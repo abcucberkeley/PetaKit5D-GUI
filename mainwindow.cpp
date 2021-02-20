@@ -35,21 +35,14 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
-    //matlab::data::ArrayFactory factory;
-
     // Set a variable to see how many threads the user can use for matlab
     QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
     ui->maxCPUs->setText(maxCPU);
 
-
     // Threading
-
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
     mThread->start(QThread::LowPriority);
-
-    //qDebug() << mThread->isFinished();
-
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -57,14 +50,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 
+    // Make the progress bar for the MATLAB job invisible initially
     ui->jobProgressBar->setVisible(false);
     ui->jobProgressBarLabel->setVisible(false);
 }
 
 MainWindow::~MainWindow()
 {
-    //qDebug() << mThread->isFinished();
     delete ui;
+
+    // If the thread is not done, kill it (This will have to change later because it is dangerous)
     if(!mThread->isFinished()) mThread->terminate();
 }
 
@@ -115,18 +110,10 @@ void MainWindow::on_submitButton_clicked()
     ui->jobProgressBar->setValue(20);
     ui->jobProgressBarLabel->setText("Moving Data");
 
+    // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
 
-    // Start matlab and add needed paths
-    /*std::unique_ptr<MATLABEngine> matlabPtr = startMATLAB();
-
-    matlab::data::CharArray newDir = factory.createCharArray("C:/Users/Matt/Documents/GitHub/XR_Repository");
-    matlabPtr->feval(u"cd",newDir);
-    matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
-    matlabPtr->feval(u"addpath",newGen);*/
-
-
-    // I have to define that there are 0 ouputs
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
     const size_t outA = 0;
     std::vector<matlab::data::Array> data;
 
@@ -256,10 +243,11 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("xcorrMode"));
     data.push_back(factory.createCharArray(ui->xCorrModeComboBox->currentText().toStdString()));
 
-    // add bound box crop here
+    // Bound box crop
     if(ui->boundBoxCheckBox->isChecked()){
         data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
     }
+
     //guiVals.primaryCh = "camA_ch0";
     //data.push_back(factory.createCharArray("primaryCh"));
     //data.push_back(factory.createCharArray(guiVals.primaryCh));
@@ -381,43 +369,17 @@ void MainWindow::on_submitButton_clicked()
     //auto outBuf = std::make_shared<SBuf>();
     //auto errBuf = std::make_shared<SBuf>();
 
-     /*
-    std::vector<std::string> options;
-    std::unique_ptr<MATLABEngine> matlabPtr = startMATLAB();
-    //matlab::data::ArrayFactory factory;
-    matlab::data::CharArray newDir = factory.createCharArray("C:/Users/Matt/Documents/GitHub/XR_Repository");
-    matlabPtr->feval(u"cd",newDir);
-    matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
-    matlabPtr->feval(u"addpath",newGen);
-    matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data);
-    */
-
-
-    //std::thread::id main_thread_id = std::this_thread::get_id();
-
-    //std::cout << "here 2" << std::endl;
-    //QProcess* output = new QProcess;
-    //output->setProcessChannelMode(QProcess::MergedChannels);
-
     // Create string buffer for standard output
     //typedef std::basic_stringbuf<char16_t> StringBuf;
     //auto output = std::make_shared<SBuf>();
 
+    // Send data to the MATLAB thread
     emit jobStart(outA, data);
 
-    // Output Console text to another window
+    // Output Console text to another window (Work in Progress)
     //consoleOutput cOutput(output);
     //cOutput.setModal(true);
     //cOutput.exec();
-
-    //mThread->requestInterruption();
-
-    //matlabPtr->feval(u"XR_microscopeAutomaticProcessing", outA, data);
-
-
-    //std::cout << "here 2" << std::endl;
-    //printFromBuf(outBuf);
-    //printFromBuf(errBuf);
 }
 
 // Browse Stitch Result Dir Folder
@@ -774,6 +736,7 @@ void MainWindow::on_boundBoxCheckBox_stateChanged(int arg1)
     }
 }
 
+// Enable or Disable settings associated with LLFF
 void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 {
     if(arg1){
