@@ -13,7 +13,6 @@
 #include <QThread>
 #include <QMessageBox>
 #include <QTimer>
-#include <QtConcurrent/QtConcurrent>
 
 using namespace matlab::engine;
 using SBuf = std::basic_stringbuf<char16_t>;
@@ -116,6 +115,9 @@ void MainWindow::on_submitButton_clicked()
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
     const size_t outA = 0;
     std::vector<matlab::data::Array> data;
+
+    // We have to push a lot of things into our data array one at a time
+    // As far as I know there is no way around this, it's just the nature of how this API and our current pipeline are setup
 
     // Data Paths
     matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
