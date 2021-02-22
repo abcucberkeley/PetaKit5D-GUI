@@ -37,15 +37,6 @@ MainWindow::MainWindow(QWidget *parent)
     QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
     ui->maxCPUs->setText(maxCPU);
 
-    // Console capturing
-    /*console.BeginCapture();
-    std::cerr << "ERR" << std::endl;
-    std::cout << "TESTING" << std::endl;
-    console.EndCapture();
-
-    std::string test = console.GetCapture();
-    std::cout << test << std::endl;*/
-
     // Threading
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
