@@ -6,11 +6,15 @@
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
 
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 using namespace matlab::engine;
+
+
 
 // Class to hold options from the user
 class GUIvals{

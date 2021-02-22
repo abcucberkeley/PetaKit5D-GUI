@@ -30,13 +30,21 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
     // Set a variable to see how many threads the user can use for matlab
     QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
     ui->maxCPUs->setText(maxCPU);
+
+    // Console capturing
+    /*console.BeginCapture();
+    std::cerr << "ERR" << std::endl;
+    std::cout << "TESTING" << std::endl;
+    console.EndCapture();
+
+    std::string test = console.GetCapture();
+    std::cout << test << std::endl;*/
 
     // Threading
     mThread = new matlabThread(this);
@@ -97,13 +105,13 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Make it so the user can't change tabs while the job is running
-    ui->jobPreviousButton->setEnabled(false);
+    //ui->jobPreviousButton->setEnabled(false);
     ui->submitButton->setEnabled(false);
     ui->jobAdvancedSettingsButton->setEnabled(false);
 
     // Turn on progress bar
-    ui->jobProgressBar->setVisible(true);
-    ui->jobProgressBarLabel->setVisible(true);
+    //ui->jobProgressBar->setVisible(true);
+    //ui->jobProgressBarLabel->setVisible(true);
 
     // Update Progress Bar
     ui->jobProgressBar->setValue(20);
@@ -379,9 +387,9 @@ void MainWindow::on_submitButton_clicked()
     emit jobStart(outA, data);
 
     // Output Console text to another window (Work in Progress)
-    //consoleOutput cOutput(output);
-    //cOutput.setModal(true);
-    //cOutput.exec();
+    consoleOutput cOutput;
+    cOutput.setModal(true);
+    cOutput.exec();
 }
 
 // Browse Stitch Result Dir Folder

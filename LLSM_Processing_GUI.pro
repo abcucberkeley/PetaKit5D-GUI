@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     consoleoutput.cpp \
+    consolethread.cpp \
     datapaths.cpp \
     deconadvanced.cpp \
     dsradvanced.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 
 HEADERS += \
     consoleoutput.h \
+    consolethread.h \
     datapaths.h \
     deconadvanced.h \
     dsradvanced.h \
