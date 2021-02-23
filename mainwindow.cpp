@@ -15,15 +15,6 @@
 #include <QTimer>
 
 using namespace matlab::engine;
-using SBuf = std::basic_stringbuf<char16_t>;
-
-void printFromBuf(const std::shared_ptr<SBuf> buf)
-{
-    //Get text from buf
-    auto text_ = buf->str();
-    std::cout << "*" << convertUTF16StringToUTF8String(text_)
-        << "*" << std::endl;
-}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,9 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 
-    // Make the progress bar for the MATLAB job invisible initially
-    ui->jobProgressBar->setVisible(false);
-    ui->jobProgressBarLabel->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -96,17 +84,9 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Make it so the user can't change tabs while the job is running
-    //ui->jobPreviousButton->setEnabled(false);
+    ui->jobPreviousButton->setEnabled(false);
     ui->submitButton->setEnabled(false);
     ui->jobAdvancedSettingsButton->setEnabled(false);
-
-    // Turn on progress bar
-    //ui->jobProgressBar->setVisible(true);
-    //ui->jobProgressBarLabel->setVisible(true);
-
-    // Update Progress Bar
-    ui->jobProgressBar->setValue(20);
-    ui->jobProgressBarLabel->setText("Moving Data");
 
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
@@ -162,8 +142,8 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createArray<bool>({1,4},{true,ui->stitchSave16BitCheckBox->isChecked(),true,true}));
 
     // This needs to change
-    //data.push_back(factory.createCharArray("onlyFirstTP"));
-    //data.push_back(factory.createScalar<bool>(ui->onlyFirstTPCheckBox->isChecked()));
+    data.push_back(factory.createCharArray("onlyFirstTP"));
+    data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
 
 
     // Pipeline Settings
@@ -212,12 +192,14 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("LowerLimit"));
     data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
-    guiVals.resampleType = "xy_isotropic";
+    //guiVals.resampleType = "xy_isotropic";
     data.push_back(factory.createCharArray("resampleType"));
     data.push_back(factory.createCharArray(guiVals.resampleType));
 
-    //data.push_back(factory.createCharArray("resample"));
-    //data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
+    if(guiVals.resample){
+        data.push_back(factory.createCharArray("resample"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
+    }
 
     // Stitch Settings
 
@@ -228,7 +210,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray(ui->resultsDirLineEdit->text().toStdString()));
 
     data.push_back(factory.createCharArray("imageListFullpaths"));
-    data.push_back(factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/ImageList_18s_tailbud_dhb_mScarlet_lck_mNeon_h2b_miRFP670.csv"/*ui->imageListFullPathsLineEdit->text().toStdString()*/));
+    data.push_back(factory.createCharArray(ui->imageListFullPathsLineEdit->text().toStdString()));
 
     if(!ui->axisOrderLineEdit->text().toStdString().empty()){
     data.push_back(factory.createCharArray("axisOrder"));
@@ -249,9 +231,11 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
     }
 
-    //guiVals.primaryCh = "camA_ch0";
-    //data.push_back(factory.createCharArray("primaryCh"));
-    //data.push_back(factory.createCharArray(guiVals.primaryCh));
+    //EX: "camA_ch0";
+    if(!ui->primaryCHLineEdit->text().isEmpty()){
+        data.push_back(factory.createCharArray("primaryCh"));
+        data.push_back(factory.createCharArray(ui->primaryCHLineEdit->text().toStdString()));
+    }
 
     // Decon Settings
 
@@ -357,22 +341,10 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
     }
 
-
     if(!guiVals.SlurmParam.empty()){
     data.push_back(factory.createCharArray("SlurmParam"));
     data.push_back(factory.createCharArray(guiVals.SlurmParam));
     }
-
-     // Update Progress bar
-     ui->jobProgressBar->setValue(40);
-     ui->jobProgressBarLabel->setText("Running Job");
-
-    //auto outBuf = std::make_shared<SBuf>();
-    //auto errBuf = std::make_shared<SBuf>();
-
-    // Create string buffer for standard output
-    //typedef std::basic_stringbuf<char16_t> StringBuf;
-    //auto output = std::make_shared<SBuf>();
 
     // Send data to the MATLAB thread
     emit jobStart(outA, data);

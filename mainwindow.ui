@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -1229,7 +1229,7 @@
        <item>
         <widget class="QLabel" name="primaryCHLabel">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="font">
           <font>
@@ -1246,13 +1246,19 @@
        <item>
         <widget class="QLineEdit" name="primaryCHLineEdit">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>32763</number>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string>Currently Unused</string>
+          <string>EX: camA_ch0</string>
          </property>
         </widget>
        </item>
@@ -2395,54 +2401,6 @@
       </property>
       <property name="text">
        <string>Max Allowed: </string>
-      </property>
-     </widget>
-     <widget class="QProgressBar" name="jobProgressBar">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>500</y>
-        <width>601</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="value">
-       <number>2</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-      </property>
-      <property name="textVisible">
-       <bool>false</bool>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="textDirection">
-       <enum>QProgressBar::TopToBottom</enum>
-      </property>
-     </widget>
-     <widget class="QLabel" name="jobProgressBarLabel">
-      <property name="geometry">
-       <rect>
-        <x>11</x>
-        <y>501</y>
-        <width>151</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Starting MATLAB</string>
       </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
