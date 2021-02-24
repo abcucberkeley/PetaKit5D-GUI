@@ -1,8 +1,8 @@
 #ifndef MAINADVANCED_H
 #define MAINADVANCED_H
 
-#include <QDialog>
 #include "mainwindow.h"
+#include <QDialog>
 
 namespace Ui {
 class mainAdvanced;

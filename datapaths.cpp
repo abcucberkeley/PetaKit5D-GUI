@@ -1,8 +1,8 @@
-#include <iostream>
-#include <QFileInfo>
-#include <QFileDialog>
 #include "datapaths.h"
 #include "ui_datapaths.h"
+#include <QFileInfo>
+#include <QFileDialog>
+
 
 //*** This form is too hardcoded. Qt has better ways to handle what we need here
 // but this is a quick solution to help get things running.

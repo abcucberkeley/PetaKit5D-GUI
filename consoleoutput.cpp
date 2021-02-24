@@ -1,8 +1,5 @@
 #include "consoleoutput.h"
 #include "ui_consoleoutput.h"
-#include <QMetaType>
-#include <iostream>
-#include <string>
 
 consoleOutput::consoleOutput(QWidget *parent) :
     QDialog(parent),
@@ -25,6 +22,7 @@ consoleOutput::~consoleOutput()
     if(!cThread->isFinished()) cThread->terminate();
 }
 
+// Listens for output from the console thread and appends it to the text box
 void consoleOutput::getOutput(const QString &output){
     ui->outputTextEdit->appendPlainText(output);
 }

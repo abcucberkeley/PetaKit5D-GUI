@@ -6,13 +6,11 @@
 #include "jobadvanced.h"
 #include "datapaths.h"
 #include "consoleoutput.h"
-#include <thread>
 #include <QFileDialog>
 #include <QDir>
 #include <QFileInfo>
 #include <QThread>
 #include <QMessageBox>
-#include <QTimer>
 
 using namespace matlab::engine;
 
@@ -177,21 +175,23 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("LLFFCorrection"));
     data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
 
-
-    data.push_back(factory.createCharArray("LSImagePaths"));
-    matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
-    for(size_t i = 0; i < lsImagePaths.size(); i++){
-        dataPaths_exps[i] = factory.createCharArray(lsImagePaths[i]);
+    if(lsImagePaths.size()){
+        data.push_back(factory.createCharArray("LSImagePaths"));
+        matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
+        for(size_t i = 0; i < lsImagePaths.size(); i++){
+            dataPaths_exps[i] = factory.createCharArray(lsImagePaths[i]);
+        }
+        data.push_back(lsImageMPaths);
     }
-    data.push_back(lsImageMPaths);
 
-    data.push_back(factory.createCharArray("BackgroundPaths"));
-    matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
-    for(size_t i = 0; i < backgroundPaths.size(); i++){
-        dataPaths_exps[i] = factory.createCharArray(backgroundPaths[i]);
+    if(backgroundPaths.size()){
+        data.push_back(factory.createCharArray("BackgroundPaths"));
+        matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
+        for(size_t i = 0; i < backgroundPaths.size(); i++){
+            dataPaths_exps[i] = factory.createCharArray(backgroundPaths[i]);
+        }
+        data.push_back(backgroundMPaths);
     }
-    data.push_back(backgroundMPaths);
-
 
     // DSR Advanced Settings
     data.push_back(factory.createCharArray("BKRemoval"));
@@ -293,12 +293,14 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray(guiVals.OTFGENPath));
     }
 
-    data.push_back(factory.createCharArray("psfFullpaths"));
-    matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
-    for(size_t i = 0; i < psfFullPaths.size(); i++){
-        dataPaths_exps[i] = factory.createCharArray(psfFullPaths[i]);
+    if(psfFullPaths.size()){
+        data.push_back(factory.createCharArray("psfFullpaths"));
+        matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+        for(size_t i = 0; i < psfFullPaths.size(); i++){
+            dataPaths_exps[i] = factory.createCharArray(psfFullPaths[i]);
+        }
+        data.push_back(psfMPaths);
     }
-    data.push_back(psfMPaths);
     // Line below is for testing purposes
     //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 

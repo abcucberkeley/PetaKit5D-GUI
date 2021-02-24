@@ -1,8 +1,9 @@
 #ifndef DSRADVANCED_H
 #define DSRADVANCED_H
 
-#include <QDialog>
 #include "mainwindow.h"
+#include <QDialog>
+
 
 namespace Ui {
 class DSRadvanced;

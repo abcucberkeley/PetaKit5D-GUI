@@ -9,10 +9,10 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // pointer to hold the passed in vals
+    // Pointer to hold the passed in vals
     gVals = &guiVals;
 
-    // set the vals in the window to the ones passed in
+    // Set the vals in the window to the ones passed in
     ui->cppDeconPathLineEdit->setText(QString::fromStdString(guiVals.cppDeconPath));
     ui->loadModulesLineEdit->setText(QString::fromStdString(guiVals.loadModules));
     ui->cudaDeconPathLineEdit->setText(QString::fromStdString(guiVals.cudaDeconPath));

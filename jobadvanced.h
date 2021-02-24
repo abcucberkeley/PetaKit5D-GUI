@@ -1,8 +1,9 @@
 #ifndef JOBADVANCED_H
 #define JOBADVANCED_H
 
-#include <QDialog>
 #include "mainwindow.h"
+#include <QDialog>
+
 
 namespace Ui {
 class jobAdvanced;

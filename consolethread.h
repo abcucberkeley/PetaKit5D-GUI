@@ -6,9 +6,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <string>
 
-// Capturing the console TESTING
+// Capturing the console
 class StdCapture
 {
 public:

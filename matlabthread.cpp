@@ -32,8 +32,9 @@ void matlabThread::run(){
 
 }
 
+// Sets data and outA (given by the GUI signal) when a job is about to start. This will let the MATLAB thread instantly start that job.
 void matlabThread::onJobStart(const size_t outA, const std::vector<matlab::data::Array> &data){
     qDebug() << "Main Job";
-    this->outA = outA;
     this->data = data;
+    this->outA = outA;
 }

@@ -1,8 +1,9 @@
 #ifndef DECONADVANCED_H
 #define DECONADVANCED_H
 
-#include <QDialog>
 #include "mainwindow.h"
+#include <QDialog>
+
 
 namespace Ui {
 class deconAdvanced;

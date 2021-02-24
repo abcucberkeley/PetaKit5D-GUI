@@ -3,7 +3,6 @@
 
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
-
 #include <QtCore>
 #include <QThread>
 
