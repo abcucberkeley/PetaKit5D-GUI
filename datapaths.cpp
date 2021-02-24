@@ -4,13 +4,16 @@
 #include "datapaths.h"
 #include "ui_datapaths.h"
 
+//*** This form is too hardcoded. Qt has better ways to handle what we need here
+// but this is a quick solution to help get things running.
 
-
-dataPaths::dataPaths(std::vector<std::string> &dPaths, QWidget *parent) :
+// folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
+dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
     ui->setupUi(this);
+    this->folder = folder;
 
     // pointer to hold the passed in paths vector
     dpHand = &dPaths;
@@ -34,7 +37,6 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, QWidget *parent) :
 
     // Initial visibility of the widgets
     for(size_t i = 0; i < paths.size(); i++){
-
         if(i == 0 && dPaths.size() == 0) continue;
         else if(i < dPaths.size()){
             std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
@@ -107,8 +109,14 @@ void dataPaths::on_submitButton_clicked()
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPath1BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath1LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath1LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath1LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath1LineEdit_textChanged(const QString &arg1)
@@ -118,8 +126,14 @@ void dataPaths::on_dataPath1LineEdit_textChanged(const QString &arg1)
 
 void dataPaths::on_dataPath2BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath2LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath2LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath2LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath2LineEdit_textChanged(const QString &arg1)
@@ -129,8 +143,14 @@ void dataPaths::on_dataPath2LineEdit_textChanged(const QString &arg1)
 
 void dataPaths::on_dataPath3BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath3LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath3LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath3LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath3LineEdit_textChanged(const QString &arg1)
@@ -140,8 +160,14 @@ void dataPaths::on_dataPath3LineEdit_textChanged(const QString &arg1)
 
 void dataPaths::on_dataPath4BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath4LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath4LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath4LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath4LineEdit_textChanged(const QString &arg1)
@@ -151,8 +177,14 @@ void dataPaths::on_dataPath4LineEdit_textChanged(const QString &arg1)
 
 void dataPaths::on_dataPath5BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath5LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath5LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath5LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath5LineEdit_textChanged(const QString &arg1)
@@ -162,8 +194,14 @@ void dataPaths::on_dataPath5LineEdit_textChanged(const QString &arg1)
 
 void dataPaths::on_dataPath6BrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
-    if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath6LineEdit->setText(folder_path.absoluteFilePath());
+    if(folder){
+        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",QDir::homePath());
+        if(folder_path.absoluteFilePath().toStdString() != "") ui->dataPath6LineEdit->setText(folder_path.absoluteFilePath());
+    }
+    else{
+        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",QDir::homePath());
+        if(file_path.absoluteFilePath().toStdString() != "") ui->dataPath6LineEdit->setText(file_path.absoluteFilePath());
+    }
 }
 
 void dataPaths::on_dataPath6LineEdit_textChanged(const QString &arg1)

@@ -15,7 +15,7 @@ class dataPaths : public QDialog
     Q_OBJECT
 
 public:
-    explicit dataPaths(std::vector<std::string> &dPaths, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
@@ -55,6 +55,7 @@ private:
     Ui::dataPaths *ui;
     int activePaths;
     bool maxPaths;
+    bool folder;
     std::vector<std::tuple<QLabel*, QLineEdit*, QPushButton*>> paths;
     std::vector<std::string> *dpHand;
 };

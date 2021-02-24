@@ -653,7 +653,7 @@ void MainWindow::on_jobPreviousButton_clicked()
 // Opens a  seperate window to add the data paths for the job
 void MainWindow::on_addPathsButton_clicked()
 {
-    dataPaths daPaths(dPaths);
+    dataPaths daPaths(dPaths, true);
     daPaths.setModal(true);
     daPaths.exec();
 }
@@ -714,17 +714,37 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 {
     if(arg1){
         ui->lsImagePathsLabel->setEnabled(true);
-        ui->lsImagePathsLineEdit->setEnabled(true);
+        ui->lsImageAddPathsButton->setEnabled(true);
         ui->backgroundPathsLabel->setEnabled(true);
-        ui->backgroundPathsLineEdit->setEnabled(true);
+        ui->backgroundAddPathsButton->setEnabled(true);
     }
     else{
         ui->lsImagePathsLabel->setEnabled(false);
-        ui->lsImagePathsLineEdit->setEnabled(false);
+        ui->lsImageAddPathsButton->setEnabled(false);
         ui->backgroundPathsLabel->setEnabled(false);
-        ui->backgroundPathsLineEdit->setEnabled(false);
+        ui->backgroundAddPathsButton->setEnabled(false);
 
-        ui->backgroundPathsLineEdit->setText("");
-        ui->lsImagePathsLineEdit->setText("");
+        lsImagePaths.clear();
+        backgroundPaths.clear();
     }
+}
+
+void MainWindow::on_lsImageAddPathsButton_clicked()
+{
+    dataPaths daPaths(lsImagePaths, false);
+    daPaths.setModal(true);
+    daPaths.exec();
+}
+
+void MainWindow::on_backgroundAddPathsButton_clicked()
+{
+    dataPaths daPaths(backgroundPaths, false);
+    daPaths.setModal(true);
+    daPaths.exec();
+}
+void MainWindow::on_psfFullAddPathsButton_2_clicked()
+{
+    dataPaths daPaths(psfFullPaths, false);
+    daPaths.setModal(true);
+    daPaths.exec();
 }

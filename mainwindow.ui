@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -937,10 +937,10 @@
      <widget class="QWidget" name="layoutWidget_6">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>280</x>
         <y>310</y>
-        <width>439</width>
-        <height>22</height>
+        <width>251</width>
+        <height>25</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -962,12 +962,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="backgroundPathsLineEdit">
+        <widget class="QPushButton" name="backgroundAddPathsButton">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <property name="text">
+          <string>Add/View Paths</string>
          </property>
         </widget>
        </item>
@@ -976,10 +976,10 @@
      <widget class="QWidget" name="layoutWidget_7">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>290</x>
         <y>280</y>
-        <width>439</width>
-        <height>22</height>
+        <width>231</width>
+        <height>25</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -1001,12 +1001,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lsImagePathsLineEdit">
+        <widget class="QPushButton" name="lsImageAddPathsButton">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <property name="text">
+          <string>Add/View Paths</string>
          </property>
         </widget>
        </item>
@@ -2135,8 +2135,8 @@
        <rect>
         <x>410</x>
         <y>204</y>
-        <width>321</width>
-        <height>22</height>
+        <width>221</width>
+        <height>25</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_38">
@@ -2155,9 +2155,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="psfFullPathsLineEdit">
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <widget class="QPushButton" name="psfFullAddPathsButton_2">
+         <property name="text">
+          <string>Add/View Paths</string>
          </property>
         </widget>
        </item>

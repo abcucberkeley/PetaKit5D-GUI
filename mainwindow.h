@@ -93,6 +93,9 @@ private:
     matlabThread *mThread;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
+    std::vector<std::string> lsImagePaths;
+    std::vector<std::string> backgroundPaths;
+    std::vector<std::string> psfFullPaths;
 
 private slots:
     void on_dsrAdvancedSettingsButton_clicked();
@@ -146,6 +149,12 @@ private slots:
     void on_boundBoxCheckBox_stateChanged(int arg1);
 
     void on_llffCorrectionCheckBox_stateChanged(int arg1);
+
+    void on_lsImageAddPathsButton_clicked();
+
+    void on_backgroundAddPathsButton_clicked();
+
+    void on_psfFullAddPathsButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
