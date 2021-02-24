@@ -101,7 +101,7 @@ void MainWindow::on_submitButton_clicked()
     // Data Paths
     matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
     for(size_t i = 0; i < dPaths.size(); i++){
-        dataPaths_exps[i] = factory.createCharArray(dPaths.at(i));
+        dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
     }
     data.push_back(dataPaths_exps);
 
@@ -177,12 +177,20 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("LLFFCorrection"));
     data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
 
-    // Change these next two to not be hardcoded
-    //data.push_back(factory.createCharArray("LSImagePaths"));
-    //data.push_back(factory.createCellArray({1,3},guiVals.LSImagePaths.at(0),guiVals.LSImagePaths.at(1),guiVals.LSImagePaths.at(2)));
 
-    //data.push_back(factory.createCharArray("BackgroundPaths"));
-    //data.push_back(factory.createCellArray({1,3},guiVals.BackgroundPaths.at(0),guiVals.BackgroundPaths.at(1),guiVals.BackgroundPaths.at(2)));
+    data.push_back(factory.createCharArray("LSImagePaths"));
+    matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
+    for(size_t i = 0; i < lsImagePaths.size(); i++){
+        dataPaths_exps[i] = factory.createCharArray(lsImagePaths[i]);
+    }
+    data.push_back(lsImageMPaths);
+
+    data.push_back(factory.createCharArray("BackgroundPaths"));
+    matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
+    for(size_t i = 0; i < backgroundPaths.size(); i++){
+        dataPaths_exps[i] = factory.createCharArray(backgroundPaths[i]);
+    }
+    data.push_back(backgroundMPaths);
 
 
     // DSR Advanced Settings
@@ -285,9 +293,14 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray(guiVals.OTFGENPath));
     }
 
-    // Make this not hard coded later---
     data.push_back(factory.createCharArray("psfFullpaths"));
-    data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
+    matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+    for(size_t i = 0; i < psfFullPaths.size(); i++){
+        dataPaths_exps[i] = factory.createCharArray(psfFullPaths[i]);
+    }
+    data.push_back(psfMPaths);
+    // Line below is for testing purposes
+    //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 
     data.push_back(factory.createCharArray("DeconIter"));
     data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));

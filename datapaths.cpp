@@ -79,7 +79,6 @@ void dataPaths::on_removePathButton_clicked()
     if(maxPaths) maxPaths = false;
     activePaths--;
 
-    //std::cout << activePaths << std::endl;
     std::get<0>(paths.at(activePaths))->setVisible(false);
     std::get<1>(paths.at(activePaths))->setVisible(false);
     std::get<2>(paths.at(activePaths))->setVisible(false);
@@ -92,7 +91,7 @@ void dataPaths::on_cancelButton_clicked()
     dataPaths::close();
 }
 
-// CLose the window and save the values currently in the boxes
+// CLose the window and save the values currently in the boxes (even if they are empty currently)
 void dataPaths::on_submitButton_clicked()
 {
     if(dpHand->size() != (size_t)activePaths){
