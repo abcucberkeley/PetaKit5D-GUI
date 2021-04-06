@@ -1,11 +1,15 @@
 #ifndef CONSOLETHREAD_H
 #define CONSOLETHREAD_H
-
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
 #include <QtCore>
 #include <QThread>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 
 // Capturing the console
 class StdCapture
@@ -15,8 +19,7 @@ public:
     {
         m_pipe[READ] = 0;
         m_pipe[WRITE] = 0;
-        if (_pipe(m_pipe, 65536, O_BINARY) == -1)
-            return;
+        //if (pipe(m_pipe, 65536, O_BINARY) == -1)return;
         m_oldStdOut = dup(fileno(stdout));
         m_oldStdErr = dup(fileno(stderr));
         if (m_oldStdOut == -1 || m_oldStdErr == -1)
@@ -71,18 +74,18 @@ public:
         const int bufSize = 1024;
         buf.resize(bufSize);
         int bytesRead = 0;
-        if (!eof(m_pipe[READ]))
-        {
+       // if (!eof(m_pipe[READ]))
+        //{
             bytesRead = read(m_pipe[READ], &(*buf.begin()), bufSize);
-        }
+        //}
         while(bytesRead == bufSize)
         {
             m_captured += buf;
             bytesRead = 0;
-            if (!eof(m_pipe[READ]))
-            {
+            //if (!eof(m_pipe[READ]))
+            //{
                 bytesRead = read(m_pipe[READ], &(*buf.begin()), bufSize);
-            }
+            //}
         }
         if (bytesRead > 0)
         {

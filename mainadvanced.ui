@@ -58,7 +58,7 @@
     <rect>
      <x>140</x>
      <y>10</y>
-     <width>341</width>
+     <width>391</width>
      <height>71</height>
     </rect>
    </property>
@@ -76,7 +76,7 @@
     <rect>
      <x>220</x>
      <y>170</y>
-     <width>178</width>
+     <width>198</width>
      <height>21</height>
     </rect>
    </property>
@@ -112,7 +112,7 @@
     <rect>
      <x>220</x>
      <y>140</y>
-     <width>91</width>
+     <width>95</width>
      <height>21</height>
     </rect>
    </property>
@@ -148,8 +148,8 @@
     <rect>
      <x>220</x>
      <y>110</y>
-     <width>181</width>
-     <height>22</height>
+     <width>191</width>
+     <height>26</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -191,7 +191,7 @@
      <x>220</x>
      <y>80</y>
      <width>181</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_5">

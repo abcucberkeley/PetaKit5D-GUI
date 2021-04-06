@@ -73,9 +73,9 @@
   <widget class="QPushButton" name="addPathButton">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>280</x>
      <y>10</y>
-     <width>61</width>
+     <width>91</width>
      <height>23</height>
     </rect>
    </property>
@@ -88,7 +88,7 @@
     <rect>
      <x>380</x>
      <y>10</y>
-     <width>81</width>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>

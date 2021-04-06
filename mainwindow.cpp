@@ -104,6 +104,8 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(dataPaths_exps);
 
     // Main Settings
+
+    // FIX
     data.push_back(factory.createCharArray("Overwrite"));
     data.push_back(factory.createScalar<bool>(ui->deskewOverwriteDataCheckBox->isChecked() || ui->rotateOverwriteDataCheckBox->isChecked() || ui->deskewAndRotateOverwriteDataCheckBox->isChecked() || ui->stitchOverwriteDataCheckBox->isChecked()));
 
@@ -111,7 +113,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
 
     data.push_back(factory.createCharArray("ChannelPatterns"));
-    data.push_back(factory.createCellArray({1,3},factory.createCharArray("CamA_ch0"),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
+    data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
 
     // Currently not used
     //data.push_back(factory.createCharArray("Channels"));
@@ -137,7 +139,7 @@ void MainWindow::on_submitButton_clicked()
 
     // This needs to change
     data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createArray<bool>({1,4},{true,ui->stitchSave16BitCheckBox->isChecked(),true,true}));
+    data.push_back(factory.createArray<bool>({1,4},{false,ui->stitchSave16BitCheckBox->isChecked(),false,false}));
 
     // This needs to change
     data.push_back(factory.createCharArray("onlyFirstTP"));
@@ -168,9 +170,9 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("flipZstack"));
     data.push_back(factory.createScalar<bool>(ui->flipZStackCheckBox->isChecked()));
 
-    // Probably removing this
-    //data.push_back(factory.createCharArray("DSRCombined"));
-    //data.push_back(factory.createScalar<bool>(ui->dsrCombinedCheckBox->isChecked()));
+    // Probably removing this. Always false for now
+    data.push_back(factory.createCharArray("DSRCombined"));
+    data.push_back(factory.createScalar<bool>(false));
 
     data.push_back(factory.createCharArray("LLFFCorrection"));
     data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
@@ -365,9 +367,11 @@ void MainWindow::on_submitButton_clicked()
     emit jobStart(outA, data);
 
     // Output Console text to another window (Work in Progress)
-    consoleOutput cOutput;
+    /*
+    (consoleOutput cOutput;
     cOutput.setModal(true);
     cOutput.exec();
+    */
 }
 
 // Browse Stitch Result Dir Folder

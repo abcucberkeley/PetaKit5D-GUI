@@ -18,7 +18,7 @@
     <rect>
      <x>130</x>
      <y>10</y>
-     <width>371</width>
+     <width>421</width>
      <height>71</height>
     </rect>
    </property>
@@ -71,13 +71,13 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>160</x>
      <y>80</y>
      <width>321</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -104,13 +104,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>160</x>
      <y>110</y>
      <width>211</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">

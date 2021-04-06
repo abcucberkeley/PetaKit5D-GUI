@@ -16,7 +16,7 @@ matlabThread::~matlabThread(){
 void matlabThread::run(){
     // Start matlab and add needed paths
     matlabPtr = startMATLAB();
-    matlab::data::CharArray newDir = factory.createCharArray(QDir::currentPath().toStdString()+"\\XR_Repository");
+    matlab::data::CharArray newDir = factory.createCharArray(QDir::currentPath().toStdString()+"/XR_Repository");
     matlabPtr->feval(u"cd",newDir);
     matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
     matlabPtr->feval(u"addpath",newGen);
