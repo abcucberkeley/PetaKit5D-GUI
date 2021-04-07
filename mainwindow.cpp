@@ -181,7 +181,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("LSImagePaths"));
         matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
         for(size_t i = 0; i < lsImagePaths.size(); i++){
-            dataPaths_exps[i] = factory.createCharArray(lsImagePaths[i]);
+            lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i]);
         }
         data.push_back(lsImageMPaths);
     }
@@ -190,7 +190,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("BackgroundPaths"));
         matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
         for(size_t i = 0; i < backgroundPaths.size(); i++){
-            dataPaths_exps[i] = factory.createCharArray(backgroundPaths[i]);
+            backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i]);
         }
         data.push_back(backgroundMPaths);
     }
@@ -299,7 +299,8 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("psfFullpaths"));
         matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
         for(size_t i = 0; i < psfFullPaths.size(); i++){
-            dataPaths_exps[i] = factory.createCharArray(psfFullPaths[i]);
+            std::cout << psfFullPaths[i] << std::endl;
+            psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
         }
         data.push_back(psfMPaths);
     }

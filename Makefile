@@ -5953,6 +5953,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qpushbutton.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QRadioButton \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qradiobutton.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QSpacerItem \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QSpinBox \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qspinbox.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QStatusBar \
