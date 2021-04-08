@@ -6,7 +6,7 @@
 matlabThread::matlabThread(QObject *parent) :
     QThread(parent), outA(1)
 {
-
+    //connect(this, &matlabThread::enableSubmitButton, parent, &MainWindow::onEnableSubmitButton);
 }
 
 matlabThread::~matlabThread(){
@@ -20,6 +20,7 @@ void matlabThread::run(){
     matlabPtr->feval(u"cd",newDir);
     matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
     matlabPtr->feval(u"addpath",newGen);
+    while(true){
     qDebug() << "MATLAB READY";
 
     // Once outA is set to 0, we can start our matlab job
@@ -30,6 +31,11 @@ void matlabThread::run(){
     // Start Matlab Job
     matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data);
 
+    outA = 1;
+    data.clear();
+    emit enableSubmitButton();
+    }
+
 }
 
 // Sets data and outA (given by the GUI signal) when a job is about to start. This will let the MATLAB thread instantly start that job.
@@ -38,3 +44,4 @@ void matlabThread::onJobStart(const size_t outA, const std::vector<matlab::data:
     this->data = data;
     this->outA = outA;
 }
+

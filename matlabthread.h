@@ -10,12 +10,15 @@ using namespace matlab::engine;
 
 class matlabThread : public QThread
 {
+    Q_OBJECT
 public:
     matlabThread(QObject *parent = 0);
     ~matlabThread();
     void run();
 public slots:
     void onJobStart(const size_t outA, const std::vector<matlab::data::Array> &data);
+signals:
+    void enableSubmitButton();
 private:
     std::unique_ptr<MATLABEngine> matlabPtr;
     matlab::data::ArrayFactory factory;

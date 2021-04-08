@@ -85,7 +85,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+public slots:
+    void onEnableSubmitButton();
 signals:
     void jobStart(const size_t outA, const std::vector<matlab::data::Array> &data);
 

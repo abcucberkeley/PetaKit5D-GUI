@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Threading
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
+    connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThread->start(QThread::LowPriority);
 
     // Disable all tabs except the main one on startup
@@ -43,8 +44,13 @@ MainWindow::~MainWindow()
 {
     delete ui;
 
-    // If the thread is not done, kill it (This will have to change later because it is dangerous)
+    // If the thread is not done, kill it (This may have to change later because it can be dangerous)
     if(!mThread->isFinished()) mThread->terminate();
+}
+
+// Reenable submit button for new jobs
+void MainWindow::onEnableSubmitButton(){
+    ui->submitButton->setEnabled(true);
 }
 
 // Open DSR Advanced Settings
@@ -74,6 +80,7 @@ void MainWindow::on_jobAdvancedSettingsButton_clicked()
 // Submit settings
 void MainWindow::on_submitButton_clicked()
 {
+    // Error if no data paths set
     if(dPaths.size() == 0){
     QMessageBox messageBox;
     messageBox.warning(0,"Error","No data paths are set");
@@ -81,10 +88,10 @@ void MainWindow::on_submitButton_clicked()
     return;
     }
 
-    // Make it so the user can't change tabs while the job is running
-    ui->jobPreviousButton->setEnabled(false);
+    // Make it so the user can't change tabs while the job is running (In Progress)
+    //ui->jobPreviousButton->setEnabled(false);
     ui->submitButton->setEnabled(false);
-    ui->jobAdvancedSettingsButton->setEnabled(false);
+    //ui->jobAdvancedSettingsButton->setEnabled(false);
 
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
@@ -105,13 +112,14 @@ void MainWindow::on_submitButton_clicked()
 
     // Main Settings
 
-    // FIX
+    // FIX THIS
     data.push_back(factory.createCharArray("Overwrite"));
     data.push_back(factory.createScalar<bool>(ui->deskewOverwriteDataCheckBox->isChecked() || ui->rotateOverwriteDataCheckBox->isChecked() || ui->deskewAndRotateOverwriteDataCheckBox->isChecked() || ui->stitchOverwriteDataCheckBox->isChecked()));
 
     data.push_back(factory.createCharArray("Streaming"));
     data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
 
+    // FIX SO IT ISN'T HARDCODED
     data.push_back(factory.createCharArray("ChannelPatterns"));
     data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
 
@@ -137,16 +145,18 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("sCMOSCameraFlip"));
     data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
-    // This needs to change
+    // This needs to change FIX
     data.push_back(factory.createCharArray("Save16bit"));
     data.push_back(factory.createArray<bool>({1,4},{false,ui->stitchSave16BitCheckBox->isChecked(),false,false}));
 
-    // This needs to change
+    // This needs to change FIX
     data.push_back(factory.createCharArray("onlyFirstTP"));
     data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
 
 
     // Pipeline Settings
+
+    // Some logic with these needs fixing
     data.push_back(factory.createCharArray("Deskew"));
     data.push_back(factory.createScalar<bool>(ui->deskewCheckBox->isChecked()));
 
@@ -159,11 +169,13 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("Decon"));
     data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()));
 
+    // Change later
     //data.push_back(factory.createCharArray("RotateAfterDecon"));
     //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
 
     // DSR Settings
+
     data.push_back(factory.createCharArray("parseSettingFile"));
     data.push_back(factory.createScalar<bool>(ui->parseSettingsFileCheckBox->isChecked()));
 
@@ -196,6 +208,7 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // DSR Advanced Settings
+
     data.push_back(factory.createCharArray("BKRemoval"));
     data.push_back(factory.createScalar<bool>(guiVals.BKRemoval));
 
@@ -367,7 +380,7 @@ void MainWindow::on_submitButton_clicked()
     // Send data to the MATLAB thread
     emit jobStart(outA, data);
 
-    // Output Console text to another window (Work in Progress)
+    // Output Console text to another window (Work in Progress) (For Windows only most likely)
     /*
     (consoleOutput cOutput;
     cOutput.setModal(true);
@@ -749,6 +762,7 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
     }
 }
 
+// Open window for adding lsImage Paths
 void MainWindow::on_lsImageAddPathsButton_clicked()
 {
     dataPaths daPaths(lsImagePaths, false);
@@ -756,12 +770,15 @@ void MainWindow::on_lsImageAddPathsButton_clicked()
     daPaths.exec();
 }
 
+// Open window for adding background Paths
 void MainWindow::on_backgroundAddPathsButton_clicked()
 {
     dataPaths daPaths(backgroundPaths, false);
     daPaths.setModal(true);
     daPaths.exec();
 }
+
+// Open window for adding PSF Paths
 void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
     dataPaths daPaths(psfFullPaths, false);
