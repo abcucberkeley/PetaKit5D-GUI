@@ -200,14 +200,14 @@ void MainWindow::writeSettings()
 
     // Save Advanced Job Settings
 
-    settings.setValue("largeFile",guiVals.largeFile);
+    settings.setValue("largeFile",QVariant::fromValue(guiVals.largeFile));
     settings.setValue("jobLogDir",QString::fromStdString(guiVals.jobLogDir));
     settings.setValue("uuid",QString::fromStdString(guiVals.uuid));
-    settings.setValue("maxTrialNum",guiVals.maxTrialNum);
-    settings.setValue("unitWaitTime",guiVals.unitWaitTime);
-    settings.setValue("minModifyTime",guiVals.minModifyTime);
-    settings.setValue("maxModifyTime",guiVals.maxModifyTime);
-    settings.setValue("maxWaitLoopNum",guiVals.maxWaitLoopNum);
+    settings.setValue("maxTrialNum",QVariant::fromValue(guiVals.maxTrialNum));
+    settings.setValue("unitWaitTime",QVariant::fromValue(guiVals.unitWaitTime));
+    settings.setValue("minModifyTime",QVariant::fromValue(guiVals.minModifyTime));
+    settings.setValue("maxModifyTime",QVariant::fromValue(guiVals.maxModifyTime));
+    settings.setValue("maxWaitLoopNum",QVariant::fromValue(guiVals.maxWaitLoopNum));
     settings.setValue("MatlabLaunchStr",QString::fromStdString(guiVals.MatlabLaunchStr));
     settings.setValue("SlurmParam",QString::fromStdString(guiVals.SlurmParam));
 
