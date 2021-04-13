@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
     ui->maxCPUs->setText(maxCPU);
 
-    // Threading
+    // Threading and connecting signals/slots
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
     connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Stitch),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
-
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -46,6 +46,331 @@ MainWindow::~MainWindow()
 
     // If the thread is not done, kill it (This may have to change later because it can be dangerous)
     if(!mThread->isFinished()) mThread->terminate();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+        writeSettings();
+        event->accept();
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings("ABC", "LLSM GUI");
+
+    settings.beginGroup("MainWindow");
+    //settings.setValue("size", size());
+    //settings.setValue("pos", pos());
+
+    // Save Data Paths
+    settings.beginWriteArray("dPaths");
+    for(unsigned int i = 0; i < dPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("dPathsi", QString::fromStdString(dPaths.at(i)));
+    }
+    settings.endArray();
+
+    // Save Main Settings
+
+    settings.setValue("deskewOverwrite",ui->deskewOverwriteDataCheckBox->isChecked());
+    settings.setValue("rotateOverwrite",ui->rotateOverwriteDataCheckBox->isChecked());
+    settings.setValue("deskewAndRotateOverwrite",ui->deskewAndRotateOverwriteDataCheckBox->isChecked());
+    settings.setValue("stitchOverwrite",ui->stitchOverwriteDataCheckBox->isChecked());
+
+    settings.setValue("Streaming",ui->streamingCheckBox->isChecked());
+
+    // TODO: ADD SAVE FOR CHANNEL PATTERNS
+
+    settings.setValue("skewAngle",guiVals.skewAngle);
+    settings.setValue("dz",ui->dzLineEdit->text());
+    settings.setValue("xyPixelSize",guiVals.xyPixelSize);
+    settings.setValue("Reverse",guiVals.Reverse);
+    settings.setValue("objectiveScan",ui->objectiveScanCheckBox->isChecked());
+    settings.setValue("sCMOSCameraFlip",guiVals.sCMOSCameraFlip);
+
+    settings.setValue("deskewSave16Bit",ui->deskewSave16BitCheckBox->isChecked());
+    settings.setValue("rotateSave16Bit",ui->rotateSave16BitCheckBox->isChecked());
+    settings.setValue("deskewAndRotateSave16Bit",ui->deskewAndRotateSave16BitCheckBox->isChecked());
+    settings.setValue("stitchSave16Bit",ui->stitchSave16BitCheckBox->isChecked());
+
+    settings.setValue("deskewOnlyFirstTP",ui->deskewOnlyFirstTPCheckBox->isChecked());
+    settings.setValue("rotateOnlyFirstTP",ui->rotateOnlyFirstTPCheckBox->isChecked());
+    settings.setValue("deskewAndRotateOnlyFirstTP",ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked());
+    settings.setValue("stitchOnlyFirstTP",ui->stitchOnlyFirstTPCheckBox->isChecked());
+
+    // Save Pipeline Settings
+
+    settings.setValue("Deskew",ui->deskewCheckBox->isChecked());
+    settings.setValue("Rotate",ui->rotateCheckBox->isChecked());
+    settings.setValue("Stitch",ui->stitchCheckBox->isChecked());
+    settings.setValue("deskewAndRotate",ui->deskewAndRotateCheckBox->isChecked());
+
+    settings.setValue("deskewDecon",ui->deskewDeconCheckBox->isChecked());
+    settings.setValue("rotateDecon",ui->rotateDeconCheckBox->isChecked());
+    settings.setValue("deskewAndRotateDecon",ui->deskewAndRotateDeconCheckBox->isChecked());
+    settings.setValue("stitchDecon",ui->stitchDeconCheckBox->isChecked());
+
+    // Save DSR Settings
+
+    settings.setValue("parseSettingFile",ui->parseSettingsFileCheckBox->isChecked());
+    settings.setValue("flipZstack",ui->flipZStackCheckBox->isChecked());
+
+    settings.setValue("LLFFCorrection",ui->llffCorrectionCheckBox->isChecked());
+
+    settings.beginWriteArray("LSImagePaths");
+    for(unsigned int i = 0; i < lsImagePaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("LSImagePathsi", QString::fromStdString(lsImagePaths.at(i)));
+    }
+    settings.endArray();
+
+    settings.beginWriteArray("BackgroundPaths");
+    for(unsigned int i = 0; i < backgroundPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("BackgroundPathsi", QString::fromStdString(backgroundPaths.at(i)));
+    }
+    settings.endArray();
+
+    // Save DSR Advanced Settings
+
+    settings.setValue("BKRemoval",guiVals.BKRemoval);
+    settings.setValue("LowerLimit",guiVals.LowerLimit);
+    settings.setValue("resampleType",QString::fromStdString(guiVals.resampleType));
+    settings.setValue("resample",guiVals.resample);
+
+    // Save Stitch Settings
+
+    settings.setValue("stitchPipeline", ui->stitchPipelineComboBox->currentText());
+    settings.setValue("stitchResultsDir", ui->resultsDirLineEdit->text());
+    settings.setValue("imageListFullPaths", ui->imageListFullPathsLineEdit->text());
+    settings.setValue("axisOrder", ui->axisOrderLineEdit->text());
+    settings.setValue("blendMethod", ui->blendMethodComboBox->currentText());
+    settings.setValue("xcorrShift", ui->xCorrShiftCheckBox->isChecked());
+    settings.setValue("xcorrMode", ui->xCorrModeComboBox->currentText());
+
+    settings.setValue("boundBox", ui->boundBoxCheckBox->isChecked());
+    settings.setValue("bbYMin", ui->boundBoxYMinSpinBox->value());
+    settings.setValue("bbXMin", ui->boundBoxXMinSpinBox->value());
+    settings.setValue("bbZMin", ui->boundBoxZMinSpinBox->value());
+    settings.setValue("bbYMax", ui->boundBoxYMaxSpinBox->value());
+    settings.setValue("bbXMax", ui->boundBoxXMaxSpinBox->value());
+    settings.setValue("bbZMax", ui->boundBoxZMaxSpinBox->value());
+
+    settings.setValue("primaryCh", ui->primaryCHLineEdit->text());
+
+    // Save Decon Settings
+
+    settings.setValue("cudaDecon", ui->cudaDeconRadioButton->isChecked());
+    settings.setValue("cppDecon", ui->cppDeconRadioButton->isChecked());
+    settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
+    settings.setValue("DSR", ui->deskewAndRotateDeconCheckBox->isChecked());
+    settings.setValue("Background", ui->backgroundIntensityLineEdit->text());
+    settings.setValue("dzPSF", ui->dzPSFLineEdit->text());
+    settings.setValue("edgeErosion", ui->edgeErosionLineEdit->text());
+    settings.setValue("ErodeByFTP", ui->erodeByFTPCheckBox->isChecked());
+    settings.setValue("deconRotate", ui->deconRotateCheckBox->isChecked());
+
+
+    // Save Decon Advaced Settings
+
+    settings.setValue("cppDeconPath",QString::fromStdString(guiVals.cppDeconPath));
+    settings.setValue("loadModules",QString::fromStdString(guiVals.loadModules));
+    settings.setValue("cudaDeconPath",QString::fromStdString(guiVals.cudaDeconPath));
+    settings.setValue("OTFGENPath",QString::fromStdString(guiVals.OTFGENPath));
+
+    settings.beginWriteArray("psfFullpaths");
+    for(unsigned int i = 0; i < psfFullPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("psfFullpathsi", QString::fromStdString(psfFullPaths.at(i)));
+    }
+    settings.endArray();
+
+    settings.setValue("DeconIter", ui->deconIterationsLineEdit->text());
+    settings.setValue("rotatedPSF", ui->rotatePSFCheckBox->isChecked());
+
+    // Save Job Settings
+
+    settings.setValue("parseCluster", ui->parseClusterCheckBox->isChecked());
+    settings.setValue("cpusPerTask", ui->cpusPerTaskLineEdit->text());
+    settings.setValue("cpuOnlyNodes", ui->cpuOnlyNodesCheckBox->isChecked());
+
+    // Save Advanced Job Settings
+
+    settings.setValue("largeFile",guiVals.largeFile);
+    settings.setValue("jobLogDir",QString::fromStdString(guiVals.jobLogDir));
+    settings.setValue("uuid",QString::fromStdString(guiVals.uuid));
+    settings.setValue("maxTrialNum",guiVals.maxTrialNum);
+    settings.setValue("unitWaitTime",guiVals.unitWaitTime);
+    settings.setValue("minModifyTime",guiVals.minModifyTime);
+    settings.setValue("maxModifyTime",guiVals.maxModifyTime);
+    settings.setValue("maxWaitLoopNum",guiVals.maxWaitLoopNum);
+    settings.setValue("MatlabLaunchStr",QString::fromStdString(guiVals.MatlabLaunchStr));
+    settings.setValue("SlurmParam",QString::fromStdString(guiVals.SlurmParam));
+
+    settings.endGroup();
+}
+
+void MainWindow::readSettings()
+{
+    QSettings settings("ABC", "LLSM GUI");
+
+    settings.beginGroup("MainWindow");
+    // resize(settings.value("size", QSize(400, 400)).toSize());
+    //move(settings.value("pos", QPoint(200, 200)).toPoint());
+
+    // Read Data Paths
+    int size = settings.beginReadArray("dPaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        dPaths.push_back(settings.value("dPathsi").toString().toStdString());
+    }
+    settings.endArray();
+
+    // Read Main Settings
+
+    ui->deskewOverwriteDataCheckBox->setChecked(settings.value("deskewOverwrite").toBool());
+    ui->rotateOverwriteDataCheckBox->setChecked(settings.value("rotateOverwrite").toBool());
+    ui->deskewAndRotateOverwriteDataCheckBox->setChecked(settings.value("deskewAndRotateOverwrite").toBool());
+    ui->stitchOverwriteDataCheckBox->setChecked(settings.value("stitchOverwrite").toBool());
+
+    ui->streamingCheckBox->setChecked(settings.value("Streaming").toBool());
+
+    // TODO: ADD READ FOR CHANNEL PATTERNS
+
+    guiVals.skewAngle = settings.value("skewAngle").toDouble();
+    ui->dzLineEdit->setText(settings.value("dz").toString());
+    guiVals.xyPixelSize = settings.value("xyPixelSize").toDouble();
+    guiVals.Reverse = settings.value("Reverse").toBool();
+    ui->objectiveScanCheckBox->setChecked(settings.value("objectiveScan").toBool());
+    guiVals.sCMOSCameraFlip = settings.value("sCMOSCameraFlip").toBool();
+
+    ui->deskewSave16BitCheckBox->setChecked(settings.value("deskewSave16Bit").toBool());
+    ui->rotateSave16BitCheckBox->setChecked(settings.value("rotateSave16Bit").toBool());
+    ui->deskewAndRotateSave16BitCheckBox->setChecked(settings.value("deskewAndRotateSave16Bit").toBool());
+    ui->stitchSave16BitCheckBox->setChecked(settings.value("stitchSave16Bit").toBool());
+
+    ui->deskewOnlyFirstTPCheckBox->setChecked(settings.value("deskewOnlyFirstTP").toBool());
+    ui->rotateOnlyFirstTPCheckBox->setChecked(settings.value("rotateOnlyFirstTP").toBool());
+    ui->deskewAndRotateOnlyFirstTPCheckBox->setChecked(settings.value("deskewAndRotateOnlyFirstTP").toBool());
+    ui->stitchOnlyFirstTPCheckBox->setChecked(settings.value("stitchOnlyFirstTP").toBool());
+
+    // Read Pipeline Settings
+
+    ui->deskewCheckBox->setChecked(settings.value("Deskew").toBool());
+    ui->rotateCheckBox->setChecked(settings.value("Rotate").toBool());
+    ui->stitchCheckBox->setChecked(settings.value("Stitch").toBool());
+    ui->deskewAndRotateCheckBox->setChecked(settings.value("deskewAndRotate").toBool());
+
+    ui->deskewDeconCheckBox->setChecked(settings.value("deskewDecon").toBool());
+    ui->rotateDeconCheckBox->setChecked(settings.value("rotateDecon").toBool());
+    ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("deskewAndRotateDecon").toBool());
+    ui->stitchDeconCheckBox->setChecked(settings.value("stitchDecon").toBool());
+
+    // Read DSR Settings
+
+    ui->parseSettingsFileCheckBox->setChecked(settings.value("parseSettingFile").toBool());
+    ui->flipZStackCheckBox->setChecked(settings.value("flipZstack").toBool());
+
+    ui->llffCorrectionCheckBox->setChecked(settings.value("LLFFCorrection").toBool());
+
+    size = settings.beginReadArray("LSImagePaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        lsImagePaths.push_back(settings.value("LSImagePathsi").toString().toStdString());
+    }
+    settings.endArray();
+
+    size = settings.beginReadArray("BackgroundPaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        backgroundPaths.push_back(settings.value("BackgroundPathsi").toString().toStdString());
+    }
+    settings.endArray();
+
+    // Read DSR Advanced Settings
+
+    guiVals.BKRemoval = settings.value("BKRemoval").toBool();
+    guiVals.BKRemoval = settings.value("BKRemoval").toDouble();
+    guiVals.resampleType = settings.value("resampleType").toString().toStdString();
+    guiVals.resample = settings.value("resample").toULongLong();
+
+    // Read Stitch Settings
+    ui->stitchPipelineComboBox->setCurrentText(settings.value("stitchPipeline").toString());
+    ui->resultsDirLineEdit->setText(settings.value("stitchResultsDir").toString());
+    ui->imageListFullPathsLineEdit->setText(settings.value("imageListFullPaths").toString());
+    ui->axisOrderLineEdit->setText(settings.value("axisOrder").toString());
+    ui->blendMethodComboBox->setCurrentText(settings.value("blendMethod").toString());
+    ui->xCorrShiftCheckBox->setChecked(settings.value("xcorrShift").toBool());
+    ui->xCorrModeComboBox->setCurrentText(settings.value("xcorrMode").toString());
+
+    ui->boundBoxCheckBox->setChecked(settings.value("boundBox").toBool());
+    ui->boundBoxYMinSpinBox->setValue(settings.value("bbYMin").toInt());
+    ui->boundBoxXMinSpinBox->setValue(settings.value("bbXMin").toInt());
+    ui->boundBoxZMinSpinBox->setValue(settings.value("bbZMin").toInt());
+    ui->boundBoxYMaxSpinBox->setValue(settings.value("bbYMax").toInt());
+    ui->boundBoxXMinSpinBox->setValue(settings.value("bbXMax").toInt());
+    ui->boundBoxZMinSpinBox->setValue(settings.value("bbZMin").toInt());
+
+    ui->primaryCHLineEdit->setText(settings.value("primaryCh").toString());
+
+
+    // Read Decon Settings
+
+    ui->cudaDeconRadioButton->setChecked(settings.value("cudaDecon").toBool());
+    ui->cppDeconRadioButton->setChecked(settings.value("cppDecon").toBool());
+    ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
+    ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("DSR").toBool());
+    ui->backgroundIntensityLineEdit->setText(settings.value("Background").toString());
+    ui->dzPSFLineEdit->setText(settings.value("dzPSF").toString());
+    ui->edgeErosionLineEdit->setText(settings.value("edgeErosion").toString());
+    ui->erodeByFTPCheckBox->setChecked(settings.value("ErodeByFTP").toBool());
+    ui->deconRotateCheckBox->setChecked(settings.value("deconRotate").toBool());
+
+    // Read Decon Advaced Settings
+
+    guiVals.cppDeconPath = settings.value("cppDeconPath").toString().toStdString();
+    guiVals.loadModules = settings.value("loadModules").toString().toStdString();
+    guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString().toStdString();
+    guiVals.OTFGENPath = settings.value("OTFGENPath").toString().toStdString();
+
+    size = settings.beginReadArray("psfFullpaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        psfFullPaths.push_back(settings.value("psfFullpathsi").toString().toStdString());
+    }
+    settings.endArray();
+
+    ui->deconIterationsLineEdit->setText(settings.value("DeconIter").toString());
+    ui->rotatePSFCheckBox->setChecked(settings.value("rotatedPSF").toBool());
+
+    // Read Job Settings
+    ui->parseClusterCheckBox->setChecked(settings.value("parseCluster").toBool());
+    ui->cpusPerTaskLineEdit->setText(settings.value("cpusPerTask").toString());
+    ui->cpuOnlyNodesCheckBox->setChecked(settings.value("cpuOnlyNodes").toBool());
+
+
+    // Save Advanced Job Settings
+
+    guiVals.largeFile = settings.value("largeFile").toBool();
+    guiVals.jobLogDir = settings.value("jobLogDir").toString().toStdString();
+    guiVals.uuid = settings.value("uuid").toString().toStdString();
+    guiVals.maxTrialNum = settings.value("maxTrialNum").toULongLong();
+    guiVals.unitWaitTime = settings.value("unitWaitTime").toULongLong();
+    guiVals.minModifyTime = settings.value("minModifyTime").toULongLong();
+    guiVals.maxModifyTime = settings.value("maxModifyTime").toULongLong();
+    guiVals.maxWaitLoopNum = settings.value("maxWaitLoopNum").toULongLong();
+    guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString().toStdString();
+    guiVals.SlurmParam = settings.value("SlurmParam").toString().toStdString();
+
+    settings.endGroup();
 }
 
 // Reenable submit button for new jobs

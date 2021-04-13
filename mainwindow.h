@@ -5,6 +5,7 @@
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
+#include <QCloseEvent>
 
 
 
@@ -90,7 +91,12 @@ public slots:
 signals:
     void jobStart(const size_t outA, const std::vector<matlab::data::Array> &data);
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
+    void writeSettings();
+    void readSettings();
     matlabThread *mThread;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
