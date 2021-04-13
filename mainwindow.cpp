@@ -139,7 +139,7 @@ void MainWindow::writeSettings()
     settings.setValue("BKRemoval",guiVals.BKRemoval);
     settings.setValue("LowerLimit",guiVals.LowerLimit);
     settings.setValue("resampleType",QString::fromStdString(guiVals.resampleType));
-    settings.setValue("resample",guiVals.resample);
+    settings.setValue("resample",QVariant::fromValue(guiVals.resample));
 
     // Save Stitch Settings
 
