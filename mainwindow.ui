@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -266,22 +266,6 @@
          </property>
          <property name="text">
           <string>Channel Patterns</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="channelPatternsLineEdit">
-         <property name="toolTip">
-          <string>Cam[A/B]_ch[0-9] or ch[0-9]. EX for 3 patterns: CamA_ch0,CamB_ch0,CamB_ch1</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-         <property name="placeholderText">
-          <string>Cam[A/B]_ch[0-9] or ch[0-9]. EX for 3 patterns: CamA_ch0,CamB_ch0,CamB_ch1</string>
          </property>
         </widget>
        </item>
@@ -2537,7 +2521,7 @@
      <x>0</x>
      <y>0</y>
      <width>801</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

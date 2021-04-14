@@ -6,11 +6,7 @@
 #include "jobadvanced.h"
 #include "datapaths.h"
 #include "consoleoutput.h"
-#include <QFileDialog>
-#include <QDir>
-#include <QFileInfo>
-#include <QThread>
-#include <QMessageBox>
+
 
 using namespace matlab::engine;
 
@@ -37,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Stitch),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
+
+    // Restore previous settings
     readSettings();
 }
 
@@ -163,6 +161,7 @@ void MainWindow::writeSettings()
 
     // Save Decon Settings
 
+    settings.setValue("matlabDecon", ui->matlabDeconRadioButton->isChecked());
     settings.setValue("cudaDecon", ui->cudaDeconRadioButton->isChecked());
     settings.setValue("cppDecon", ui->cppDeconRadioButton->isChecked());
     settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
@@ -323,6 +322,7 @@ void MainWindow::readSettings()
 
     // Read Decon Settings
 
+    ui->matlabDeconRadioButton->setChecked(settings.value("matlabDecon").toBool());
     ui->cudaDeconRadioButton->setChecked(settings.value("cudaDecon").toBool());
     ui->cppDeconRadioButton->setChecked(settings.value("cppDecon").toBool());
     ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
@@ -446,7 +446,7 @@ void MainWindow::on_submitButton_clicked()
 
     // FIX SO IT ISN'T HARDCODED
     data.push_back(factory.createCharArray("ChannelPatterns"));
-    data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
+    //data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
 
     // Currently not used
     //data.push_back(factory.createCharArray("Channels"));
@@ -1014,6 +1014,45 @@ void MainWindow::on_addPathsButton_clicked()
     dataPaths daPaths(dPaths, true);
     daPaths.setModal(true);
     daPaths.exec();
+
+    // Find all possible channels
+    if(dPaths.size()){
+        if(channelWidgets.size()){
+            for(auto &i : channelWidgets){
+                delete i.first;
+                delete i.second;
+            }
+        }
+        channelWidgets.clear();
+        std::vector<QString> channels;
+        for(const std::string &i : dPaths){
+            QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
+            QString c;
+            QRegularExpression re("Cam\\w_ch\\d");
+            QRegularExpressionMatch rmatch;
+            while(cPath.hasNext()){
+                c = cPath.next();
+                //qDebug() << c;
+                rmatch = re.match(c);
+                if (!rmatch.captured(0).isEmpty()) channels.push_back(rmatch.captured(0));
+                //qDebug() << rmatch.captured(0);
+
+            }
+        }
+        for(const QString &ch : channels){
+
+            QLabel* label = new QLabel(ui->Main);
+            label->setTextFormat(Qt::RichText);
+            label->setText("<b>"+ch+"<\b>");
+            ui->horizontalLayout_4->addWidget(label);
+
+            QCheckBox* checkBox = new QCheckBox(ui->Main);
+            ui->horizontalLayout_4->addWidget(checkBox);
+            channelWidgets.push_back(std::make_pair(label,checkBox));
+        }
+    }
+
+
 }
 
 void MainWindow::on_imageListFullPathsBrowseButton_clicked()

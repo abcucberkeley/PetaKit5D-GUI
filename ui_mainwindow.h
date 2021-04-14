@@ -56,7 +56,6 @@ public:
     QWidget *layoutWidget2;
     QHBoxLayout *horizontalLayout_4;
     QLabel *channelPatternsLabel;
-    QLineEdit *channelPatternsLineEdit;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_15;
     QHBoxLayout *horizontalLayout_46;
@@ -377,12 +376,6 @@ public:
         channelPatternsLabel->setFont(font2);
 
         horizontalLayout_4->addWidget(channelPatternsLabel);
-
-        channelPatternsLineEdit = new QLineEdit(layoutWidget2);
-        channelPatternsLineEdit->setObjectName(QString::fromUtf8("channelPatternsLineEdit"));
-        channelPatternsLineEdit->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-
-        horizontalLayout_4->addWidget(channelPatternsLineEdit);
 
         horizontalLayoutWidget = new QWidget(Main);
         horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
@@ -1407,7 +1400,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 801, 20));
+        menubar->setGeometry(QRect(0, 0, 801, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -1415,7 +1408,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -1436,11 +1429,6 @@ public:
         streamingLabel->setText(QCoreApplication::translate("MainWindow", "Real-time Processing", nullptr));
         streamingCheckBox->setText(QString());
         channelPatternsLabel->setText(QCoreApplication::translate("MainWindow", "Channel Patterns", nullptr));
-#if QT_CONFIG(tooltip)
-        channelPatternsLineEdit->setToolTip(QCoreApplication::translate("MainWindow", "Cam[A/B]_ch[0-9] or ch[0-9]. EX for 3 patterns: CamA_ch0,CamB_ch0,CamB_ch1", nullptr));
-#endif // QT_CONFIG(tooltip)
-        channelPatternsLineEdit->setText(QString());
-        channelPatternsLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Cam[A/B]_ch[0-9] or ch[0-9]. EX for 3 patterns: CamA_ch0,CamB_ch0,CamB_ch1", nullptr));
         deskewLabel->setText(QCoreApplication::translate("MainWindow", "Deskew", nullptr));
         deskewCheckBox->setText(QString());
         deskewDeconCheckBox->setText(QString());

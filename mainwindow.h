@@ -6,7 +6,11 @@
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
 #include <QCloseEvent>
-
+#include <QFileDialog>
+#include <QDir>
+#include <QFileInfo>
+#include <QThread>
+#include <QMessageBox>
 
 
 QT_BEGIN_NAMESPACE
@@ -100,6 +104,7 @@ private:
     matlabThread *mThread;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
     std::vector<std::string> lsImagePaths;
     std::vector<std::string> backgroundPaths;
     std::vector<std::string> psfFullPaths;
