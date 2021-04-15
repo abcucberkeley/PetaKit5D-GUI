@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(ui->tabWidget);
 
     // Set a variable to see how many threads the user can use for matlab
-    QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
-    ui->maxCPUs->setText(maxCPU);
+    //QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
+    //ui->maxCPUs->setText(maxCPU);
 
     // Threading and connecting signals/slots
     mThread = new matlabThread(this);
