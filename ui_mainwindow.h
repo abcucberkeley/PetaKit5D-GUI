@@ -56,6 +56,7 @@ public:
     QWidget *layoutWidget2;
     QHBoxLayout *horizontalLayout_4;
     QLabel *channelPatternsLabel;
+    QSpacerItem *horizontalSpacer_8;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_15;
     QHBoxLayout *horizontalLayout_46;
@@ -367,15 +368,24 @@ public:
 
         layoutWidget2 = new QWidget(Main);
         layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(180, 130, 501, 25));
+        layoutWidget2->setGeometry(QRect(160, 130, 571, 25));
         horizontalLayout_4 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
         channelPatternsLabel = new QLabel(layoutWidget2);
         channelPatternsLabel->setObjectName(QString::fromUtf8("channelPatternsLabel"));
+        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(channelPatternsLabel->sizePolicy().hasHeightForWidth());
+        channelPatternsLabel->setSizePolicy(sizePolicy);
         channelPatternsLabel->setFont(font2);
 
         horizontalLayout_4->addWidget(channelPatternsLabel);
+
+        horizontalSpacer_8 = new QSpacerItem(30, 20, QSizePolicy::Maximum, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_8);
 
         horizontalLayoutWidget = new QWidget(Main);
         horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
@@ -1121,11 +1131,11 @@ public:
         deconTypeButtonGroup->setObjectName(QString::fromUtf8("deconTypeButtonGroup"));
         deconTypeButtonGroup->addButton(matlabDeconRadioButton);
         matlabDeconRadioButton->setObjectName(QString::fromUtf8("matlabDeconRadioButton"));
-        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(matlabDeconRadioButton->sizePolicy().hasHeightForWidth());
-        matlabDeconRadioButton->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(matlabDeconRadioButton->sizePolicy().hasHeightForWidth());
+        matlabDeconRadioButton->setSizePolicy(sizePolicy1);
         matlabDeconRadioButton->setAutoFillBackground(false);
 
         horizontalLayout_31->addWidget(matlabDeconRadioButton);
@@ -1145,8 +1155,8 @@ public:
         cudaDeconRadioButton = new QRadioButton(layoutWidget14);
         deconTypeButtonGroup->addButton(cudaDeconRadioButton);
         cudaDeconRadioButton->setObjectName(QString::fromUtf8("cudaDeconRadioButton"));
-        sizePolicy.setHeightForWidth(cudaDeconRadioButton->sizePolicy().hasHeightForWidth());
-        cudaDeconRadioButton->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(cudaDeconRadioButton->sizePolicy().hasHeightForWidth());
+        cudaDeconRadioButton->setSizePolicy(sizePolicy1);
         cudaDeconRadioButton->setAutoFillBackground(false);
 
         horizontalLayout_29->addWidget(cudaDeconRadioButton);
@@ -1166,8 +1176,8 @@ public:
         cppDeconRadioButton = new QRadioButton(layoutWidget15);
         deconTypeButtonGroup->addButton(cppDeconRadioButton);
         cppDeconRadioButton->setObjectName(QString::fromUtf8("cppDeconRadioButton"));
-        sizePolicy.setHeightForWidth(cppDeconRadioButton->sizePolicy().hasHeightForWidth());
-        cppDeconRadioButton->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(cppDeconRadioButton->sizePolicy().hasHeightForWidth());
+        cppDeconRadioButton->setSizePolicy(sizePolicy1);
         cppDeconRadioButton->setAutoFillBackground(false);
 
         horizontalLayout_30->addWidget(cppDeconRadioButton);

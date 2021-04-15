@@ -78,7 +78,22 @@ void MainWindow::writeSettings()
 
     settings.setValue("Streaming",ui->streamingCheckBox->isChecked());
 
-    // TODO: ADD SAVE FOR CHANNEL PATTERNS
+    // SAVE FOR CHANNEL PATTERNS
+    settings.beginWriteArray("channelLabels");
+    for(unsigned int i = 0; i < channelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("channelLabelsi", channelWidgets[i].first->text());
+    }
+    settings.endArray();
+
+    settings.beginWriteArray("channelChecks");
+    for(unsigned int i = 0; i < channelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("channelChecksi", channelWidgets[i].second->isChecked());
+    }
+    settings.endArray();
 
     settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
@@ -239,7 +254,43 @@ void MainWindow::readSettings()
 
     ui->streamingCheckBox->setChecked(settings.value("Streaming").toBool());
 
-    // TODO: ADD READ FOR CHANNEL PATTERNS
+    // READ FOR CHANNEL PATTERNS
+
+    // temp vectors to hold labels and checkbox values
+    std::vector<QString> tLabels;
+    std::vector<bool> tChecks;
+
+    // Read labels and checks into vectors
+    size = settings.beginReadArray("channelLabels");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        tLabels.push_back(settings.value("channelLabelsi").toString());
+    }
+    settings.endArray();
+
+    size = settings.beginReadArray("channelChecks");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        tChecks.push_back(settings.value("channelChecksi").toBool());
+    }
+    settings.endArray();
+
+    // Create widgets and put them in channelWidgets
+    for(size_t i = 0; i < tLabels.size(); i++){
+        QLabel* label = new QLabel(ui->Main);
+        label->setTextFormat(Qt::RichText);
+        label->setText("<b>"+tLabels[i]+"<\b>");
+        ui->horizontalLayout_4->addWidget(label);
+
+        QCheckBox* checkBox = new QCheckBox(ui->Main);
+        checkBox->setChecked(tChecks[i]);
+        ui->horizontalLayout_4->addWidget(checkBox);
+
+        channelWidgets.push_back(std::make_pair(label,checkBox));
+
+    }
 
     guiVals.skewAngle = settings.value("skewAngle").toDouble();
     ui->dzLineEdit->setText(settings.value("dz").toString());
@@ -437,15 +488,32 @@ void MainWindow::on_submitButton_clicked()
 
     // Main Settings
 
-    // FIX THIS
+    // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
     data.push_back(factory.createCharArray("Overwrite"));
-    data.push_back(factory.createScalar<bool>(ui->deskewOverwriteDataCheckBox->isChecked() || ui->rotateOverwriteDataCheckBox->isChecked() || ui->deskewAndRotateOverwriteDataCheckBox->isChecked() || ui->stitchOverwriteDataCheckBox->isChecked()));
+    if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
+    else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
 
     data.push_back(factory.createCharArray("Streaming"));
     data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
 
-    // FIX SO IT ISN'T HARDCODED
-    data.push_back(factory.createCharArray("ChannelPatterns"));
+    // Channel Patterns
+    if(channelWidgets.size()){
+        data.push_back(factory.createCharArray("ChannelPatterns"));
+        // Grab indexes of checked boxes
+        std::vector<int> indexes;
+        for(size_t i = 0; i < channelWidgets.size(); i++){
+            if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+        }
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+        int cpi = 0;
+        // Go through checked indexes and the label text (channel pattern) in the cell array
+        for(int i : indexes){
+            channelPatterns[cpi] = factory.createCharArray(channelWidgets[i].first->text().toStdString());
+            cpi++;
+        }
+        data.push_back(channelPatterns);
+    }
+
     //data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
 
     // Currently not used
@@ -472,7 +540,7 @@ void MainWindow::on_submitButton_clicked()
 
     // This needs to change FIX
     data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createArray<bool>({1,4},{false,ui->stitchSave16BitCheckBox->isChecked(),false,false}));
+    data.push_back(factory.createArray<bool>({1,4},{ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
 
     // This needs to change FIX
     data.push_back(factory.createCharArray("onlyFirstTP"));
@@ -481,12 +549,29 @@ void MainWindow::on_submitButton_clicked()
 
     // Pipeline Settings
 
-    // Some logic with these needs fixing
+    //
+    // TODO: Test this Logic more
+    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked()) && ui->deskewAndRotateCheckBox->isChecked()){
+        data.push_back(factory.createCharArray("DSRCombined"));
+        data.push_back(factory.createScalar<bool>(true));
+
+        data.push_back(factory.createCharArray("Deskew"));
+        data.push_back(factory.createScalar<bool>(true));
+
+        data.push_back(factory.createCharArray("Rotate"));
+        data.push_back(factory.createScalar<bool>(true));
+
+    }
+    else{
+    data.push_back(factory.createCharArray("DSRCombined"));
+    data.push_back(factory.createScalar<bool>(false));
+
     data.push_back(factory.createCharArray("Deskew"));
     data.push_back(factory.createScalar<bool>(ui->deskewCheckBox->isChecked()));
 
     data.push_back(factory.createCharArray("Rotate"));
     data.push_back(factory.createScalar<bool>(ui->rotateCheckBox->isChecked()));
+    }
 
     data.push_back(factory.createCharArray("Stitch"));
     data.push_back(factory.createScalar<bool>(ui->stitchCheckBox->isChecked()));
@@ -506,10 +591,6 @@ void MainWindow::on_submitButton_clicked()
 
     data.push_back(factory.createCharArray("flipZstack"));
     data.push_back(factory.createScalar<bool>(ui->flipZStackCheckBox->isChecked()));
-
-    // Probably removing this. Always false for now
-    data.push_back(factory.createCharArray("DSRCombined"));
-    data.push_back(factory.createScalar<bool>(false));
 
     data.push_back(factory.createCharArray("LLFFCorrection"));
     data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
@@ -1019,8 +1100,8 @@ void MainWindow::on_addPathsButton_clicked()
     if(dPaths.size()){
         if(channelWidgets.size()){
             for(auto &i : channelWidgets){
-                delete i.first;
-                delete i.second;
+                if(i.first) delete i.first;
+                if(i.second) delete i.second;
             }
         }
         channelWidgets.clear();
