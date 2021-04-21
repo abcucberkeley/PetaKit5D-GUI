@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
-    // Set a variable to see how many threads the user can use for matlab
+    // Set a variable to see how many threads the user can use for matlab (Unused for now)
     //QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
     //ui->maxCPUs->setText(maxCPU);
 
@@ -46,19 +46,20 @@ MainWindow::~MainWindow()
     if(!mThread->isFinished()) mThread->terminate();
 }
 
+// Event triggered when main window is closed
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+        // Write current user settings
         writeSettings();
         event->accept();
 }
 
+// Write user settings
 void MainWindow::writeSettings()
 {
     QSettings settings("ABC", "LLSM GUI");
 
     settings.beginGroup("MainWindow");
-    //settings.setValue("size", size());
-    //settings.setValue("pos", pos());
 
     // Save Data Paths
     settings.beginWriteArray("dPaths");
@@ -228,13 +229,12 @@ void MainWindow::writeSettings()
     settings.endGroup();
 }
 
+// Restore previous user settings
 void MainWindow::readSettings()
 {
     QSettings settings("ABC", "LLSM GUI");
 
     settings.beginGroup("MainWindow");
-    // resize(settings.value("size", QSize(400, 400)).toSize());
-    //move(settings.value("pos", QPoint(200, 200)).toPoint());
 
     // Read Data Paths
     int size = settings.beginReadArray("dPaths");
