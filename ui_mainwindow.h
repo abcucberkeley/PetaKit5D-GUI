@@ -251,7 +251,6 @@ public:
     QPushButton *jobAdvancedSettingsButton;
     QPushButton *submitButton;
     QPushButton *jobPreviousButton;
-    QLabel *maxCPUs;
     QWidget *layoutWidget24;
     QVBoxLayout *verticalLayout_4;
     QHBoxLayout *horizontalLayout_41;
@@ -368,7 +367,7 @@ public:
 
         layoutWidget2 = new QWidget(Main);
         layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(160, 130, 571, 25));
+        layoutWidget2->setGeometry(QRect(140, 130, 581, 25));
         horizontalLayout_4 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
@@ -1137,6 +1136,7 @@ public:
         sizePolicy1.setHeightForWidth(matlabDeconRadioButton->sizePolicy().hasHeightForWidth());
         matlabDeconRadioButton->setSizePolicy(sizePolicy1);
         matlabDeconRadioButton->setAutoFillBackground(false);
+        matlabDeconRadioButton->setChecked(true);
 
         horizontalLayout_31->addWidget(matlabDeconRadioButton);
 
@@ -1343,11 +1343,6 @@ public:
         jobPreviousButton->setObjectName(QString::fromUtf8("jobPreviousButton"));
         jobPreviousButton->setGeometry(QRect(240, 420, 111, 61));
         jobPreviousButton->setFont(font5);
-        maxCPUs = new QLabel(Job);
-        maxCPUs->setObjectName(QString::fromUtf8("maxCPUs"));
-        maxCPUs->setEnabled(true);
-        maxCPUs->setGeometry(QRect(510, 160, 151, 61));
-        maxCPUs->setFont(font5);
         layoutWidget24 = new QWidget(Job);
         layoutWidget24->setObjectName(QString::fromUtf8("layoutWidget24"));
         layoutWidget24->setGeometry(QRect(310, 110, 191, 161));
@@ -1410,7 +1405,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 801, 21));
+        menubar->setGeometry(QRect(0, 0, 801, 20));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -1557,7 +1552,6 @@ public:
         jobAdvancedSettingsButton->setText(QCoreApplication::translate("MainWindow", "Job Advanced Settings", nullptr));
         submitButton->setText(QCoreApplication::translate("MainWindow", "Submit", nullptr));
         jobPreviousButton->setText(QCoreApplication::translate("MainWindow", "Previous", nullptr));
-        maxCPUs->setText(QCoreApplication::translate("MainWindow", "Max Allowed: ", nullptr));
         parseClusterLabel->setText(QCoreApplication::translate("MainWindow", "Parse Cluster", nullptr));
         parseClusterCheckBox->setText(QString());
         cpusPerTaskLabel->setText(QCoreApplication::translate("MainWindow", "CPUs Per Task", nullptr));
