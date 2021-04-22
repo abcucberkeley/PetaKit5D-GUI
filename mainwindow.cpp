@@ -6,6 +6,7 @@
 #include "jobadvanced.h"
 #include "datapaths.h"
 #include "consoleoutput.h"
+#include <QTextDocument>
 
 
 using namespace matlab::engine;
@@ -508,7 +509,12 @@ void MainWindow::on_submitButton_clicked()
         int cpi = 0;
         // Go through checked indexes and the label text (channel pattern) in the cell array
         for(int i : indexes){
-            channelPatterns[cpi] = factory.createCharArray(channelWidgets[i].first->text().toStdString());
+
+            // Convert from rich text to plain text
+            QTextDocument toPlain;
+            toPlain.setHtml(channelWidgets[i].first->text());
+
+            channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
             cpi++;
         }
         data.push_back(channelPatterns);
@@ -622,6 +628,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
     //guiVals.resampleType = "xy_isotropic";
+
     data.push_back(factory.createCharArray("resampleType"));
     data.push_back(factory.createCharArray(guiVals.resampleType));
 
