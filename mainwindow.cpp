@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Threading and connecting signals/slots
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
-    connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
-    mThread->start(QThread::LowPriority);
+    //connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
+    mThread->start(QThread::HighestPriority);
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
