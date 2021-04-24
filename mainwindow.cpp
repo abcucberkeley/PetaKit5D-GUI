@@ -525,8 +525,6 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(channelPatterns);
     }
 
-    //data.push_back(factory.createCellArray({1,3},factory.createCharArray(ui->channelPatternsLineEdit->text().toStdString()),factory.createCharArray("CamB_ch1"),factory.createCharArray("CamB_ch1")));
-
     // Currently not used
     //data.push_back(factory.createCharArray("Channels"));
     //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
@@ -1119,7 +1117,7 @@ void MainWindow::on_addPathsButton_clicked()
         channelWidgets.clear();
         std::vector<QString> channels;
         for(const std::string &i : dPaths){
-            // Looking for channel patterns recursively
+            // Looking for channel patterns in the given directory
             //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
             QDirIterator cPath(QString::fromStdString(i));
             QString c;
@@ -1127,11 +1125,11 @@ void MainWindow::on_addPathsButton_clicked()
             QRegularExpressionMatch rmatch;
             while(cPath.hasNext()){
                 c = cPath.next();
-                //qDebug() << c;
                 rmatch = re.match(c);
+
                 // Check if there is a match and that it is not already in the vector
                 if (!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
-                //qDebug() << rmatch.captured(0);
+
 
             }
         }
@@ -1241,7 +1239,17 @@ void MainWindow::on_backgroundAddPathsButton_clicked()
 // Open window for adding PSF Paths
 void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
-    dataPaths daPaths(psfFullPaths, false, "PSF");
+    size_t channels = 0;
+    std::vector<QString> channelNames;
+    for(auto i : channelWidgets){
+       if(i.second->isChecked()){
+           channels++;
+           //QTextDocument toPlain;
+           //toPlain.setHtml(i.first->text());
+           channelNames.push_back(i.first->text());
+       }
+    }
+    dataPaths daPaths(psfFullPaths, false, channels, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
 }

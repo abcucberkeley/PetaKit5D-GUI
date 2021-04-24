@@ -49,13 +49,17 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *par
     }
 }
 
-// folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
-dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, std::string pathType, QWidget *parent) :
+// For PSF data paths
+dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
     ui->setupUi(this);
     this->folder = folder;
+
+    delete ui->addPathButton;
+    delete ui->removePathButton;
+
 
     // pointer to hold the passed in paths vector
     dpHand = &dPaths;
@@ -63,7 +67,7 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, std::string 
     // if there are no current data paths in the vector set it to 1
     // else its the size of how data paths there are
     if(dPaths.size() == 0) activePaths = 1;
-    else activePaths = dPaths.size();
+    else activePaths = channels;
 
     // Check if max paths
     if(activePaths < 6) maxPaths = false;
@@ -79,9 +83,11 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, std::string 
 
     // Initial visibility of the widgets
     for(size_t i = 0; i < paths.size(); i++){
-        if(i == 0 && dPaths.size() == 0) continue;
-        else if(i < dPaths.size()){
-            std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
+        if(i == 0 && channels == 0) continue;
+        else if(i < channels){
+            std::get<0>(paths.at(i))->setTextFormat(Qt::RichText);
+            std::get<0>(paths.at(i))->setText(channelNames.at(i));
+            if(i < dPaths.size()) std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
         }
         else{
             std::get<0>(paths.at(i))->setVisible(false);
@@ -133,7 +139,7 @@ void dataPaths::on_cancelButton_clicked()
     dataPaths::close();
 }
 
-// CLose the window and save the values currently in the boxes (even if they are empty currently)
+// Close the window and save the values currently in the boxes (even if they are empty currently)
 void dataPaths::on_submitButton_clicked()
 {
     if(dpHand->size() != (size_t)activePaths){
@@ -146,7 +152,6 @@ void dataPaths::on_submitButton_clicked()
 }
 
 // Can probably optimize all these later
-
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPath1BrowseButton_clicked()
 {

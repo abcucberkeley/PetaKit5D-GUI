@@ -16,7 +16,7 @@ class dataPaths : public QDialog
 
 public:
     explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *parent = nullptr);
-    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, std::string pathType, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
