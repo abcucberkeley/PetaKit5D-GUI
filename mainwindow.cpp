@@ -459,6 +459,9 @@ void MainWindow::on_jobAdvancedSettingsButton_clicked()
 // Submit settings
 void MainWindow::on_submitButton_clicked()
 {
+    // Save settings in case of crash
+    writeSettings();
+
     // Error if no data paths set
     if(dPaths.size() == 0){
     QMessageBox messageBox;

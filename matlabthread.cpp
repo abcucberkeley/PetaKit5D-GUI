@@ -21,7 +21,7 @@ void matlabThread::run(){
     matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
     matlabPtr->feval(u"addpath",newGen);
     while(true){
-    std::cout << "MATLAB READY" << std::endl;
+    std::cout << "Ready for new job" << std::endl;
 
     // Once outA is set to 0, we can start our matlab job
     while(outA){
