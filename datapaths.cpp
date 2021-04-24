@@ -49,6 +49,48 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *par
     }
 }
 
+// folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
+dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, std::string pathType, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::dataPaths)
+{
+    ui->setupUi(this);
+    this->folder = folder;
+
+    // pointer to hold the passed in paths vector
+    dpHand = &dPaths;
+
+    // if there are no current data paths in the vector set it to 1
+    // else its the size of how data paths there are
+    if(dPaths.size() == 0) activePaths = 1;
+    else activePaths = dPaths.size();
+
+    // Check if max paths
+    if(activePaths < 6) maxPaths = false;
+    else maxPaths = true;
+
+    // structure to hold widgets on the screen so we can turn them on and off
+    paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
+    paths.push_back(std::make_tuple(ui->dataPath2Label,ui->dataPath2LineEdit,ui->dataPath2BrowseButton));
+    paths.push_back(std::make_tuple(ui->dataPath3Label,ui->dataPath3LineEdit,ui->dataPath3BrowseButton));
+    paths.push_back(std::make_tuple(ui->dataPath4Label,ui->dataPath4LineEdit,ui->dataPath4BrowseButton));
+    paths.push_back(std::make_tuple(ui->dataPath5Label,ui->dataPath5LineEdit,ui->dataPath5BrowseButton));
+    paths.push_back(std::make_tuple(ui->dataPath6Label,ui->dataPath6LineEdit,ui->dataPath6BrowseButton));
+
+    // Initial visibility of the widgets
+    for(size_t i = 0; i < paths.size(); i++){
+        if(i == 0 && dPaths.size() == 0) continue;
+        else if(i < dPaths.size()){
+            std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
+        }
+        else{
+            std::get<0>(paths.at(i))->setVisible(false);
+            std::get<1>(paths.at(i))->setVisible(false);
+            std::get<2>(paths.at(i))->setVisible(false);
+        }
+    }
+}
+
 dataPaths::~dataPaths()
 {
     delete ui;

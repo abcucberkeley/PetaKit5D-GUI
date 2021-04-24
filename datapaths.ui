@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add Paths</string>
   </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
@@ -71,6 +71,9 @@
    </layout>
   </widget>
   <widget class="QPushButton" name="addPathButton">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>280</x>

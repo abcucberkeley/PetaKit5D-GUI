@@ -1129,7 +1129,8 @@ void MainWindow::on_addPathsButton_clicked()
                 c = cPath.next();
                 //qDebug() << c;
                 rmatch = re.match(c);
-                if (!rmatch.captured(0).isEmpty()) channels.push_back(rmatch.captured(0));
+                // Check if there is a match and that it is not already in the vector
+                if (!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
                 //qDebug() << rmatch.captured(0);
 
             }
@@ -1240,7 +1241,7 @@ void MainWindow::on_backgroundAddPathsButton_clicked()
 // Open window for adding PSF Paths
 void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
-    dataPaths daPaths(psfFullPaths, false);
+    dataPaths daPaths(psfFullPaths, false, "PSF");
     daPaths.setModal(true);
     daPaths.exec();
 }
