@@ -6,6 +6,7 @@
 #include "jobadvanced.h"
 #include "datapaths.h"
 #include "consoleoutput.h"
+#include "loadprevioussettings.h"
 #include <QTextDocument>
 
 
@@ -35,8 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 
-    // Restore previous settings
-    readSettings();
+    // Restore previous settings if user says yes
+    checkLoadPrevSettings();
+    if(loadSettings) readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -1096,7 +1098,7 @@ void MainWindow::on_jobPreviousButton_clicked()
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 }
 
-// Opens a  seperate window to add the data paths for the job
+// Opens a seperate window to add the data paths for the job
 void MainWindow::on_addPathsButton_clicked()
 {
     dataPaths daPaths(dPaths, true);
@@ -1114,7 +1116,9 @@ void MainWindow::on_addPathsButton_clicked()
         channelWidgets.clear();
         std::vector<QString> channels;
         for(const std::string &i : dPaths){
-            QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
+            // Looking for channel patterns recursively
+            //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
+            QDirIterator cPath(QString::fromStdString(i));
             QString c;
             QRegularExpression re("Cam\\w_ch\\d");
             QRegularExpressionMatch rmatch;
@@ -1236,4 +1240,13 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
     dataPaths daPaths(psfFullPaths, false);
     daPaths.setModal(true);
     daPaths.exec();
+}
+
+// Open Main Window Advanced Settings
+void MainWindow::checkLoadPrevSettings()
+{
+    loadSettings = false;
+    loadPreviousSettings lPSettings(loadSettings);
+    lPSettings.setModal(true);
+    lPSettings.exec();
 }

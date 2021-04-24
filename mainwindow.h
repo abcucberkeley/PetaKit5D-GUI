@@ -108,6 +108,8 @@ private:
     std::vector<std::string> lsImagePaths;
     std::vector<std::string> backgroundPaths;
     std::vector<std::string> psfFullPaths;
+    bool loadSettings;
+    void checkLoadPrevSettings();
 
 private slots:
     void on_dsrAdvancedSettingsButton_clicked();
@@ -167,6 +169,7 @@ private slots:
     void on_backgroundAddPathsButton_clicked();
 
     void on_psfFullAddPathsButton_2_clicked();
+
 
 private:
     Ui::MainWindow *ui;
