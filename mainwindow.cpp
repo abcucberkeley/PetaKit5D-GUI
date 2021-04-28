@@ -36,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 
+    // Set most recent Dir to Home initially
+    mostRecentDir = QDir::homePath();
+
     // Restore previous settings if user says yes
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
@@ -807,8 +810,11 @@ void MainWindow::on_submitButton_clicked()
 // Browse Stitch Result Dir Folder
 void MainWindow::on_resultsDirBrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Make and Select the Results Folder",QDir::homePath());
-    if(folder_path.baseName().toStdString() != "") ui->resultsDirLineEdit->setText(folder_path.baseName());
+    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Make and Select the Results Folder",mostRecentDir);
+    if(folder_path.baseName().toStdString() != ""){
+        ui->resultsDirLineEdit->setText(folder_path.baseName());
+        mostRecentDir = folder_path.absoluteFilePath();
+    }
 }
 
 // Set tool tip for Stitch Result Dir line
@@ -1102,7 +1108,7 @@ void MainWindow::on_jobPreviousButton_clicked()
 // Opens a seperate window to add the data paths for the job
 void MainWindow::on_addPathsButton_clicked()
 {
-    dataPaths daPaths(dPaths, true);
+    dataPaths daPaths(dPaths, true, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
 
@@ -1151,8 +1157,11 @@ void MainWindow::on_addPathsButton_clicked()
 
 void MainWindow::on_imageListFullPathsBrowseButton_clicked()
 {
-    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Image List Full Paths File",QDir::homePath());
-    if(file_path.absoluteFilePath().toStdString() != "") ui->imageListFullPathsLineEdit->setText(file_path.absoluteFilePath());
+    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Image List Full Paths File",mostRecentDir);
+    if(file_path.absoluteFilePath().toStdString() != ""){
+        ui->imageListFullPathsLineEdit->setText(file_path.absoluteFilePath());
+        mostRecentDir = file_path.absolutePath();
+    }
 }
 
 void MainWindow::on_imageListFullPathsLineEdit_textChanged(const QString &arg1)
@@ -1223,7 +1232,7 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 // Open window for adding lsImage Paths
 void MainWindow::on_lsImageAddPathsButton_clicked()
 {
-    dataPaths daPaths(lsImagePaths, false);
+    dataPaths daPaths(lsImagePaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
 }
@@ -1231,7 +1240,7 @@ void MainWindow::on_lsImageAddPathsButton_clicked()
 // Open window for adding background Paths
 void MainWindow::on_backgroundAddPathsButton_clicked()
 {
-    dataPaths daPaths(backgroundPaths, false);
+    dataPaths daPaths(backgroundPaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
 }
@@ -1249,7 +1258,7 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
            channelNames.push_back(i.first->text());
        }
     }
-    dataPaths daPaths(psfFullPaths, false, channels, channelNames);
+    dataPaths daPaths(psfFullPaths, false, mostRecentDir, channels, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
 }

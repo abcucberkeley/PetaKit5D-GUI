@@ -15,8 +15,8 @@ class dataPaths : public QDialog
     Q_OBJECT
 
 public:
-    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QWidget *parent = nullptr);
-    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
@@ -54,6 +54,7 @@ private slots:
 
 private:
     Ui::dataPaths *ui;
+    QString *mostRecentDir;
     int activePaths;
     bool maxPaths;
     bool folder;

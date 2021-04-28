@@ -110,6 +110,7 @@ private:
     std::vector<std::string> psfFullPaths;
     bool loadSettings;
     void checkLoadPrevSettings();
+    QString mostRecentDir;
 
 private slots:
     void on_dsrAdvancedSettingsButton_clicked();
