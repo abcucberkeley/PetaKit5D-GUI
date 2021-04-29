@@ -169,6 +169,9 @@
     </item>
     <item>
      <widget class="QDoubleSpinBox" name="xyPixelSizeSpinBox">
+      <property name="toolTip">
+       <string>Microns</string>
+      </property>
       <property name="decimals">
        <number>3</number>
       </property>
@@ -211,6 +214,9 @@
     </item>
     <item>
      <widget class="QDoubleSpinBox" name="skewAngleSpinBox">
+      <property name="toolTip">
+       <string>Degrees</string>
+      </property>
       <property name="singleStep">
        <double>0.010000000000000</double>
       </property>
