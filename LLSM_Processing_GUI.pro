@@ -16,7 +16,8 @@ HEADERS += consoleoutput.h \
            mainadvanced.h \
            mainwindow.h \
            matlabthread.h \
-           stitchadvanced.h 
+           stitchadvanced.h \
+           loadprevioussettings.h
 
 FORMS += consoleoutput.ui \
          datapaths.ui \
@@ -26,7 +27,9 @@ FORMS += consoleoutput.ui \
          jobsettings.ui \
          mainadvanced.ui \
          mainwindow.ui \
-         stitchadvanced.ui
+         stitchadvanced.ui \
+         loadprevioussettings.ui
+
 SOURCES += consoleoutput.cpp \
            consolethread.cpp \
            datapaths.cpp \
@@ -38,8 +41,8 @@ SOURCES += consoleoutput.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
            matlabthread.cpp \
-           stitchadvanced.cpp 
-
+           stitchadvanced.cpp \
+           loadprevioussettings.cpp
 LIBS += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabEngine.so" \
         "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabDataArray.so" 
 
