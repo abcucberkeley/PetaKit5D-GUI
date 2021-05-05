@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Threading and connecting signals/slots
     mThread = new matlabThread(this);
     connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
-    //connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
+    connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThread->start(QThread::HighestPriority);
 
     // Disable all tabs except the main one on startup
@@ -433,6 +433,10 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton(){
     ui->submitButton->setEnabled(true);
+    QMessageBox msgBox;
+    msgBox.setText("Ready for new job");
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.exec();
 }
 
 // Open DSR Advanced Settings
@@ -473,7 +477,7 @@ void MainWindow::on_submitButton_clicked()
     return;
     }
 
-    // Make it so the user can't change tabs while the job is running (In Progress)
+    // Make it so the user can't change tabs or submit another job while the job is running (In Progress)
     //ui->jobPreviousButton->setEnabled(false);
     ui->submitButton->setEnabled(false);
     //ui->jobAdvancedSettingsButton->setEnabled(false);
