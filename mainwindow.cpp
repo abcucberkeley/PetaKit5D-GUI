@@ -1263,7 +1263,7 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
     daPaths.exec();
 }
 
-// Open Main Window Advanced Settings
+// Check if the user wants to load previous settings
 void MainWindow::checkLoadPrevSettings()
 {
     loadSettings = false;
