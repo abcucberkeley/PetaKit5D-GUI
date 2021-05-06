@@ -162,6 +162,9 @@
         <bold>true</bold>
        </font>
       </property>
+      <property name="toolTip">
+       <string>Microns</string>
+      </property>
       <property name="text">
        <string>xy Pixel Size</string>
       </property>
@@ -206,6 +209,9 @@
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>Degrees</string>
       </property>
       <property name="text">
        <string>Skew Angle</string>
