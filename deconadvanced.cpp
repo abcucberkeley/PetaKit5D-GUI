@@ -17,6 +17,9 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     ui->loadModulesLineEdit->setText(QString::fromStdString(guiVals.loadModules));
     ui->cudaDeconPathLineEdit->setText(QString::fromStdString(guiVals.cudaDeconPath));
     ui->otfgenPathLineEdit->setText(QString::fromStdString(guiVals.OTFGENPath));
+    if(guiVals.RLMethod == "original") ui->rlMethodOriginalRadioButton->setChecked(true);
+    else if(guiVals.RLMethod == "simplified") ui->rlMethodSimplifiedRadioButton->setChecked(true);
+    else if (guiVals.RLMethod == "cudagen") ui->rlMethodCudaGenRadioButton->setChecked(true);
 
 }
 
