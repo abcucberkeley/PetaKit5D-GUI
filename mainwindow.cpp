@@ -477,10 +477,8 @@ void MainWindow::on_submitButton_clicked()
     return;
     }
 
-    // Make it so the user can't change tabs or submit another job while the job is running (In Progress)
-    //ui->jobPreviousButton->setEnabled(false);
+    // Make it so the user can't submit another job while the job is running (In Progress)
     ui->submitButton->setEnabled(false);
-    //ui->jobAdvancedSettingsButton->setEnabled(false);
 
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;

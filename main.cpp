@@ -17,6 +17,7 @@ void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, con
     case QtInfoMsg:
         fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
+    // Suppress warnings and errors
     case QtWarningMsg:
         //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
