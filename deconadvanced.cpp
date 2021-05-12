@@ -38,6 +38,9 @@ void deconAdvanced::on_submitButton_clicked()
     gVals->loadModules = ui->loadModulesLineEdit->text().toStdString();
     gVals->cudaDeconPath = ui->cudaDeconPathLineEdit->text().toStdString();
     gVals->OTFGENPath = ui->otfgenPathLineEdit->text().toStdString();
+    if(ui->rlMethodOriginalRadioButton->isChecked()) gVals->RLMethod = "original";
+    else if (ui->rlMethodSimplifiedRadioButton->isChecked()) gVals->RLMethod = "simplified";
+    else if (ui->rlMethodCudaGenRadioButton->isChecked()) gVals->RLMethod = "cudagen";
     deconAdvanced::close();
 }
 

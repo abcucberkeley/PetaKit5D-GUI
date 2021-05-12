@@ -42,6 +42,7 @@ class GUIvals{
         std::string loadModules;
         std::string cudaDeconPath;
         std::string OTFGENPath;
+        std::string RLMethod;
 
         // Job Advanced Settings
         bool largeFile;
@@ -67,6 +68,7 @@ class GUIvals{
                     loadModules{""},
                     cudaDeconPath{""},
                     OTFGENPath{""},
+                    RLMethod{"simplified"},
                     largeFile{false},
                     jobLogDir{""},
                     uuid{""},

@@ -201,6 +201,7 @@ void MainWindow::writeSettings()
     settings.setValue("loadModules",QString::fromStdString(guiVals.loadModules));
     settings.setValue("cudaDeconPath",QString::fromStdString(guiVals.cudaDeconPath));
     settings.setValue("OTFGENPath",QString::fromStdString(guiVals.OTFGENPath));
+    settings.setValue("RLMethod",QString::fromStdString(guiVals.RLMethod));
 
     settings.beginWriteArray("psfFullpaths");
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
@@ -396,6 +397,7 @@ void MainWindow::readSettings()
     guiVals.loadModules = settings.value("loadModules").toString().toStdString();
     guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString().toStdString();
     guiVals.OTFGENPath = settings.value("OTFGENPath").toString().toStdString();
+    guiVals.RLMethod = settings.value("RLMethod").toString().toStdString();
 
     size = settings.beginReadArray("psfFullpaths");
     for(int i = 0; i < size; i++)
@@ -738,6 +740,9 @@ void MainWindow::on_submitButton_clicked()
         }
         data.push_back(psfMPaths);
     }
+    data.push_back(factory.createCharArray("RLMethod"));
+    data.push_back(factory.createCharArray(guiVals.RLMethod));
+
     // Line below is for testing purposes
     //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 
