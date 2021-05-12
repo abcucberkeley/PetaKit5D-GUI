@@ -214,7 +214,7 @@
          </font>
         </property>
         <property name="text">
-         <string>RL Method</string>
+         <string>RL Method:</string>
         </property>
        </widget>
       </item>
