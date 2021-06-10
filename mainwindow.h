@@ -65,20 +65,20 @@ class GUIvals{
                     resampleType{"isotropic"},
                     resample{0},
                     cppDeconPath{""},
-                    loadModules{""},
+                    loadModules{"module load gcc/4.8.5; module load fftw/3.3.6-gcc; module load boost/1.65.1-gcc; module load libtiff/4.1.0; "},
                     cudaDeconPath{""},
-                    OTFGENPath{""},
+                    OTFGENPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/radialft"},
                     RLMethod{"simplified"},
                     largeFile{false},
-                    jobLogDir{""},
+                    jobLogDir{"../job_logs"},
                     uuid{""},
                     maxTrialNum{3},
                     unitWaitTime{1},
                     minModifyTime{1},
                     maxModifyTime{10},
                     maxWaitLoopNum{10},
-                    MatlabLaunchStr{""},
-                    SlurmParam{""}
+                    MatlabLaunchStr{"module load matlab/r2020b; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
+                    SlurmParam{"-p abc --qos abc_normal -n1 --mem-per-cpu=21418M"}
         {
 
         }
