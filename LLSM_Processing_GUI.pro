@@ -44,7 +44,7 @@ SOURCES += consoleoutput.cpp \
            stitchadvanced.cpp \
            loadprevioussettings.cpp
 LIBS += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabEngine.so" \
-        "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabDataArray.so" 
+        "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabDataArray.so"
 
 INCLUDEPATH += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include"
 

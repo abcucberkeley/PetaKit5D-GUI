@@ -20,6 +20,9 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     if(guiVals.RLMethod == "original") ui->rlMethodOriginalRadioButton->setChecked(true);
     else if(guiVals.RLMethod == "simplified") ui->rlMethodSimplifiedRadioButton->setChecked(true);
     else if (guiVals.RLMethod == "cudagen") ui->rlMethodCudaGenRadioButton->setChecked(true);
+    ui->fixIterCheckBox->setChecked(guiVals.fixIter);
+    ui->errThreshLineEdit->setText(QString::number(guiVals.errThresh));
+    ui->debugCheckBox->setChecked(guiVals.debug);
 
 }
 
@@ -44,6 +47,9 @@ void deconAdvanced::on_submitButton_clicked()
     if(ui->rlMethodOriginalRadioButton->isChecked()) gVals->RLMethod = "original";
     else if (ui->rlMethodSimplifiedRadioButton->isChecked()) gVals->RLMethod = "simplified";
     else if (ui->rlMethodCudaGenRadioButton->isChecked()) gVals->RLMethod = "cudagen";
+    gVals->fixIter = ui->fixIterCheckBox->isChecked();
+    gVals->errThresh = ui->errThreshLineEdit->text().toDouble();
+    gVals->debug = ui->debugCheckBox->isChecked();
     deconAdvanced::close();
 }
 

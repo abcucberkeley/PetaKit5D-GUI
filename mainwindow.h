@@ -43,6 +43,9 @@ class GUIvals{
         std::string cudaDeconPath;
         std::string OTFGENPath;
         std::string RLMethod;
+        bool fixIter;
+        double errThresh;
+        bool debug;
 
         // Job Advanced Settings
         bool largeFile;
@@ -64,11 +67,14 @@ class GUIvals{
                     LowerLimit{.4},
                     resampleType{"isotropic"},
                     resample{0},
-                    cppDeconPath{""},
+                    cppDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/RLDecon_CPU/20200718/build-cluster/cpuDeconv"},
                     loadModules{"module load gcc/4.8.5; module load fftw/3.3.6-gcc; module load boost/1.65.1-gcc; module load libtiff/4.1.0; "},
-                    cudaDeconPath{""},
+                    cudaDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/cudaDeconv"},
                     OTFGENPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/radialft"},
                     RLMethod{"simplified"},
+                    fixIter{false},
+                    errThresh{.00000001},
+                    debug{false},
                     largeFile{false},
                     jobLogDir{"../job_logs"},
                     uuid{""},
@@ -95,7 +101,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(const size_t outA, const std::vector<matlab::data::Array> &data);
+    void jobStart(const size_t outA, const std::vector<matlab::data::Array> &data, const std::string funcType);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -173,6 +179,10 @@ private slots:
 
     void on_psfFullAddPathsButton_2_clicked();
 
+
+    void on_deconOnlyCheckBox_stateChanged(int arg1);
+
+    void on_customPatternsCheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

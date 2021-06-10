@@ -63,7 +63,8 @@ SOURCES       = consoleoutput.cpp \
 		mainadvanced.cpp \
 		mainwindow.cpp \
 		matlabthread.cpp \
-		stitchadvanced.cpp moc_consoleoutput.cpp \
+		stitchadvanced.cpp \
+		loadprevioussettings.cpp moc_consoleoutput.cpp \
 		moc_consolethread.cpp \
 		moc_datapaths.cpp \
 		moc_deconadvanced.cpp \
@@ -73,7 +74,8 @@ SOURCES       = consoleoutput.cpp \
 		moc_mainadvanced.cpp \
 		moc_mainwindow.cpp \
 		moc_matlabthread.cpp \
-		moc_stitchadvanced.cpp
+		moc_stitchadvanced.cpp \
+		moc_loadprevioussettings.cpp
 OBJECTS       = consoleoutput.o \
 		consolethread.o \
 		datapaths.o \
@@ -86,6 +88,7 @@ OBJECTS       = consoleoutput.o \
 		mainwindow.o \
 		matlabthread.o \
 		stitchadvanced.o \
+		loadprevioussettings.o \
 		moc_consoleoutput.o \
 		moc_consolethread.o \
 		moc_datapaths.o \
@@ -96,7 +99,8 @@ OBJECTS       = consoleoutput.o \
 		moc_mainadvanced.o \
 		moc_mainwindow.o \
 		moc_matlabthread.o \
-		moc_stitchadvanced.o
+		moc_stitchadvanced.o \
+		moc_loadprevioussettings.o
 DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_pre.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/common/unix.conf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/common/linux.conf \
@@ -303,7 +307,8 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		mainadvanced.h \
 		mainwindow.h \
 		matlabthread.h \
-		stitchadvanced.h consoleoutput.cpp \
+		stitchadvanced.h \
+		loadprevioussettings.h consoleoutput.cpp \
 		consolethread.cpp \
 		datapaths.cpp \
 		deconadvanced.cpp \
@@ -314,7 +319,8 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		mainadvanced.cpp \
 		mainwindow.cpp \
 		matlabthread.cpp \
-		stitchadvanced.cpp
+		stitchadvanced.cpp \
+		loadprevioussettings.cpp
 QMAKE_TARGET  = LLSM_Processing_GUI
 DESTDIR       = 
 TARGET        = LLSM_Processing_GUI
@@ -323,7 +329,7 @@ TARGET        = LLSM_Processing_GUI
 first: all
 ####### Build rules
 
-LLSM_Processing_GUI: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h $(OBJECTS)  
+LLSM_Processing_GUI: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: LLSM_Processing_GUI.pro /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++/qmake.conf /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_pre.prf \
@@ -736,9 +742,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlabthread.h stitchadvanced.h $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlabthread.cpp stitchadvanced.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.ui datapaths.ui deconadvanced.ui dsradvanced.ui jobadvanced.ui jobsettings.ui mainadvanced.ui mainwindow.ui stitchadvanced.ui $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlabthread.h stitchadvanced.h loadprevioussettings.h $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlabthread.cpp stitchadvanced.cpp loadprevioussettings.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.ui datapaths.ui deconadvanced.ui dsradvanced.ui jobadvanced.ui jobsettings.ui mainadvanced.ui mainwindow.ui stitchadvanced.ui loadprevioussettings.ui $(DISTDIR)/
 	$(COPY_FILE) --parents LLSM_Processing_GUI_en_US.ts $(DISTDIR)/
 
 
@@ -771,9 +777,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp
+compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp
+	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 moc_consoleoutput.cpp: consoleoutput.h \
 		consolethread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
@@ -1647,8 +1653,15 @@ moc_deconadvanced.cpp: deconadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include deconadvanced.h -o moc_deconadvanced.cpp
@@ -1963,8 +1976,15 @@ moc_dsradvanced.cpp: dsradvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include dsradvanced.h -o moc_dsradvanced.cpp
@@ -2279,8 +2299,15 @@ moc_jobadvanced.cpp: jobadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include jobadvanced.h -o moc_jobadvanced.cpp
@@ -2704,8 +2731,15 @@ moc_mainadvanced.cpp: mainadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainadvanced.h -o moc_mainadvanced.cpp
@@ -3019,6 +3053,14 @@ moc_mainwindow.cpp: mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainwindow.h -o moc_mainwindow.cpp
@@ -3411,13 +3453,122 @@ moc_stitchadvanced.cpp: stitchadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include stitchadvanced.h -o moc_stitchadvanced.cpp
 
+moc_loadprevioussettings.cpp: loadprevioussettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtwidgetsglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtguiglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig-bootstrapped.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcore-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocessordetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcompilerdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypeinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsysinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlogging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qflags.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasicatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_bootstrap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qgenericatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_cxx11.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_msvc.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobalstatic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmutex.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnumeric.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversiontagging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtgui-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtwidgets-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qwidget.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qwindowdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnamespace.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qwindowdefs_win.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstring.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qchar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrefcount.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringliteral.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringview.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringbuilder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhashfunctions.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpair.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainertools_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpoint.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraylist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregexp.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringmatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetatype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvarlengtharray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainerfwd.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmargins.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpaintdevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrect.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsize.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpalette.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qcolor.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qrgb.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qrgba64.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qbrush.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qmatrix.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpolygon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qregion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatastream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiodevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtransform.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qimage.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpixelformat.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpixmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qshareddata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfont.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfontmetrics.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfontinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qsizepolicy.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qcursor.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qkeysequence.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariant.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdebug.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlocale.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qset.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontiguouscache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurlquery.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfiledevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qvector2d.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
+		moc_predefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include loadprevioussettings.h -o moc_loadprevioussettings.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h
+compiler_uic_make_all: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h
+	-$(DEL_FILE) ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
 ui_consoleoutput.h: consoleoutput.ui \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic consoleoutput.ui -o ui_consoleoutput.h
@@ -3453,6 +3604,10 @@ ui_mainwindow.h: mainwindow.ui \
 ui_stitchadvanced.h: stitchadvanced.ui \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic stitchadvanced.ui -o ui_stitchadvanced.h
+
+ui_loadprevioussettings.h: loadprevioussettings.ui \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic loadprevioussettings.ui -o ui_loadprevioussettings.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -4377,8 +4532,15 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		ui_deconadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
@@ -4386,6 +4548,11 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdesktopwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qguiapplication.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qinputmethod.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QButtonGroup \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qbuttongroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QCheckBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qcheckbox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qabstractbutton.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QHBoxLayout \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qboxlayout.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qlayout.h \
@@ -4402,12 +4569,10 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtextoption.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QPushButton \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qpushbutton.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qabstractbutton.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QRadioButton \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qradiobutton.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QVBoxLayout \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o deconadvanced.o deconadvanced.cpp
 
 dsradvanced.o: dsradvanced.cpp dsradvanced.h \
@@ -4720,8 +4885,15 @@ dsradvanced.o: dsradvanced.cpp dsradvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		ui_dsradvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
@@ -5070,8 +5242,15 @@ jobadvanced.o: jobadvanced.cpp jobadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		ui_jobadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
@@ -5102,10 +5281,7 @@ jobadvanced.o: jobadvanced.cpp jobadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qspinbox.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qabstractspinbox.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qvalidator.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o jobadvanced.o jobadvanced.cpp
 
 jobsettings.o: jobsettings.cpp jobsettings.h \
@@ -5533,6 +5709,14 @@ main.o: main.cpp mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qapplication.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdesktopwidget.h \
@@ -5850,8 +6034,15 @@ mainadvanced.o: mainadvanced.cpp mainadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
 		ui_mainadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
@@ -6188,6 +6379,14 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h \
 		ui_mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
@@ -6244,7 +6443,6 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget \
 		mainadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
 		dsradvanced.h \
 		deconadvanced.h \
 		jobadvanced.h \
@@ -6252,12 +6450,9 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		consoleoutput.h \
 		consolethread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QProcess \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h
+		loadprevioussettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QTextDocument \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtextdocument.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 matlabthread.o: matlabthread.cpp matlabthread.h \
@@ -6568,7 +6763,15 @@ matlabthread.o: matlabthread.cpp matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qvector2d.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtabwidget.h \
-		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/QCloseEvent \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QFileDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qfiledialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDir \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthread.o matlabthread.cpp
 
 stitchadvanced.o: stitchadvanced.cpp stitchadvanced.h \
@@ -6706,6 +6909,129 @@ stitchadvanced.o: stitchadvanced.cpp stitchadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stitchadvanced.o stitchadvanced.cpp
 
+loadprevioussettings.o: loadprevioussettings.cpp loadprevioussettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdialog.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtwidgetsglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtguiglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig-bootstrapped.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcore-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocessordetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcompilerdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypeinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsysinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlogging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qflags.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasicatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_bootstrap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qgenericatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_cxx11.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_msvc.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobalstatic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmutex.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnumeric.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversiontagging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtgui-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qtwidgets-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qwidget.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qwindowdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnamespace.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qwindowdefs_win.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstring.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qchar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrefcount.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringliteral.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringview.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringbuilder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhashfunctions.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpair.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainertools_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpoint.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraylist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregexp.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringmatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetatype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvarlengtharray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainerfwd.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmargins.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpaintdevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrect.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsize.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpalette.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qcolor.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qrgb.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qrgba64.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qbrush.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qmatrix.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpolygon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qregion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatastream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiodevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtransform.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qimage.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpixelformat.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qpixmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qshareddata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfont.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfontmetrics.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qfontinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qsizepolicy.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qcursor.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qkeysequence.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariant.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdebug.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlocale.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qset.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontiguouscache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurlquery.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfiledevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qvector2d.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qtouchdevice.h \
+		ui_loadprevioussettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QVariant \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QApplication \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qapplication.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreapplication.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeventloop.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qdesktopwidget.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qguiapplication.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qinputmethod.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QLabel \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qlabel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qframe.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QPushButton \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qpushbutton.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qabstractbutton.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui/qicon.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loadprevioussettings.o loadprevioussettings.cpp
+
 moc_consoleoutput.o: moc_consoleoutput.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_consoleoutput.o moc_consoleoutput.cpp
 
@@ -6738,6 +7064,9 @@ moc_matlabthread.o: moc_matlabthread.cpp
 
 moc_stitchadvanced.o: moc_stitchadvanced.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_stitchadvanced.o moc_stitchadvanced.cpp
+
+moc_loadprevioussettings.o: moc_loadprevioussettings.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_loadprevioussettings.o moc_loadprevioussettings.cpp
 
 ####### Install
 

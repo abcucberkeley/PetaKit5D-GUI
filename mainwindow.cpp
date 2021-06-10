@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
@@ -126,6 +127,8 @@ void MainWindow::writeSettings()
     settings.setValue("Stitch",ui->stitchCheckBox->isChecked());
     settings.setValue("deskewAndRotate",ui->deskewAndRotateCheckBox->isChecked());
 
+    settings.setValue("deconOnly",ui->deconOnlyCheckBox->isChecked());
+
     settings.setValue("deskewDecon",ui->deskewDeconCheckBox->isChecked());
     settings.setValue("rotateDecon",ui->rotateDeconCheckBox->isChecked());
     settings.setValue("deskewAndRotateDecon",ui->deskewAndRotateDeconCheckBox->isChecked());
@@ -202,6 +205,9 @@ void MainWindow::writeSettings()
     settings.setValue("cudaDeconPath",QString::fromStdString(guiVals.cudaDeconPath));
     settings.setValue("OTFGENPath",QString::fromStdString(guiVals.OTFGENPath));
     settings.setValue("RLMethod",QString::fromStdString(guiVals.RLMethod));
+    settings.setValue("fixIter", guiVals.fixIter);
+    settings.setValue("errThresh", guiVals.errThresh);
+    settings.setValue("debug", guiVals.debug);
 
     settings.beginWriteArray("psfFullpaths");
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
@@ -323,6 +329,8 @@ void MainWindow::readSettings()
     ui->stitchCheckBox->setChecked(settings.value("Stitch").toBool());
     ui->deskewAndRotateCheckBox->setChecked(settings.value("deskewAndRotate").toBool());
 
+    ui->deconOnlyCheckBox->setChecked(settings.value("deconOnly").toBool());
+
     ui->deskewDeconCheckBox->setChecked(settings.value("deskewDecon").toBool());
     ui->rotateDeconCheckBox->setChecked(settings.value("rotateDecon").toBool());
     ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("deskewAndRotateDecon").toBool());
@@ -398,6 +406,10 @@ void MainWindow::readSettings()
     guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString().toStdString();
     guiVals.OTFGENPath = settings.value("OTFGENPath").toString().toStdString();
     guiVals.RLMethod = settings.value("RLMethod").toString().toStdString();
+    guiVals.fixIter = settings.value("fixIter").toBool();
+    guiVals.errThresh = settings.value("errThresh").toDouble();
+    guiVals.debug = settings.value("debug").toBool();
+
 
     size = settings.beginReadArray("psfFullpaths");
     for(int i = 0; i < size; i++)
@@ -489,8 +501,245 @@ void MainWindow::on_submitButton_clicked()
     const size_t outA = 0;
     std::vector<matlab::data::Array> data;
 
-    // We have to push a lot of things into our data array one at a time
+    // NOTE: We have to push a lot of things into our data array one at a time
     // As far as I know there is no way around this, it's just the nature of how this API and our current pipeline are setup
+
+    //
+    //
+    // TODO: GOING TO REDO THIS PORTION AND MAKE A FUNCTION SO I CAN SUPPORT MULTIPLE SCRIPTS EASIER
+    //
+    //
+
+    if(ui->deconOnlyCheckBox->isChecked()){
+        // Data Paths
+        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
+        for(size_t i = 0; i < dPaths.size(); i++){
+            dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
+        }
+        data.push_back(dataPaths_exps);
+
+        // Main Settings
+
+        // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
+        // TODO: FIX LOGIC FOR DECON ONLY
+        data.push_back(factory.createCharArray("Overwrite"));
+        if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
+        else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
+
+        // Channel Patterns
+        if(!ui->customPatternsCheckBox->isChecked()){
+
+        if(channelWidgets.size()){
+            data.push_back(factory.createCharArray("ChannelPatterns"));
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < channelWidgets.size(); i++){
+                if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(channelWidgets[i].first->text());
+
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+
+        }
+        // Use custom patterns
+        else{
+            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
+            std::string pattern;
+            std::vector<std::string> patterns;
+            for(size_t i = 0; i < patternLine.size(); i++){
+                if(patternLine.at(i) == ','){
+                    patterns.push_back(pattern);
+                    pattern.clear();
+                }
+                else{
+                    pattern.push_back(patternLine.at(i));
+                }
+            }
+            if(pattern.size()) patterns.push_back(pattern);
+
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+
+            for(size_t i = 0; i < patterns.size(); i++){
+                channelPatterns[i] = factory.createCharArray(patterns.at(i));
+            }
+
+        }
+        // Currently not used
+        //data.push_back(factory.createCharArray("Channels"));
+        //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
+
+        data.push_back(factory.createCharArray("SkewAngle"));
+        data.push_back(factory.createScalar<double>(guiVals.skewAngle));
+
+        data.push_back(factory.createCharArray("dz"));
+        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+
+        data.push_back(factory.createCharArray("xyPixelSize"));
+        data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
+
+        data.push_back(factory.createCharArray("Reverse"));
+        data.push_back(factory.createScalar<bool>(guiVals.Reverse));
+
+        data.push_back(factory.createCharArray("ObjectiveScan"));
+        data.push_back(factory.createScalar<bool>(ui->objectiveScanCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("sCMOSCameraFlip"));
+        data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
+
+        // This needs to change FIX
+        //TODO: FIX LOGIC FOR DECON ONLY
+        data.push_back(factory.createCharArray("Save16bit"));
+        if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+        else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
+
+        // This needs to change FIX
+        data.push_back(factory.createCharArray("onlyFirstTP"));
+        data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
+
+
+        // Pipeline Setting
+
+        data.push_back(factory.createCharArray("Decon"));
+        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
+
+        // Change later
+        //data.push_back(factory.createCharArray("RotateAfterDecon"));
+        //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
+
+        // Decon Settings
+
+        data.push_back(factory.createCharArray("cudaDecon"));
+        data.push_back(factory.createScalar<bool>(ui->cudaDeconRadioButton->isChecked()));
+
+        data.push_back(factory.createCharArray("cppDecon"));
+        data.push_back(factory.createScalar<bool>(ui->cppDeconRadioButton->isChecked()));
+
+        data.push_back(factory.createCharArray("Background"));
+        data.push_back(factory.createScalar<uint64_t>(ui->backgroundIntensityLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("dzPSF"));
+        data.push_back(factory.createScalar<double>(ui->dzPSFLineEdit->text().toDouble()));
+
+        data.push_back(factory.createCharArray("EdgeErosion"));
+        data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("ErodeByFTP"));
+        data.push_back(factory.createScalar<bool>(ui->erodeByFTPCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("deconRotate"));
+        data.push_back(factory.createScalar<bool>(ui->deconRotateCheckBox->isChecked()));
+
+        // Decon Advanced settings
+
+        if(!guiVals.cppDeconPath.empty()){
+            data.push_back(factory.createCharArray("cppDeconPath"));
+            data.push_back(factory.createCharArray(guiVals.cppDeconPath));
+        }
+        if(!guiVals.loadModules.empty()){
+            data.push_back(factory.createCharArray("loadModules"));
+            data.push_back(factory.createCharArray(guiVals.loadModules));
+        }
+        if(!guiVals.cudaDeconPath.empty()){
+            data.push_back(factory.createCharArray("cudaDeconPath"));
+            data.push_back(factory.createCharArray(guiVals.cudaDeconPath));
+        }
+        if(!guiVals.OTFGENPath.empty()){
+            data.push_back(factory.createCharArray("OTFGENPath"));
+            data.push_back(factory.createCharArray(guiVals.OTFGENPath));
+        }
+
+        if(psfFullPaths.size()){
+            data.push_back(factory.createCharArray("psfFullpaths"));
+            matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+            for(size_t i = 0; i < psfFullPaths.size(); i++){
+                std::cout << psfFullPaths[i] << std::endl;
+                psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
+            }
+            data.push_back(psfMPaths);
+        }
+        data.push_back(factory.createCharArray("RLMethod"));
+        data.push_back(factory.createCharArray(guiVals.RLMethod));
+
+        //----TESTING ERR THRESH VALS------
+
+        data.push_back(factory.createCharArray("fixIter"));
+        data.push_back(factory.createScalar<bool>(false));
+
+        data.push_back(factory.createCharArray("errThresh"));
+        data.push_back(factory.createScalar<double>(.00000001));
+
+        data.push_back(factory.createCharArray("debug"));
+        data.push_back(factory.createScalar<bool>(false));
+
+
+        // Line below is for testing purposes
+        //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
+
+        data.push_back(factory.createCharArray("DeconIter"));
+        data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("rotatePSF"));
+        data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
+
+        // Job Settings
+
+        data.push_back(factory.createCharArray("parseCluster"));
+        data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("cpusPerTask"));
+        data.push_back(factory.createScalar<uint64_t>(ui->cpusPerTaskLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("cpuOnlyNodes"));
+        data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+
+        // Advanced Job Settings
+
+        data.push_back(factory.createCharArray("largeFile"));
+        data.push_back(factory.createScalar<bool>(guiVals.largeFile));
+
+        if(!guiVals.jobLogDir.empty()){
+            data.push_back(factory.createCharArray("jobLogDir"));
+            data.push_back(factory.createCharArray(guiVals.jobLogDir));
+        }
+
+        if(!guiVals.uuid.empty()){
+            data.push_back(factory.createCharArray("uuid"));
+            data.push_back(factory.createCharArray(guiVals.uuid));
+        }
+
+        data.push_back(factory.createCharArray("maxTrialNum"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.maxTrialNum));
+
+        data.push_back(factory.createCharArray("unitWaitTime"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.unitWaitTime));
+
+        data.push_back(factory.createCharArray("maxWaitLoopNum"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
+
+        if(!guiVals.MatlabLaunchStr.empty()){
+        data.push_back(factory.createCharArray("MatlabLaunchStr"));
+        data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
+        }
+
+        if(!guiVals.SlurmParam.empty()){
+        data.push_back(factory.createCharArray("SlurmParam"));
+        data.push_back(factory.createCharArray(guiVals.SlurmParam));
+        }
+    }
+    else{
+
 
     // Data Paths
     matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
@@ -502,14 +751,19 @@ void MainWindow::on_submitButton_clicked()
     // Main Settings
 
     // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
+    // TODO: FIX LOGIC FOR DECON ONLY
     data.push_back(factory.createCharArray("Overwrite"));
-    if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
+    if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+    else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
     else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
 
     data.push_back(factory.createCharArray("Streaming"));
     data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
 
+
     // Channel Patterns
+    if(!ui->customPatternsCheckBox->isChecked()){
+
     if(channelWidgets.size()){
         data.push_back(factory.createCharArray("ChannelPatterns"));
         // Grab indexes of checked boxes
@@ -532,6 +786,30 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(channelPatterns);
     }
 
+    }
+    // Use custom patterns
+    else{
+        std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
+        std::string pattern;
+        std::vector<std::string> patterns;
+        for(size_t i = 0; i < patternLine.size(); i++){
+            if(patternLine.at(i) == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine.at(i));
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns.at(i));
+        }
+
+    }
     // Currently not used
     //data.push_back(factory.createCharArray("Channels"));
     //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
@@ -555,8 +833,10 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
     // This needs to change FIX
+    //TODO: FIX LOGIC FOR DECON ONLY
     data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createArray<bool>({1,4},{ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
+    if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+    else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
 
     // This needs to change FIX
     data.push_back(factory.createCharArray("onlyFirstTP"));
@@ -593,7 +873,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<bool>(ui->stitchCheckBox->isChecked()));
 
     data.push_back(factory.createCharArray("Decon"));
-    data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()));
+    data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
 
     // Change later
     //data.push_back(factory.createCharArray("RotateAfterDecon"));
@@ -743,6 +1023,15 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("RLMethod"));
     data.push_back(factory.createCharArray(guiVals.RLMethod));
 
+    data.push_back(factory.createCharArray("fixIter"));
+    data.push_back(factory.createScalar<bool>(false));
+
+    data.push_back(factory.createCharArray("errThresh"));
+    data.push_back(factory.createScalar<double>(.00000001));
+
+    data.push_back(factory.createCharArray("debug"));
+    data.push_back(factory.createScalar<bool>(false));
+
     // Line below is for testing purposes
     //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 
@@ -802,9 +1091,14 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("SlurmParam"));
     data.push_back(factory.createCharArray(guiVals.SlurmParam));
     }
+    }
+    std::string funcType;
 
+    if(ui->deconOnlyCheckBox->isChecked()){
+        funcType="DeconOnly";
+    }
     // Send data to the MATLAB thread
-    emit jobStart(outA, data);
+    emit jobStart(outA, data, funcType);
 
     // Output Console text to another window (Work in Progress) (For Windows only most likely)
     /*
@@ -864,7 +1158,7 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
         ui->deskewOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
-        if(!(ui->stitchCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked())){
+        if(!(ui->stitchCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
         }
     }
@@ -896,7 +1190,7 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
         ui->rotateOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
-        if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked())){
+        if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
         }
     }
@@ -929,7 +1223,7 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
         ui->deskewAndRotateOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
-        if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked())){
+        if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
         }
     }
@@ -960,7 +1254,7 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
         ui->stitchOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
-        if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked())){
+        if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
         }
     }
@@ -976,6 +1270,9 @@ void MainWindow::on_mainNextButton_clicked()
     // Logic of which tab is next
     if(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->DSR);
+    }
+    else if (ui->deconOnlyCheckBox->isChecked()){
+        ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else{
         ui->tabWidget->setCurrentWidget(ui->Stitch);
@@ -1002,7 +1299,7 @@ void MainWindow::on_dsrNextButton_clicked()
     if(ui->stitchCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Stitch);
     }
-    else if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked()){
+    else if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else{
@@ -1060,7 +1357,7 @@ void MainWindow::on_stitchNextButton_clicked()
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Stitch),false);
 
     // Logic of which tab is next
-    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()){
+    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else{
@@ -1075,8 +1372,11 @@ void MainWindow::on_deconPreviousButton_clicked()
     if(ui->stitchCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Stitch);
     }
-    else{
+    else if((ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked())){
         ui->tabWidget->setCurrentWidget(ui->DSR);
+    }
+    else{
+        ui->tabWidget->setCurrentWidget(ui->Main);
     }
 
     // Disable the Decon tab
@@ -1098,7 +1398,7 @@ void MainWindow::on_deconNextButton_clicked()
 void MainWindow::on_jobPreviousButton_clicked()
 {
     // Logic for which tab to go to
-    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()){
+    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else if (ui->stitchCheckBox->isChecked()){
@@ -1278,3 +1578,27 @@ void MainWindow::checkLoadPrevSettings()
     lPSettings.setModal(true);
     lPSettings.exec();
 }
+
+void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
+{
+    if(arg1){
+        ui->mainNextButton->setEnabled(true);
+    }
+    else{
+        if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->rotateCheckBox->isChecked())){
+            ui->mainNextButton->setEnabled(false);
+        }
+    }
+}
+
+
+void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
+{
+    if(arg1){
+        ui->customPatternsLineEdit->setEnabled(true);
+    }
+    else{
+        ui->customPatternsLineEdit->setEnabled(false);
+    }
+}
+

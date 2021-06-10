@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -63,7 +63,7 @@
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>70</y>
+        <y>60</y>
         <width>90</width>
         <height>19</height>
        </rect>
@@ -97,8 +97,8 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>160</y>
+        <x>300</x>
+        <y>170</y>
         <width>146</width>
         <height>25</height>
        </rect>
@@ -138,8 +138,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>420</y>
+        <x>350</x>
+        <y>450</y>
         <width>111</width>
         <height>61</height>
        </rect>
@@ -160,8 +160,8 @@
      <widget class="QWidget" name="layoutWidget_8">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>190</y>
+        <x>300</x>
+        <y>200</y>
         <width>156</width>
         <height>21</height>
        </rect>
@@ -199,7 +199,7 @@
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>70</y>
+        <y>60</y>
         <width>111</width>
         <height>23</height>
        </rect>
@@ -212,7 +212,7 @@
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>100</y>
+        <y>90</y>
         <width>213</width>
         <height>21</height>
        </rect>
@@ -246,8 +246,8 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>130</y>
+        <x>110</x>
+        <y>110</y>
         <width>581</width>
         <height>25</height>
        </rect>
@@ -884,6 +884,157 @@
           </size>
          </property>
         </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>410</y>
+        <width>711</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_48">
+       <item>
+        <widget class="QLabel" name="deconOnlyLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+           <strikeout>false</strikeout>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="text">
+          <string>Decon Only</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Maximum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>45</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="deconOnlyCheckBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>195</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="deconOnlyOverwriteDataCheckBox">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="deconOnlySave16BitCheckBox">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="deconOnlyOnlyFirstTPCheckBox">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_7">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>140</y>
+        <width>511</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_49">
+       <item>
+        <widget class="QLabel" name="customPatternsLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+           <strikeout>false</strikeout>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="text">
+          <string>Custom Patterns</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="customPatternsCheckBox">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="customPatternsLineEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -2523,7 +2674,7 @@
      <x>0</x>
      <y>0</y>
      <width>801</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
