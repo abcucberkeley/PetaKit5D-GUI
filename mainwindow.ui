@@ -125,9 +125,6 @@
          <property name="text">
           <string>.5</string>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
         </widget>
        </item>
       </layout>
@@ -1034,6 +1031,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="placeholderText">
+          <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -1434,9 +1434,6 @@
          <property name="maxLength">
           <number>32763</number>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
          <property name="placeholderText">
           <string>EX: camA_ch0</string>
          </property>
@@ -1653,9 +1650,6 @@
          <property name="text">
           <string/>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
         </widget>
        </item>
        <item>
@@ -1692,11 +1686,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="imageListFullPathsLineEdit">
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
+        <widget class="QLineEdit" name="imageListFullPathsLineEdit"/>
        </item>
        <item>
         <widget class="QPushButton" name="imageListFullPathsBrowseButton">
@@ -1733,9 +1723,6 @@
        </item>
        <item>
         <widget class="QLineEdit" name="axisOrderLineEdit">
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
          <property name="placeholderText">
           <string>EX: xyz OR -xyz OR yxz etc.</string>
          </property>
@@ -2234,9 +2221,6 @@
          <property name="text">
           <string>100</string>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
         </widget>
        </item>
       </layout>
@@ -2269,9 +2253,6 @@
         <widget class="QLineEdit" name="dzPSFLineEdit">
          <property name="text">
           <string>.1</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -2375,9 +2356,6 @@
          <property name="text">
           <string>15</string>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
         </widget>
        </item>
       </layout>
@@ -2446,9 +2424,6 @@
         <widget class="QLineEdit" name="edgeErosionLineEdit">
          <property name="text">
           <string>8</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -2627,9 +2602,6 @@
           <widget class="QLineEdit" name="cpusPerTaskLineEdit">
            <property name="text">
             <string>2</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>

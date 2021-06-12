@@ -1579,6 +1579,7 @@ void MainWindow::checkLoadPrevSettings()
     lPSettings.exec();
 }
 
+// Enable next button if deconOnly is checked
 void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 {
     if(arg1){
@@ -1591,7 +1592,7 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
     }
 }
 
-
+// Enable or Disable custom pattern writing
 void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
 {
     if(arg1){

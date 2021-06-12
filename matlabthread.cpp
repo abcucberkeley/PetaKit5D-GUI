@@ -19,8 +19,8 @@ void matlabThread::run(){
     
     // Check if cluster TESTING
     //matlab::data::CharArray newDir = factory.createCharArray(QCoreApplication::applicationDirPath().toStdString()+"/XR_Repository");
-    matlab::data::CharArray newDir = factory.createCharArray("/clusterfs/fiona/ABCcode/XR_Repository");
-    
+    matlab::data::CharArray newDir = factory.createCharArray("/clusterfs/fiona/ABCcode/XR_Repository");   
+
     matlabPtr->feval(u"cd",newDir);
     matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
     matlabPtr->feval(u"addpath",newGen);
