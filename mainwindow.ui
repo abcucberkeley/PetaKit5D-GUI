@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -2219,7 +2219,7 @@
        <item>
         <widget class="QLineEdit" name="backgroundIntensityLineEdit">
          <property name="text">
-          <string>100</string>
+          <string>99</string>
          </property>
         </widget>
        </item>
@@ -2460,6 +2460,9 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

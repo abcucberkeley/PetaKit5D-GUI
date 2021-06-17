@@ -46,6 +46,7 @@ class GUIvals{
         bool fixIter;
         double errThresh;
         bool debug;
+        bool gpuJob;
 
         // Job Advanced Settings
         bool largeFile;
@@ -75,6 +76,7 @@ class GUIvals{
                     fixIter{false},
                     errThresh{.00000001},
                     debug{false},
+                    gpuJob{false},
                     largeFile{false},
                     jobLogDir{"../job_logs"},
                     uuid{""},

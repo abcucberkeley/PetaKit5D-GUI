@@ -23,6 +23,7 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     ui->fixIterCheckBox->setChecked(guiVals.fixIter);
     ui->errThreshLineEdit->setText(QString::number(guiVals.errThresh));
     ui->debugCheckBox->setChecked(guiVals.debug);
+    ui->gpuJobCheckBox->setChecked(guiVals.gpuJob);
 
 }
 
@@ -50,6 +51,7 @@ void deconAdvanced::on_submitButton_clicked()
     gVals->fixIter = ui->fixIterCheckBox->isChecked();
     gVals->errThresh = ui->errThreshLineEdit->text().toDouble();
     gVals->debug = ui->debugCheckBox->isChecked();
+    gVals->gpuJob = ui->gpuJobCheckBox->isChecked();
     deconAdvanced::close();
 }
 

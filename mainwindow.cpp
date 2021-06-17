@@ -208,6 +208,7 @@ void MainWindow::writeSettings()
     settings.setValue("fixIter", guiVals.fixIter);
     settings.setValue("errThresh", guiVals.errThresh);
     settings.setValue("debug", guiVals.debug);
+    settings.setValue("gpuJob", guiVals.gpuJob);
 
     settings.beginWriteArray("psfFullpaths");
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
@@ -409,6 +410,7 @@ void MainWindow::readSettings()
     guiVals.fixIter = settings.value("fixIter").toBool();
     guiVals.errThresh = settings.value("errThresh").toDouble();
     guiVals.debug = settings.value("debug").toBool();
+    guiVals.gpuJob = settings.value("gpuJob").toBool();
 
 
     size = settings.beginReadArray("psfFullpaths");
@@ -675,13 +677,16 @@ void MainWindow::on_submitButton_clicked()
         //----TESTING ERR THRESH VALS------
 
         data.push_back(factory.createCharArray("fixIter"));
-        data.push_back(factory.createScalar<bool>(false));
+        data.push_back(factory.createScalar<bool>(guiVals.fixIter));
 
         data.push_back(factory.createCharArray("errThresh"));
-        data.push_back(factory.createScalar<double>(.00000001));
+        data.push_back(factory.createScalar<double>(guiVals.errThresh));
 
         data.push_back(factory.createCharArray("debug"));
-        data.push_back(factory.createScalar<bool>(false));
+        data.push_back(factory.createScalar<bool>(guiVals.debug));
+
+        data.push_back(factory.createCharArray("GPUJob"));
+        data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
 
 
         // Line below is for testing purposes
@@ -1024,13 +1029,16 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray(guiVals.RLMethod));
 
     data.push_back(factory.createCharArray("fixIter"));
-    data.push_back(factory.createScalar<bool>(false));
+    data.push_back(factory.createScalar<bool>(guiVals.fixIter));
 
     data.push_back(factory.createCharArray("errThresh"));
-    data.push_back(factory.createScalar<double>(.00000001));
+    data.push_back(factory.createScalar<double>(guiVals.errThresh));
 
     data.push_back(factory.createCharArray("debug"));
-    data.push_back(factory.createScalar<bool>(false));
+    data.push_back(factory.createScalar<bool>(guiVals.debug));
+
+    data.push_back(factory.createCharArray("GPUJob"));
+    data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
 
     // Line below is for testing purposes
     //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
