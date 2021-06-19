@@ -486,9 +486,17 @@ void MainWindow::on_submitButton_clicked()
     writeSettings();
 
     // Error if no data paths set
-    if(dPaths.size() == 0){
+    if(!dPaths.size()){
     QMessageBox messageBox;
     messageBox.warning(0,"Error","No data paths are set");
+    messageBox.setFixedSize(500,200);
+    return;
+    }
+
+    // Error if decon is set but no psf paths are set
+    if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
+    QMessageBox messageBox;
+    messageBox.warning(0,"Error","Decon is set but there are no psf paths set");
     messageBox.setFixedSize(500,200);
     return;
     }
