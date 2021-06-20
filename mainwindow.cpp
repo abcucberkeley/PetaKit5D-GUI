@@ -485,6 +485,8 @@ void MainWindow::on_submitButton_clicked()
     // Save settings in case of crash
     writeSettings();
 
+    // TODO: Seperate functions for error checking
+
     // Error if no data paths set
     if(!dPaths.size()){
     QMessageBox messageBox;
@@ -500,6 +502,25 @@ void MainWindow::on_submitButton_clicked()
     messageBox.setFixedSize(500,200);
     return;
     }
+
+    // Error if no channel patterns set
+    if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
+    QMessageBox messageBox;
+    messageBox.warning(0,"Error","No channel patterns set");
+    messageBox.setFixedSize(500,200);
+    return;
+    }
+    for(size_t i = 0; i < channelWidgets.size(); i++){
+        if(channelWidgets[i].second->isChecked()) break;
+        if(i == channelWidgets.size()-1 && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
+            QMessageBox messageBox;
+            messageBox.warning(0,"Error","No channel patterns set");
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+    }
+
+
 
     // Make it so the user can't submit another job while the job is running (In Progress)
     ui->submitButton->setEnabled(false);
