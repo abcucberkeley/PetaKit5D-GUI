@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "matlabthread.h"
+#include "matlabthreadmanager.h"
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
@@ -111,7 +111,7 @@ protected:
 private:
     void writeSettings();
     void readSettings();
-    matlabThread *mThread;
+    matlabThreadManager *mThreadManager;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;

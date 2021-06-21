@@ -26,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->maxCPUs->setText(maxCPU);
 
     // Threading and connecting signals/slots
-    mThread = new matlabThread(this);
-    connect(this, &MainWindow::jobStart, mThread, &matlabThread::onJobStart);
-    connect(mThread, &matlabThread::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
-    mThread->start(QThread::HighestPriority);
+    mThreadManager = new matlabThreadManager(this);
+    connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
+    connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
+    mThreadManager->start(QThread::HighestPriority);
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -50,7 +50,7 @@ MainWindow::~MainWindow()
     delete ui;
 
     // If the thread is not done, kill it (This may have to change later because it can be dangerous)
-    if(!mThread->isFinished()) mThread->terminate();
+    if(!mThreadManager->isFinished()) mThreadManager->terminate();
 }
 
 // Event triggered when main window is closed
@@ -450,7 +450,7 @@ void MainWindow::readSettings()
 void MainWindow::onEnableSubmitButton(){
     ui->submitButton->setEnabled(true);
     QMessageBox msgBox;
-    msgBox.setText("Ready for new job");
+    msgBox.setText("Job Submitted. Ready for new job!");
     msgBox.setIcon(QMessageBox::Information);
     msgBox.exec();
 }

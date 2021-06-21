@@ -63,6 +63,7 @@ SOURCES       = consoleoutput.cpp \
 		mainadvanced.cpp \
 		mainwindow.cpp \
 		matlabthread.cpp \
+		matlabthreadmanager.cpp \
 		stitchadvanced.cpp \
 		loadprevioussettings.cpp moc_consoleoutput.cpp \
 		moc_consolethread.cpp \
@@ -74,6 +75,7 @@ SOURCES       = consoleoutput.cpp \
 		moc_mainadvanced.cpp \
 		moc_mainwindow.cpp \
 		moc_matlabthread.cpp \
+		moc_matlabthreadmanager.cpp \
 		moc_stitchadvanced.cpp \
 		moc_loadprevioussettings.cpp
 OBJECTS       = consoleoutput.o \
@@ -87,6 +89,7 @@ OBJECTS       = consoleoutput.o \
 		mainadvanced.o \
 		mainwindow.o \
 		matlabthread.o \
+		matlabthreadmanager.o \
 		stitchadvanced.o \
 		loadprevioussettings.o \
 		moc_consoleoutput.o \
@@ -99,6 +102,7 @@ OBJECTS       = consoleoutput.o \
 		moc_mainadvanced.o \
 		moc_mainwindow.o \
 		moc_matlabthread.o \
+		moc_matlabthreadmanager.o \
 		moc_stitchadvanced.o \
 		moc_loadprevioussettings.o
 DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_pre.prf \
@@ -307,6 +311,7 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		mainadvanced.h \
 		mainwindow.h \
 		matlabthread.h \
+		matlabthreadmanager.h \
 		stitchadvanced.h \
 		loadprevioussettings.h consoleoutput.cpp \
 		consolethread.cpp \
@@ -319,6 +324,7 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		mainadvanced.cpp \
 		mainwindow.cpp \
 		matlabthread.cpp \
+		matlabthreadmanager.cpp \
 		stitchadvanced.cpp \
 		loadprevioussettings.cpp
 QMAKE_TARGET  = LLSM_Processing_GUI
@@ -742,8 +748,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlabthread.h stitchadvanced.h loadprevioussettings.h $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlabthread.cpp stitchadvanced.cpp loadprevioussettings.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlabthread.h matlabthreadmanager.h stitchadvanced.h loadprevioussettings.h $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlabthread.cpp matlabthreadmanager.cpp stitchadvanced.cpp loadprevioussettings.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents consoleoutput.ui datapaths.ui deconadvanced.ui dsradvanced.ui jobadvanced.ui jobsettings.ui mainadvanced.ui mainwindow.ui stitchadvanced.ui loadprevioussettings.ui $(DISTDIR)/
 	$(COPY_FILE) --parents LLSM_Processing_GUI_en_US.ts $(DISTDIR)/
 
@@ -777,9 +783,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
+compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
+	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 moc_consoleoutput.cpp: consoleoutput.h \
 		consolethread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
@@ -1345,7 +1351,7 @@ moc_datapaths.cpp: datapaths.h \
 
 moc_deconadvanced.cpp: deconadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -1419,6 +1425,7 @@ moc_deconadvanced.cpp: deconadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -1668,7 +1675,7 @@ moc_deconadvanced.cpp: deconadvanced.h \
 
 moc_dsradvanced.cpp: dsradvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -1742,6 +1749,7 @@ moc_dsradvanced.cpp: dsradvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -1991,7 +1999,7 @@ moc_dsradvanced.cpp: dsradvanced.h \
 
 moc_jobadvanced.cpp: jobadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -2065,6 +2073,7 @@ moc_jobadvanced.cpp: jobadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -2423,7 +2432,7 @@ moc_jobsettings.cpp: jobsettings.h \
 
 moc_mainadvanced.cpp: mainadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -2497,6 +2506,7 @@ moc_mainadvanced.cpp: mainadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -2745,7 +2755,7 @@ moc_mainadvanced.cpp: mainadvanced.h \
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainadvanced.h -o moc_mainadvanced.cpp
 
 moc_mainwindow.cpp: mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -2819,6 +2829,7 @@ moc_mainwindow.cpp: mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -3343,6 +3354,286 @@ moc_matlabthread.cpp: matlabthread.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthread.h -o moc_matlabthread.cpp
+
+moc_matlabthreadmanager.cpp: matlabthreadmanager.h \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Optional.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/publish_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_extdata_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayDimensions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/String.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Range.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/exception_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementTypedRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Enumeration.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MDArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ReferenceHolder.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/FunctionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/HelperFunctions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ReferenceHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/StringHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MemoryLayout.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MATLABStringReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Struct.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayFactory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/CharArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MatlabFieldIdentifier.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ForwardIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ObjectArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Object.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/object_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/EnumArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetReturnType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ArrayFactoryHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/task_reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/value_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/execution_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/value_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/matlab_engine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_factory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_interface_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/task_reference_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/matlab_engine_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_execution_interface_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_factory_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig-bootstrapped.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcore-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocessordetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcompilerdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypeinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsysinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlogging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qflags.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasicatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_bootstrap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qgenericatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_cxx11.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_msvc.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobalstatic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmutex.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnumeric.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversiontagging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnamespace.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstring.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qchar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrefcount.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringliteral.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringview.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringbuilder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhashfunctions.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpair.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainertools_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpoint.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraylist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregexp.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringmatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetatype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvarlengtharray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainerfwd.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstracteventdispatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeventloop.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractitemmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariant.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdebug.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiodevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlocale.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qshareddata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qset.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontiguouscache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractnativeeventfilter.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstracttransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydataops.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydatapointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasictimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbitarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbuffer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraymatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcalendar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborvalue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatetime.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborcommon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregularexpression.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurlquery.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/quuid.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcbormap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstreamreader.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfloat16.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstreamwriter.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcollator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcommandlineoption.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcommandlineparser.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreapplication.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconcatenatetablesproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcryptographichash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatastream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdeadlinetimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qelapsedtimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdir.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfileinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfiledevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdiriterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeasingcurve.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qendian.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeventtransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qexception.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfactoryinterface.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfileselector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QObject \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QStringList \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfilesystemwatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfinalstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuture.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfutureinterface.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrunnable.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qresultstore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuturesynchronizer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuturewatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhistorystate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qidentityproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qisenum.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qitemselectionmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonvalue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsondocument.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlibrary.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlibraryinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversionnumber.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlinkedlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlockfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qloggingcategory.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmargins.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmath.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmessageauthenticationcode.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetaobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimedata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimedatabase.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimetype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectcleanuphandler.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qoperatingsystemversion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qparallelanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpauseanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qplugin.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpluginloader.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocess.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpropertyanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariantanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qqueue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrandom.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qreadwritelock.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrect.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsize.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qresource.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsavefile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedvaluerollback.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopeguard.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsemaphore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsequentialanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedmemory.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsignalmapper.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsignaltransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsocketnotifier.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsortfilterproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstack.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstandardpaths.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstatemachine.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstorageinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlistmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemsemaphore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtemporarydir.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtemporaryfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextboundaryfinder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextcodec.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthread.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthreadpool.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthreadstorage.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimeline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimezone.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtranslator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtransposeproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypetraits.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qwaitcondition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDeadlineTimer \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qwineventnotifier.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qxmlstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcoreversion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QThread \
+		moc_predefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/Qt-5.15.2/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthreadmanager.h -o moc_matlabthreadmanager.cpp
 
 moc_stitchadvanced.cpp: stitchadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
@@ -4224,7 +4515,7 @@ datapaths.o: datapaths.cpp datapaths.h \
 
 deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -4298,6 +4589,7 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -4577,7 +4869,7 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 
 dsradvanced.o: dsradvanced.cpp dsradvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -4651,6 +4943,7 @@ dsradvanced.o: dsradvanced.cpp dsradvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -4934,7 +5227,7 @@ dsradvanced.o: dsradvanced.cpp dsradvanced.h \
 
 jobadvanced.o: jobadvanced.cpp jobadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -5008,6 +5301,7 @@ jobadvanced.o: jobadvanced.cpp jobadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -5401,7 +5695,7 @@ jobsettings.o: jobsettings.cpp jobsettings.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o jobsettings.o jobsettings.cpp
 
 main.o: main.cpp mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -5475,6 +5769,7 @@ main.o: main.cpp mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -5726,7 +6021,7 @@ main.o: main.cpp mainwindow.h \
 
 mainadvanced.o: mainadvanced.cpp mainadvanced.h \
 		mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -5800,6 +6095,7 @@ mainadvanced.o: mainadvanced.cpp mainadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -6071,7 +6367,7 @@ mainadvanced.o: mainadvanced.cpp mainadvanced.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainadvanced.o mainadvanced.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
-		matlabthread.h \
+		matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -6145,6 +6441,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
@@ -6729,6 +7026,284 @@ matlabthread.o: matlabthread.cpp matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qwineventnotifier.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qxmlstream.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcoreversion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QThread
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthread.o matlabthread.cpp
+
+matlabthreadmanager.o: matlabthreadmanager.cpp matlabthreadmanager.h \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Optional.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/publish_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_extdata_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayDimensions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/String.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Range.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/exception_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementTypedRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Enumeration.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MDArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ReferenceHolder.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/FunctionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/HelperFunctions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ReferenceHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/StringHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MemoryLayout.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MATLABStringReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Struct.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayFactory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/CharArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MatlabFieldIdentifier.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ForwardIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ObjectArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Object.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/object_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/EnumArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetReturnType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ArrayFactoryHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/task_reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/value_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/execution_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/value_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/matlab_engine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_factory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_interface_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/task_reference_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/matlab_engine_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_execution_interface_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_factory_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlabthread.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCore \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QtCoreDepends \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobal.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig-bootstrapped.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconfig.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcore-config.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocessordetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcompilerdetection.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypeinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsysinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlogging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qflags.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasicatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_bootstrap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qgenericatomic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_cxx11.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qatomic_msvc.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qglobalstatic.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmutex.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnumeric.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversiontagging.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qnamespace.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectdefs_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstring.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qchar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrefcount.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringliteral.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringview.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringbuilder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qalgorithms.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhashfunctions.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpair.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainertools_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpoint.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraylist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregexp.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringmatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreevent.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetatype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvarlengtharray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontainerfwd.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobject_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstracteventdispatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeventloop.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractitemmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariant.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdebug.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qiodevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlocale.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qshareddata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qset.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcontiguouscache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedpointer_impl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractnativeeventfilter.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstractstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qabstracttransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydataops.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qarraydatapointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbasictimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbitarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbuffer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qbytearraymatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcache.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcalendar.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborvalue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatetime.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborcommon.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qregularexpression.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurl.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qurlquery.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/quuid.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcbormap.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstreamreader.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfloat16.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcborstreamwriter.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcollator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcommandlineoption.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcommandlineparser.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcoreapplication.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qconcatenatetablesproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qcryptographichash.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdatastream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdeadlinetimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qelapsedtimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdir.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfileinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfiledevice.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qdiriterator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeasingcurve.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qendian.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qeventtransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qexception.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfactoryinterface.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfileselector.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QObject \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QStringList \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfilesystemwatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfinalstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuture.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfutureinterface.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrunnable.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qresultstore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuturesynchronizer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qfuturewatcher.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qhistorystate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qidentityproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qisenum.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qitemselectionmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonarray.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonvalue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsondocument.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qjsonobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlibrary.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlibraryinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qversionnumber.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlinkedlist.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qlockfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qloggingcategory.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmargins.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmath.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmessageauthenticationcode.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmetaobject.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimedata.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimedatabase.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qmimetype.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qobjectcleanuphandler.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qoperatingsystemversion.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qparallelanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpauseanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qplugin.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpointer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpluginloader.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qprocess.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qpropertyanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qvariantanimation.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qqueue.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrandom.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qreadwritelock.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qrect.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsize.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qresource.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsavefile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopedvaluerollback.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qscopeguard.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsemaphore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsequentialanimationgroup.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsettings.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsharedmemory.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsignalmapper.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsignaltransition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsocketnotifier.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsortfilterproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstack.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstandardpaths.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstate.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstatemachine.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstorageinfo.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qstringlistmodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qsystemsemaphore.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtemporarydir.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtemporaryfile.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextboundaryfinder.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtextcodec.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthread.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthreadpool.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qthreadstorage.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimeline.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimer.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtimezone.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtranslator.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtransposeproxymodel.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtypetraits.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qwaitcondition.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QDeadlineTimer \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qwineventnotifier.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qxmlstream.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/qtcoreversion.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QThread \
 		mainwindow.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMainWindow \
@@ -6772,7 +7347,7 @@ matlabthread.o: matlabthread.cpp matlabthread.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore/QFileInfo \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QMessageBox \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/qmessagebox.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthread.o matlabthread.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthreadmanager.o matlabthreadmanager.cpp
 
 stitchadvanced.o: stitchadvanced.cpp stitchadvanced.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets/QDialog \
@@ -7061,6 +7636,9 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_matlabthread.o: moc_matlabthread.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_matlabthread.o moc_matlabthread.cpp
+
+moc_matlabthreadmanager.o: moc_matlabthreadmanager.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_matlabthreadmanager.o moc_matlabthreadmanager.cpp
 
 moc_stitchadvanced.o: moc_stitchadvanced.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_stitchadvanced.o moc_stitchadvanced.cpp

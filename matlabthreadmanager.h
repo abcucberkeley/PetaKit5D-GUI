@@ -1,37 +1,16 @@
-#ifndef MATLABTHREAD_H
-#define MATLABTHREAD_H
+#ifndef MATLABTHREADMANAGER_H
+#define MATLABTHREADMANAGER_H
 
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include "matlabthread.h"
+#include <queue>
 #include <QtCore>
 #include <QThread>
 
 using namespace matlab::engine;
 
-class matlabThread : public QThread
-{
-    Q_OBJECT
-public:
-    matlabThread(QObject *parent, std::string funcType, size_t outA, std::vector<matlab::data::Array> data, unsigned int mThreadID);
-    ~matlabThread();
-    void run();
-public slots:
-
-signals:
-  //void enableSubmitButton();
-private:
-    std::unique_ptr<MATLABEngine> matlabPtr;
-    matlab::data::ArrayFactory factory;
-    size_t outA;
-    std::vector<matlab::data::Array> data;
-    std::string funcType;
-    unsigned int mThreadID;
-};
-
-#endif // MATLABTHREAD_H
-
-/*class matlabThreadManager : public QThread
+class matlabThreadManager : public QThread
 {
     Q_OBJECT
 public:
@@ -43,9 +22,12 @@ public slots:
 signals:
     void enableSubmitButton();
 private:
+    std::deque<matlabThread*> mThreads;
     std::unique_ptr<MATLABEngine> matlabPtr;
     matlab::data::ArrayFactory factory;
     size_t outA;
     std::vector<matlab::data::Array> data;
     std::string funcType;
-};*/
+};
+
+#endif // MATLABTHREADMANAGER_H

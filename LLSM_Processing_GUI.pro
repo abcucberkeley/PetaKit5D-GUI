@@ -16,6 +16,7 @@ HEADERS += consoleoutput.h \
            mainadvanced.h \
            mainwindow.h \
            matlabthread.h \
+           matlabthreadmanager.h \
            stitchadvanced.h \
            loadprevioussettings.h
 
@@ -41,6 +42,7 @@ SOURCES += consoleoutput.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
            matlabthread.cpp \
+           matlabthreadmanager.cpp \
            stitchadvanced.cpp \
            loadprevioussettings.cpp
 LIBS += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabEngine.so" \
