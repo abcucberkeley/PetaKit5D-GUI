@@ -502,6 +502,16 @@ void MainWindow::on_submitButton_clicked()
     messageBox.setFixedSize(500,200);
     return;
     }
+    else{
+        for(std::string path : psfFullPaths){
+            if(!QFileInfo::exists(QString::fromStdString(path))){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error",QString::fromStdString("Psf path " + path + " does not exist!"));
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+        }
+    }
 
     // Error if no channel patterns set
     if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
@@ -522,7 +532,7 @@ void MainWindow::on_submitButton_clicked()
 
 
 
-    // Make it so the user can't submit another job while the job is running (In Progress)
+    // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
     // We need this to convert C++ vars to MATLAB vars
