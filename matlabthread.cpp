@@ -1,6 +1,6 @@
 #include "matlabthread.h"
 
-matlabThread::matlabThread(QObject *parent, std::string funcType, size_t outA, std::vector<matlab::data::Array> data, unsigned int mThreadID) :
+matlabThread::matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, const unsigned int &mThreadID) :
     QThread(parent), funcType(funcType), outA(outA), data(data), mThreadID(mThreadID)
 {
 
@@ -27,6 +27,7 @@ void matlabThread::run(){
     //setup.push_back(factory.createStructArray({0,0},{}));
     //setup.push_back(factory.createScalar<bool>(true));
     //matlabPtr->feval(u"setup",([],true));
+
     if(funcType == "DeconOnly"){
         matlabPtr->feval(u"XR_decon_data_wrapper",outA,data);
     }
