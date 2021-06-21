@@ -13,7 +13,7 @@ class matlabThread : public QThread
 {
     Q_OBJECT
 public:
-    matlabThread(QObject *parent, std::string funcType, size_t outA, std::vector<matlab::data::Array> data, unsigned int mThreadID);
+    matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, const unsigned int &mThreadID);
     ~matlabThread();
     void run();
 public slots:

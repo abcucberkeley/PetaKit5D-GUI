@@ -18,7 +18,7 @@ public:
     ~matlabThreadManager();
     void run();
 public slots:
-    void onJobStart(const size_t outA, const std::vector<matlab::data::Array> &data, const std::string funcType);
+    void onJobStart(const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &funcType);
 signals:
     void enableSubmitButton();
 private:
