@@ -495,14 +495,6 @@ void MainWindow::on_submitButton_clicked()
 
     // TODO: Seperate functions for error checking
 
-    // Error if no data paths set
-    if(!dPaths.size()){
-    QMessageBox messageBox;
-    messageBox.warning(0,"Error","No data paths are set");
-    messageBox.setFixedSize(500,200);
-    return;
-    }
-
     // Error if decon is set but no psf paths are set
     if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
     QMessageBox messageBox;
@@ -518,23 +510,6 @@ void MainWindow::on_submitButton_clicked()
                 messageBox.setFixedSize(500,200);
                 return;
             }
-        }
-    }
-
-    // Error if no channel patterns set
-    if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-    QMessageBox messageBox;
-    messageBox.warning(0,"Error","No channel patterns set");
-    messageBox.setFixedSize(500,200);
-    return;
-    }
-    for(size_t i = 0; i < channelWidgets.size(); i++){
-        if(channelWidgets[i].second->isChecked()) break;
-        if(i == channelWidgets.size()-1 && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-            QMessageBox messageBox;
-            messageBox.warning(0,"Error","No channel patterns set");
-            messageBox.setFixedSize(500,200);
-            return;
         }
     }
 
@@ -1317,6 +1292,31 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
 // Functionality for the Next button on the main page
 void MainWindow::on_mainNextButton_clicked()
 {
+    // Error if no data paths set
+    if(!dPaths.size()){
+    QMessageBox messageBox;
+    messageBox.warning(0,"Error","No data paths are set. Please set at least one data path before continuing.");
+    messageBox.setFixedSize(500,200);
+    return;
+    }
+
+    // Error if no channel patterns set
+    if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
+    QMessageBox messageBox;
+    messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
+    messageBox.setFixedSize(500,200);
+    return;
+    }
+    for(size_t i = 0; i < channelWidgets.size(); i++){
+        if(channelWidgets[i].second->isChecked()) break;
+        if(i == channelWidgets.size()-1 && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
+            QMessageBox messageBox;
+            messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+    }
+
     // Set the checkmark and disable the tab
     ui->tabWidget->setTabText(ui->tabWidget->indexOf(ui->Main),QString::fromStdString("Main ✔"));
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Main),false);
