@@ -1669,9 +1669,3 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
     }
 }
 
-// Open review settings page
-void MainWindow::on_reviewSettingsButton_clicked()
-{
-
-}
-
