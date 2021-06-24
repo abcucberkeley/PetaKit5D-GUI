@@ -1676,3 +1676,4 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
         ui->customPatternsLineEdit->setEnabled(false);
     }
 }
+
