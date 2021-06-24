@@ -152,6 +152,11 @@ void dataPaths::on_submitButton_clicked()
         dpHand->resize(activePaths);
     }
     for(size_t i = 0; i < dpHand->size(); i++){
+        // If first path is empty then reset the vector
+        if(!i && std::get<1>(paths.at(i))->text().toStdString().empty()){
+            dpHand->clear();
+            break;
+        }
         dpHand->at(i) = std::get<1>(paths.at(i))->text().toStdString();
     }
     dataPaths::close();
