@@ -569,30 +569,28 @@ void MainWindow::on_submitButton_clicked()
         else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
 
         // Channel Patterns
+        data.push_back(factory.createCharArray("ChannelPatterns"));
         if(!ui->customPatternsCheckBox->isChecked()){
+            if(channelWidgets.size()){
+                // Grab indexes of checked boxes
+                std::vector<int> indexes;
+                for(size_t i = 0; i < channelWidgets.size(); i++){
+                    if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+                }
+                matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+                int cpi = 0;
+                // Go through checked indexes and the label text (channel pattern) in the cell array
+                for(int i : indexes){
 
-        if(channelWidgets.size()){
-            data.push_back(factory.createCharArray("ChannelPatterns"));
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < channelWidgets.size(); i++){
-                if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+                    // Convert from rich text to plain text
+                    QTextDocument toPlain;
+                    toPlain.setHtml(channelWidgets[i].first->text());
+
+                    channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                    cpi++;
+                }
+                data.push_back(channelPatterns);
             }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(channelWidgets[i].first->text());
-
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-
         }
         // Use custom patterns
         else{
@@ -615,7 +613,7 @@ void MainWindow::on_submitButton_clicked()
             for(size_t i = 0; i < patterns.size(); i++){
                 channelPatterns[i] = factory.createCharArray(patterns.at(i));
             }
-
+            data.push_back(channelPatterns);
         }
         // Currently not used
         //data.push_back(factory.createCharArray("Channels"));
@@ -806,10 +804,10 @@ void MainWindow::on_submitButton_clicked()
 
 
     // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
     if(!ui->customPatternsCheckBox->isChecked()){
 
     if(channelWidgets.size()){
-        data.push_back(factory.createCharArray("ChannelPatterns"));
         // Grab indexes of checked boxes
         std::vector<int> indexes;
         for(size_t i = 0; i < channelWidgets.size(); i++){
@@ -852,6 +850,7 @@ void MainWindow::on_submitButton_clicked()
         for(size_t i = 0; i < patterns.size(); i++){
             channelPatterns[i] = factory.createCharArray(patterns.at(i));
         }
+        data.push_back(channelPatterns);
 
     }
     // Currently not used
@@ -1604,6 +1603,7 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
     size_t channels = 0;
     std::vector<QString> channelNames;
+    if(!ui->customPatternsCheckBox->isChecked()){
     for(auto i : channelWidgets){
        if(i.second->isChecked()){
            channels++;
@@ -1612,6 +1612,25 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
            channelNames.push_back(i.first->text());
        }
     }
+    }
+    else{
+            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
+            std::string pattern;
+            for(size_t i = 0; i < patternLine.size(); i++){
+                if(patternLine.at(i) == ','){
+                    channelNames.push_back(QString::fromStdString(pattern));
+                    channels++;
+                    pattern.clear();
+                }
+                else{
+                    pattern.push_back(patternLine.at(i));
+                }
+            }
+            if(pattern.size()){
+                channelNames.push_back(QString::fromStdString(pattern));
+                channels++;
+            }
+        }
     dataPaths daPaths(psfFullPaths, false, mostRecentDir, channels, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
@@ -1648,5 +1667,11 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
     else{
         ui->customPatternsLineEdit->setEnabled(false);
     }
+}
+
+// Open review settings page
+void MainWindow::on_reviewSettingsButton_clicked()
+{
+
 }
 
