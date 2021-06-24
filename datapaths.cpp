@@ -72,7 +72,7 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
 
     // if there are no current data paths in the vector set it to 1
     // else its the size of how data paths there are
-    if(dPaths.size() == 0) activePaths = 1;
+    if(!channels) activePaths = 1;
     else activePaths = channels;
 
     // Check if max paths
