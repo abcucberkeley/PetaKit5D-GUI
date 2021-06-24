@@ -8,6 +8,7 @@
 #include "consoleoutput.h"
 #include "loadprevioussettings.h"
 #include <QTextDocument>
+#include <QObjectList>
 
 
 using namespace matlab::engine;
@@ -371,7 +372,7 @@ void MainWindow::readSettings()
     // Read DSR Advanced Settings
 
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
-    guiVals.BKRemoval = settings.value("BKRemoval").toDouble();
+    guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
     guiVals.resampleType = settings.value("resampleType").toString().toStdString();
     guiVals.resample = settings.value("resample").toULongLong();
 
@@ -490,6 +491,17 @@ void MainWindow::on_jobAdvancedSettingsButton_clicked()
 // Submit settings
 void MainWindow::on_submitButton_clicked()
 {
+    // Testing object list. Looping through all widgets
+    /*
+    QList<QWidget *> widgetList = ui->tabWidget->findChildren<QWidget *>();
+    std::cout << "Amount of c " << std::endl;
+    std::cout << "Amount of children found : " << widgetList.count() << std::endl;
+    for(auto widget : widgetList){
+        std::cout << widget->objectName().toStdString() << std::endl;
+    }
+    return;
+    */
+
     // Save settings in case of crash
     writeSettings();
 
@@ -526,7 +538,7 @@ void MainWindow::on_submitButton_clicked()
     std::vector<matlab::data::Array> data;
 
     // NOTE: We have to push a lot of things into our data array one at a time
-    // As far as I know there is no way around this, it's just the nature of how this API and our current pipeline are setup
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     //
     //
@@ -621,7 +633,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
         // This needs to change FIX
-        //TODO: FIX LOGIC FOR DECON ONLY
+        // TODO: FIX LOGIC FOR DECON ONLY
         data.push_back(factory.createCharArray("Save16bit"));
         if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
         else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
@@ -1060,9 +1072,6 @@ void MainWindow::on_submitButton_clicked()
 
     data.push_back(factory.createCharArray("GPUJob"));
     data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
-
-    // Line below is for testing purposes
-    //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 
     data.push_back(factory.createCharArray("DeconIter"));
     data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
