@@ -103,6 +103,10 @@ void MainWindow::writeSettings()
     }
     settings.endArray();
 
+    // Save custom patterns
+    settings.setValue("customPatternsCheckBox",ui->customPatternsCheckBox->isChecked());
+    settings.setValue("customPatterns", ui->customPatternsLineEdit->text());
+
     settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
     settings.setValue("xyPixelSize",guiVals.xyPixelSize);
@@ -290,6 +294,10 @@ void MainWindow::readSettings()
         tChecks.push_back(settings.value("channelChecksi").toBool());
     }
     settings.endArray();
+
+    // Read custom patterns
+    ui->customPatternsCheckBox->setChecked(settings.value("customPatternsCheckBox").toBool());
+    ui->customPatternsLineEdit->setText(settings.value("customPatterns").toString());
 
     // Create widgets and put them in channelWidgets
     for(size_t i = 0; i < tLabels.size(); i++){
