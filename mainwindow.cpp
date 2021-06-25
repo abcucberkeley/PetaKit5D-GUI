@@ -497,7 +497,9 @@ void MainWindow::on_submitButton_clicked()
     std::cout << "Amount of c " << std::endl;
     std::cout << "Amount of children found : " << widgetList.count() << std::endl;
     for(auto widget : widgetList){
-        std::cout << widget->objectName().toStdString() << std::endl;
+        if(widget->objectName().toStdString().find("CheckBox") != std::string::npos){
+            std::cout << widget->objectName().toStdString() << std::endl;
+        }
     }
     return;
     */
@@ -506,6 +508,16 @@ void MainWindow::on_submitButton_clicked()
     writeSettings();
 
     // TODO: Seperate functions for error checking
+
+    // Error if data path does not exist when submit is pressed
+    for(std::string path : dPaths){
+        if(!QFileInfo::exists(QString::fromStdString(path))){
+            QMessageBox messageBox;
+            messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path + "\" does not exist!"));
+            messageBox.setFixedSize(500,200);
+            return;
+        }
+    }
 
     // Error if decon is set but no psf paths are set
     if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
@@ -518,7 +530,7 @@ void MainWindow::on_submitButton_clicked()
         for(std::string path : psfFullPaths){
             if(!QFileInfo::exists(QString::fromStdString(path))){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error",QString::fromStdString("Psf path " + path + " does not exist!"));
+                messageBox.warning(0,"Error",QString::fromStdString("Psf path \"" + path + "\" does not exist!"));
                 messageBox.setFixedSize(500,200);
                 return;
             }
