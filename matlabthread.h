@@ -30,22 +30,3 @@ private:
 };
 
 #endif // MATLABTHREAD_H
-
-/*class matlabThreadManager : public QThread
-{
-    Q_OBJECT
-public:
-    matlabThreadManager(QObject *parent = 0);
-    ~matlabThreadManager();
-    void run();
-public slots:
-    void onJobStart(const size_t outA, const std::vector<matlab::data::Array> &data, const std::string funcType);
-signals:
-    void enableSubmitButton();
-private:
-    std::unique_ptr<MATLABEngine> matlabPtr;
-    matlab::data::ArrayFactory factory;
-    size_t outA;
-    std::vector<matlab::data::Array> data;
-    std::string funcType;
-};*/

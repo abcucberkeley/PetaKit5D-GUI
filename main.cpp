@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <qapplication.h>
+#include <QSysInfo>
 #include <stdio.h>
 #include <stdlib.h>
 

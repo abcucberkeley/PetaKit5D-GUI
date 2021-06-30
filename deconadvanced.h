@@ -34,6 +34,8 @@ private slots:
 
     void on_otfgenPathLineEdit_textChanged(const QString &arg1);
 
+    void on_rlMethodSimplifiedRadioButton_toggled(bool checked);
+
 private:
     Ui::deconAdvanced *ui;
     GUIvals* gVals;
