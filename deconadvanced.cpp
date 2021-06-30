@@ -18,13 +18,28 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     ui->cudaDeconPathLineEdit->setText(QString::fromStdString(guiVals.cudaDeconPath));
     ui->otfgenPathLineEdit->setText(QString::fromStdString(guiVals.OTFGENPath));
     if(guiVals.RLMethod == "original") ui->rlMethodOriginalRadioButton->setChecked(true);
-    else if(guiVals.RLMethod == "simplified") ui->rlMethodSimplifiedRadioButton->setChecked(true);
+    else if(guiVals.RLMethod == "simplified"){
+        ui->rlMethodSimplifiedRadioButton->setChecked(true);
+        ui->fixIterLabel->setEnabled(true);
+        ui->fixIterCheckBox->setEnabled(true);
+        ui->errThreshLabel->setEnabled(true);
+        ui->errThreshLineEdit->setEnabled(true);
+        ui->debugLabel->setEnabled(true);
+        ui->debugCheckBox->setEnabled(true);
+    }
     else if (guiVals.RLMethod == "cudagen") ui->rlMethodCudaGenRadioButton->setChecked(true);
     ui->fixIterCheckBox->setChecked(guiVals.fixIter);
     ui->errThreshLineEdit->setText(QString::number(guiVals.errThresh));
     ui->debugCheckBox->setChecked(guiVals.debug);
     ui->gpuJobCheckBox->setChecked(guiVals.gpuJob);
-
+    if(guiVals.RLMethod != "simplified"){
+        ui->fixIterLabel->setEnabled(false);
+        ui->fixIterCheckBox->setEnabled(false);
+        ui->errThreshLabel->setEnabled(false);
+        ui->errThreshLineEdit->setEnabled(false);
+        ui->debugLabel->setEnabled(false);
+        ui->debugCheckBox->setEnabled(false);
+    }
 }
 
 deconAdvanced::~deconAdvanced()
@@ -87,3 +102,25 @@ void deconAdvanced::on_otfgenPathLineEdit_textChanged(const QString &arg1)
 {
     ui->otfgenPathLineEdit->setToolTip(arg1);
 }
+
+// Disable extra options if simplified is not checked
+void deconAdvanced::on_rlMethodSimplifiedRadioButton_toggled(bool checked)
+{
+    if(checked){
+        ui->fixIterLabel->setEnabled(true);
+        ui->fixIterCheckBox->setEnabled(true);
+        ui->errThreshLabel->setEnabled(true);
+        ui->errThreshLineEdit->setEnabled(true);
+        ui->debugLabel->setEnabled(true);
+        ui->debugCheckBox->setEnabled(true);
+    }
+    else{
+        ui->fixIterLabel->setEnabled(false);
+        ui->fixIterCheckBox->setEnabled(false);
+        ui->errThreshLabel->setEnabled(false);
+        ui->errThreshLineEdit->setEnabled(false);
+        ui->debugLabel->setEnabled(false);
+        ui->debugCheckBox->setEnabled(false);
+    }
+}
+
