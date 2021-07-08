@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = LLSM_Processing_GUI1.0.0
-DISTDIR = /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/.tmp/LLSM_Processing_GUI1.0.0
+DISTDIR = /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/.tmp/LLSM_Processing_GUI1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/lib
 LIBS          = $(SUBLIBS) /global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabEngine.so /global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabDataArray.so /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/lib/libQt5Widgets.so /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/lib/libQt5Gui.so /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/lib/libQt5Core.so -lGL -lpthread   
@@ -62,6 +62,8 @@ SOURCES       = consoleoutput.cpp \
 		main.cpp \
 		mainadvanced.cpp \
 		mainwindow.cpp \
+		matlaboutputthread.cpp \
+		matlaboutputwindow.cpp \
 		matlabthread.cpp \
 		matlabthreadmanager.cpp \
 		stitchadvanced.cpp \
@@ -74,6 +76,8 @@ SOURCES       = consoleoutput.cpp \
 		moc_jobsettings.cpp \
 		moc_mainadvanced.cpp \
 		moc_mainwindow.cpp \
+		moc_matlaboutputthread.cpp \
+		moc_matlaboutputwindow.cpp \
 		moc_matlabthread.cpp \
 		moc_matlabthreadmanager.cpp \
 		moc_stitchadvanced.cpp \
@@ -88,6 +92,8 @@ OBJECTS       = consoleoutput.o \
 		main.o \
 		mainadvanced.o \
 		mainwindow.o \
+		matlaboutputthread.o \
+		matlaboutputwindow.o \
 		matlabthread.o \
 		matlabthreadmanager.o \
 		stitchadvanced.o \
@@ -101,6 +107,8 @@ OBJECTS       = consoleoutput.o \
 		moc_jobsettings.o \
 		moc_mainadvanced.o \
 		moc_mainwindow.o \
+		moc_matlaboutputthread.o \
+		moc_matlaboutputwindow.o \
 		moc_matlabthread.o \
 		moc_matlabthreadmanager.o \
 		moc_stitchadvanced.o \
@@ -281,6 +289,7 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/qt_config.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++/qmake.conf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/exclusive_builds.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/toolchain.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/default_pre.prf \
@@ -309,6 +318,8 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		jobsettings.h \
 		mainadvanced.h \
 		mainwindow.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		matlabthread.h \
 		matlabthreadmanager.h \
 		stitchadvanced.h \
@@ -322,6 +333,8 @@ DIST          = /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspe
 		main.cpp \
 		mainadvanced.cpp \
 		mainwindow.cpp \
+		matlaboutputthread.cpp \
+		matlaboutputwindow.cpp \
 		matlabthread.cpp \
 		matlabthreadmanager.cpp \
 		stitchadvanced.cpp \
@@ -334,7 +347,7 @@ TARGET        = LLSM_Processing_GUI
 first: all
 ####### Build rules
 
-LLSM_Processing_GUI: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h $(OBJECTS)  
+LLSM_Processing_GUI: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_matlaboutputwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: LLSM_Processing_GUI.pro /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++/qmake.conf /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_pre.prf \
@@ -513,6 +526,7 @@ Makefile: LLSM_Processing_GUI.pro /global/home/groups/software/sl-7.x86_64/modul
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/qt_config.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++/qmake.conf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/exclusive_builds.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/toolchain.prf \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/default_pre.prf \
@@ -710,6 +724,7 @@ Makefile: LLSM_Processing_GUI.pro /global/home/groups/software/sl-7.x86_64/modul
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/qt_config.prf:
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++/qmake.conf:
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/exclusive_builds.prf:
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/toolchain.prf:
 /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/default_pre.prf:
@@ -745,9 +760,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlabthread.h matlabthreadmanager.h stitchadvanced.h loadprevioussettings.h $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlabthread.cpp matlabthreadmanager.cpp stitchadvanced.cpp loadprevioussettings.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents consoleoutput.ui datapaths.ui deconadvanced.ui dsradvanced.ui jobadvanced.ui jobsettings.ui mainadvanced.ui mainwindow.ui stitchadvanced.ui loadprevioussettings.ui $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.h consolethread.h datapaths.h deconadvanced.h dsradvanced.h jobadvanced.h jobsettings.h mainadvanced.h mainwindow.h matlaboutputthread.h matlaboutputwindow.h matlabthread.h matlabthreadmanager.h stitchadvanced.h loadprevioussettings.h $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.cpp consolethread.cpp datapaths.cpp deconadvanced.cpp dsradvanced.cpp jobadvanced.cpp jobsettings.cpp main.cpp mainadvanced.cpp mainwindow.cpp matlaboutputthread.cpp matlaboutputwindow.cpp matlabthread.cpp matlabthreadmanager.cpp stitchadvanced.cpp loadprevioussettings.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents consoleoutput.ui datapaths.ui deconadvanced.ui dsradvanced.ui jobadvanced.ui jobsettings.ui mainadvanced.ui mainwindow.ui matlaboutputwindow.ui stitchadvanced.ui loadprevioussettings.ui $(DISTDIR)/
 	$(COPY_FILE) --parents LLSM_Processing_GUI_en_US.ts $(DISTDIR)/
 
 
@@ -780,24 +795,24 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
+compiler_moc_header_make_all: moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlaboutputthread.cpp moc_matlaboutputwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
+	-$(DEL_FILE) moc_consoleoutput.cpp moc_consolethread.cpp moc_datapaths.cpp moc_deconadvanced.cpp moc_dsradvanced.cpp moc_jobadvanced.cpp moc_jobsettings.cpp moc_mainadvanced.cpp moc_mainwindow.cpp moc_matlaboutputthread.cpp moc_matlaboutputwindow.cpp moc_matlabthread.cpp moc_matlabthreadmanager.cpp moc_stitchadvanced.cpp moc_loadprevioussettings.cpp
 moc_consoleoutput.cpp: consoleoutput.h \
 		consolethread.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include consoleoutput.h -o moc_consoleoutput.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include consoleoutput.h -o moc_consoleoutput.cpp
 
 moc_consolethread.cpp: consolethread.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include consolethread.h -o moc_consolethread.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include consolethread.h -o moc_consolethread.cpp
 
 moc_datapaths.cpp: datapaths.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include datapaths.h -o moc_datapaths.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include datapaths.h -o moc_datapaths.cpp
 
 moc_deconadvanced.cpp: deconadvanced.h \
 		mainwindow.h \
@@ -876,9 +891,11 @@ moc_deconadvanced.cpp: deconadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include deconadvanced.h -o moc_deconadvanced.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include deconadvanced.h -o moc_deconadvanced.cpp
 
 moc_dsradvanced.cpp: dsradvanced.h \
 		mainwindow.h \
@@ -957,9 +974,11 @@ moc_dsradvanced.cpp: dsradvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include dsradvanced.h -o moc_dsradvanced.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include dsradvanced.h -o moc_dsradvanced.cpp
 
 moc_jobadvanced.cpp: jobadvanced.h \
 		mainwindow.h \
@@ -1038,14 +1057,16 @@ moc_jobadvanced.cpp: jobadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include jobadvanced.h -o moc_jobadvanced.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include jobadvanced.h -o moc_jobadvanced.cpp
 
 moc_jobsettings.cpp: jobsettings.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include jobsettings.h -o moc_jobsettings.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include jobsettings.h -o moc_jobsettings.cpp
 
 moc_mainadvanced.cpp: mainadvanced.h \
 		mainwindow.h \
@@ -1124,9 +1145,11 @@ moc_mainadvanced.cpp: mainadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainadvanced.h -o moc_mainadvanced.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainadvanced.h -o moc_mainadvanced.cpp
 
 moc_mainwindow.cpp: mainwindow.h \
 		matlabthreadmanager.h \
@@ -1204,11 +1227,13 @@ moc_mainwindow.cpp: mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
-moc_matlabthread.cpp: matlabthread.h \
+moc_matlaboutputthread.cpp: matlaboutputthread.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
@@ -1284,7 +1309,91 @@ moc_matlabthread.cpp: matlabthread.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthread.h -o moc_matlabthread.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlaboutputthread.h -o moc_matlaboutputthread.cpp
+
+moc_matlaboutputwindow.cpp: matlaboutputwindow.h \
+		moc_predefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlaboutputwindow.h -o moc_matlaboutputwindow.cpp
+
+moc_matlabthread.cpp: matlabthread.h \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Optional.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/publish_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_extdata_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayDimensions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/String.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Range.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/exception_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementTypedRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Enumeration.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MDArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ReferenceHolder.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/FunctionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/HelperFunctions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ReferenceHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/StringHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MemoryLayout.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MATLABStringReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Struct.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayFactory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/CharArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MatlabFieldIdentifier.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ForwardIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ObjectArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Object.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/object_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/EnumArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetReturnType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ArrayFactoryHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/task_reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/value_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/execution_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/value_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/matlab_engine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_factory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_interface_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/task_reference_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/matlab_engine_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_execution_interface_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_factory_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlaboutputthread.h \
+		moc_predefs.h \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthread.h -o moc_matlabthread.cpp
 
 moc_matlabthreadmanager.cpp: matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
@@ -1361,27 +1470,28 @@ moc_matlabthreadmanager.cpp: matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthreadmanager.h -o moc_matlabthreadmanager.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include matlabthreadmanager.h -o moc_matlabthreadmanager.cpp
 
 moc_stitchadvanced.cpp: stitchadvanced.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include stitchadvanced.h -o moc_stitchadvanced.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include stitchadvanced.h -o moc_stitchadvanced.cpp
 
 moc_loadprevioussettings.cpp: loadprevioussettings.h \
 		moc_predefs.h \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc
-	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/local/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include loadprevioussettings.h -o moc_loadprevioussettings.cpp
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/moc $(DEFINES) --include /clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI/moc_predefs.h -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/mkspecs/linux-g++ -I/clusterfs/fiona/matthewmueller/devLLSM_Processing_GUI/LLSM_Processing_GUI -I/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtWidgets -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtGui -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include/QtCore -I/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libicu/50.2/include -I/global/home/groups/software/sl-7.x86_64/modules/libxcb-render-util/0.3.9/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/libpng/1.6.34/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/zlib/1.2.11/include -I/global/software/sl-7.x86_64/modules/tools/xkbcommon/0.7.1/include -I/global/software/sl-7.x86_64/modules/cuda/10.2/cudnn/7.6.5/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/include -I/global/software/sl-7.x86_64/modules/langs/cuda/10.2/cublas/include -I/global/software/sl-7.x86_64/modules/langs/python/3.7/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0 -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/x86_64-pc-linux-gnu -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include/c++/8.3.0/backward -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include -I/usr/local/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/include -I/global/home/groups/consultsw/sl-7.x86_64/modules/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed -I/usr/include loadprevioussettings.h -o moc_loadprevioussettings.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
+compiler_uic_make_all: ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_matlaboutputwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
+	-$(DEL_FILE) ui_consoleoutput.h ui_datapaths.h ui_deconadvanced.h ui_dsradvanced.h ui_jobadvanced.h ui_jobsettings.h ui_mainadvanced.h ui_mainwindow.h ui_matlaboutputwindow.h ui_stitchadvanced.h ui_loadprevioussettings.h
 ui_consoleoutput.h: consoleoutput.ui \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic consoleoutput.ui -o ui_consoleoutput.h
@@ -1413,6 +1523,10 @@ ui_mainadvanced.h: mainadvanced.ui \
 ui_mainwindow.h: mainwindow.ui \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
 	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic mainwindow.ui -o ui_mainwindow.h
+
+ui_matlaboutputwindow.h: matlaboutputwindow.ui \
+		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
+	/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic matlaboutputwindow.ui -o ui_matlaboutputwindow.h
 
 ui_stitchadvanced.h: stitchadvanced.ui \
 		/global/home/groups/software/sl-7.x86_64/modules/Qt-5.15.2/bin/uic
@@ -1521,6 +1635,8 @@ deconadvanced.o: deconadvanced.cpp deconadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		ui_deconadvanced.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o deconadvanced.o deconadvanced.cpp
 
@@ -1601,6 +1717,8 @@ dsradvanced.o: dsradvanced.cpp dsradvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		ui_dsradvanced.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dsradvanced.o dsradvanced.cpp
 
@@ -1681,6 +1799,8 @@ jobadvanced.o: jobadvanced.cpp jobadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		ui_jobadvanced.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o jobadvanced.o jobadvanced.cpp
 
@@ -1763,7 +1883,9 @@ main.o: main.cpp mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
-		matlabthread.h
+		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainadvanced.o: mainadvanced.cpp mainadvanced.h \
@@ -1843,6 +1965,8 @@ mainadvanced.o: mainadvanced.cpp mainadvanced.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		ui_mainadvanced.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainadvanced.o mainadvanced.cpp
 
@@ -1922,6 +2046,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
+		matlaboutputthread.h \
+		matlaboutputwindow.h \
 		ui_mainwindow.h \
 		mainadvanced.h \
 		dsradvanced.h \
@@ -1932,6 +2058,86 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		consolethread.h \
 		loadprevioussettings.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
+
+matlaboutputthread.o: matlaboutputthread.cpp matlaboutputthread.h \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_data_array_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Optional.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/publish_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/matlab_extdata_defs.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayDimensions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetArrayType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/String.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Range.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/exception_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementTypedRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Enumeration.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MDArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayElementRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ReferenceHolder.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ExceptionHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/FunctionType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/HelperFunctions.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ReferenceHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/StringHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MemoryLayout.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MATLABStringReferenceExt.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Struct.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedIterator_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayFactory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/CharArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/TypedArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/MatlabFieldIdentifier.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ForwardIterator.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/StructRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArray_VS2013.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ObjectArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/Object.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/object_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/EnumArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/GetReturnType.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/detail/ArrayFactoryHelpers.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/task_reference.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/value_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/execution_interface.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/value_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabExecutionInterface/detail/exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/cpp_engine_api_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_exception.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/matlab_engine.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_future.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_factory.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/engine_interface_util.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/task_reference_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_exception_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/matlab_engine_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_execution_interface_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_future_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine/detail/engine_factory_impl.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArrayRef.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlaboutputthread.o matlaboutputthread.cpp
+
+matlaboutputwindow.o: matlaboutputwindow.cpp matlaboutputwindow.h \
+		ui_matlaboutputwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlaboutputwindow.o matlaboutputwindow.cpp
 
 matlabthread.o: matlabthread.cpp matlabthread.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabEngine.hpp \
@@ -2006,7 +2212,8 @@ matlabthread.o: matlabthread.cpp matlabthread.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SparseArrayRef.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/ArrayVisitors.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
-		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp
+		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
+		matlaboutputthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthread.o matlabthread.cpp
 
 matlabthreadmanager.o: matlabthreadmanager.cpp matlabthreadmanager.h \
@@ -2084,7 +2291,9 @@ matlabthreadmanager.o: matlabthreadmanager.cpp matlabthreadmanager.h \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/VariableInfo.hpp \
 		/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include/MatlabDataArray/SymbolStatus.hpp \
 		matlabthread.h \
-		mainwindow.h
+		matlaboutputthread.h \
+		mainwindow.h \
+		matlaboutputwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matlabthreadmanager.o matlabthreadmanager.cpp
 
 stitchadvanced.o: stitchadvanced.cpp stitchadvanced.h \
@@ -2121,6 +2330,12 @@ moc_mainadvanced.o: moc_mainadvanced.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_matlaboutputthread.o: moc_matlaboutputthread.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_matlaboutputthread.o moc_matlaboutputthread.cpp
+
+moc_matlaboutputwindow.o: moc_matlaboutputwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_matlaboutputwindow.o moc_matlaboutputwindow.cpp
 
 moc_matlabthread.o: moc_matlabthread.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_matlabthread.o moc_matlabthread.cpp

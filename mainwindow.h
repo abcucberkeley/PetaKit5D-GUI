@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "matlabthreadmanager.h"
+#include "matlaboutputwindow.h"
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
@@ -103,7 +104,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(const size_t outA, const std::vector<matlab::data::Array> &data, const std::string funcType);
+    void jobStart(const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &funcType, const std::string &mainPath);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -112,6 +113,7 @@ private:
     void writeSettings();
     void readSettings();
     matlabThreadManager *mThreadManager;
+    matlabOutputWindow *mOutputWindow;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;

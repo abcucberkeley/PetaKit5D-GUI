@@ -32,6 +32,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
 
+
+    // Job Output
+    mOutputWindow = nullptr;
+
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Stitch),false);
@@ -52,6 +56,7 @@ MainWindow::~MainWindow()
 
     // If the thread is not done, kill it (This may have to change later because it can be dangerous)
     if(!mThreadManager->isFinished()) mThreadManager->terminate();
+
 }
 
 // Event triggered when main window is closed
@@ -60,6 +65,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Write current user settings
         writeSettings();
         event->accept();
+        if(mOutputWindow->isVisible()) mOutputWindow->close();
 }
 
 // Write user settings
@@ -558,8 +564,12 @@ void MainWindow::on_submitButton_clicked()
     //
     //
 
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    std::string mainPath = dPaths.at(0);
+
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
+
         matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
         for(size_t i = 0; i < dPaths.size(); i++){
             dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
@@ -883,7 +893,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
     // This needs to change FIX
-    //TODO: FIX LOGIC FOR DECON ONLY
+    // TODO: FIX LOGIC FOR DECON ONLY
     data.push_back(factory.createCharArray("Save16bit"));
     if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
     else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
@@ -1148,14 +1158,14 @@ void MainWindow::on_submitButton_clicked()
         funcType="DeconOnly";
     }
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType);
+    emit jobStart(outA, data, funcType, mainPath);
 
     // Output Console text to another window (Work in Progress) (For Windows only most likely)
-    /*
-    (consoleOutput cOutput;
-    cOutput.setModal(true);
-    cOutput.exec();
-    */
+
+    mOutputWindow = new matlabOutputWindow();
+    mOutputWindow->setModal(false);
+    mOutputWindow->show();
+
 }
 
 // Browse Stitch Result Dir Folder
