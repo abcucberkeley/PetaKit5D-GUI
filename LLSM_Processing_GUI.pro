@@ -5,6 +5,12 @@ TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
 
+MATLAB_VER_WIN = R2020b
+MATLAB_VER_CLUSTER = r2020b
+
+MATLAB_ROOT_WIN = C:/Program Files/MATLAB
+MATLAB_ROOT_CLUSTER = /global/software/sl-7.x86_64/modules/tools/matlab
+
 # Input
 HEADERS += consoleoutput.h \
            consolethread.h \
@@ -15,6 +21,8 @@ HEADERS += consoleoutput.h \
            jobsettings.h \
            mainadvanced.h \
            mainwindow.h \
+           matlaboutputthread.h \
+           matlaboutputwindow.h \
            matlabthread.h \
            matlabthreadmanager.h \
            stitchadvanced.h \
@@ -28,6 +36,7 @@ FORMS += consoleoutput.ui \
          jobsettings.ui \
          mainadvanced.ui \
          mainwindow.ui \
+         matlaboutputwindow.ui \
          stitchadvanced.ui \
          loadprevioussettings.ui
 
@@ -41,13 +50,33 @@ SOURCES += consoleoutput.cpp \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
+           matlaboutputthread.cpp \
+           matlaboutputwindow.cpp \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
            stitchadvanced.cpp \
            loadprevioussettings.cpp
-LIBS += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabEngine.so" \
-        "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/bin/glnxa64/libMatlabDataArray.so"
-
-INCLUDEPATH += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include"
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
+
+unix:!macx {
+LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \
+        "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabDataArray.so"
+
+INCLUDEPATH += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include"
+}
+
+win32 {
+LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibeng \
+       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibmx \
+       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabEngine \
+       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabDataArray
+
+
+INCLUDEPATH += "C:/Program Files/MATLAB/R2020b/extern/include"
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+}
