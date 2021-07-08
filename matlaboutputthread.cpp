@@ -1,7 +1,7 @@
 #include "matlaboutputthread.h"
 
-matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath) :
-    QThread(parent), output(output), mainPath(mainPath), jobFinished(false)
+matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath, const unsigned int &mThreadID) :
+    QThread(parent), output(output), mainPath(mainPath), mThreadID(mThreadID), jobFinished(false)
 {
 
 }
@@ -14,6 +14,8 @@ void matlabOutputThread::run(){
     std::string nOut;
     QDir dir(QString::fromStdString(mainPath+"/jobOutput"));
     if (!dir.exists()) dir.mkpath(".");
+
+    QString filename=dir.absolutePath()+QString::fromStdString("/job")+QString::number(mThreadID)+QDateTime::currentDateTime().toString("_yyyyMMdd_HH_mm_ss")+QString::fromStdString(".txt");
 
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){
         sleep(2);
@@ -32,7 +34,6 @@ void matlabOutputThread::run(){
             }
         }
 
-        QString filename=dir.absolutePath()+QString::fromStdString("/test.txt");
         QFile file(filename);
         if (file.open(QIODevice::WriteOnly | QIODevice::Append))
         {

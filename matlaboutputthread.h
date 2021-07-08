@@ -13,7 +13,7 @@ class matlabOutputThread : public QThread
 {
     Q_OBJECT
 public:
-    matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath);
+    matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath, const unsigned int &mThreadID);
     ~matlabOutputThread();
     void run();
 public slots:
@@ -21,6 +21,7 @@ public slots:
 private:
     std::shared_ptr<StringBuf> output;
     std::string mainPath;
+    unsigned int mThreadID;
     bool jobFinished;
 };
 

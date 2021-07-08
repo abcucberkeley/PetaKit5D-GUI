@@ -37,7 +37,7 @@ void matlabThread::run(){
 
     // Create string buffer for standard output TESTING
     std::shared_ptr<StringBuf> output = std::make_shared<StringBuf>();
-    mOutThread = new matlabOutputThread(this, output, mainPath);
+    mOutThread = new matlabOutputThread(this, output, mainPath,mThreadID);
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);
     mOutThread->start(QThread::NormalPriority);
 

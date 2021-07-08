@@ -22,10 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
-    // Set a variable to see how many threads the user can use for matlab (Unused for now)
-    //QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
-    //ui->maxCPUs->setText(maxCPU);
-
     // Threading and connecting signals/slots
     mThreadManager = new matlabThreadManager(this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
@@ -65,7 +61,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Write current user settings
         writeSettings();
         event->accept();
-        if(mOutputWindow->isVisible()) mOutputWindow->close();
+        if(mOutputWindow) mOutputWindow->close();
 }
 
 // Write user settings
@@ -516,7 +512,7 @@ void MainWindow::on_submitButton_clicked()
     // TODO: Seperate functions for error checking
 
     // Error if data path does not exist when submit is pressed
-    for(std::string path : dPaths){
+    for(const std::string &path : dPaths){
         if(!QFileInfo::exists(QString::fromStdString(path))){
             QMessageBox messageBox;
             messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path + "\" does not exist!"));
@@ -533,7 +529,7 @@ void MainWindow::on_submitButton_clicked()
     return;
     }
     else{
-        for(std::string path : psfFullPaths){
+        for(const std::string &path : psfFullPaths){
             if(!QFileInfo::exists(QString::fromStdString(path))){
                 QMessageBox messageBox;
                 messageBox.warning(0,"Error",QString::fromStdString("Psf path \"" + path + "\" does not exist!"));
@@ -977,8 +973,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("LowerLimit"));
     data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
-    //guiVals.resampleType = "xy_isotropic";
-
+    // TODO: Update Resample
     data.push_back(factory.createCharArray("resampleType"));
     data.push_back(factory.createCharArray(guiVals.resampleType));
 
@@ -1160,8 +1155,7 @@ void MainWindow::on_submitButton_clicked()
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mainPath);
 
-    // Output Console text to another window (Work in Progress) (For Windows only most likely)
-
+    // Output Window
     mOutputWindow = new matlabOutputWindow();
     mOutputWindow->setModal(false);
     mOutputWindow->show();
