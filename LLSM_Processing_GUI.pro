@@ -12,8 +12,7 @@ MATLAB_ROOT_WIN = C:/Program Files/MATLAB
 MATLAB_ROOT_CLUSTER = /global/software/sl-7.x86_64/modules/tools/matlab
 
 # Input
-HEADERS += consoleoutput.h \
-           consolethread.h \
+HEADERS += \
            datapaths.h \
            deconadvanced.h \
            dsradvanced.h \
@@ -23,12 +22,13 @@ HEADERS += consoleoutput.h \
            mainwindow.h \
            matlaboutputthread.h \
            matlaboutputwindow.h \
+           matlaboutputwindowthread.h \
            matlabthread.h \
            matlabthreadmanager.h \
            stitchadvanced.h \
            loadprevioussettings.h
 
-FORMS += consoleoutput.ui \
+FORMS += \
          datapaths.ui \
          deconadvanced.ui \
          dsradvanced.ui \
@@ -40,8 +40,7 @@ FORMS += consoleoutput.ui \
          stitchadvanced.ui \
          loadprevioussettings.ui
 
-SOURCES += consoleoutput.cpp \
-           consolethread.cpp \
+SOURCES += \
            datapaths.cpp \
            deconadvanced.cpp \
            dsradvanced.cpp \
@@ -52,6 +51,7 @@ SOURCES += consoleoutput.cpp \
            mainwindow.cpp \
            matlaboutputthread.cpp \
            matlaboutputwindow.cpp \
+           matlaboutputwindowthread.cpp \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
            stitchadvanced.cpp \
@@ -63,7 +63,7 @@ unix:!macx {
 LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \
         "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabDataArray.so"
 
-INCLUDEPATH += "/global/software/sl-7.x86_64/modules/tools/matlab/r2020b/extern/include"
+INCLUDEPATH += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/include"
 }
 
 win32 {
@@ -73,7 +73,7 @@ LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -lli
        -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabDataArray
 
 
-INCLUDEPATH += "C:/Program Files/MATLAB/R2020b/extern/include"
+INCLUDEPATH += "$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/include"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

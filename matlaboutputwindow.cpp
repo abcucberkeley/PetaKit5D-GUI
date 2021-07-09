@@ -1,11 +1,23 @@
+#include <QLabel>
+#include <QPushButton>
 #include "matlaboutputwindow.h"
 #include "ui_matlaboutputwindow.h"
+
 
 matlabOutputWindow::matlabOutputWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::matlabOutputWindow)
 {
     ui->setupUi(this);
+
+    QVBoxLayout* VBox = new QVBoxLayout(this);
+    QHBoxLayout* HBox = new QHBoxLayout(this);
+
+    VBox->addLayout(HBox);
+    QPushButton* button = new QPushButton(this);
+    button->setText("test");
+    HBox->addWidget(button);
+    VBox->addStretch();
 }
 
 matlabOutputWindow::~matlabOutputWindow()
