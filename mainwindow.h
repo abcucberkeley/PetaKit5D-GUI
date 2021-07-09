@@ -104,7 +104,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &funcType, const std::string &mainPath);
+    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath);
 
 protected:
     void closeEvent(QCloseEvent *event) override;

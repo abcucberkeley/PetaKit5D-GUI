@@ -22,15 +22,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
+
+
     // Threading and connecting signals/slots
     mThreadManager = new matlabThreadManager(this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
-
-
-    // Job Output
-    mOutputWindow = nullptr;
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -548,7 +546,7 @@ void MainWindow::on_submitButton_clicked()
     matlab::data::ArrayFactory factory;
 
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    const size_t outA = 0;
+    size_t outA = 0;
     std::vector<matlab::data::Array> data;
 
     // NOTE: We have to push a lot of things into our data array one at a time
@@ -1155,11 +1153,10 @@ void MainWindow::on_submitButton_clicked()
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mainPath);
 
-    // Output Window
-    mOutputWindow = new matlabOutputWindow();
+    // Job Output
+    mOutputWindow = new matlabOutputWindow(this);
     mOutputWindow->setModal(false);
     mOutputWindow->show();
-
 }
 
 // Browse Stitch Result Dir Folder

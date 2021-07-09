@@ -47,11 +47,11 @@ void matlabThreadManager::run(){
 }
 
 // Sets data and outA (given by the GUI signal) when a job is about to start. This will let the MATLAB thread instantly start that job.
-void matlabThreadManager::onJobStart(const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &funcType, const std::string &mainPath){
+void matlabThreadManager::onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath){
     std::cout << "Starting job" << std::endl;
-    this->data = data;
-    this->funcType = funcType;
-    this->mainPath = mainPath;
-    this->outA = outA;
+    this->data = std::move(data);
+    this->funcType = std::move(funcType);
+    this->mainPath = std::move(mainPath);
+    this->outA = std::move(outA);
 }
 
