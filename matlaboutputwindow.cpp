@@ -1,5 +1,6 @@
 #include <QLabel>
 #include <QPushButton>
+#include <QCloseEvent>
 #include "matlaboutputwindow.h"
 #include "ui_matlaboutputwindow.h"
 
@@ -10,6 +11,8 @@ matlabOutputWindow::matlabOutputWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mOWThread = new matlabOutputWindowThread(this);
+    /*
     QVBoxLayout* VBox = new QVBoxLayout(this);
     QHBoxLayout* HBox = new QHBoxLayout(this);
 
@@ -18,6 +21,7 @@ matlabOutputWindow::matlabOutputWindow(QWidget *parent) :
     button->setText("test");
     HBox->addWidget(button);
     VBox->addStretch();
+    */
 }
 
 matlabOutputWindow::~matlabOutputWindow()
@@ -25,6 +29,9 @@ matlabOutputWindow::~matlabOutputWindow()
     delete ui;
 }
 
+void matlabOutputWindow::closeEvent(QCloseEvent *event){
+    event->ignore();
+}
 /*
 QLabel* label = new QLabel(ui->Main);
 label->setTextFormat(Qt::RichText);

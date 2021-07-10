@@ -12,19 +12,16 @@ matlabThreadManager::matlabThreadManager(QObject *parent) :
 }
 
 matlabThreadManager::~matlabThreadManager(){
-    for(auto thread : mThreads){
-        if(!thread->isFinished()) thread->terminate();
+
+    // Terminate all unfinished threads
+    for(auto &thread : mThreads){
+        if(!thread.second->isFinished()) thread.second->terminate();
     }
 }
 
 void matlabThreadManager::run(){
 
-
-    // Threading and connecting signals/slots
-    //mThreadManager = new matlabThreadManager(this);
-    //connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
-    //connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
-    //mThreadManager->start(QThread::HighestPriority);
+    // Start IDs at 1
     unsigned int mThreadID = 1;
     while(true){
     std::cout << "Ready for new job!" << std::endl;
@@ -35,9 +32,13 @@ void matlabThreadManager::run(){
     }
 
     // Create new matlab thread
-    mThreads.push_back(new matlabThread(this, funcType, outA, data, mainPath, mThreadID));
-    mThreads.back()->start(QThread::TimeCriticalPriority);
+    mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, data, mainPath, mThreadID));
+    mThreads.at(mThreadID)->start(QThread::TimeCriticalPriority);
     std::cout << "Matlab Job " << mThreadID << " Submitted" << std::endl;
+
+    // Add path/button to Output Window
+    emit addOutputIDAndPath(mThreadID, mainPath);
+
     mThreadID++;
     outA = 1;
     data.clear();

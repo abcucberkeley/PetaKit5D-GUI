@@ -17,6 +17,7 @@ void matlabOutputThread::run(){
 
     QString filename=dir.absolutePath()+QString::fromStdString("/job")+QString::number(mThreadID)+QDateTime::currentDateTime().toString("_yyyyMMdd_HH_mm_ss")+QString::fromStdString(".txt");
 
+    // Collect string from matlab thread
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){
         sleep(2);
         std::string mString = convertUTF16StringToUTF8String(output.get()->str());

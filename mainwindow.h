@@ -114,6 +114,7 @@ private:
     void readSettings();
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
+    matlabOutputWindowThread *mOutputWindowThread;
     GUIvals guiVals;
     std::vector<std::string> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;

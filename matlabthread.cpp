@@ -7,7 +7,6 @@ matlabThread::matlabThread(QObject *parent, const std::string &funcType, const s
 }
 
 matlabThread::~matlabThread(){
-    mOutThread->wait(10);
     if(!mOutThread->isFinished()) mOutThread->terminate();
 }
 
@@ -35,7 +34,7 @@ void matlabThread::run(){
     //setup.push_back(factory.createScalar<bool>(true));
     //matlabPtr->feval(u"setup",([],true));
 
-    // Create string buffer for standard output TESTING
+    // Create string buffer for standard output
     std::shared_ptr<StringBuf> output = std::make_shared<StringBuf>();
     mOutThread = new matlabOutputThread(this, output, mainPath,mThreadID);
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);

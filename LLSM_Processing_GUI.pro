@@ -25,7 +25,6 @@ HEADERS += \
            matlaboutputwindowthread.h \
            matlabthread.h \
            matlabthreadmanager.h \
-           stitchadvanced.h \
            loadprevioussettings.h
 
 FORMS += \
@@ -37,7 +36,6 @@ FORMS += \
          mainadvanced.ui \
          mainwindow.ui \
          matlaboutputwindow.ui \
-         stitchadvanced.ui \
          loadprevioussettings.ui
 
 SOURCES += \
@@ -54,7 +52,6 @@ SOURCES += \
            matlaboutputwindowthread.cpp \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
-           stitchadvanced.cpp \
            loadprevioussettings.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts

@@ -5,7 +5,6 @@
 #include "deconadvanced.h"
 #include "jobadvanced.h"
 #include "datapaths.h"
-#include "consoleoutput.h"
 #include "loadprevioussettings.h"
 #include <QTextDocument>
 #include <QObjectList>
@@ -29,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
+
+    mOutputWindow = new matlabOutputWindow(this);
+    mOutputWindowThread = new matlabOutputWindowThread(this);
+    connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -1154,9 +1157,10 @@ void MainWindow::on_submitButton_clicked()
     emit jobStart(outA, data, funcType, mainPath);
 
     // Job Output
-    mOutputWindow = new matlabOutputWindow(this);
-    mOutputWindow->setModal(false);
-    mOutputWindow->show();
+    if(!mOutputWindow->isVisible()){
+        mOutputWindow->setModal(false);
+        mOutputWindow->show();
+    }
 }
 
 // Browse Stitch Result Dir Folder
