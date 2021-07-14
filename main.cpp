@@ -4,6 +4,7 @@
 #include <QSysInfo>
 #include <stdio.h>
 #include <stdlib.h>
+#include <Windows.h>
 
 // Handle message output
 void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -33,6 +34,14 @@ void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, con
 
 int main(int argc, char *argv[])
 {
+    //Console Output for Windows
+    if(QSysInfo::productType().contains("win",Qt::CaseInsensitive)){
+        if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+    }
+
     qInstallMessageHandler(messageOutputHandler);
     QApplication a(argc, argv);
     MainWindow w;
