@@ -4,7 +4,10 @@
 #include <QSysInfo>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 // Handle message output
 void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -35,12 +38,12 @@ void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, con
 int main(int argc, char *argv[])
 {
     //Console Output for Windows
-    if(QSysInfo::productType().contains("win",Qt::CaseInsensitive)){
+    #ifdef _WIN32
         if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
             freopen("CONOUT$", "w", stdout);
             freopen("CONOUT$", "w", stderr);
         }
-    }
+    #endif
 
     qInstallMessageHandler(messageOutputHandler);
     QApplication a(argc, argv);
