@@ -49,7 +49,6 @@ void matlabThread::run(){
     }
 
     // Close MATLAB session by deleting the unique pointer (Still testing)
-    //matlabPtr->feval(u"clear",size_t(0),std::vector<matlab::data::Array> {factory.createCharArray("all")});
     matlabPtr.reset();
 
     emit jobFinish(true);

@@ -12,10 +12,13 @@ matlabOutputThread::~matlabOutputThread(){
 
 void matlabOutputThread::run(){
     std::string nOut;
+
+    // Code for job logs
+    /*
     QDir dir(QString::fromStdString(mainPath+"/jobOutput"));
     if (!dir.exists()) dir.mkpath(".");
-
     QString filename=dir.absolutePath()+QString::fromStdString("/job")+QString::number(mThreadID)+QDateTime::currentDateTime().toString("_yyyyMMdd_HH_mm_ss")+QString::fromStdString(".txt");
+    */
 
     // Collect string from matlab thread
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){
@@ -35,14 +38,17 @@ void matlabOutputThread::run(){
             }
         }
 
+        // Code for job logs
+        /*
         QFile file(filename);
         if (file.open(QIODevice::WriteOnly | QIODevice::Append))
         {
             QTextStream stream(&file);
             stream << QString::fromStdString(mString);
         }
+        */
 
-        //std::cout << mString;
+        std::cout << mString;
     }
 }
 

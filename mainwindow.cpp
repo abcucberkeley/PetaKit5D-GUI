@@ -30,9 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
     mThreadManager->start(QThread::HighestPriority);
 
     // Output Window Threading
-    mOutputWindow = new matlabOutputWindow(this);
+    /*mOutputWindow = new matlabOutputWindow(this);
     mOutputWindowThread = new matlabOutputWindowThread(this);
     connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
+    */
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -48,10 +49,10 @@ MainWindow::MainWindow(QWidget *parent)
     if(loadSettings) readSettings();
 
     // Job Output
-    if(!mOutputWindow->isVisible()){
+    /*if(!mOutputWindow->isVisible()){
         mOutputWindow->setModal(false);
         mOutputWindow->show();
-    }
+    }*/
 }
 
 MainWindow::~MainWindow()
@@ -69,7 +70,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Write current user settings
         writeSettings();
         event->accept();
-        if(mOutputWindow) mOutputWindow->close();
+
+        // Close output window if visible
+        //if(mOutputWindow) mOutputWindow->close();
 }
 
 // Write user settings
