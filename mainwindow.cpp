@@ -5,7 +5,6 @@
 #include "deconadvanced.h"
 #include "jobadvanced.h"
 #include "datapaths.h"
-#include "consoleoutput.h"
 #include "loadprevioussettings.h"
 #include <QTextDocument>
 #include <QObjectList>
@@ -22,15 +21,19 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
-    // Set a variable to see how many threads the user can use for matlab (Unused for now)
-    //QString maxCPU = QString::fromStdString(ui->maxCPUs->text().toStdString()+std::to_string(QThread::idealThreadCount()-1));
-    //ui->maxCPUs->setText(maxCPU);
 
-    // Threading and connecting signals/slots
+
+    // Matlab Threading and connecting signals/slots
     mThreadManager = new matlabThreadManager(this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
+
+    // Output Window Threading
+    /*mOutputWindow = new matlabOutputWindow(this);
+    mOutputWindowThread = new matlabOutputWindowThread(this);
+    connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
+    */
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -44,6 +47,12 @@ MainWindow::MainWindow(QWidget *parent)
     // Restore previous settings if user says yes
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
+
+    // Job Output
+    /*if(!mOutputWindow->isVisible()){
+        mOutputWindow->setModal(false);
+        mOutputWindow->show();
+    }*/
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +61,7 @@ MainWindow::~MainWindow()
 
     // If the thread is not done, kill it (This may have to change later because it can be dangerous)
     if(!mThreadManager->isFinished()) mThreadManager->terminate();
+
 }
 
 // Event triggered when main window is closed
@@ -60,6 +70,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Write current user settings
         writeSettings();
         event->accept();
+
+        // Close output window if visible
+        //if(mOutputWindow) mOutputWindow->close();
 }
 
 // Write user settings
@@ -458,10 +471,10 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton(){
     ui->submitButton->setEnabled(true);
-    QMessageBox msgBox;
-    msgBox.setText("Job Submitted. Ready for new job!");
-    msgBox.setIcon(QMessageBox::Information);
-    msgBox.exec();
+    //QMessageBox msgBox;
+    //msgBox.setText("Job Submitted. Ready for new job!");
+    //msgBox.setIcon(QMessageBox::Information);
+    //msgBox.exec();
 }
 
 // Open DSR Advanced Settings
@@ -510,7 +523,7 @@ void MainWindow::on_submitButton_clicked()
     // TODO: Seperate functions for error checking
 
     // Error if data path does not exist when submit is pressed
-    for(std::string path : dPaths){
+    for(const std::string &path : dPaths){
         if(!QFileInfo::exists(QString::fromStdString(path))){
             QMessageBox messageBox;
             messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path + "\" does not exist!"));
@@ -527,7 +540,7 @@ void MainWindow::on_submitButton_clicked()
     return;
     }
     else{
-        for(std::string path : psfFullPaths){
+        for(const std::string &path : psfFullPaths){
             if(!QFileInfo::exists(QString::fromStdString(path))){
                 QMessageBox messageBox;
                 messageBox.warning(0,"Error",QString::fromStdString("Psf path \"" + path + "\" does not exist!"));
@@ -546,7 +559,7 @@ void MainWindow::on_submitButton_clicked()
     matlab::data::ArrayFactory factory;
 
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    const size_t outA = 0;
+    size_t outA = 0;
     std::vector<matlab::data::Array> data;
 
     // NOTE: We have to push a lot of things into our data array one at a time
@@ -558,8 +571,12 @@ void MainWindow::on_submitButton_clicked()
     //
     //
 
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    std::string mainPath = dPaths.at(0);
+
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
+
         matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
         for(size_t i = 0; i < dPaths.size(); i++){
             dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
@@ -883,7 +900,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
     // This needs to change FIX
-    //TODO: FIX LOGIC FOR DECON ONLY
+    // TODO: FIX LOGIC FOR DECON ONLY
     data.push_back(factory.createCharArray("Save16bit"));
     if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
     else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
@@ -967,8 +984,7 @@ void MainWindow::on_submitButton_clicked()
     data.push_back(factory.createCharArray("LowerLimit"));
     data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
-    //guiVals.resampleType = "xy_isotropic";
-
+    // TODO: Update Resample
     data.push_back(factory.createCharArray("resampleType"));
     data.push_back(factory.createCharArray(guiVals.resampleType));
 
@@ -1148,14 +1164,9 @@ void MainWindow::on_submitButton_clicked()
         funcType="DeconOnly";
     }
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType);
+    emit jobStart(outA, data, funcType, mainPath);
 
-    // Output Console text to another window (Work in Progress) (For Windows only most likely)
-    /*
-    (consoleOutput cOutput;
-    cOutput.setModal(true);
-    cOutput.exec();
-    */
+
 }
 
 // Browse Stitch Result Dir Folder

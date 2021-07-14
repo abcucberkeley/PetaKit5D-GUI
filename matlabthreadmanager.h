@@ -4,7 +4,7 @@
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include "matlabthread.h"
-#include <queue>
+#include <unordered_map>
 #include <QtCore>
 #include <QThread>
 
@@ -18,16 +18,18 @@ public:
     ~matlabThreadManager();
     void run();
 public slots:
-    void onJobStart(const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &funcType);
+    void onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath);
 signals:
     void enableSubmitButton();
+    void addOutputIDAndPath(const unsigned int mThreadID, const std::string mainPath);
 private:
-    std::deque<matlabThread*> mThreads;
+    std::unordered_map<unsigned int, matlabThread*> mThreads;
     std::unique_ptr<MATLABEngine> matlabPtr;
     matlab::data::ArrayFactory factory;
     size_t outA;
     std::vector<matlab::data::Array> data;
     std::string funcType;
+    std::string mainPath;
 };
 
 #endif // MATLABTHREADMANAGER_H
