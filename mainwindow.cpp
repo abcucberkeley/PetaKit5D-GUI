@@ -23,12 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    // Threading and connecting signals/slots
+    // Matlab Threading and connecting signals/slots
     mThreadManager = new matlabThreadManager(this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
 
+    // Output Window Threading
     mOutputWindow = new matlabOutputWindow(this);
     mOutputWindowThread = new matlabOutputWindowThread(this);
     connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
@@ -45,6 +46,12 @@ MainWindow::MainWindow(QWidget *parent)
     // Restore previous settings if user says yes
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
+
+    // Job Output
+    if(!mOutputWindow->isVisible()){
+        mOutputWindow->setModal(false);
+        mOutputWindow->show();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -461,10 +468,10 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton(){
     ui->submitButton->setEnabled(true);
-    QMessageBox msgBox;
-    msgBox.setText("Job Submitted. Ready for new job!");
-    msgBox.setIcon(QMessageBox::Information);
-    msgBox.exec();
+    //QMessageBox msgBox;
+    //msgBox.setText("Job Submitted. Ready for new job!");
+    //msgBox.setIcon(QMessageBox::Information);
+    //msgBox.exec();
 }
 
 // Open DSR Advanced Settings
@@ -1156,11 +1163,7 @@ void MainWindow::on_submitButton_clicked()
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mainPath);
 
-    // Job Output
-    if(!mOutputWindow->isVisible()){
-        mOutputWindow->setModal(false);
-        mOutputWindow->show();
-    }
+
 }
 
 // Browse Stitch Result Dir Folder

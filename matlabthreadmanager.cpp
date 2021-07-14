@@ -33,11 +33,11 @@ void matlabThreadManager::run(){
 
     // Create new matlab thread
     mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, data, mainPath, mThreadID));
-    mThreads.at(mThreadID)->start(QThread::TimeCriticalPriority);
+    mThreads.at(mThreadID)->start(QThread::HighestPriority);
     std::cout << "Matlab Job " << mThreadID << " Submitted" << std::endl;
 
     // Add path/button to Output Window
-    emit addOutputIDAndPath(mThreadID, mainPath);
+    //emit addOutputIDAndPath(mThreadID, mainPath);
 
     mThreadID++;
     outA = 1;

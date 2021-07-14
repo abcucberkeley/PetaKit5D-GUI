@@ -47,6 +47,11 @@ void matlabThread::run(){
     else{
         matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data,output);
     }
+
+    // Close MATLAB session by deleting the unique pointer (Still testing)
+    //matlabPtr->feval(u"clear",size_t(0),std::vector<matlab::data::Array> {factory.createCharArray("all")});
+    matlabPtr.reset();
+
     emit jobFinish(true);
     mOutThread->wait();
     std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
