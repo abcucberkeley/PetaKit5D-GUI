@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
 
+    // Connect crop signals
+    connect(ui->cropAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Output Window Threading
     /*mOutputWindow = new matlabOutputWindow(this);
     mOutputWindowThread = new matlabOutputWindowThread(this);
@@ -53,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
         mOutputWindow->setModal(false);
         mOutputWindow->show();
     }*/
+
+
 }
 
 MainWindow::~MainWindow()
@@ -1501,21 +1506,36 @@ void MainWindow::on_jobPreviousButton_clicked()
 // Opens a seperate window to add the data paths for the job
 void MainWindow::on_addPathsButton_clicked()
 {
-    dataPaths daPaths(dPaths, true, mostRecentDir);
+    // Default behavior is for the main Data Paths
+    std::vector<std::string>* addPathsDataPaths = &dPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>>* addPathsChannelWidgets = &channelWidgets;
+    QWidget* addPathsCurrWidget = ui->Main;
+    QHBoxLayout* addPathsCurrLayout = ui->horizontalLayout_4;
+
+    // Data Paths for crop
+    if(((QPushButton *)sender())->objectName().contains("crop")){
+        addPathsDataPaths = &cropDPaths;
+        addPathsChannelWidgets = &cropChannelWidgets;
+        addPathsCurrWidget = ui->Crop;
+        addPathsCurrLayout = ui->cropChannelPatternsHorizontalLayout;
+    }
+
+
+    dataPaths daPaths(*addPathsDataPaths, true, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
 
     // Find all possible channels
-    if(dPaths.size()){
-        if(channelWidgets.size()){
-            for(auto &i : channelWidgets){
+    if(addPathsDataPaths->size()){
+        if(addPathsChannelWidgets->size()){
+            for(auto &i : *addPathsChannelWidgets){
                 if(i.first) delete i.first;
                 if(i.second) delete i.second;
             }
         }
-        channelWidgets.clear();
+        addPathsChannelWidgets->clear();
         std::vector<QString> channels;
-        for(const std::string &i : dPaths){
+        for(const std::string &i : *addPathsDataPaths){
             // Looking for channel patterns in the given directory
             //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
             QDirIterator cPath(QString::fromStdString(i));
@@ -1534,14 +1554,14 @@ void MainWindow::on_addPathsButton_clicked()
         }
         for(const QString &ch : channels){
 
-            QLabel* label = new QLabel(ui->Main);
+            QLabel* label = new QLabel(addPathsCurrWidget);
             label->setTextFormat(Qt::RichText);
             label->setText("<b>"+ch+"<\b>");
-            ui->horizontalLayout_4->addWidget(label);
+            addPathsCurrLayout->addWidget(label);
 
-            QCheckBox* checkBox = new QCheckBox(ui->Main);
-            ui->horizontalLayout_4->addWidget(checkBox);
-            channelWidgets.push_back(std::make_pair(label,checkBox));
+            QCheckBox* checkBox = new QCheckBox(addPathsCurrWidget);
+            addPathsCurrLayout->addWidget(checkBox);
+            addPathsChannelWidgets->push_back(std::make_pair(label,checkBox));
         }
     }
 

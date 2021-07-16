@@ -118,6 +118,8 @@ private:
     GUIvals guiVals;
     std::vector<std::string> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
+    std::vector<std::string> cropDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
     std::vector<std::string> lsImagePaths;
     std::vector<std::string> backgroundPaths;
     std::vector<std::string> psfFullPaths;
@@ -183,7 +185,6 @@ private slots:
     void on_backgroundAddPathsButton_clicked();
 
     void on_psfFullAddPathsButton_2_clicked();
-
 
     void on_deconOnlyCheckBox_stateChanged(int arg1);
 
