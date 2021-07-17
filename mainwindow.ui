@@ -1446,7 +1446,7 @@
        <rect>
         <x>560</x>
         <y>230</y>
-        <width>111</width>
+        <width>122</width>
         <height>26</height>
        </rect>
       </property>
@@ -1472,6 +1472,9 @@
         <widget class="QSpinBox" name="boundBoxXMinSpinBox">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>1000000</number>
          </property>
         </widget>
        </item>
@@ -1509,6 +1512,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="maximum">
+          <number>1000000</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -1518,7 +1524,7 @@
        <rect>
         <x>430</x>
         <y>270</y>
-        <width>121</width>
+        <width>131</width>
         <height>26</height>
        </rect>
       </property>
@@ -1545,6 +1551,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="maximum">
+          <number>1000000</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -1554,7 +1563,7 @@
        <rect>
         <x>560</x>
         <y>270</y>
-        <width>113</width>
+        <width>121</width>
         <height>26</height>
        </rect>
       </property>
@@ -1581,6 +1590,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="maximum">
+          <number>1000000</number>
+         </property>
         </widget>
        </item>
       </layout>
@@ -1590,7 +1602,7 @@
        <rect>
         <x>680</x>
         <y>270</y>
-        <width>112</width>
+        <width>111</width>
         <height>26</height>
        </rect>
       </property>
@@ -1616,6 +1628,9 @@
         <widget class="QSpinBox" name="boundBoxZMaxSpinBox">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>1000000</number>
          </property>
         </widget>
        </item>
@@ -1947,7 +1962,7 @@
        <rect>
         <x>430</x>
         <y>230</y>
-        <width>121</width>
+        <width>131</width>
         <height>26</height>
        </rect>
       </property>
@@ -1973,6 +1988,9 @@
         <widget class="QSpinBox" name="boundBoxYMinSpinBox">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>1000000</number>
          </property>
         </widget>
        </item>
@@ -2664,7 +2682,7 @@
        <widget class="QWidget" name="horizontalLayoutWidget_8">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>170</x>
           <y>90</y>
           <width>511</width>
           <height>25</height>
@@ -2712,7 +2730,7 @@
        <widget class="QWidget" name="layoutWidget_2">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>140</x>
           <y>60</y>
           <width>581</width>
           <height>25</height>
@@ -2762,7 +2780,7 @@
        <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
-          <x>130</x>
+          <x>300</x>
           <y>0</y>
           <width>201</width>
           <height>25</height>
@@ -2797,7 +2815,7 @@
        <widget class="QWidget" name="layoutWidget_3">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>210</x>
           <y>30</y>
           <width>381</width>
           <height>31</height>
@@ -2839,7 +2857,7 @@
          <rect>
           <x>40</x>
           <y>210</y>
-          <width>121</width>
+          <width>127</width>
           <height>26</height>
          </rect>
         </property>
@@ -2866,6 +2884,12 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -2873,9 +2897,9 @@
        <widget class="QWidget" name="layoutWidget_17">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>300</x>
           <y>170</y>
-          <width>111</width>
+          <width>121</width>
           <height>26</height>
          </rect>
         </property>
@@ -2902,6 +2926,12 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -2909,9 +2939,9 @@
        <widget class="QWidget" name="layoutWidget_18">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>300</x>
           <y>210</y>
-          <width>112</width>
+          <width>126</width>
           <height>26</height>
          </rect>
         </property>
@@ -2938,6 +2968,12 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -2947,7 +2983,7 @@
          <rect>
           <x>40</x>
           <y>170</y>
-          <width>121</width>
+          <width>122</width>
           <height>26</height>
          </rect>
         </property>
@@ -2973,6 +3009,12 @@
           <widget class="QSpinBox" name="cropBoundBoxYMinSpinBox">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
            </property>
           </widget>
          </item>
@@ -3009,7 +3051,7 @@
          <rect>
           <x>170</x>
           <y>210</y>
-          <width>113</width>
+          <width>127</width>
           <height>26</height>
          </rect>
         </property>
@@ -3036,6 +3078,12 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -3045,7 +3093,7 @@
          <rect>
           <x>170</x>
           <y>170</y>
-          <width>111</width>
+          <width>122</width>
           <height>26</height>
          </rect>
         </property>
@@ -3071,6 +3119,12 @@
           <widget class="QSpinBox" name="cropBoundBoxXMinSpinBox">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
            </property>
           </widget>
          </item>
@@ -3108,6 +3162,15 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -3144,6 +3207,15 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -3179,6 +3251,15 @@
           <widget class="QSpinBox" name="cropLastStartXSpinBox">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+           <property name="value">
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -3375,6 +3456,9 @@
            </item>
            <item>
             <widget class="QLineEdit" name="cropJobLogDirLineEdit">
+             <property name="text">
+              <string>../job_logs</string>
+             </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
@@ -3545,6 +3629,42 @@
         <property name="text">
          <string>Submit</string>
         </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_32">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>360</y>
+          <width>151</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="cropPadHorizontalLayout">
+         <item>
+          <widget class="QLabel" name="cropPadLabel">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Add Padding</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cropPadCheckBox">
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>

@@ -190,6 +190,8 @@ private slots:
 
     void on_customPatternsCheckBox_stateChanged(int arg1);
 
+    void on_cropSubmitButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

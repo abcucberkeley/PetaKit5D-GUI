@@ -40,8 +40,10 @@ void matlabThread::run(){
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);
     mOutThread->start(QThread::NormalPriority);
 
-
-    if(funcType == "DeconOnly"){
+    if (funcType == "crop"){
+        matlabPtr->feval(u"XR_crop_dataset",outA,data,output);
+    }
+    else if(funcType == "DeconOnly"){
         matlabPtr->feval(u"XR_decon_data_wrapper",outA,data,output);
     }
     else{
@@ -53,6 +55,8 @@ void matlabThread::run(){
 
     emit jobFinish(true);
     mOutThread->wait();
+
+
     std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
 }
 

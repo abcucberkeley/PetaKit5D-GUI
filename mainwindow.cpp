@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect crop signals
     connect(ui->cropAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+    //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
     // Output Window Threading
     /*mOutputWindow = new matlabOutputWindow(this);
@@ -50,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Restore previous settings if user says yes
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
+
+    // Set current tab to the main tab
+    ui->tabWidget->setCurrentWidget(ui->Main);
 
     // Job Output
     /*if(!mOutputWindow->isVisible()){
@@ -263,6 +267,45 @@ void MainWindow::writeSettings()
     settings.setValue("MatlabLaunchStr",QString::fromStdString(guiVals.MatlabLaunchStr));
     settings.setValue("SlurmParam",QString::fromStdString(guiVals.SlurmParam));
 
+    // ********* Save Crop Settings *********
+
+    // Save Data Paths
+    settings.beginWriteArray("cropDPaths");
+    for(unsigned int i = 0; i < cropDPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("cropDPathsi", QString::fromStdString(cropDPaths.at(i)));
+    }
+    settings.endArray();
+
+    // SAVE FOR CHANNEL PATTERNS
+    settings.beginWriteArray("cropChannelLabels");
+    for(unsigned int i = 0; i < cropChannelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("cropChannelLabelsi", cropChannelWidgets[i].first->text());
+    }
+    settings.endArray();
+
+    settings.beginWriteArray("cropChannelChecks");
+    for(unsigned int i = 0; i < cropChannelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("cropChannelChecksi", cropChannelWidgets[i].second->isChecked());
+    }
+    settings.endArray();
+
+    // Save custom patterns
+    settings.setValue("cropCustomPatternsCheckBox",ui->cropCustomPatternsCheckBox->isChecked());
+    settings.setValue("cropCustomPatterns", ui->cropCustomPatternsLineEdit->text());
+
+    settings.setValue("cropResultPath", ui->cropResultPathLineEdit->text());
+    settings.setValue("cropParseCluster", ui->cropParseClusterCheckBox->isChecked());
+    settings.setValue("cropCpusPerTask", ui->cropCpusPerTaskLineEdit->text());
+    settings.setValue("cropCpuOnlyNodes", ui->cropCpuOnlyNodesCheckBox->isChecked());
+    settings.setValue("cropJobLogDir",ui->cropJobLogDirLineEdit->text());
+    settings.setValue("cropUuid",ui->cropUuidLineEdit->text());
+
     settings.endGroup();
 }
 
@@ -475,7 +518,10 @@ void MainWindow::readSettings()
 
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton(){
+
+    ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
+
     //QMessageBox msgBox;
     //msgBox.setText("Job Submitted. Ready for new job!");
     //msgBox.setIcon(QMessageBox::Information);
@@ -1727,5 +1773,127 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
     else{
         ui->customPatternsLineEdit->setEnabled(false);
     }
+}
+
+
+void MainWindow::on_cropSubmitButton_clicked()
+{
+    // Disable submit button
+    ui->cropSubmitButton->setEnabled(false);
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    std::string mainPath = cropDPaths.at(0);
+
+    // Data Path
+    data.push_back(factory.createCharArray(mainPath));
+
+    // Result Path
+    data.push_back(factory.createCharArray(ui->cropResultPathLineEdit->text().toStdString()));
+
+    // bbox
+    data.push_back(factory.createArray<int64_t>({1,6},{ui->cropBoundBoxYMinSpinBox->value(),ui->cropBoundBoxXMinSpinBox->value(),ui->cropBoundBoxZMinSpinBox->value(),ui->cropBoundBoxYMaxSpinBox->value(), ui->cropBoundBoxXMaxSpinBox->value(), ui->cropBoundBoxZMaxSpinBox->value()}));
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->cropCustomPatternsCheckBox->isChecked()){
+
+    if(cropChannelWidgets.size()){
+        // Grab indexes of checked boxes
+        std::vector<int> indexes;
+        for(size_t i = 0; i < cropChannelWidgets.size(); i++){
+            if(cropChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+        }
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+        int cpi = 0;
+        // Go through checked indexes and the label text (channel pattern) in the cell array
+        for(int i : indexes){
+
+            // Convert from rich text to plain text
+            QTextDocument toPlain;
+            toPlain.setHtml(cropChannelWidgets[i].first->text());
+
+            channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+            cpi++;
+        }
+        data.push_back(channelPatterns);
+    }
+
+    }
+    // Use custom patterns
+    else{
+        std::string patternLine = ui->cropCustomPatternsLineEdit->text().toStdString();
+        std::string pattern;
+        std::vector<std::string> patterns;
+        for(size_t i = 0; i < patternLine.size(); i++){
+            if(patternLine.at(i) == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine.at(i));
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns.at(i));
+        }
+        data.push_back(channelPatterns);
+
+    }
+
+    data.push_back(factory.createCharArray("Save16bit"));
+    data.push_back(factory.createScalar<bool>(ui->cropSave16BitCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("pad"));
+    data.push_back(factory.createScalar<bool>(ui->cropPadCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("cropType"));
+    data.push_back(factory.createCharArray(ui->cropCropTypeComboBox->currentText().toStdString()));
+
+    data.push_back(factory.createCharArray("lastStart"));
+    data.push_back(factory.createArray<int64_t>({1,3},{ui->cropLastStartYSpinBox->value(),ui->cropLastStartXSpinBox->value(),ui->cropLastStartZSpinBox->value()}));
+
+    // Job Settings
+    data.push_back(factory.createCharArray("parseCluster"));
+    data.push_back(factory.createScalar<bool>(ui->cropParseClusterCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("masterCompute"));
+    data.push_back(factory.createScalar<bool>(ui->cropMasterComputeCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("cpusPerTask"));
+    data.push_back(factory.createScalar<uint64_t>(ui->cropCpusPerTaskLineEdit->text().toULongLong()));
+
+    data.push_back(factory.createCharArray("cpuOnlyNodes"));
+    data.push_back(factory.createScalar<bool>(ui->cropCpuOnlyNodesCheckBox->isChecked()));
+
+    // Advanced Job Settings
+
+    if(!guiVals.jobLogDir.empty()){
+        data.push_back(factory.createCharArray("jobLogDir"));
+        data.push_back(factory.createCharArray(ui->cropJobLogDirLineEdit->text().toStdString()));
+    }
+
+    if(!guiVals.uuid.empty()){
+        data.push_back(factory.createCharArray("uuid"));
+        data.push_back(factory.createCharArray(ui->cropUuidLineEdit->text().toStdString()));
+    }
+
+    std::string funcType = "crop";
+
+    // Send data to the MATLAB thread
+    emit jobStart(outA, data, funcType, mainPath);
 }
 
