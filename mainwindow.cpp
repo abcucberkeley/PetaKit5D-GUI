@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect crop signals
     connect(ui->cropAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+    connect(ui->cropResultPathBrowseButton, &QPushButton::clicked, this, &MainWindow::selectFolderPath);
+    connect(ui->cropJobLogDirBrowseButton, &QPushButton::clicked, this, &MainWindow::selectFolderPath);
     //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
     // Output Window Threading
@@ -299,9 +301,26 @@ void MainWindow::writeSettings()
     settings.setValue("cropCustomPatternsCheckBox",ui->cropCustomPatternsCheckBox->isChecked());
     settings.setValue("cropCustomPatterns", ui->cropCustomPatternsLineEdit->text());
 
+    settings.setValue("cropCropType",ui->cropCropTypeComboBox->currentText());
+
+    settings.setValue("cropBoundBoxYMin",ui->cropBoundBoxYMinSpinBox->value());
+    settings.setValue("cropBoundBoxXMin",ui->cropBoundBoxXMinSpinBox->value());
+    settings.setValue("cropBoundBoxZMin",ui->cropBoundBoxZMinSpinBox->value());
+    settings.setValue("cropBoundBoxYMax",ui->cropBoundBoxYMaxSpinBox->value());
+    settings.setValue("cropBoundBoxXMax",ui->cropBoundBoxXMaxSpinBox->value());
+    settings.setValue("cropBoundBoxZMax",ui->cropBoundBoxZMaxSpinBox->value());
+
+    settings.setValue("cropLastStartY",ui->cropLastStartYSpinBox->value());
+    settings.setValue("cropLastStartX",ui->cropLastStartYSpinBox->value());
+    settings.setValue("cropLastStartZ",ui->cropLastStartYSpinBox->value());
+
+    settings.setValue("cropSave16Bit",ui->cropSave16BitCheckBox->isChecked());
+    settings.setValue("cropPad",ui->cropPadCheckBox->isChecked());
+
     settings.setValue("cropResultPath", ui->cropResultPathLineEdit->text());
     settings.setValue("cropParseCluster", ui->cropParseClusterCheckBox->isChecked());
     settings.setValue("cropCpusPerTask", ui->cropCpusPerTaskLineEdit->text());
+    settings.setValue("cropMasterCompute",ui->cropMasterComputeCheckBox->isChecked());
     settings.setValue("cropCpuOnlyNodes", ui->cropCpuOnlyNodesCheckBox->isChecked());
     settings.setValue("cropJobLogDir",ui->cropJobLogDirLineEdit->text());
     settings.setValue("cropUuid",ui->cropUuidLineEdit->text());
@@ -512,6 +531,82 @@ void MainWindow::readSettings()
     guiVals.maxWaitLoopNum = settings.value("maxWaitLoopNum").toULongLong();
     guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString().toStdString();
     guiVals.SlurmParam = settings.value("SlurmParam").toString().toStdString();
+
+    // ********* Read Crop Settings *********
+
+    // Read Data Paths
+    size = settings.beginReadArray("cropDPaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        cropDPaths.push_back(settings.value("cropDPathsi").toString().toStdString());
+    }
+    settings.endArray();
+
+    // temp vectors to hold labels and checkbox values
+    tLabels.clear();
+    tChecks.clear();
+
+    // READ FOR CHANNEL PATTERNS
+    size = settings.beginReadArray("cropChannelLabels");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        tLabels.push_back(settings.value("cropChannelLabelsi").toString());
+
+    }
+    settings.endArray();
+
+    size = settings.beginReadArray("cropChannelChecks");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        tChecks.push_back(settings.value("cropChannelChecksi").toBool());
+    }
+    settings.endArray();
+
+    // Create widgets and put them in channelWidgets
+    for(size_t i = 0; i < tLabels.size(); i++){
+        QLabel* label = new QLabel(ui->Crop);
+        label->setTextFormat(Qt::RichText);
+        label->setText("<b>"+tLabels[i]+"<\b>");
+        ui->cropChannelPatternsHorizontalLayout->addWidget(label);
+
+        QCheckBox* checkBox = new QCheckBox(ui->Crop);
+        checkBox->setChecked(tChecks[i]);
+        ui->cropChannelPatternsHorizontalLayout->addWidget(checkBox);
+
+        cropChannelWidgets.push_back(std::make_pair(label,checkBox));
+
+    }
+
+    // Read custom patterns
+    ui->cropCustomPatternsCheckBox->setChecked(settings.value("cropCustomPatternsCheckBox").toBool());
+    ui->cropCustomPatternsLineEdit->setText(settings.value("cropCustomPatterns").toString());
+
+    ui->cropCropTypeComboBox->setCurrentText(settings.value("cropCropType").toString());
+
+    ui->cropBoundBoxYMinSpinBox->setValue(settings.value("cropBoundBoxYMin").toInt());
+    ui->cropBoundBoxXMinSpinBox->setValue(settings.value("cropBoundBoxXMin").toInt());
+    ui->cropBoundBoxZMinSpinBox->setValue(settings.value("cropBoundBoxZMin").toInt());
+    ui->cropBoundBoxYMaxSpinBox->setValue(settings.value("cropBoundBoxYMax").toInt());
+    ui->cropBoundBoxXMaxSpinBox->setValue(settings.value("cropBoundBoxXMax").toInt());
+    ui->cropBoundBoxZMaxSpinBox->setValue(settings.value("cropBoundBoxZMax").toInt());
+
+    ui->cropLastStartYSpinBox->setValue(settings.value("cropLastStartY").toInt());
+    ui->cropLastStartXSpinBox->setValue(settings.value("cropLastStartX").toInt());
+    ui->cropLastStartZSpinBox->setValue(settings.value("cropLastStartZ").toInt());
+
+    ui->cropSave16BitCheckBox->setChecked(settings.value("cropSave16Bit").toBool());
+    ui->cropPadCheckBox->setChecked(settings.value("cropPad").toBool());
+
+    ui->cropResultPathLineEdit->setText(settings.value("cropResultPath").toString());
+    ui->cropParseClusterCheckBox->setChecked(settings.value("cropParseCluster").toBool());
+    ui->cropCpusPerTaskLineEdit->setText(settings.value("cropCpusPerTask").toString());
+    ui->cropMasterComputeCheckBox->setChecked(settings.value("cropMasterCompute").toBool());
+    ui->cropCpuOnlyNodesCheckBox->setChecked(settings.value("cropCpuOnlyNodes").toBool());
+    ui->cropJobLogDirLineEdit->setText(settings.value("cropJobLogDir").toString());
+    ui->cropUuidLineEdit->setText(settings.value("cropUuid").toString());
 
     settings.endGroup();
 }
@@ -1220,10 +1315,10 @@ void MainWindow::on_submitButton_clicked()
 
 }
 
-// Browse Stitch Result Dir Folder
+// Browse for Result Dir Folder
 void MainWindow::on_resultsDirBrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Make and Select the Results Folder",mostRecentDir);
+    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Results Folder",mostRecentDir);
     if(folder_path.baseName().toStdString() != ""){
         ui->resultsDirLineEdit->setText(folder_path.baseName());
         mostRecentDir = folder_path.absoluteFilePath();
@@ -1881,12 +1976,12 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     // Advanced Job Settings
 
-    if(!guiVals.jobLogDir.empty()){
+    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
         data.push_back(factory.createCharArray("jobLogDir"));
         data.push_back(factory.createCharArray(ui->cropJobLogDirLineEdit->text().toStdString()));
     }
 
-    if(!guiVals.uuid.empty()){
+    if(!ui->cropUuidLineEdit->text().isEmpty()){
         data.push_back(factory.createCharArray("uuid"));
         data.push_back(factory.createCharArray(ui->cropUuidLineEdit->text().toStdString()));
     }
@@ -1895,5 +1990,23 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mainPath);
+}
+
+void MainWindow::selectFolderPath(){
+    QLineEdit* result = nullptr;
+
+    if(((QPushButton *)sender())->objectName().contains("cropResult")){
+        result = ui->cropResultPathLineEdit;
+    }
+
+    else {
+        result = ui->cropJobLogDirLineEdit;
+    }
+
+    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Folder",mostRecentDir);
+    if(folder_path.absoluteFilePath().toStdString() != ""){
+        result->setText(folder_path.absoluteFilePath());
+        mostRecentDir = folder_path.absoluteFilePath();
+    }
 }
 

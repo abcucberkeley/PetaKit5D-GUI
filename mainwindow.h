@@ -192,6 +192,8 @@ private slots:
 
     void on_cropSubmitButton_clicked();
 
+    void selectFolderPath();
+
 private:
     Ui::MainWindow *ui;
 };
