@@ -586,16 +586,16 @@ void MainWindow::readSettings()
 
     ui->cropCropTypeComboBox->setCurrentText(settings.value("cropCropType").toString());
 
-    ui->cropBoundBoxYMinSpinBox->setValue(settings.value("cropBoundBoxYMin").toInt());
-    ui->cropBoundBoxXMinSpinBox->setValue(settings.value("cropBoundBoxXMin").toInt());
-    ui->cropBoundBoxZMinSpinBox->setValue(settings.value("cropBoundBoxZMin").toInt());
-    ui->cropBoundBoxYMaxSpinBox->setValue(settings.value("cropBoundBoxYMax").toInt());
-    ui->cropBoundBoxXMaxSpinBox->setValue(settings.value("cropBoundBoxXMax").toInt());
-    ui->cropBoundBoxZMaxSpinBox->setValue(settings.value("cropBoundBoxZMax").toInt());
+    ui->cropBoundBoxYMinSpinBox->setValue(settings.value("cropBoundBoxYMin").toULongLong());
+    ui->cropBoundBoxXMinSpinBox->setValue(settings.value("cropBoundBoxXMin").toULongLong());
+    ui->cropBoundBoxZMinSpinBox->setValue(settings.value("cropBoundBoxZMin").toULongLong());
+    ui->cropBoundBoxYMaxSpinBox->setValue(settings.value("cropBoundBoxYMax").toULongLong());
+    ui->cropBoundBoxXMaxSpinBox->setValue(settings.value("cropBoundBoxXMax").toULongLong());
+    ui->cropBoundBoxZMaxSpinBox->setValue(settings.value("cropBoundBoxZMax").toULongLong());
 
-    ui->cropLastStartYSpinBox->setValue(settings.value("cropLastStartY").toInt());
-    ui->cropLastStartXSpinBox->setValue(settings.value("cropLastStartX").toInt());
-    ui->cropLastStartZSpinBox->setValue(settings.value("cropLastStartZ").toInt());
+    ui->cropLastStartYSpinBox->setValue(settings.value("cropLastStartY").toULongLong());
+    ui->cropLastStartXSpinBox->setValue(settings.value("cropLastStartX").toULongLong());
+    ui->cropLastStartZSpinBox->setValue(settings.value("cropLastStartZ").toULongLong());
 
     ui->cropSave16BitCheckBox->setChecked(settings.value("cropSave16Bit").toBool());
     ui->cropPadCheckBox->setChecked(settings.value("cropPad").toBool());
@@ -1873,6 +1873,9 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
 
 void MainWindow::on_cropSubmitButton_clicked()
 {
+    // Write settings in case of crash
+    writeSettings();
+
     // Disable submit button
     ui->cropSubmitButton->setEnabled(false);
 
@@ -1896,7 +1899,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     data.push_back(factory.createCharArray(ui->cropResultPathLineEdit->text().toStdString()));
 
     // bbox
-    data.push_back(factory.createArray<int64_t>({1,6},{ui->cropBoundBoxYMinSpinBox->value(),ui->cropBoundBoxXMinSpinBox->value(),ui->cropBoundBoxZMinSpinBox->value(),ui->cropBoundBoxYMaxSpinBox->value(), ui->cropBoundBoxXMaxSpinBox->value(), ui->cropBoundBoxZMaxSpinBox->value()}));
+    data.push_back(factory.createArray<double>({1,6},{static_cast<double>(ui->cropBoundBoxYMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxXMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxZMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxYMaxSpinBox->value()), static_cast<double>(ui->cropBoundBoxXMaxSpinBox->value()), static_cast<double>(ui->cropBoundBoxZMaxSpinBox->value())}));
 
     // Channel Patterns
     data.push_back(factory.createCharArray("ChannelPatterns"));
@@ -1959,7 +1962,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     data.push_back(factory.createCharArray(ui->cropCropTypeComboBox->currentText().toStdString()));
 
     data.push_back(factory.createCharArray("lastStart"));
-    data.push_back(factory.createArray<int64_t>({1,3},{ui->cropLastStartYSpinBox->value(),ui->cropLastStartXSpinBox->value(),ui->cropLastStartZSpinBox->value()}));
+    data.push_back(factory.createArray<double>({1,3},{static_cast<double>(ui->cropLastStartYSpinBox->value()),static_cast<double>(ui->cropLastStartXSpinBox->value()),static_cast<double>(ui->cropLastStartZSpinBox->value())}));
 
     // Job Settings
     data.push_back(factory.createCharArray("parseCluster"));
