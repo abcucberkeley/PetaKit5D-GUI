@@ -5,6 +5,10 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <tuple>
+#include <QCheckBox>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QBoxLayout>
 
 namespace Ui {
 class dataPaths;
@@ -22,35 +26,19 @@ public:
 private slots:
     void on_addPathButton_clicked();
 
-    void on_removePathButton_clicked();
-
     void on_cancelButton_clicked();
 
     void on_submitButton_clicked();
 
-    void on_dataPath1BrowseButton_clicked();
+    void on_dataPathBrowseButton_clicked();
 
-    void on_dataPath1LineEdit_textChanged(const QString &arg1);
+    void on_dataPathLineEdit_textChanged(const QString &arg1);
 
-    void on_dataPath2BrowseButton_clicked();
+    void on_dataPathRemoveButton_clicked();
 
-    void on_dataPath2LineEdit_textChanged(const QString &arg1);
+    void on_dataPathCheckBox_stateChanged(int checked);
 
-    void on_dataPath3BrowseButton_clicked();
-
-    void on_dataPath3LineEdit_textChanged(const QString &arg1);
-
-    void on_dataPath4BrowseButton_clicked();
-
-    void on_dataPath4LineEdit_textChanged(const QString &arg1);
-
-    void on_dataPath5BrowseButton_clicked();
-
-    void on_dataPath5LineEdit_textChanged(const QString &arg1);
-
-    void on_dataPath6BrowseButton_clicked();
-
-    void on_dataPath6LineEdit_textChanged(const QString &arg1);
+    void makeNewPath(int i);
 
 private:
     Ui::dataPaths *ui;
@@ -58,7 +46,7 @@ private:
     int activePaths;
     bool maxPaths;
     bool folder;
-    std::vector<std::tuple<QLabel*, QLineEdit*, QPushButton*>> paths;
+    std::vector<std::tuple<QHBoxLayout*, QLabel*, QLabel*, QCheckBox*, QLineEdit*, QPushButton*, QPushButton*>> paths;
     std::vector<std::string> *dpHand;
 };
 

@@ -1,7 +1,8 @@
 #include "datapaths.h"
 #include "ui_datapaths.h"
-#include <QFileInfo>
-#include <QFileDialog>
+#include <iostream>
+#include <QSpinBox>
+
 
 
 //*** This form is too hardcoded. Qt has better ways to handle what we need here
@@ -30,26 +31,17 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
     if(activePaths < 6) maxPaths = false;
     else maxPaths = true;
 
-    // structure to hold widgets on the screen so we can turn them on and off
-    paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath2Label,ui->dataPath2LineEdit,ui->dataPath2BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath3Label,ui->dataPath3LineEdit,ui->dataPath3BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath4Label,ui->dataPath4LineEdit,ui->dataPath4BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath5Label,ui->dataPath5LineEdit,ui->dataPath5BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath6Label,ui->dataPath6LineEdit,ui->dataPath6BrowseButton));
-
-    // Initial visibility of the widgets
-    for(size_t i = 0; i < paths.size(); i++){
-        if(i == 0 && dPaths.size() == 0) continue;
-        else if(i < dPaths.size()){
-            std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
-        }
-        else{
-            std::get<0>(paths.at(i))->setVisible(false);
-            std::get<1>(paths.at(i))->setVisible(false);
-            std::get<2>(paths.at(i))->setVisible(false);
-        }
+    //***********************NEW*******************
+    ui->dataPathsVerticalLayout->addStretch();
+    for(size_t i = 0; i < 3; i++){
+        makeNewPath(i);
     }
+
+    //ui->dataPathsVerticalLayout->addStretch();
+
+    // structure to hold widgets on the screen so we can turn them on and off
+    //paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
+
 }
 
 // For PSF data paths
@@ -64,7 +56,7 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
     this->mostRecentDir = &mostRecentDir;
 
     delete ui->addPathButton;
-    delete ui->removePathButton;
+    //delete ui->removePathButton;
 
 
     // pointer to hold the passed in paths vector
@@ -80,27 +72,8 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
     else maxPaths = true;
 
     // structure to hold widgets on the screen so we can turn them on and off
-    paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath2Label,ui->dataPath2LineEdit,ui->dataPath2BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath3Label,ui->dataPath3LineEdit,ui->dataPath3BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath4Label,ui->dataPath4LineEdit,ui->dataPath4BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath5Label,ui->dataPath5LineEdit,ui->dataPath5BrowseButton));
-    paths.push_back(std::make_tuple(ui->dataPath6Label,ui->dataPath6LineEdit,ui->dataPath6BrowseButton));
+    //paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
 
-    // Initial visibility of the widgets
-    for(size_t i = 0; i < paths.size(); i++){
-        if(i == 0 && channels == 0) continue;
-        else if(i < channels){
-            std::get<0>(paths.at(i))->setTextFormat(Qt::RichText);
-            std::get<0>(paths.at(i))->setText(channelNames.at(i));
-            if(i < dPaths.size()) std::get<1>(paths.at(i))->setText(QString::fromStdString(dPaths.at(i)));
-        }
-        else{
-            std::get<0>(paths.at(i))->setVisible(false);
-            std::get<1>(paths.at(i))->setVisible(false);
-            std::get<2>(paths.at(i))->setVisible(false);
-        }
-    }
 }
 
 dataPaths::~dataPaths()
@@ -111,32 +84,8 @@ dataPaths::~dataPaths()
 // Add a path to the window
 void dataPaths::on_addPathButton_clicked()
 {
-
-    if(maxPaths) return;
-
-    std::get<0>(paths.at(activePaths))->setVisible(true);
-    std::get<1>(paths.at(activePaths))->setVisible(true);
-    std::get<2>(paths.at(activePaths))->setVisible(true);
-    activePaths++;
-
-    if((size_t)activePaths == paths.size()){
-        maxPaths = true;
-    }
-
-}
-
-// Remove a path from the window
-void dataPaths::on_removePathButton_clicked()
-{
-    if(activePaths == 1) return;
-
-    if(maxPaths) maxPaths = false;
-    activePaths--;
-
-    std::get<0>(paths.at(activePaths))->setVisible(false);
-    std::get<1>(paths.at(activePaths))->setVisible(false);
-    std::get<2>(paths.at(activePaths))->setVisible(false);
-
+    makeNewPath(paths.size());
+    //ui->dataPathsVerticalLayout->addStretch();
 }
 
 // Close the window
@@ -164,140 +113,121 @@ void dataPaths::on_submitButton_clicked()
 
 // Can probably optimize all these later
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
-void dataPaths::on_dataPath1BrowseButton_clicked()
+void dataPaths::on_dataPathBrowseButton_clicked()
 {
+    // Get last char of senders string so we can access it.
+    QLineEdit* currQLE = std::get<4>(paths.at(QString(((QPushButton*)sender())->objectName().back()).toInt()));
+
     if(folder){
         QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
         if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath1LineEdit->setText(folder_path.absoluteFilePath());
+            currQLE->setText(folder_path.absoluteFilePath());
             *mostRecentDir = folder_path.absoluteFilePath();
         }
     }
     else{
         QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
         if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath1LineEdit->setText(file_path.absoluteFilePath());
+           currQLE->setText(file_path.absoluteFilePath());
             *mostRecentDir = file_path.absolutePath();
         }
     }
 }
 
-void dataPaths::on_dataPath1LineEdit_textChanged(const QString &arg1)
+void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 {
-    ui->dataPath1LineEdit->setToolTip(arg1);
+    ((QLineEdit*)sender())->setToolTip(arg1);
 }
 
-void dataPaths::on_dataPath2BrowseButton_clicked()
-{
-    if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath2LineEdit->setText(folder_path.absoluteFilePath());
-            *mostRecentDir = folder_path.absoluteFilePath();
-        }
+void dataPaths::on_dataPathRemoveButton_clicked(){
+    //int elemsInTuple = 9;
+    int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
+    // Delete elems in Tuple
+    std::get<0>(paths.at(currTuple))->deleteLater();
+    std::get<1>(paths.at(currTuple))->deleteLater();
+    std::get<2>(paths.at(currTuple))->deleteLater();
+    std::get<3>(paths.at(currTuple))->deleteLater();
+    std::get<4>(paths.at(currTuple))->deleteLater();
+    std::get<5>(paths.at(currTuple))->deleteLater();
+    std::get<6>(paths.at(currTuple))->deleteLater();
+    //std::get<7>(paths.at(currTuple))->deleteLater();
+    //std::get<8>(paths.at(currTuple))->deleteLater();
+
+    // Erase it from our vector
+    paths.erase(paths.begin()+currTuple);
+
+    // Change names of the other tuples
+    for(size_t i = currTuple; i < paths.size(); i++){
+        std::get<1>(paths.at(i))->setText(QString("<b>")+QString("Data Path: ")+QString::number(i+1)+QString("<\b>"));
+        std::get<5>(paths.at(i))->setObjectName(QString("dataPathBrowseButton")+QString::number(i));
+        std::get<6>(paths.at(i))->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
+    }
+
+}
+
+void dataPaths::on_dataPathCheckBox_stateChanged(int checked){
+    if(checked){
+
     }
     else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath2LineEdit->setText(file_path.absoluteFilePath());
-            *mostRecentDir = file_path.absolutePath();
-        }
+
     }
 }
 
-void dataPaths::on_dataPath2LineEdit_textChanged(const QString &arg1)
-{
-    ui->dataPath2LineEdit->setToolTip(arg1);
-}
+void dataPaths::makeNewPath(int i){
+    // Add a horizontal layout to the form
+    QHBoxLayout* QHBox = new QHBoxLayout(this);
+    ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
+    //ui->dataPathsVerticalLayout->addLayout(QHBox);
 
-void dataPaths::on_dataPath3BrowseButton_clicked()
-{
-    if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath3LineEdit->setText(folder_path.absoluteFilePath());
-            *mostRecentDir = folder_path.absoluteFilePath();
-        }
-    }
-    else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath3LineEdit->setText(file_path.absoluteFilePath());
-            *mostRecentDir = file_path.absolutePath();
-        }
-    }
-}
+    // Add the Recurse label
+    QLabel* QLR = new QLabel(this);
+    QLR->setTextFormat(Qt::RichText);
+    QLR->setText("<b>Check SubDirs:<\b>");
+    QHBox->addWidget(QLR);
 
-void dataPaths::on_dataPath3LineEdit_textChanged(const QString &arg1)
-{
-    ui->dataPath3LineEdit->setToolTip(arg1);
-}
+    // Add Checkbox
+    QCheckBox* QCB = new QCheckBox(this);
+    QCB->setObjectName(QString("dataPathCheckBox")+QString::number(i));
+    connect(QCB,&QCheckBox::stateChanged,this,&dataPaths::on_dataPathCheckBox_stateChanged);
+    QHBox->addWidget(QCB);
 
-void dataPaths::on_dataPath4BrowseButton_clicked()
-{
-    if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath4LineEdit->setText(folder_path.absoluteFilePath());
-            *mostRecentDir = folder_path.absoluteFilePath();
-        }
-    }
-    else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath4LineEdit->setText(file_path.absoluteFilePath());
-            *mostRecentDir = file_path.absolutePath();
-        }
-    }
-}
+    // Add the Max Level label
+    QLabel* QLML = new QLabel(this);
+    QLML->setTextFormat(Qt::RichText);
+    QLML->setText("<b>Max Levels:<\b>");
+    QHBox->addWidget(QLML);
 
-void dataPaths::on_dataPath4LineEdit_textChanged(const QString &arg1)
-{
-    ui->dataPath4LineEdit->setToolTip(arg1);
-}
+    // Add the Max Level SpinBox
+    QSpinBox* QSB = new QSpinBox(this);
+    QSB->setValue(0);
+    QSB->setMinimum(0);
+    QHBox->addWidget(QSB);
 
-void dataPaths::on_dataPath5BrowseButton_clicked()
-{
-    if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath5LineEdit->setText(folder_path.absoluteFilePath());
-            *mostRecentDir = folder_path.absoluteFilePath();
-        }
-    }
-    else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath5LineEdit->setText(file_path.absoluteFilePath());
-            *mostRecentDir = file_path.absolutePath();
-        }
-    }
-}
+    // Add the Path label
+    QLabel* QL = new QLabel(this);
+    QL->setTextFormat(Qt::RichText);
+    QL->setText(QString("<b>")+QString("Data Path: ")+QString::number(i+1)+QString("<\b>"));
+    QHBox->addWidget(QL);
 
-void dataPaths::on_dataPath5LineEdit_textChanged(const QString &arg1)
-{
-    ui->dataPath5LineEdit->setToolTip(arg1);
-}
+    // Add the text box
+    QLineEdit* QLE = new QLineEdit(this);
+    connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
+    QHBox->addWidget(QLE);
 
-void dataPaths::on_dataPath6BrowseButton_clicked()
-{
-    if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath6LineEdit->setText(folder_path.absoluteFilePath());
-            *mostRecentDir = folder_path.absoluteFilePath();
-        }
-    }
-    else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
-            ui->dataPath6LineEdit->setText(file_path.absoluteFilePath());
-            *mostRecentDir = file_path.absolutePath();
-        }
-    }
-}
+    // Add browse button
+    QPushButton* QPB = new QPushButton(this);
+    QPB->setObjectName(QString("dataPathBrowseButton")+QString::number(i));
+    QPB->setText("Browse");
+    connect(QPB,&QPushButton::clicked,this,&dataPaths::on_dataPathBrowseButton_clicked);
+    QHBox->addWidget(QPB);
 
-void dataPaths::on_dataPath6LineEdit_textChanged(const QString &arg1)
-{
-    ui->dataPath6LineEdit->setToolTip(arg1);
+    // Add Remove button
+    QPushButton* QPBR = new QPushButton(this);
+    QPBR->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
+    QPBR->setText("Remove Path");
+    connect(QPBR,&QPushButton::clicked,this,&dataPaths::on_dataPathRemoveButton_clicked);
+    QHBox->addWidget(QPBR);
+
+    paths.push_back(std::make_tuple(QHBox,QL,QLR,QCB,QLE,QPB,QPBR));
 }
