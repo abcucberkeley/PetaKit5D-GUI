@@ -14,6 +14,7 @@ MATLAB_ROOT_CLUSTER = /global/software/sl-7.x86_64/modules/tools/matlab
 # Input
 HEADERS += \
            datapaths.h \
+           datapathsrecursive.h \
            deconadvanced.h \
            dsradvanced.h \
            jobadvanced.h \
@@ -29,6 +30,7 @@ HEADERS += \
 
 FORMS += \
          datapaths.ui \
+         datapathsrecursive.ui \
          deconadvanced.ui \
          dsradvanced.ui \
          jobadvanced.ui \
@@ -40,6 +42,7 @@ FORMS += \
 
 SOURCES += \
            datapaths.cpp \
+           datapathsrecursive.cpp \
            deconadvanced.cpp \
            dsradvanced.cpp \
            jobadvanced.cpp \
