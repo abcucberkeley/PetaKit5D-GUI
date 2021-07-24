@@ -142,7 +142,7 @@ void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 void dataPaths::on_dataPathFindButton_clicked(){
     //int elemsInTuple = 9;
     int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
-    dataPathsRecursive dPR(currPaths,std::get<2>(paths.at(currTuple))->text().toStdString(),std::get<6>(paths.at(currTuple))->value(),this);
+    dataPathsRecursive dPR(currPaths,std::get<2>(paths.at(currTuple))->text().toStdString(),std::get<6>(paths.at(currTuple))->text(),std::get<8>(paths.at(currTuple))->value(),this);
     dPR.setModal(true);
     dPR.exec();
 
@@ -164,6 +164,8 @@ void dataPaths::on_dataPathRemoveButton_clicked(){
     std::get<7>(paths.at(currTuple))->deleteLater();
     std::get<8>(paths.at(currTuple))->deleteLater();
     std::get<9>(paths.at(currTuple))->deleteLater();
+    std::get<10>(paths.at(currTuple))->deleteLater();
+    std::get<11>(paths.at(currTuple))->deleteLater();
 
     // Erase it from our vector
     paths.erase(paths.begin()+currTuple);
@@ -172,9 +174,9 @@ void dataPaths::on_dataPathRemoveButton_clicked(){
     for(size_t i = currTuple; i < paths.size(); i++){
         std::get<1>(paths.at(i))->setText(QString("<b>")+QString("Data Path ")+QString::number(i+1)+QString("<\b>"));
         std::get<3>(paths.at(i))->setObjectName(QString("dataPathBrowseButton")+QString::number(i));
-        std::get<3>(paths.at(i))->setObjectName(QString("dataPathFindButton")+QString::number(i));
-        std::get<8>(paths.at(i))->setObjectName(QString("dataPathCheckBox")+QString::number(i));
-        std::get<9>(paths.at(i))->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
+        std::get<4>(paths.at(i))->setObjectName(QString("dataPathFindButton")+QString::number(i));
+        std::get<10>(paths.at(i))->setObjectName(QString("dataPathCheckBox")+QString::number(i));
+        std::get<11>(paths.at(i))->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
     }
 
 }
@@ -219,6 +221,18 @@ void dataPaths::makeNewPath(int i){
     connect(QPBF,&QPushButton::clicked,this,&dataPaths::on_dataPathFindButton_clicked);
     QHBox->addWidget(QPBF);
 
+    // Add the Pattern label
+    QLabel* QLP = new QLabel(this);
+    QLP->setTextFormat(Qt::RichText);
+    QLP->setText("<b>Pattern<\b>");
+    QHBox->addWidget(QLP);
+
+    // Add the text box for Pattern
+    QLineEdit* QLEP = new QLineEdit(this);
+    //QLEP->setMinimumWidth(150);
+    connect(QLEP,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
+    QHBox->addWidget(QLEP);
+
     // Add the Max Depth label
     QLabel* QLMD = new QLabel(this);
     QLMD->setTextFormat(Qt::RichText);
@@ -234,7 +248,7 @@ void dataPaths::makeNewPath(int i){
     // Add the Recurse label
     QLabel* QLR = new QLabel(this);
     QLR->setTextFormat(Qt::RichText);
-    QLR->setText("<b>Include Master:<\b>");
+    QLR->setText("<b>Include Master<\b>");
     QLR->setToolTip("Checking this option will also include this Master folder as a path");
     QHBox->addWidget(QLR);
 
@@ -253,5 +267,5 @@ void dataPaths::makeNewPath(int i){
     connect(QPBR,&QPushButton::clicked,this,&dataPaths::on_dataPathRemoveButton_clicked);
     QHBox->addWidget(QPBR);
 
-    paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLMD,QSB,QLR,QCB,QPBR));
+    paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));
 }

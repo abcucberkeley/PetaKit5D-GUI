@@ -48,11 +48,11 @@ private slots:
 private:
     Ui::dataPaths *ui;
     QString *mostRecentDir;
-    std::unordered_map<std::string,std::string> currPaths;
+    std::unordered_map<std::string,std::unordered_map<std::string,std::string>>* currPaths;
     int activePaths;
     bool maxPaths;
     bool folder;
-    std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
+    std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
     std::vector<std::string> *dpHand;
 };
 

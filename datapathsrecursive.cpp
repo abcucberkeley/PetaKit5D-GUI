@@ -3,12 +3,12 @@
 #include <QDirIterator>
 #include <iostream>
 
-dataPathsRecursive::dataPathsRecursive(std::unordered_map<std::string,std::string> &currPaths, const std::string &currPath, int maxDepth, QWidget *parent) :
+dataPathsRecursive::dataPathsRecursive(std::unordered_map<std::string,std::unordered_map<std::string,std::string>> *currPaths, const std::string &currPath, const QString &currPatttern,int maxDepth, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPathsRecursive)
 {
     ui->setupUi(this);
-    this->currPaths = &currPaths;
+    this->currPaths = currPaths;
     this->currPath = currPath;
     this->maxDepth = maxDepth;
 
@@ -21,12 +21,12 @@ dataPathsRecursive::dataPathsRecursive(std::unordered_map<std::string,std::strin
     int currPathDepth = currPathQ.count('/');
     QDirIterator it(currPathQ,{QDir::NoDotAndDotDot,QDir::Dirs},QDirIterator::Subdirectories);
 
-    ui->dataPathsRecursiveVeriticalLayout->addStretch();
+    ui->dataPathsRecursiveVerticalLayout->addStretch();
     int i = 0;
     while(it.hasNext()){
         QString checkString = it.next();
         int checkCount = checkString.count('/');
-        if(checkCount <= currPathDepth+maxDepth){
+        if(checkCount <= currPathDepth+maxDepth  && checkString.contains(currPatttern)){
             makeNewPath(i,checkString);
             i++;
         }
@@ -41,11 +41,16 @@ dataPathsRecursive::~dataPathsRecursive()
     delete ui;
 }
 
+void dataPathsRecursive::on_dataPathRecursiveLineEdit_textChanged(const QString &arg1)
+{
+    ((QLineEdit*)sender())->setToolTip(arg1);
+}
+
 void dataPathsRecursive::makeNewPath(int i, QString currPath){
 
     // Add a horizontal layout to the form
     QHBoxLayout* QHBox = new QHBoxLayout(this);
-    ui->dataPathsRecursiveVeriticalLayout->insertLayout(ui->dataPathsRecursiveVeriticalLayout->count()-1,QHBox);
+    ui->dataPathsRecursiveVerticalLayout->insertLayout(ui->dataPathsRecursiveVerticalLayout->count()-1,QHBox);
 
     // Add the Add Path label
     QLabel* QLAP = new QLabel(this);
@@ -62,8 +67,24 @@ void dataPathsRecursive::makeNewPath(int i, QString currPath){
     // Add the text box
     QLineEdit* QLE = new QLineEdit(this);
     QLE->setText(currPath);
-    //connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
+    connect(QLE,&QLineEdit::textChanged,this,&dataPathsRecursive::on_dataPathRecursiveLineEdit_textChanged);
     QHBox->addWidget(QLE);
 
     paths.push_back(std::make_tuple(QHBox,QLAP,QCB,QLE));
 }
+
+void dataPathsRecursive::on_searchButton_clicked()
+{
+    for(auto path : paths){
+        if(std::get<3>(path)->text().contains(ui->patternLineEdit->text())){
+            std::get<2>(path)->setChecked(true);
+        }
+    }
+}
+
+
+void dataPathsRecursive::on_cancelButton_clicked()
+{
+    dataPathsRecursive::close();
+}
+

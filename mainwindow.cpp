@@ -93,14 +93,38 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("MainWindow");
 
-    // Save Data Paths
+
+
     settings.beginWriteArray("dPaths");
     for(unsigned int i = 0; i < dPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("dPathsi", QString::fromStdString(dPaths.at(i)));
+        settings.setValue("dPathsimasterPath", QString::fromStdString(dPaths.at(i).masterPath));
+        settings.setValue("dPathsiincludeMaster", dPaths.at(i).includeMaster);
+        settings.setValue("dPathsipattern", QString::fromStdString(dPaths.at(i).pattern));
+        settings.setValue("dPathsimaxDepth", dPaths.at(i).maxDepth);
     }
     settings.endArray();
+
+
+    for(unsigned int i = 0; i < dPaths.size(); i++)
+    {
+        settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"bool");
+        unsigned int j = 0;
+        for(auto path : dPaths.at(i).subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue(QString::fromStdString(dPaths.at(i).masterPath)+"booli",path.second.first);
+            j++;
+        }
+        settings.endArray();
+
+        settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"subPath");
+        settings.setArrayIndex()
+
+
+    }
+    settings.endArray();
+
 
     // Save Main Settings
 
@@ -336,6 +360,8 @@ void MainWindow::readSettings()
     settings.beginGroup("MainWindow");
 
     // Read Data Paths
+
+    /*
     int size = settings.beginReadArray("dPaths");
     for(int i = 0; i < size; i++)
     {
@@ -343,6 +369,24 @@ void MainWindow::readSettings()
         dPaths.push_back(settings.value("dPathsi").toString().toStdString());
     }
     settings.endArray();
+    */
+
+    // Read Data Paths
+    int size = settings.beginReadArray("dPaths");
+    for (int i = 0; i < size; i++){
+        settings.setArrayIndex(i);
+        dPaths.emplace(settings.value("dPathsi").toString(),std::unordered_map<std::string,std::string>());
+    }
+    settings.endArray();
+
+    for(auto path : dPaths){
+        size = settings.beginReadArray(QString::fromStdString(path.first));
+        for(int i = 0; i < size; i++){
+            settings.setArrayIndex(i);
+            path.second.emplace(settings.value(QString::fromStdString(path.first)+"i").toString(),settings.value(QString::fromStdString(path.first)+"i").toString());
+        }
+        settings.endArray();
+    }
 
     // Read Main Settings
 
@@ -669,12 +713,20 @@ void MainWindow::on_submitButton_clicked()
     // TODO: Seperate functions for error checking
 
     // Error if data path does not exist when submit is pressed
-    for(const std::string &path : dPaths){
-        if(!QFileInfo::exists(QString::fromStdString(path))){
+    for(auto path : dPaths){
+        if(!QFileInfo::exists(QString::fromStdString(path.first))){
             QMessageBox messageBox;
-            messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path + "\" does not exist!"));
+            messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path.first + "\" does not exist!"));
             messageBox.setFixedSize(500,200);
             return;
+        }
+        for (auto subPath : path.second){
+            if(!QFileInfo::exists(QString::fromStdString(subPath.second))){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + subPath.second + "\" does not exist!"));
+                messageBox.setFixedSize(500,200);
+                return;
+            }
         }
     }
 
@@ -718,11 +770,14 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    std::string mainPath = dPaths.at(0);
+    std::string mainPath = dPaths.begin()->first;
 
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
-
+        int numPaths = 0;
+        for(auto path : dPaths){
+            for(auto subPath : path.second) numPaths++;
+        }
         matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
         for(size_t i = 0; i < dPaths.size(); i++){
             dataPaths_exps[i] = factory.createCharArray(dPaths[i]);

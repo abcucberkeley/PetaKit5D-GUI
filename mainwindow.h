@@ -3,6 +3,7 @@
 
 #include "matlabthreadmanager.h"
 #include "matlaboutputwindow.h"
+#include "datapath.h"
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include <QMainWindow>
@@ -116,7 +117,7 @@ private:
     matlabOutputWindow *mOutputWindow;
     matlabOutputWindowThread *mOutputWindowThread;
     GUIvals guiVals;
-    std::vector<std::string> dPaths;
+    std::vector<dataPath> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
     std::vector<std::string> cropDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
