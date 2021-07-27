@@ -1,6 +1,7 @@
 #include "datapaths.h"
 #include "ui_datapaths.h"
 #include "datapathsrecursive.h"
+#include <QMessageBox>
 
 
 
@@ -9,7 +10,7 @@
 // but this is a quick solution to help get things running.
 
 // folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
-dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
+dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -22,25 +23,13 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
     // pointer to hold the passed in paths vector
     dpHand = &dPaths;
 
-    // if there are no current data paths in the vector set it to 1
-    // else its the size of how data paths there are
-    if(dPaths.size() == 0) activePaths = 1;
-    else activePaths = dPaths.size();
-
-    // Check if max paths
-    if(activePaths < 6) maxPaths = false;
-    else maxPaths = true;
-
     //***********************NEW*******************
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < dPaths.size(); i++){
-        makeNewPath(i);
+        makeNewPath(i,dpHand->at(i));
     }
 
     //ui->dataPathsVerticalLayout->addStretch();
-
-    // structure to hold widgets on the screen so we can turn them on and off
-    //paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
 
 }
 
@@ -60,7 +49,7 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
 
 
     // pointer to hold the passed in paths vector
-    dpHand = &dPaths;
+    //dpHand = &dPaths;
 
     // if there are no current data paths in the vector set it to 1
     // else its the size of how data paths there are
@@ -84,7 +73,7 @@ dataPaths::~dataPaths()
 // Add a path to the window
 void dataPaths::on_addPathButton_clicked()
 {
-    makeNewPath(paths.size());
+    makeNewPath(paths.size(),dataPath());
     //ui->dataPathsVerticalLayout->addStretch();
 }
 
@@ -97,17 +86,37 @@ void dataPaths::on_cancelButton_clicked()
 // Close the window and save the values currently in the boxes (even if they are empty currently)
 void dataPaths::on_submitButton_clicked()
 {
-    if(dpHand->size() != (size_t)activePaths){
-        dpHand->resize(activePaths);
-    }
-    for(size_t i = 0; i < dpHand->size(); i++){
-        // If first path is empty then reset the vector
-        if(!i && std::get<1>(paths.at(i))->text().toStdString().empty()){
-            dpHand->clear();
-            break;
+
+    bool found = false;
+    for(const auto &cPath : currPaths){
+        if(cPath.second.masterPath.empty()) continue;
+
+        found = false;
+        for(const auto &path : paths){
+            if(cPath.second.masterPath == std::get<2>(path)->text().toStdString()){
+                found = true;
+                break;
+            }
         }
-        dpHand->at(i) = std::get<1>(paths.at(i))->text().toStdString();
+        if(!found) currPaths.erase(cPath.second.masterPath);
     }
+
+
+    for(const auto &path : paths){
+        if(std::get<2>(path)->text().isEmpty()) continue;
+        if(currPaths.find(std::get<2>(path)->text().toStdString()) == currPaths.end()){
+            currPaths.emplace(std::get<2>(path)->text().toStdString(),dataPath(std::get<2>(path)->text().toStdString(),std::get<10>(path)->isChecked(),std::get<6>(path)->text().toStdString(),std::get<8>(path)->value(),std::unordered_map<std::string,std::pair<bool,std::string>>()));
+        }
+    }
+
+    // TODO: Add handling for multiple paths that have the same name****************
+
+    dpHand->clear();
+    for(const auto &path : currPaths){
+        dpHand->push_back(path.second);
+    }
+    std::sort(dpHand->begin(),dpHand->end());
+
     dataPaths::close();
 }
 
@@ -142,12 +151,26 @@ void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 void dataPaths::on_dataPathFindButton_clicked(){
     //int elemsInTuple = 9;
     int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
-    dataPathsRecursive dPR(currPaths,std::get<2>(paths.at(currTuple))->text().toStdString(),std::get<6>(paths.at(currTuple))->text(),std::get<8>(paths.at(currTuple))->value(),this);
+
+    if(std::get<2>(paths.at(currTuple))->text().isEmpty()){
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error",QString::fromStdString("Cannot search because the data path box is empty!"));
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+
+    if(currPaths.find(std::get<2>(paths.at(currTuple))->text().toStdString()) == currPaths.end()){
+        currPaths.emplace(std::get<2>(paths.at(currTuple))->text().toStdString(),dataPath(std::get<2>(paths.at(currTuple))->text().toStdString(),std::get<10>(paths.at(currTuple))->isChecked(),std::get<6>(paths.at(currTuple))->text().toStdString(),std::get<8>(paths.at(currTuple))->value(),std::unordered_map<std::string,std::pair<bool,std::string>>()));
+    }
+    else{
+        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).includeMaster = std::get<10>(paths.at(currTuple))->isChecked();
+        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).pattern = std::get<6>(paths.at(currTuple))->text().toStdString();
+        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).maxDepth = std::get<8>(paths.at(currTuple))->value();
+
+    }
+    dataPathsRecursive dPR(currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()),this);
     dPR.setModal(true);
     dPR.exec();
-
-
-
 }
 
 void dataPaths::on_dataPathRemoveButton_clicked(){
@@ -188,7 +211,7 @@ void dataPaths::on_dataPathCheckBox_stateChanged(int checked){
     std::get<4>(paths.at(currTuple))->setEnabled(checked);
 }
 
-void dataPaths::makeNewPath(int i){
+void dataPaths::makeNewPath(int i, dataPath currPath){
     // Add a horizontal layout to the form
     QHBoxLayout* QHBox = new QHBoxLayout(this);
     ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
@@ -202,6 +225,7 @@ void dataPaths::makeNewPath(int i){
 
     // Add the text box
     QLineEdit* QLE = new QLineEdit(this);
+    QLE->setText(QString::fromStdString(currPath.masterPath));
     QLE->setMinimumWidth(150);
     connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     QHBox->addWidget(QLE);
@@ -229,6 +253,7 @@ void dataPaths::makeNewPath(int i){
 
     // Add the text box for Pattern
     QLineEdit* QLEP = new QLineEdit(this);
+    QLEP->setText(QString::fromStdString(currPath.pattern));
     //QLEP->setMinimumWidth(150);
     connect(QLEP,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     QHBox->addWidget(QLEP);
@@ -241,7 +266,7 @@ void dataPaths::makeNewPath(int i){
 
     // Add the Max Depth SpinBox
     QSpinBox* QSB = new QSpinBox(this);
-    QSB->setValue(1);
+    QSB->setValue(currPath.maxDepth);
     QSB->setMinimum(1);
     QHBox->addWidget(QSB);
 
@@ -255,7 +280,7 @@ void dataPaths::makeNewPath(int i){
     // Add Checkbox
     QCheckBox* QCB = new QCheckBox(this);
     QCB->setObjectName(QString("dataPathCheckBox")+QString::number(i));
-    QCB->setChecked(true);
+    QCB->setChecked(currPath.includeMaster);
     //connect(QCB,&QCheckBox::stateChanged,this,&dataPaths::on_dataPathCheckBox_stateChanged);
     QLR->setToolTip("Checking this option will also include this Master folder as a path");
     QHBox->addWidget(QCB);

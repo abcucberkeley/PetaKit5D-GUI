@@ -78,12 +78,12 @@ MainWindow::~MainWindow()
 // Event triggered when main window is closed
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-        // Write current user settings
-        writeSettings();
-        event->accept();
+    // Write current user settings
+    writeSettings();
+    event->accept();
 
-        // Close output window if visible
-        //if(mOutputWindow) mOutputWindow->close();
+    // Close output window if visible
+    //if(mOutputWindow) mOutputWindow->close();
 }
 
 // Write user settings
@@ -92,7 +92,6 @@ void MainWindow::writeSettings()
     QSettings settings("ABC", "LLSM GUI");
 
     settings.beginGroup("MainWindow");
-
 
 
     settings.beginWriteArray("dPaths");
@@ -111,7 +110,7 @@ void MainWindow::writeSettings()
     {
         settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"bool");
         unsigned int j = 0;
-        for(auto path : dPaths.at(i).subPaths){
+        for(const auto &path : dPaths.at(i).subPaths){
             settings.setArrayIndex(j);
             settings.setValue(QString::fromStdString(dPaths.at(i).masterPath)+"booli",path.second.first);
             j++;
@@ -119,11 +118,16 @@ void MainWindow::writeSettings()
         settings.endArray();
 
         settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"subPath");
-        settings.setArrayIndex()
+        j = 0;
+        for(const auto &path : dPaths.at(i).subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue(QString::fromStdString(dPaths.at(i).masterPath)+"subPathi",QString::fromStdString(path.second.second));
+            j++;
+        }
+        settings.endArray();
 
 
     }
-    settings.endArray();
 
 
     // Save Main Settings
@@ -300,9 +304,36 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < cropDPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("cropDPathsi", QString::fromStdString(cropDPaths.at(i)));
+        settings.setValue("cropDPathsimasterPath", QString::fromStdString(cropDPaths.at(i).masterPath));
+        settings.setValue("cropDPathsiincludeMaster", cropDPaths.at(i).includeMaster);
+        settings.setValue("cropDPathsipattern", QString::fromStdString(cropDPaths.at(i).pattern));
+        settings.setValue("cropDPathsimaxDepth", cropDPaths.at(i).maxDepth);
     }
     settings.endArray();
+
+
+    for(unsigned int i = 0; i < cropDPaths.size(); i++)
+    {
+        settings.beginWriteArray("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"bool");
+        unsigned int j = 0;
+        for(const auto &path : cropDPaths.at(i).subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"booli",path.second.first);
+            j++;
+        }
+        settings.endArray();
+
+        settings.beginWriteArray("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"subPath");
+        j = 0;
+        for(const auto &path : cropDPaths.at(i).subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"subPathi",QString::fromStdString(path.second.second));
+            j++;
+        }
+        settings.endArray();
+
+
+    }
 
     // SAVE FOR CHANNEL PATTERNS
     settings.beginWriteArray("cropChannelLabels");
@@ -375,18 +406,40 @@ void MainWindow::readSettings()
     int size = settings.beginReadArray("dPaths");
     for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
-        dPaths.emplace(settings.value("dPathsi").toString(),std::unordered_map<std::string,std::string>());
+        dPaths.push_back(dataPath());
+        dPaths.at(i).masterPath = settings.value("dPathsimasterPath").toString().toStdString();
+        dPaths.at(i).includeMaster = settings.value("dPathsiincludeMaster").toBool();
+        dPaths.at(i).pattern = settings.value("dPathsipattern").toString().toStdString();
+        dPaths.at(i).maxDepth = settings.value("dPathsimaxDepth").toInt();
     }
     settings.endArray();
 
-    for(auto path : dPaths){
-        size = settings.beginReadArray(QString::fromStdString(path.first));
-        for(int i = 0; i < size; i++){
-            settings.setArrayIndex(i);
-            path.second.emplace(settings.value(QString::fromStdString(path.first)+"i").toString(),settings.value(QString::fromStdString(path.first)+"i").toString());
+    for(size_t i = 0; i < dPaths.size(); i++){
+        std::vector<std::string> subPaths;
+        std::vector<bool> include;
+
+        size = settings.beginReadArray(QString::fromStdString(dPaths.at(i).masterPath)+"bool");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            include.push_back(settings.value(QString::fromStdString(dPaths.at(i).masterPath)+"booli").toBool());
         }
         settings.endArray();
+
+        size = settings.beginReadArray(QString::fromStdString(dPaths.at(i).masterPath)+"subPath");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            subPaths.push_back(settings.value(QString::fromStdString(dPaths.at(i).masterPath)+"subPathi").toString().toStdString());
+        }
+        settings.endArray();
+
+        for(int j = 0; j < size; j++){
+            dPaths.at(i).subPaths.emplace(subPaths.at(j),std::make_pair(include.at(j),subPaths.at(j)));
+        }
+
     }
+
+
+
 
     // Read Main Settings
 
@@ -580,12 +633,39 @@ void MainWindow::readSettings()
 
     // Read Data Paths
     size = settings.beginReadArray("cropDPaths");
-    for(int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
-        cropDPaths.push_back(settings.value("cropDPathsi").toString().toStdString());
+        cropDPaths.push_back(dataPath());
+        cropDPaths.at(i).masterPath = settings.value("cropDPathsimasterPath").toString().toStdString();
+        cropDPaths.at(i).includeMaster = settings.value("cropDPathsiincludeMaster").toBool();
+        cropDPaths.at(i).pattern = settings.value("cropDPathsipattern").toString().toStdString();
+        cropDPaths.at(i).maxDepth = settings.value("cropDPathsimaxDepth").toInt();
     }
     settings.endArray();
+
+    for(size_t i = 0; i < cropDPaths.size(); i++){
+        std::vector<std::string> subPaths;
+        std::vector<bool> include;
+
+        size = settings.beginReadArray(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"bool");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            include.push_back(settings.value(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"booli").toBool());
+        }
+        settings.endArray();
+
+        size = settings.beginReadArray(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"subPath");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            subPaths.push_back(settings.value(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"subPathi").toString().toStdString());
+        }
+        settings.endArray();
+
+        for(int j = 0; j < size; j++){
+            cropDPaths.at(i).subPaths.emplace(subPaths.at(j),std::make_pair(include.at(j),subPaths.at(j)));
+        }
+
+    }
 
     // temp vectors to hold labels and checkbox values
     tLabels.clear();
@@ -686,9 +766,9 @@ void MainWindow::on_deconAdvancedSettingsButton_clicked()
 // Open Job Advanced Settings
 void MainWindow::on_jobAdvancedSettingsButton_clicked()
 {
-   jobAdvanced jAdvanced(guiVals);
-   jAdvanced.setModal(true);
-   jAdvanced.exec();
+    jobAdvanced jAdvanced(guiVals);
+    jAdvanced.setModal(true);
+    jAdvanced.exec();
 }
 
 // Submit settings
@@ -713,29 +793,33 @@ void MainWindow::on_submitButton_clicked()
     // TODO: Seperate functions for error checking
 
     // Error if data path does not exist when submit is pressed
-    for(auto path : dPaths){
-        if(!QFileInfo::exists(QString::fromStdString(path.first))){
-            QMessageBox messageBox;
-            messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + path.first + "\" does not exist!"));
-            messageBox.setFixedSize(500,200);
-            return;
-        }
-        for (auto subPath : path.second){
-            if(!QFileInfo::exists(QString::fromStdString(subPath.second))){
+    for(size_t i = 0; i < dPaths.size(); i++){
+        if(dPaths.at(i).includeMaster){
+            if(!QFileInfo::exists(QString::fromStdString(dPaths.at(i).masterPath))){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + subPath.second + "\" does not exist!"));
+                messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + dPaths.at(i).masterPath + "\" does not exist!"));
                 messageBox.setFixedSize(500,200);
                 return;
+            }
+        }
+        for (const auto &subPath : dPaths.at(i).subPaths){
+            if(subPath.second.first){
+                if(!QFileInfo::exists(QString::fromStdString(subPath.second.second))){
+                    QMessageBox messageBox;
+                    messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + subPath.second.second + "\" does not exist!"));
+                    messageBox.setFixedSize(500,200);
+                    return;
+                }
             }
         }
     }
 
     // Error if decon is set but no psf paths are set
     if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
-    QMessageBox messageBox;
-    messageBox.warning(0,"Error","Decon is set but there are no psf paths set");
-    messageBox.setFixedSize(500,200);
-    return;
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","Decon is set but there are no psf paths set");
+        messageBox.setFixedSize(500,200);
+        return;
     }
     else{
         for(const std::string &path : psfFullPaths){
@@ -770,17 +854,30 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    std::string mainPath = dPaths.begin()->first;
+    std::string mainPath = dPaths.at(0).masterPath;
 
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
-        int numPaths = 0;
-        for(auto path : dPaths){
-            for(auto subPath : path.second) numPaths++;
+        unsigned long long numPaths = 0;
+        for(const auto &path : dPaths){
+            if(path.includeMaster) numPaths++;
+            for(const auto &subPath : path.subPaths){
+                if(subPath.second.first) numPaths++;
+            }
         }
-        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
-        for(size_t i = 0; i < dPaths.size(); i++){
-            dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
+        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+        size_t currPath = 0;
+        for(const auto &path : dPaths){
+            if(path.includeMaster){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
+                currPath++;
+            }
+            for(const auto &subPath : path.subPaths){
+                if(subPath.second.first){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                    currPath++;
+                }
+            }
         }
         data.push_back(dataPaths_exps);
 
@@ -996,368 +1093,384 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
 
         if(!guiVals.MatlabLaunchStr.empty()){
-        data.push_back(factory.createCharArray("MatlabLaunchStr"));
-        data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
+            data.push_back(factory.createCharArray("MatlabLaunchStr"));
+            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
         }
 
         if(!guiVals.SlurmParam.empty()){
-        data.push_back(factory.createCharArray("SlurmParam"));
-        data.push_back(factory.createCharArray(guiVals.SlurmParam));
+            data.push_back(factory.createCharArray("SlurmParam"));
+            data.push_back(factory.createCharArray(guiVals.SlurmParam));
         }
     }
     else{
 
-
-    // Data Paths
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,dPaths.size()});
-    for(size_t i = 0; i < dPaths.size(); i++){
-        dataPaths_exps[i] = factory.createCharArray(dPaths[i]);
-    }
-    data.push_back(dataPaths_exps);
-
-    // Main Settings
-
-    // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
-    // TODO: FIX LOGIC FOR DECON ONLY
-    data.push_back(factory.createCharArray("Overwrite"));
-    if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-    else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
-    else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
-
-    data.push_back(factory.createCharArray("Streaming"));
-    data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
-
-
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->customPatternsCheckBox->isChecked()){
-
-    if(channelWidgets.size()){
-        // Grab indexes of checked boxes
-        std::vector<int> indexes;
-        for(size_t i = 0; i < channelWidgets.size(); i++){
-            if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
-        }
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-        int cpi = 0;
-        // Go through checked indexes and the label text (channel pattern) in the cell array
-        for(int i : indexes){
-
-            // Convert from rich text to plain text
-            QTextDocument toPlain;
-            toPlain.setHtml(channelWidgets[i].first->text());
-
-            channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-            cpi++;
-        }
-        data.push_back(channelPatterns);
-    }
-
-    }
-    // Use custom patterns
-    else{
-        std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
-        std::string pattern;
-        std::vector<std::string> patterns;
-        for(size_t i = 0; i < patternLine.size(); i++){
-            if(patternLine.at(i) == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine.at(i));
+        // Data Paths
+        unsigned long long numPaths = 0;
+        for(const auto &path : dPaths){
+            if(path.includeMaster) numPaths++;
+            for(const auto &subPath : path.subPaths){
+                if(subPath.second.first) numPaths++;
             }
         }
-        if(pattern.size()) patterns.push_back(pattern);
-
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns.at(i));
+        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+        size_t currPath = 0;
+        for(const auto &path : dPaths){
+            if(path.includeMaster){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
+                currPath++;
+            }
+            for(const auto &subPath : path.subPaths){
+                if(subPath.second.first){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                    currPath++;
+                }
+            }
         }
-        data.push_back(channelPatterns);
+        data.push_back(dataPaths_exps);
 
-    }
-    // Currently not used
-    //data.push_back(factory.createCharArray("Channels"));
-    //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
+        // Main Settings
 
-    data.push_back(factory.createCharArray("SkewAngle"));
-    data.push_back(factory.createScalar<double>(guiVals.skewAngle));
+        // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
+        // TODO: FIX LOGIC FOR DECON ONLY
+        data.push_back(factory.createCharArray("Overwrite"));
+        if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
+        else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
 
-    data.push_back(factory.createCharArray("dz"));
-    data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
-
-    data.push_back(factory.createCharArray("xyPixelSize"));
-    data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
-
-    data.push_back(factory.createCharArray("Reverse"));
-    data.push_back(factory.createScalar<bool>(guiVals.Reverse));
-
-    data.push_back(factory.createCharArray("ObjectiveScan"));
-    data.push_back(factory.createScalar<bool>(ui->objectiveScanCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("sCMOSCameraFlip"));
-    data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
-
-    // This needs to change FIX
-    // TODO: FIX LOGIC FOR DECON ONLY
-    data.push_back(factory.createCharArray("Save16bit"));
-    if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-    else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
-
-    // This needs to change FIX
-    data.push_back(factory.createCharArray("onlyFirstTP"));
-    data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
+        data.push_back(factory.createCharArray("Streaming"));
+        data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
 
 
-    // Pipeline Settings
+        // Channel Patterns
+        data.push_back(factory.createCharArray("ChannelPatterns"));
+        if(!ui->customPatternsCheckBox->isChecked()){
 
-    //
-    // TODO: Test this Logic more
-    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked()) && ui->deskewAndRotateCheckBox->isChecked()){
-        data.push_back(factory.createCharArray("DSRCombined"));
-        data.push_back(factory.createScalar<bool>(true));
+            if(channelWidgets.size()){
+                // Grab indexes of checked boxes
+                std::vector<int> indexes;
+                for(size_t i = 0; i < channelWidgets.size(); i++){
+                    if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+                }
+                matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+                int cpi = 0;
+                // Go through checked indexes and the label text (channel pattern) in the cell array
+                for(int i : indexes){
 
-        data.push_back(factory.createCharArray("Deskew"));
-        data.push_back(factory.createScalar<bool>(true));
+                    // Convert from rich text to plain text
+                    QTextDocument toPlain;
+                    toPlain.setHtml(channelWidgets[i].first->text());
 
-        data.push_back(factory.createCharArray("Rotate"));
-        data.push_back(factory.createScalar<bool>(true));
+                    channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                    cpi++;
+                }
+                data.push_back(channelPatterns);
+            }
 
-    }
-    else{
-    data.push_back(factory.createCharArray("DSRCombined"));
-    data.push_back(factory.createScalar<bool>(false));
-
-    data.push_back(factory.createCharArray("Deskew"));
-    data.push_back(factory.createScalar<bool>(ui->deskewCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("Rotate"));
-    data.push_back(factory.createScalar<bool>(ui->rotateCheckBox->isChecked()));
-    }
-
-    data.push_back(factory.createCharArray("Stitch"));
-    data.push_back(factory.createScalar<bool>(ui->stitchCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("Decon"));
-    data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
-
-    // Change later
-    //data.push_back(factory.createCharArray("RotateAfterDecon"));
-    //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
-
-
-    // DSR Settings
-
-    data.push_back(factory.createCharArray("parseSettingFile"));
-    data.push_back(factory.createScalar<bool>(ui->parseSettingsFileCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("flipZstack"));
-    data.push_back(factory.createScalar<bool>(ui->flipZStackCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("LLFFCorrection"));
-    data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
-
-    if(lsImagePaths.size()){
-        data.push_back(factory.createCharArray("LSImagePaths"));
-        matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
-        for(size_t i = 0; i < lsImagePaths.size(); i++){
-            lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i]);
         }
-        data.push_back(lsImageMPaths);
-    }
+        // Use custom patterns
+        else{
+            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
+            std::string pattern;
+            std::vector<std::string> patterns;
+            for(size_t i = 0; i < patternLine.size(); i++){
+                if(patternLine.at(i) == ','){
+                    patterns.push_back(pattern);
+                    pattern.clear();
+                }
+                else{
+                    pattern.push_back(patternLine.at(i));
+                }
+            }
+            if(pattern.size()) patterns.push_back(pattern);
 
-    if(backgroundPaths.size()){
-        data.push_back(factory.createCharArray("BackgroundPaths"));
-        matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
-        for(size_t i = 0; i < backgroundPaths.size(); i++){
-            backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i]);
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+
+            for(size_t i = 0; i < patterns.size(); i++){
+                channelPatterns[i] = factory.createCharArray(patterns.at(i));
+            }
+            data.push_back(channelPatterns);
+
         }
-        data.push_back(backgroundMPaths);
-    }
+        // Currently not used
+        //data.push_back(factory.createCharArray("Channels"));
+        //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
-    // DSR Advanced Settings
+        data.push_back(factory.createCharArray("SkewAngle"));
+        data.push_back(factory.createScalar<double>(guiVals.skewAngle));
 
-    data.push_back(factory.createCharArray("BKRemoval"));
-    data.push_back(factory.createScalar<bool>(guiVals.BKRemoval));
+        data.push_back(factory.createCharArray("dz"));
+        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
 
-    data.push_back(factory.createCharArray("LowerLimit"));
-    data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
+        data.push_back(factory.createCharArray("xyPixelSize"));
+        data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
 
-    // TODO: Update Resample
-    data.push_back(factory.createCharArray("resampleType"));
-    data.push_back(factory.createCharArray(guiVals.resampleType));
+        data.push_back(factory.createCharArray("Reverse"));
+        data.push_back(factory.createScalar<bool>(guiVals.Reverse));
 
-    if(guiVals.resample){
-        data.push_back(factory.createCharArray("resample"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
-    }
+        data.push_back(factory.createCharArray("ObjectiveScan"));
+        data.push_back(factory.createScalar<bool>(ui->objectiveScanCheckBox->isChecked()));
 
-    // Stitch Settings
+        data.push_back(factory.createCharArray("sCMOSCameraFlip"));
+        data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
 
-    data.push_back(factory.createCharArray("stitchPipeline"));
-    data.push_back(factory.createCharArray(ui->stitchPipelineComboBox->currentText().toStdString()));
+        // This needs to change FIX
+        // TODO: FIX LOGIC FOR DECON ONLY
+        data.push_back(factory.createCharArray("Save16bit"));
+        if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
+        else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
 
-    data.push_back(factory.createCharArray("stitchResultDir"));
-    data.push_back(factory.createCharArray(ui->resultsDirLineEdit->text().toStdString()));
+        // This needs to change FIX
+        data.push_back(factory.createCharArray("onlyFirstTP"));
+        data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("imageListFullpaths"));
-    data.push_back(factory.createCharArray(ui->imageListFullPathsLineEdit->text().toStdString()));
 
-    if(!ui->axisOrderLineEdit->text().toStdString().empty()){
-    data.push_back(factory.createCharArray("axisOrder"));
-    data.push_back(factory.createCharArray(ui->axisOrderLineEdit->text().toStdString()));
-    }
+        // Pipeline Settings
 
-    data.push_back(factory.createCharArray("BlendMethod"));
-    data.push_back(factory.createCharArray(ui->blendMethodComboBox->currentText().toStdString()));
+        //
+        // TODO: Test this Logic more
+        if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked()) && ui->deskewAndRotateCheckBox->isChecked()){
+            data.push_back(factory.createCharArray("DSRCombined"));
+            data.push_back(factory.createScalar<bool>(true));
 
-    data.push_back(factory.createCharArray("xcorrShift"));
-    data.push_back(factory.createScalar<bool>(ui->xCorrShiftCheckBox->isChecked()));
+            data.push_back(factory.createCharArray("Deskew"));
+            data.push_back(factory.createScalar<bool>(true));
 
-    data.push_back(factory.createCharArray("xcorrMode"));
-    data.push_back(factory.createCharArray(ui->xCorrModeComboBox->currentText().toStdString()));
+            data.push_back(factory.createCharArray("Rotate"));
+            data.push_back(factory.createScalar<bool>(true));
 
-    // Bound box crop
-    if(ui->boundBoxCheckBox->isChecked()){
-        data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
-    }
-
-    //EX: "camA_ch0";
-    if(!ui->primaryCHLineEdit->text().isEmpty()){
-        data.push_back(factory.createCharArray("primaryCh"));
-        data.push_back(factory.createCharArray(ui->primaryCHLineEdit->text().toStdString()));
-    }
-
-    // Decon Settings
-
-    data.push_back(factory.createCharArray("cudaDecon"));
-    data.push_back(factory.createScalar<bool>(ui->cudaDeconRadioButton->isChecked()));
-
-    data.push_back(factory.createCharArray("cppDecon"));
-    data.push_back(factory.createScalar<bool>(ui->cppDeconRadioButton->isChecked()));
-
-    data.push_back(factory.createCharArray("DS"));
-    data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("DSR"));
-    data.push_back(factory.createScalar<bool>(ui->deskewAndRotateDeconCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("Background"));
-    data.push_back(factory.createScalar<uint64_t>(ui->backgroundIntensityLineEdit->text().toULongLong()));
-
-    data.push_back(factory.createCharArray("dzPSF"));
-    data.push_back(factory.createScalar<double>(ui->dzPSFLineEdit->text().toDouble()));
-
-    data.push_back(factory.createCharArray("EdgeErosion"));
-    data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
-
-    data.push_back(factory.createCharArray("ErodeByFTP"));
-    data.push_back(factory.createScalar<bool>(ui->erodeByFTPCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("deconRotate"));
-    data.push_back(factory.createScalar<bool>(ui->deconRotateCheckBox->isChecked()));
-
-    // Decon Advanced settings
-
-    if(!guiVals.cppDeconPath.empty()){
-        data.push_back(factory.createCharArray("cppDeconPath"));
-        data.push_back(factory.createCharArray(guiVals.cppDeconPath));
-    }
-    if(!guiVals.loadModules.empty()){
-        data.push_back(factory.createCharArray("loadModules"));
-        data.push_back(factory.createCharArray(guiVals.loadModules));
-    }
-    if(!guiVals.cudaDeconPath.empty()){
-        data.push_back(factory.createCharArray("cudaDeconPath"));
-        data.push_back(factory.createCharArray(guiVals.cudaDeconPath));
-    }
-    if(!guiVals.OTFGENPath.empty()){
-        data.push_back(factory.createCharArray("OTFGENPath"));
-        data.push_back(factory.createCharArray(guiVals.OTFGENPath));
-    }
-
-    if(psfFullPaths.size()){
-        data.push_back(factory.createCharArray("psfFullpaths"));
-        matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
-        for(size_t i = 0; i < psfFullPaths.size(); i++){
-            std::cout << psfFullPaths[i] << std::endl;
-            psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
         }
-        data.push_back(psfMPaths);
-    }
-    data.push_back(factory.createCharArray("RLMethod"));
-    data.push_back(factory.createCharArray(guiVals.RLMethod));
+        else{
+            data.push_back(factory.createCharArray("DSRCombined"));
+            data.push_back(factory.createScalar<bool>(false));
 
-    data.push_back(factory.createCharArray("fixIter"));
-    data.push_back(factory.createScalar<bool>(guiVals.fixIter));
+            data.push_back(factory.createCharArray("Deskew"));
+            data.push_back(factory.createScalar<bool>(ui->deskewCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("errThresh"));
-    data.push_back(factory.createScalar<double>(guiVals.errThresh));
+            data.push_back(factory.createCharArray("Rotate"));
+            data.push_back(factory.createScalar<bool>(ui->rotateCheckBox->isChecked()));
+        }
 
-    data.push_back(factory.createCharArray("debug"));
-    data.push_back(factory.createScalar<bool>(guiVals.debug));
+        data.push_back(factory.createCharArray("Stitch"));
+        data.push_back(factory.createScalar<bool>(ui->stitchCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("GPUJob"));
-    data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
+        data.push_back(factory.createCharArray("Decon"));
+        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("DeconIter"));
-    data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
+        // Change later
+        //data.push_back(factory.createCharArray("RotateAfterDecon"));
+        //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("rotatedPSF"));
-    data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
 
-    // Job Settings
+        // DSR Settings
 
-    data.push_back(factory.createCharArray("parseCluster"));
-    data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+        data.push_back(factory.createCharArray("parseSettingFile"));
+        data.push_back(factory.createScalar<bool>(ui->parseSettingsFileCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("cpusPerTask"));
-    data.push_back(factory.createScalar<uint64_t>(ui->cpusPerTaskLineEdit->text().toULongLong()));
+        data.push_back(factory.createCharArray("flipZstack"));
+        data.push_back(factory.createScalar<bool>(ui->flipZStackCheckBox->isChecked()));
 
-    data.push_back(factory.createCharArray("cpuOnlyNodes"));
-    data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+        data.push_back(factory.createCharArray("LLFFCorrection"));
+        data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
 
-    // Advanced Job Settings
+        if(lsImagePaths.size()){
+            data.push_back(factory.createCharArray("LSImagePaths"));
+            matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
+            for(size_t i = 0; i < lsImagePaths.size(); i++){
+                lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i]);
+            }
+            data.push_back(lsImageMPaths);
+        }
 
-    data.push_back(factory.createCharArray("largeFile"));
-    data.push_back(factory.createScalar<bool>(guiVals.largeFile));
+        if(backgroundPaths.size()){
+            data.push_back(factory.createCharArray("BackgroundPaths"));
+            matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
+            for(size_t i = 0; i < backgroundPaths.size(); i++){
+                backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i]);
+            }
+            data.push_back(backgroundMPaths);
+        }
 
-    if(!guiVals.jobLogDir.empty()){
-        data.push_back(factory.createCharArray("jobLogDir"));
-        data.push_back(factory.createCharArray(guiVals.jobLogDir));
-    }
+        // DSR Advanced Settings
 
-    if(!guiVals.uuid.empty()){
-        data.push_back(factory.createCharArray("uuid"));
-        data.push_back(factory.createCharArray(guiVals.uuid));
-    }
+        data.push_back(factory.createCharArray("BKRemoval"));
+        data.push_back(factory.createScalar<bool>(guiVals.BKRemoval));
 
-    data.push_back(factory.createCharArray("maxTrialNum"));
-    data.push_back(factory.createScalar<uint64_t>(guiVals.maxTrialNum));
+        data.push_back(factory.createCharArray("LowerLimit"));
+        data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
-    data.push_back(factory.createCharArray("unitWaitTime"));
-    data.push_back(factory.createScalar<uint64_t>(guiVals.unitWaitTime));
+        // TODO: Update Resample
+        data.push_back(factory.createCharArray("resampleType"));
+        data.push_back(factory.createCharArray(guiVals.resampleType));
 
-    data.push_back(factory.createCharArray("minModifyTime"));
-    data.push_back(factory.createScalar<uint64_t>(guiVals.minModifyTime));
+        if(guiVals.resample){
+            data.push_back(factory.createCharArray("resample"));
+            data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
+        }
 
-    data.push_back(factory.createCharArray("maxModifyTime"));
-    data.push_back(factory.createScalar<uint64_t>(guiVals.maxModifyTime));
+        // Stitch Settings
 
-    data.push_back(factory.createCharArray("maxWaitLoopNum"));
-    data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
+        data.push_back(factory.createCharArray("stitchPipeline"));
+        data.push_back(factory.createCharArray(ui->stitchPipelineComboBox->currentText().toStdString()));
 
-    if(!guiVals.MatlabLaunchStr.empty()){
-    data.push_back(factory.createCharArray("MatlabLaunchStr"));
-    data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
-    }
+        data.push_back(factory.createCharArray("stitchResultDir"));
+        data.push_back(factory.createCharArray(ui->resultsDirLineEdit->text().toStdString()));
 
-    if(!guiVals.SlurmParam.empty()){
-    data.push_back(factory.createCharArray("SlurmParam"));
-    data.push_back(factory.createCharArray(guiVals.SlurmParam));
-    }
+        data.push_back(factory.createCharArray("imageListFullpaths"));
+        data.push_back(factory.createCharArray(ui->imageListFullPathsLineEdit->text().toStdString()));
+
+        if(!ui->axisOrderLineEdit->text().toStdString().empty()){
+            data.push_back(factory.createCharArray("axisOrder"));
+            data.push_back(factory.createCharArray(ui->axisOrderLineEdit->text().toStdString()));
+        }
+
+        data.push_back(factory.createCharArray("BlendMethod"));
+        data.push_back(factory.createCharArray(ui->blendMethodComboBox->currentText().toStdString()));
+
+        data.push_back(factory.createCharArray("xcorrShift"));
+        data.push_back(factory.createScalar<bool>(ui->xCorrShiftCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("xcorrMode"));
+        data.push_back(factory.createCharArray(ui->xCorrModeComboBox->currentText().toStdString()));
+
+        // Bound box crop
+        if(ui->boundBoxCheckBox->isChecked()){
+            data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
+        }
+
+        //EX: "camA_ch0";
+        if(!ui->primaryCHLineEdit->text().isEmpty()){
+            data.push_back(factory.createCharArray("primaryCh"));
+            data.push_back(factory.createCharArray(ui->primaryCHLineEdit->text().toStdString()));
+        }
+
+        // Decon Settings
+
+        data.push_back(factory.createCharArray("cudaDecon"));
+        data.push_back(factory.createScalar<bool>(ui->cudaDeconRadioButton->isChecked()));
+
+        data.push_back(factory.createCharArray("cppDecon"));
+        data.push_back(factory.createScalar<bool>(ui->cppDeconRadioButton->isChecked()));
+
+        data.push_back(factory.createCharArray("DS"));
+        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("DSR"));
+        data.push_back(factory.createScalar<bool>(ui->deskewAndRotateDeconCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("Background"));
+        data.push_back(factory.createScalar<uint64_t>(ui->backgroundIntensityLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("dzPSF"));
+        data.push_back(factory.createScalar<double>(ui->dzPSFLineEdit->text().toDouble()));
+
+        data.push_back(factory.createCharArray("EdgeErosion"));
+        data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("ErodeByFTP"));
+        data.push_back(factory.createScalar<bool>(ui->erodeByFTPCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("deconRotate"));
+        data.push_back(factory.createScalar<bool>(ui->deconRotateCheckBox->isChecked()));
+
+        // Decon Advanced settings
+
+        if(!guiVals.cppDeconPath.empty()){
+            data.push_back(factory.createCharArray("cppDeconPath"));
+            data.push_back(factory.createCharArray(guiVals.cppDeconPath));
+        }
+        if(!guiVals.loadModules.empty()){
+            data.push_back(factory.createCharArray("loadModules"));
+            data.push_back(factory.createCharArray(guiVals.loadModules));
+        }
+        if(!guiVals.cudaDeconPath.empty()){
+            data.push_back(factory.createCharArray("cudaDeconPath"));
+            data.push_back(factory.createCharArray(guiVals.cudaDeconPath));
+        }
+        if(!guiVals.OTFGENPath.empty()){
+            data.push_back(factory.createCharArray("OTFGENPath"));
+            data.push_back(factory.createCharArray(guiVals.OTFGENPath));
+        }
+
+        if(psfFullPaths.size()){
+            data.push_back(factory.createCharArray("psfFullpaths"));
+            matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+            for(size_t i = 0; i < psfFullPaths.size(); i++){
+                std::cout << psfFullPaths[i] << std::endl;
+                psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
+            }
+            data.push_back(psfMPaths);
+        }
+        data.push_back(factory.createCharArray("RLMethod"));
+        data.push_back(factory.createCharArray(guiVals.RLMethod));
+
+        data.push_back(factory.createCharArray("fixIter"));
+        data.push_back(factory.createScalar<bool>(guiVals.fixIter));
+
+        data.push_back(factory.createCharArray("errThresh"));
+        data.push_back(factory.createScalar<double>(guiVals.errThresh));
+
+        data.push_back(factory.createCharArray("debug"));
+        data.push_back(factory.createScalar<bool>(guiVals.debug));
+
+        data.push_back(factory.createCharArray("GPUJob"));
+        data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
+
+        data.push_back(factory.createCharArray("DeconIter"));
+        data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("rotatedPSF"));
+        data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
+
+        // Job Settings
+
+        data.push_back(factory.createCharArray("parseCluster"));
+        data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("cpusPerTask"));
+        data.push_back(factory.createScalar<uint64_t>(ui->cpusPerTaskLineEdit->text().toULongLong()));
+
+        data.push_back(factory.createCharArray("cpuOnlyNodes"));
+        data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+
+        // Advanced Job Settings
+
+        data.push_back(factory.createCharArray("largeFile"));
+        data.push_back(factory.createScalar<bool>(guiVals.largeFile));
+
+        if(!guiVals.jobLogDir.empty()){
+            data.push_back(factory.createCharArray("jobLogDir"));
+            data.push_back(factory.createCharArray(guiVals.jobLogDir));
+        }
+
+        if(!guiVals.uuid.empty()){
+            data.push_back(factory.createCharArray("uuid"));
+            data.push_back(factory.createCharArray(guiVals.uuid));
+        }
+
+        data.push_back(factory.createCharArray("maxTrialNum"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.maxTrialNum));
+
+        data.push_back(factory.createCharArray("unitWaitTime"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.unitWaitTime));
+
+        data.push_back(factory.createCharArray("minModifyTime"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.minModifyTime));
+
+        data.push_back(factory.createCharArray("maxModifyTime"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.maxModifyTime));
+
+        data.push_back(factory.createCharArray("maxWaitLoopNum"));
+        data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
+
+        if(!guiVals.MatlabLaunchStr.empty()){
+            data.push_back(factory.createCharArray("MatlabLaunchStr"));
+            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
+        }
+
+        if(!guiVals.SlurmParam.empty()){
+            data.push_back(factory.createCharArray("SlurmParam"));
+            data.push_back(factory.createCharArray(guiVals.SlurmParam));
+        }
     }
     std::string funcType;
 
@@ -1527,18 +1640,18 @@ void MainWindow::on_mainNextButton_clicked()
 {
     // Error if no data paths set
     if(!dPaths.size()){
-    QMessageBox messageBox;
-    messageBox.warning(0,"Error","No data paths are set. Please set at least one data path before continuing.");
-    messageBox.setFixedSize(500,200);
-    return;
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","No data paths are set. Please set at least one data path before continuing.");
+        messageBox.setFixedSize(500,200);
+        return;
     }
 
     // Error if no channel patterns set
     if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-    QMessageBox messageBox;
-    messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
-    messageBox.setFixedSize(500,200);
-    return;
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
+        messageBox.setFixedSize(500,200);
+        return;
     }
     for(size_t i = 0; i < channelWidgets.size(); i++){
         if(channelWidgets[i].second->isChecked()) break;
@@ -1703,7 +1816,7 @@ void MainWindow::on_jobPreviousButton_clicked()
 void MainWindow::on_addPathsButton_clicked()
 {
     // Default behavior is for the main Data Paths
-    std::vector<std::string>* addPathsDataPaths = &dPaths;
+    std::vector<dataPath>* addPathsDataPaths = &dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>>* addPathsChannelWidgets = &channelWidgets;
     QWidget* addPathsCurrWidget = ui->Main;
     QHBoxLayout* addPathsCurrLayout = ui->horizontalLayout_4;
@@ -1722,19 +1835,20 @@ void MainWindow::on_addPathsButton_clicked()
     daPaths.exec();
 
     // Find all possible channels
-    if(addPathsDataPaths->size()){
-        if(addPathsChannelWidgets->size()){
-            for(auto &i : *addPathsChannelWidgets){
-                if(i.first) delete i.first;
-                if(i.second) delete i.second;
-            }
+    if(addPathsChannelWidgets->size()){
+        for(auto &i : *addPathsChannelWidgets){
+            if(i.first) delete i.first;
+            if(i.second) delete i.second;
         }
-        addPathsChannelWidgets->clear();
-        std::vector<QString> channels;
-        for(const std::string &i : *addPathsDataPaths){
+    }
+    addPathsChannelWidgets->clear();
+    if(!addPathsDataPaths->size()) return;
+    std::vector<QString> channels;
+    for(const auto &path : *addPathsDataPaths){
+        if(path.includeMaster){
             // Looking for channel patterns in the given directory
             //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
-            QDirIterator cPath(QString::fromStdString(i));
+            QDirIterator cPath(QString::fromStdString(path.masterPath));
             QString c;
             QRegularExpression re("Cam\\w_ch\\d");
             QRegularExpressionMatch rmatch;
@@ -1748,17 +1862,36 @@ void MainWindow::on_addPathsButton_clicked()
 
             }
         }
-        for(const QString &ch : channels){
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                // Looking for channel patterns in the given directory
+                //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
+                QDirIterator cPath(QString::fromStdString(path.masterPath));
+                QString c;
+                QRegularExpression re("Cam\\w_ch\\d");
+                QRegularExpressionMatch rmatch;
+                while(cPath.hasNext()){
+                    c = cPath.next();
+                    rmatch = re.match(c);
 
-            QLabel* label = new QLabel(addPathsCurrWidget);
-            label->setTextFormat(Qt::RichText);
-            label->setText("<b>"+ch+"<\b>");
-            addPathsCurrLayout->addWidget(label);
+                    // Check if there is a match and that it is not already in the vector
+                    if (!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
 
-            QCheckBox* checkBox = new QCheckBox(addPathsCurrWidget);
-            addPathsCurrLayout->addWidget(checkBox);
-            addPathsChannelWidgets->push_back(std::make_pair(label,checkBox));
+
+                }
+            }
         }
+    }
+    for(const QString &ch : channels){
+
+        QLabel* label = new QLabel(addPathsCurrWidget);
+        label->setTextFormat(Qt::RichText);
+        label->setText("<b>"+ch+"<\b>");
+        addPathsCurrLayout->addWidget(label);
+
+        QCheckBox* checkBox = new QCheckBox(addPathsCurrWidget);
+        addPathsCurrLayout->addWidget(checkBox);
+        addPathsChannelWidgets->push_back(std::make_pair(label,checkBox));
     }
 
 
@@ -1841,17 +1974,21 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 // Open window for adding lsImage Paths
 void MainWindow::on_lsImageAddPathsButton_clicked()
 {
+    /*
     dataPaths daPaths(lsImagePaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
+    */
 }
 
 // Open window for adding background Paths
 void MainWindow::on_backgroundAddPathsButton_clicked()
 {
+    /*
     dataPaths daPaths(backgroundPaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
+    */
 }
 
 // Open window for adding PSF Paths
@@ -1860,33 +1997,33 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
     size_t channels = 0;
     std::vector<QString> channelNames;
     if(!ui->customPatternsCheckBox->isChecked()){
-    for(auto i : channelWidgets){
-       if(i.second->isChecked()){
-           channels++;
-           //QTextDocument toPlain;
-           //toPlain.setHtml(i.first->text());
-           channelNames.push_back(i.first->text());
-       }
-    }
-    }
-    else{
-            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
-            std::string pattern;
-            for(size_t i = 0; i < patternLine.size(); i++){
-                if(patternLine.at(i) == ','){
-                    channelNames.push_back(QString::fromStdString(pattern));
-                    channels++;
-                    pattern.clear();
-                }
-                else{
-                    pattern.push_back(patternLine.at(i));
-                }
-            }
-            if(pattern.size()){
-                channelNames.push_back(QString::fromStdString(pattern));
+        for(auto i : channelWidgets){
+            if(i.second->isChecked()){
                 channels++;
+                //QTextDocument toPlain;
+                //toPlain.setHtml(i.first->text());
+                channelNames.push_back(i.first->text());
             }
         }
+    }
+    else{
+        std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
+        std::string pattern;
+        for(size_t i = 0; i < patternLine.size(); i++){
+            if(patternLine.at(i) == ','){
+                channelNames.push_back(QString::fromStdString(pattern));
+                channels++;
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine.at(i));
+            }
+        }
+        if(pattern.size()){
+            channelNames.push_back(QString::fromStdString(pattern));
+            channels++;
+        }
+    }
     dataPaths daPaths(psfFullPaths, false, mostRecentDir, channels, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
@@ -1945,7 +2082,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    std::string mainPath = cropDPaths.at(0);
+    std::string mainPath = cropDPaths.at(0).masterPath;
 
     // Data Path
     data.push_back(factory.createCharArray(mainPath));
@@ -1960,26 +2097,26 @@ void MainWindow::on_cropSubmitButton_clicked()
     data.push_back(factory.createCharArray("ChannelPatterns"));
     if(!ui->cropCustomPatternsCheckBox->isChecked()){
 
-    if(cropChannelWidgets.size()){
-        // Grab indexes of checked boxes
-        std::vector<int> indexes;
-        for(size_t i = 0; i < cropChannelWidgets.size(); i++){
-            if(cropChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-        }
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-        int cpi = 0;
-        // Go through checked indexes and the label text (channel pattern) in the cell array
-        for(int i : indexes){
+        if(cropChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < cropChannelWidgets.size(); i++){
+                if(cropChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
 
-            // Convert from rich text to plain text
-            QTextDocument toPlain;
-            toPlain.setHtml(cropChannelWidgets[i].first->text());
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(cropChannelWidgets[i].first->text());
 
-            channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-            cpi++;
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
         }
-        data.push_back(channelPatterns);
-    }
 
     }
     // Use custom patterns

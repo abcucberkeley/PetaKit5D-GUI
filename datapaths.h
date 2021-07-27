@@ -12,6 +12,7 @@
 #include <iostream>
 #include <QSpinBox>
 #include <unordered_map>
+#include "datapath.h"
 
 namespace Ui {
 class dataPaths;
@@ -22,7 +23,7 @@ class dataPaths : public QDialog
     Q_OBJECT
 
 public:
-    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
     explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
     ~dataPaths();
 
@@ -43,17 +44,17 @@ private slots:
 
     void on_dataPathCheckBox_stateChanged(int checked);
 
-    void makeNewPath(int i);
+    void makeNewPath(int i, dataPath currPath);
 
 private:
     Ui::dataPaths *ui;
     QString *mostRecentDir;
-    std::unordered_map<std::string,std::unordered_map<std::string,std::string>>* currPaths;
+    std::unordered_map<std::string,dataPath> currPaths;
     int activePaths;
     bool maxPaths;
     bool folder;
     std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
-    std::vector<std::string> *dpHand;
+    std::vector<dataPath> *dpHand;
 };
 
 #endif // DATAPATHS_H
