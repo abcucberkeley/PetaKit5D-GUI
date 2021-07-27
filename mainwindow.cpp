@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
-
-
     // Matlab Threading and connecting signals/slots
     mThreadManager = new matlabThreadManager(this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
@@ -108,20 +106,20 @@ void MainWindow::writeSettings()
 
     for(unsigned int i = 0; i < dPaths.size(); i++)
     {
-        settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"bool");
+        settings.beginWriteArray(QString::number(i)+"bool");
         unsigned int j = 0;
         for(const auto &path : dPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue(QString::fromStdString(dPaths.at(i).masterPath)+"booli",path.second.first);
+            settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"booli",path.second.first);
             j++;
         }
         settings.endArray();
 
-        settings.beginWriteArray(QString::fromStdString(dPaths.at(i).masterPath)+"subPath");
+        settings.beginWriteArray(QString::number(i)+"subPath");
         j = 0;
         for(const auto &path : dPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue(QString::fromStdString(dPaths.at(i).masterPath)+"subPathi",QString::fromStdString(path.second.second));
+            settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"subPathi",QString::fromStdString(path.second.second));
             j++;
         }
         settings.endArray();
@@ -314,20 +312,20 @@ void MainWindow::writeSettings()
 
     for(unsigned int i = 0; i < cropDPaths.size(); i++)
     {
-        settings.beginWriteArray("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"bool");
+        settings.beginWriteArray("crop"+QString::number(i)+"bool");
         unsigned int j = 0;
         for(const auto &path : cropDPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"booli",path.second.first);
+            settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"booli",path.second.first);
             j++;
         }
         settings.endArray();
 
-        settings.beginWriteArray("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"subPath");
+        settings.beginWriteArray("crop"+QString::number(i)+"subPath");
         j = 0;
         for(const auto &path : cropDPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue("crop"+QString::fromStdString(cropDPaths.at(i).masterPath)+"subPathi",QString::fromStdString(path.second.second));
+            settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi",QString::fromStdString(path.second.second));
             j++;
         }
         settings.endArray();
@@ -418,17 +416,17 @@ void MainWindow::readSettings()
         std::vector<std::string> subPaths;
         std::vector<bool> include;
 
-        size = settings.beginReadArray(QString::fromStdString(dPaths.at(i).masterPath)+"bool");
+        size = settings.beginReadArray(QString::number(i)+"bool");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            include.push_back(settings.value(QString::fromStdString(dPaths.at(i).masterPath)+"booli").toBool());
+            include.push_back(settings.value("i"+QString::number(i)+"j"+QString::number(j)+"booli").toBool());
         }
         settings.endArray();
 
-        size = settings.beginReadArray(QString::fromStdString(dPaths.at(i).masterPath)+"subPath");
+        size = settings.beginReadArray(QString::number(i)+"subPath");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            subPaths.push_back(settings.value(QString::fromStdString(dPaths.at(i).masterPath)+"subPathi").toString().toStdString());
+            subPaths.push_back(settings.value("i"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString().toStdString());
         }
         settings.endArray();
 
@@ -647,17 +645,17 @@ void MainWindow::readSettings()
         std::vector<std::string> subPaths;
         std::vector<bool> include;
 
-        size = settings.beginReadArray(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"bool");
+        size = settings.beginReadArray("crop"+QString::number(i)+"bool");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            include.push_back(settings.value(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"booli").toBool());
+            include.push_back(settings.value("cropi"+QString::number(i)+"j"+QString::number(j)+"booli").toBool());
         }
         settings.endArray();
 
-        size = settings.beginReadArray(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"subPath");
+        size = settings.beginReadArray("crop"+QString::number(i)+"subPath");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            subPaths.push_back(settings.value(QString::fromStdString("crop"+cropDPaths.at(i).masterPath)+"subPathi").toString().toStdString());
+            subPaths.push_back(settings.value("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString().toStdString());
         }
         settings.endArray();
 
@@ -860,22 +858,36 @@ void MainWindow::on_submitButton_clicked()
         // Data Paths
         unsigned long long numPaths = 0;
         for(const auto &path : dPaths){
-            if(path.includeMaster) numPaths++;
+            if(path.includeMaster){
+                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
             for(const auto &subPath : path.subPaths){
-                if(subPath.second.first) numPaths++;
+                if(subPath.second.first){
+                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    if(it.hasNext()) numPaths++;
+                }
             }
         }
         matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
         size_t currPath = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
+                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                if(it.hasNext()){
                 dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
                 currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << path.masterPath << " not included because it contains no files. Continuing." << std::endl;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
-                    currPath++;
+                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    if(it.hasNext()){
+                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                        currPath++;
+                    }
+                    else std::cout << "WARNING: Data Path: " << subPath.second.second << " not included because it contains no files. Continuing." << std::endl;
                 }
             }
         }
@@ -1107,22 +1119,36 @@ void MainWindow::on_submitButton_clicked()
         // Data Paths
         unsigned long long numPaths = 0;
         for(const auto &path : dPaths){
-            if(path.includeMaster) numPaths++;
+            if(path.includeMaster){
+                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
             for(const auto &subPath : path.subPaths){
-                if(subPath.second.first) numPaths++;
+                if(subPath.second.first){
+                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    if(it.hasNext()) numPaths++;
+                }
             }
         }
         matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
         size_t currPath = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
+                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                if(it.hasNext()){
                 dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
                 currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << path.masterPath << " not included because it contains no files. Continuing." << std::endl;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
-                    currPath++;
+                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    if(it.hasNext()){
+                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                        currPath++;
+                    }
+                    else std::cout << "WARNING: Data Path: " << subPath.second.second << " not included because it contains no files. Continuing." << std::endl;
                 }
             }
         }
@@ -1866,7 +1892,7 @@ void MainWindow::on_addPathsButton_clicked()
             if(subPath.second.first){
                 // Looking for channel patterns in the given directory
                 //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
-                QDirIterator cPath(QString::fromStdString(path.masterPath));
+                QDirIterator cPath(QString::fromStdString(subPath.second.second));
                 QString c;
                 QRegularExpression re("Cam\\w_ch\\d");
                 QRegularExpressionMatch rmatch;

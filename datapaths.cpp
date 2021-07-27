@@ -23,6 +23,9 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
     // pointer to hold the passed in paths vector
     dpHand = &dPaths;
 
+    for(size_t i = 0; i < dpHand->size(); i++){
+        currPaths.emplace(dpHand->at(i).masterPath,dpHand->at(i));
+    }
     //***********************NEW*******************
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < dPaths.size(); i++){
