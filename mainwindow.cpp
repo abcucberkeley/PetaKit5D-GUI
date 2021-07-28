@@ -821,7 +821,13 @@ void MainWindow::on_submitButton_clicked()
     }
     else{
         for(const std::string &path : psfFullPaths){
-            if(!QFileInfo::exists(QString::fromStdString(path))){
+            if(path.empty()){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error",QString::fromStdString("One of the PSF paths is empty!"));
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+            else if(!QFileInfo::exists(QString::fromStdString(path))){
                 QMessageBox messageBox;
                 messageBox.warning(0,"Error",QString::fromStdString("Psf path \"" + path + "\" does not exist!"));
                 messageBox.setFixedSize(500,200);
@@ -1058,10 +1064,6 @@ void MainWindow::on_submitButton_clicked()
 
         data.push_back(factory.createCharArray("GPUJob"));
         data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
-
-
-        // Line below is for testing purposes
-        //data.push_back(factory.createCellArray({1,3},factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/488nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/560nm.tif"),factory.createCharArray("C:/Users/Matt/Desktop/Play_with_data/20191114_Imaging/ZF_TailbudDevelopment/PSF/642nm.tif")));
 
         data.push_back(factory.createCharArray("DeconIter"));
         data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
@@ -2000,21 +2002,21 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 // Open window for adding lsImage Paths
 void MainWindow::on_lsImageAddPathsButton_clicked()
 {
-    /*
+
     dataPaths daPaths(lsImagePaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
-    */
+
 }
 
 // Open window for adding background Paths
 void MainWindow::on_backgroundAddPathsButton_clicked()
 {
-    /*
+
     dataPaths daPaths(backgroundPaths, false, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
-    */
+
 }
 
 // Open window for adding PSF Paths

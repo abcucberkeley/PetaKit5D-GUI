@@ -3,12 +3,6 @@
 #include "datapathsrecursive.h"
 #include <QMessageBox>
 
-
-
-
-//*** This form is too hardcoded. Qt has better ways to handle what we need here
-// but this is a quick solution to help get things running.
-
 // folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
 dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
     QDialog(parent),
@@ -26,18 +20,18 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
     for(size_t i = 0; i < dpHand->size(); i++){
         currPaths.emplace(dpHand->at(i).masterPath,dpHand->at(i));
     }
-    //***********************NEW*******************
+    connect(ui->addPathButton,&QPushButton::clicked,this,&dataPaths::on_dataPathAddPathButton_clicked);
+    connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clicked);
+
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < dPaths.size(); i++){
         makeNewPath(i,dpHand->at(i));
     }
 
-    //ui->dataPathsVerticalLayout->addStretch();
-
 }
 
 // For PSF data paths
-dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent) :
+dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -48,23 +42,42 @@ dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mos
     this->mostRecentDir = &mostRecentDir;
 
     delete ui->addPathButton;
-    //delete ui->removePathButton;
 
+    // connect slot for psf
+    connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clickedOther);
 
     // pointer to hold the passed in paths vector
-    //dpHand = &dPaths;
+    dataHand = &psfPaths;
 
-    // if there are no current data paths in the vector set it to 1
-    // else its the size of how data paths there are
-    if(!channels) activePaths = 1;
-    else activePaths = channels;
+    ui->dataPathsVerticalLayout->addStretch();
+    for(size_t i = 0; i < channels; i++){
+        makeNewPath(i,dataPath(),true,channelNames.at(i));
+    }
 
-    // Check if max paths
-    if(activePaths < 6) maxPaths = false;
-    else maxPaths = true;
+}
 
-    // structure to hold widgets on the screen so we can turn them on and off
-    //paths.push_back(std::make_tuple(ui->dataPath1Label,ui->dataPath1LineEdit,ui->dataPath1BrowseButton));
+// For PSF data paths
+dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::dataPaths)
+{
+    ui->setupUi(this);
+    this->folder = folder;
+
+    // Most recent folder for browsing
+    this->mostRecentDir = &mostRecentDir;
+
+    // connect slot for data
+    connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clickedOther);
+    connect(ui->addPathButton,&QPushButton::clicked,this,&dataPaths::on_dataPathAddPathButton_clickedOther);
+
+    // pointer to hold the passed in paths vector
+    dataHand = &dPaths;
+
+    ui->dataPathsVerticalLayout->addStretch();
+    for(size_t i = 0; i < dPaths.size(); i++){
+        makeNewPath(i,dataPath(),false,QString(),true);
+    }
 
 }
 
@@ -74,10 +87,15 @@ dataPaths::~dataPaths()
 }
 
 // Add a path to the window
-void dataPaths::on_addPathButton_clicked()
+void dataPaths::on_dataPathAddPathButton_clicked()
 {
     makeNewPath(paths.size(),dataPath());
-    //ui->dataPathsVerticalLayout->addStretch();
+}
+
+// Add a path to the window (for data other than the main data paths)
+void dataPaths::on_dataPathAddPathButton_clickedOther()
+{
+    makeNewPath(paths.size(),dataPath(),false,QString(),true);
 }
 
 // Close the window
@@ -87,7 +105,7 @@ void dataPaths::on_cancelButton_clicked()
 }
 
 // Close the window and save the values currently in the boxes (even if they are empty currently)
-void dataPaths::on_submitButton_clicked()
+void dataPaths::on_dataPathSubmitButton_clicked()
 {
 
     bool found = false;
@@ -123,6 +141,15 @@ void dataPaths::on_submitButton_clicked()
     dataPaths::close();
 }
 
+// Close the window and save the values currently in the boxes). Case for PSF/LLFF submitting.
+void dataPaths::on_dataPathSubmitButton_clickedOther(){
+    dataHand->clear();
+    for(const auto &path : paths){
+        dataHand->push_back(std::get<2>(path)->text().toStdString());
+    }
+    dataPaths::close();
+}
+
 // Can probably optimize all these later
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPathBrowseButton_clicked()
@@ -152,7 +179,7 @@ void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 }
 
 void dataPaths::on_dataPathFindButton_clicked(){
-    //int elemsInTuple = 9;
+
     int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
 
     if(std::get<2>(paths.at(currTuple))->text().isEmpty()){
@@ -177,8 +204,9 @@ void dataPaths::on_dataPathFindButton_clicked(){
 }
 
 void dataPaths::on_dataPathRemoveButton_clicked(){
-    //int elemsInTuple = 9;
+
     int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
+
     // Delete elems in Tuple
     std::get<0>(paths.at(currTuple))->deleteLater();
     std::get<1>(paths.at(currTuple))->deleteLater();
@@ -207,28 +235,22 @@ void dataPaths::on_dataPathRemoveButton_clicked(){
 
 }
 
-void dataPaths::on_dataPathCheckBox_stateChanged(int checked){
-    // Enable or disable recurse widgets
-    int currTuple = QString(((QCheckBox*)sender())->objectName().back()).toInt();
-    std::get<3>(paths.at(currTuple))->setEnabled(checked);
-    std::get<4>(paths.at(currTuple))->setEnabled(checked);
-}
-
-void dataPaths::makeNewPath(int i, dataPath currPath){
+void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelName, bool otherData){
     // Add a horizontal layout to the form
     QHBoxLayout* QHBox = new QHBoxLayout(this);
     ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
-    //ui->dataPathsVerticalLayout->addLayout(QHBox);
 
     // Add the Path label
     QLabel* QL = new QLabel(this);
     QL->setTextFormat(Qt::RichText);
-    QL->setText(QString("<b>")+QString("Data Path ")+QString::number(i+1)+QString("<\b>"));
+    if(!psf) QL->setText(QString("<b>")+QString("Data Path ")+QString::number(i+1)+QString("<\b>"));
+    else QL->setText(QString("<b>")+channelName+QString("<\b>"));
     QHBox->addWidget(QL);
 
     // Add the text box
     QLineEdit* QLE = new QLineEdit(this);
-    QLE->setText(QString::fromStdString(currPath.masterPath));
+    if(!psf && !otherData) QLE->setText(QString::fromStdString(currPath.masterPath));
+    else if(size_t(i) < dataHand->size() && !dataHand->at(i).empty()) QLE->setText(QString::fromStdString(dataHand->at(i)));
     QLE->setMinimumWidth(150);
     connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     QHBox->addWidget(QLE);
@@ -237,7 +259,6 @@ void dataPaths::makeNewPath(int i, dataPath currPath){
     QPushButton* QPB = new QPushButton(this);
     QPB->setObjectName(QString("dataPathBrowseButton")+QString::number(i));
     QPB->setText("Browse");
-    //QPB->setMaximumWidth(50);
     connect(QPB,&QPushButton::clicked,this,&dataPaths::on_dataPathBrowseButton_clicked);
     QHBox->addWidget(QPB);
 
@@ -246,12 +267,14 @@ void dataPaths::makeNewPath(int i, dataPath currPath){
     QPBF->setObjectName(QString("dataPathFindButton")+QString::number(i));
     QPBF->setText("Find/View SubDirs");
     connect(QPBF,&QPushButton::clicked,this,&dataPaths::on_dataPathFindButton_clicked);
+    if(psf || otherData) QPBF->setVisible(false);
     QHBox->addWidget(QPBF);
 
     // Add the Pattern label
     QLabel* QLP = new QLabel(this);
     QLP->setTextFormat(Qt::RichText);
     QLP->setText("<b>Pattern<\b>");
+    if(psf || otherData) QLP->setVisible(false);
     QHBox->addWidget(QLP);
 
     // Add the text box for Pattern
@@ -259,18 +282,21 @@ void dataPaths::makeNewPath(int i, dataPath currPath){
     QLEP->setText(QString::fromStdString(currPath.pattern));
     //QLEP->setMinimumWidth(150);
     connect(QLEP,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
+    if(psf || otherData) QLEP->setVisible(false);
     QHBox->addWidget(QLEP);
 
     // Add the Max Depth label
     QLabel* QLMD = new QLabel(this);
     QLMD->setTextFormat(Qt::RichText);
     QLMD->setText("<b>Max Depth<\b>");
+    if(psf || otherData) QLMD->setVisible(false);
     QHBox->addWidget(QLMD);
 
     // Add the Max Depth SpinBox
     QSpinBox* QSB = new QSpinBox(this);
     QSB->setValue(currPath.maxDepth);
     QSB->setMinimum(1);
+    if(psf || otherData) QSB->setVisible(false);
     QHBox->addWidget(QSB);
 
     // Add the Recurse label
@@ -278,14 +304,15 @@ void dataPaths::makeNewPath(int i, dataPath currPath){
     QLR->setTextFormat(Qt::RichText);
     QLR->setText("<b>Include Master<\b>");
     QLR->setToolTip("Checking this option will also include this Master folder as a path");
+    if(psf || otherData) QLR->setVisible(false);
     QHBox->addWidget(QLR);
 
     // Add Checkbox
     QCheckBox* QCB = new QCheckBox(this);
     QCB->setObjectName(QString("dataPathCheckBox")+QString::number(i));
     QCB->setChecked(currPath.includeMaster);
-    //connect(QCB,&QCheckBox::stateChanged,this,&dataPaths::on_dataPathCheckBox_stateChanged);
     QLR->setToolTip("Checking this option will also include this Master folder as a path");
+    if(psf || otherData) QCB->setVisible(false);
     QHBox->addWidget(QCB);
 
     // Add Remove button
@@ -293,6 +320,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath){
     QPBR->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
     QPBR->setText("Remove Path");
     connect(QPBR,&QPushButton::clicked,this,&dataPaths::on_dataPathRemoveButton_clicked);
+    if(psf) QPBR->setVisible(false);
     QHBox->addWidget(QPBR);
 
     paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));

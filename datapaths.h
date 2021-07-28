@@ -24,15 +24,20 @@ class dataPaths : public QDialog
 
 public:
     explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
-    explicit dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
+    dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
-    void on_addPathButton_clicked();
+    void on_dataPathAddPathButton_clicked();
+
+    void on_dataPathAddPathButton_clickedOther();
 
     void on_cancelButton_clicked();
 
-    void on_submitButton_clicked();
+    void on_dataPathSubmitButton_clicked();
+
+    void on_dataPathSubmitButton_clickedOther();
 
     void on_dataPathBrowseButton_clicked();
 
@@ -42,9 +47,7 @@ private slots:
 
     void on_dataPathRemoveButton_clicked();
 
-    void on_dataPathCheckBox_stateChanged(int checked);
-
-    void makeNewPath(int i, dataPath currPath);
+    void makeNewPath(int i, dataPath currPath, bool psf = false, QString channelName = QString(), bool otherData = false);
 
 private:
     Ui::dataPaths *ui;
@@ -55,6 +58,7 @@ private:
     bool folder;
     std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
     std::vector<dataPath> *dpHand;
+    std::vector<std::string> *dataHand;
 };
 
 #endif // DATAPATHS_H
