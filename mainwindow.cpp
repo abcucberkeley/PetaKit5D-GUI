@@ -182,7 +182,11 @@ void MainWindow::writeSettings()
     settings.setValue("Stitch",ui->stitchCheckBox->isChecked());
     settings.setValue("deskewAndRotate",ui->deskewAndRotateCheckBox->isChecked());
 
+    // decon only settings
     settings.setValue("deconOnly",ui->deconOnlyCheckBox->isChecked());
+    settings.setValue("deconOnlyOnlyFirstTP",ui->deconOnlyOnlyFirstTPCheckBox->isChecked());
+    settings.setValue("deconOnlyOverwriteData",ui->deconOnlyOverwriteDataCheckBox->isChecked());
+    settings.setValue("deconOnlySave16Bit",ui->deconOnlySave16BitCheckBox->isChecked());
 
     settings.setValue("deskewDecon",ui->deskewDeconCheckBox->isChecked());
     settings.setValue("rotateDecon",ui->rotateDeconCheckBox->isChecked());
@@ -515,6 +519,9 @@ void MainWindow::readSettings()
     ui->deskewAndRotateCheckBox->setChecked(settings.value("deskewAndRotate").toBool());
 
     ui->deconOnlyCheckBox->setChecked(settings.value("deconOnly").toBool());
+    ui->deconOnlyOnlyFirstTPCheckBox->setChecked(settings.value("deconOnlyOnlyFirstTP").toBool());
+    ui->deconOnlyOverwriteDataCheckBox->setChecked(settings.value("deconOnlyOverwriteData").toBool());
+    ui->deconOnlySave16BitCheckBox->setChecked(settings.value("deconOnlySave16Bit").toBool());
 
     ui->deskewDeconCheckBox->setChecked(settings.value("deskewDecon").toBool());
     ui->rotateDeconCheckBox->setChecked(settings.value("rotateDecon").toBool());
@@ -1875,7 +1882,6 @@ void MainWindow::on_addPathsButton_clicked()
     for(const auto &path : *addPathsDataPaths){
         if(path.includeMaster){
             // Looking for channel patterns in the given directory
-            //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
             QDirIterator cPath(QString::fromStdString(path.masterPath));
             QString c;
             QRegularExpression re("Cam\\w_ch\\d");
@@ -1893,7 +1899,6 @@ void MainWindow::on_addPathsButton_clicked()
         for(const auto &subPath : path.subPaths){
             if(subPath.second.first){
                 // Looking for channel patterns in the given directory
-                //QDirIterator cPath(QString::fromStdString(i),QDirIterator::Subdirectories);
                 QDirIterator cPath(QString::fromStdString(subPath.second.second));
                 QString c;
                 QRegularExpression re("Cam\\w_ch\\d");
@@ -2022,14 +2027,10 @@ void MainWindow::on_backgroundAddPathsButton_clicked()
 // Open window for adding PSF Paths
 void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
-    size_t channels = 0;
     std::vector<QString> channelNames;
     if(!ui->customPatternsCheckBox->isChecked()){
         for(auto i : channelWidgets){
             if(i.second->isChecked()){
-                channels++;
-                //QTextDocument toPlain;
-                //toPlain.setHtml(i.first->text());
                 channelNames.push_back(i.first->text());
             }
         }
@@ -2040,7 +2041,6 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
         for(size_t i = 0; i < patternLine.size(); i++){
             if(patternLine.at(i) == ','){
                 channelNames.push_back(QString::fromStdString(pattern));
-                channels++;
                 pattern.clear();
             }
             else{
@@ -2049,10 +2049,9 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
         }
         if(pattern.size()){
             channelNames.push_back(QString::fromStdString(pattern));
-            channels++;
         }
     }
-    dataPaths daPaths(psfFullPaths, false, mostRecentDir, channels, channelNames);
+    dataPaths daPaths(psfFullPaths, false, mostRecentDir, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
 }

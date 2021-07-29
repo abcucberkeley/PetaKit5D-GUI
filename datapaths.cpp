@@ -31,7 +31,7 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
 }
 
 // For PSF data paths
-dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent) :
+dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -50,7 +50,7 @@ dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &m
     dataHand = &psfPaths;
 
     ui->dataPathsVerticalLayout->addStretch();
-    for(size_t i = 0; i < channels; i++){
+    for(size_t i = 0; i < channelNames.size(); i++){
         makeNewPath(i,dataPath(),true,channelNames.at(i));
     }
 
@@ -128,6 +128,12 @@ void dataPaths::on_dataPathSubmitButton_clicked()
         if(currPaths.find(std::get<2>(path)->text().toStdString()) == currPaths.end()){
             currPaths.emplace(std::get<2>(path)->text().toStdString(),dataPath(std::get<2>(path)->text().toStdString(),std::get<10>(path)->isChecked(),std::get<6>(path)->text().toStdString(),std::get<8>(path)->value(),std::unordered_map<std::string,std::pair<bool,std::string>>()));
         }
+        else{
+            currPaths.at(std::get<2>(path)->text().toStdString()).includeMaster = std::get<10>(path)->isChecked();
+            currPaths.at(std::get<2>(path)->text().toStdString()).pattern = std::get<6>(path)->text().toStdString();
+            currPaths.at(std::get<2>(path)->text().toStdString()).maxDepth = std::get<8>(path)->value();
+
+        }
     }
 
     // TODO: Add handling for multiple paths that have the same name****************
@@ -154,8 +160,18 @@ void dataPaths::on_dataPathSubmitButton_clickedOther(){
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPathBrowseButton_clicked()
 {
-    // Get last char of senders string so we can access it.
-    QLineEdit* currQLE = std::get<2>(paths.at(QString(((QPushButton*)sender())->objectName().back()).toInt()));
+    // Get last chars of senders string so we know the index.
+    // TODO: Change this later
+    int currChar = ((QPushButton*)sender())->objectName().size()-1;
+    QString currQLEIndex;
+    while(currChar >= 0){
+        if(((QPushButton*)sender())->objectName().at(currChar).isDigit()){
+            currQLEIndex.push_front(((QPushButton*)sender())->objectName().at(currChar));
+        }
+        else break;
+        currChar--;
+    }
+    QLineEdit* currQLE = std::get<2>(paths.at(currQLEIndex.toInt()));
 
     if(folder){
         QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);

@@ -19,7 +19,6 @@ HEADERS += \
            deconadvanced.h \
            dsradvanced.h \
            jobadvanced.h \
-           jobsettings.h \
            mainadvanced.h \
            mainwindow.h \
            matlaboutputthread.h \
@@ -35,7 +34,6 @@ FORMS += \
          deconadvanced.ui \
          dsradvanced.ui \
          jobadvanced.ui \
-         jobsettings.ui \
          mainadvanced.ui \
          mainwindow.ui \
          matlaboutputwindow.ui \
@@ -48,7 +46,6 @@ SOURCES += \
            deconadvanced.cpp \
            dsradvanced.cpp \
            jobadvanced.cpp \
-           jobsettings.cpp \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \

@@ -24,7 +24,7 @@ class dataPaths : public QDialog
 
 public:
     explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
-    explicit dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const size_t &channels, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
     dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
     ~dataPaths();
 
