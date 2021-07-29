@@ -67,6 +67,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="searchUncheckButton">
+       <property name="text">
+        <string>Auto Uncheck</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="2" column="2">

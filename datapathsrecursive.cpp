@@ -116,3 +116,13 @@ void dataPathsRecursive::on_submitButton_clicked()
     dataPathsRecursive::close();
 }
 
+
+void dataPathsRecursive::on_searchUncheckButton_clicked()
+{
+    for(auto path : paths){
+        if(std::get<3>(path)->text().contains(ui->patternLineEdit->text())){
+            std::get<2>(path)->setChecked(false);
+        }
+    }
+}
+

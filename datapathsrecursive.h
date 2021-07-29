@@ -31,6 +31,8 @@ private slots:
 
     void on_submitButton_clicked();
 
+    void on_searchUncheckButton_clicked();
+
 private:
     Ui::dataPathsRecursive *ui;
     std::unordered_map<std::string,std::pair<bool, std::string>>* currPaths;
