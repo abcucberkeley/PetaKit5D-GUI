@@ -105,6 +105,7 @@ void dataPathsRecursive::on_submitButton_clicked()
             }
         }
         if(!found) currPaths->erase(cPath.second.second);
+        if(currPaths->empty()) break;
     }
 
     for(const auto &path : paths){
