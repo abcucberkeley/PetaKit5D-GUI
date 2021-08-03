@@ -120,6 +120,7 @@ void dataPaths::on_dataPathSubmitButton_clicked()
             }
         }
         if(!found) currPaths.erase(cPath.second.masterPath);
+        if(currPaths.empty()) break;
     }
 
 

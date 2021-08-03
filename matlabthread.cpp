@@ -40,6 +40,8 @@ void matlabThread::run(){
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);
     mOutThread->start(QThread::NormalPriority);
 
+    bool jobSuccess = true;
+    try{
     if (funcType == "crop"){
         matlabPtr->feval(u"XR_crop_dataset",outA,data,output);
     }
@@ -49,6 +51,11 @@ void matlabThread::run(){
     else{
         matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data,output);
     }
+    }
+    catch(const matlab::engine::MATLABException& ex){
+        jobSuccess = false;
+        matlabPtr->feval(u"disp", 0, std::vector<matlab::data::Array>({factory.createScalar(ex.what())}));
+    }
 
     // Close MATLAB session by deleting the unique pointer (Still testing)
     matlabPtr.reset();
@@ -56,7 +63,7 @@ void matlabThread::run(){
     emit jobFinish(true);
     mOutThread->wait();
 
-
-    std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
+    if(jobSuccess) std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
+    else std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION." << std::endl;
 }
 
