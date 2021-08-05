@@ -49,6 +49,7 @@ private slots:
 
     void makeNewPath(int i, dataPath currPath, bool psf = false, QString channelName = QString(), bool otherData = false);
 
+    int getCurrPathIndex(QString currWidgetName);
 private:
     Ui::dataPaths *ui;
     QString *mostRecentDir;

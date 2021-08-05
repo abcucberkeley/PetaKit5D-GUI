@@ -56,7 +56,7 @@ dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &m
 
 }
 
-// For PSF data paths
+// For other data paths
 dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
@@ -161,18 +161,8 @@ void dataPaths::on_dataPathSubmitButton_clickedOther(){
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPathBrowseButton_clicked()
 {
-    // Get last chars of senders string so we know the index.
-    // TODO: Change this later
-    int currChar = ((QPushButton*)sender())->objectName().size()-1;
-    QString currQLEIndex;
-    while(currChar >= 0){
-        if(((QPushButton*)sender())->objectName().at(currChar).isDigit()){
-            currQLEIndex.push_front(((QPushButton*)sender())->objectName().at(currChar));
-        }
-        else break;
-        currChar--;
-    }
-    QLineEdit* currQLE = std::get<2>(paths.at(currQLEIndex.toInt()));
+
+    QLineEdit* currQLE = std::get<2>(paths.at(getCurrPathIndex(((QPushButton*)sender())->objectName())));
 
     if(folder){
         QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
@@ -190,14 +180,16 @@ void dataPaths::on_dataPathBrowseButton_clicked()
     }
 }
 
+// Changes the tooltip to be the current text in the LineEdit whenever it is changed
 void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 {
     ((QLineEdit*)sender())->setToolTip(arg1);
 }
 
+// Searchs for possible subDirs. Opens up a seperate form.
 void dataPaths::on_dataPathFindButton_clicked(){
 
-    int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
+    int currTuple = getCurrPathIndex(((QPushButton*)sender())->objectName());
 
     if(std::get<2>(paths.at(currTuple))->text().isEmpty()){
         QMessageBox messageBox;
@@ -222,7 +214,7 @@ void dataPaths::on_dataPathFindButton_clicked(){
 
 void dataPaths::on_dataPathRemoveButton_clicked(){
 
-    int currTuple = QString(((QPushButton*)sender())->objectName().back()).toInt();
+    int currTuple = getCurrPathIndex(((QPushButton*)sender())->objectName());
 
     // Delete elems in Tuple
     std::get<0>(paths.at(currTuple))->deleteLater();
@@ -341,4 +333,18 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     QHBox->addWidget(QPBR);
 
     paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));
+}
+
+int dataPaths::getCurrPathIndex(QString currWidgetName){
+    int currChar = currWidgetName.size()-1;
+    QString currIndexString;
+    while(currChar >= 0){
+        if(currWidgetName.at(currChar).isDigit()){
+            currIndexString.push_front(currWidgetName.at(currChar));
+        }
+        else break;
+        currChar--;
+    }
+
+    return currIndexString.toInt();
 }
