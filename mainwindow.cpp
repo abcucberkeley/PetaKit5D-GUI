@@ -48,9 +48,21 @@ MainWindow::MainWindow(QWidget *parent)
     // Set most recent Dir to Home initially
     mostRecentDir = QDir::homePath();
 
+    // Check if version is up to date with what was last saved.
+    QSettings settings("ABC", "LLSM GUI");
+    settings.beginGroup("MainWindow");
+    QString savedVersion = settings.value("version").toString();
+    settings.endGroup();
+
+    if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
+    }
+    else{
+        // If saved version is not the current version then reset values to avoid corruption
+        std::cout << "New Version has been detected. Resetting saved settings to avoid corruption." << std::endl;
+    }
 
     // Set current tab to the main tab
     ui->tabWidget->setCurrentWidget(ui->Main);
@@ -91,6 +103,7 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("MainWindow");
 
+    settings.setValue("version", QCoreApplication::applicationVersion());
 
     settings.beginWriteArray("dPaths");
     for(unsigned int i = 0; i < dPaths.size(); i++)
@@ -391,18 +404,6 @@ void MainWindow::readSettings()
     QSettings settings("ABC", "LLSM GUI");
 
     settings.beginGroup("MainWindow");
-
-    // Read Data Paths
-
-    /*
-    int size = settings.beginReadArray("dPaths");
-    for(int i = 0; i < size; i++)
-    {
-        settings.setArrayIndex(i);
-        dPaths.push_back(settings.value("dPathsi").toString().toStdString());
-    }
-    settings.endArray();
-    */
 
     // Read Data Paths
     int size = settings.beginReadArray("dPaths");
