@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(ui->tabWidget);
 
     // Matlab Threading and connecting signals/slots
-    mThreadManager = new matlabThreadManager(this);
+    mThreadManager = new matlabThreadManager(outputLock,this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
@@ -61,7 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else{
         // If saved version is not the current version then reset values to avoid corruption
+        outputLock.lock();
         std::cout << "New Version has been detected. Resetting saved settings to avoid corruption." << std::endl;
+        outputLock.unlock();
     }
 
     // Set current tab to the main tab

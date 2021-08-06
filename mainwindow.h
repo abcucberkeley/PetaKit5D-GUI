@@ -116,6 +116,7 @@ private:
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
     matlabOutputWindowThread *mOutputWindowThread;
+    QMutex outputLock;
     GUIvals guiVals;
     std::vector<dataPath> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
