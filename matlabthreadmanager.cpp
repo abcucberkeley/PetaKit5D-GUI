@@ -5,8 +5,8 @@
 
 
 // Object that creates this thread is the parent
-matlabThreadManager::matlabThreadManager(QObject *parent) :
-    QThread(parent), outA(1)
+matlabThreadManager::matlabThreadManager(QMutex &outputLock, QObject *parent) :
+    QThread(parent), outputLock(&outputLock), outA(1)
 {
 
 }
@@ -24,7 +24,9 @@ void matlabThreadManager::run(){
     // Start IDs at 1
     unsigned int mThreadID = 1;
     while(true){
+    outputLock->lock();
     std::cout << "Ready for new job!" << std::endl;
+    outputLock->unlock();
 
     // Once outA is set to 0, we can create a new matlab thread for the job
     while(outA){
@@ -34,7 +36,10 @@ void matlabThreadManager::run(){
     // Create new matlab thread
     mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, data, mainPath, mThreadID));
     mThreads.at(mThreadID)->start(QThread::TimeCriticalPriority);
+
+    outputLock->lock();
     std::cout << "Matlab Job " << mThreadID << " Submitted" << std::endl;
+    outputLock->unlock();
 
     // Add path/button to Output Window
     //emit addOutputIDAndPath(mThreadID, mainPath);
