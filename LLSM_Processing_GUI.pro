@@ -28,7 +28,8 @@ HEADERS += \
            matlaboutputwindowthread.h \
            matlabthread.h \
            matlabthreadmanager.h \
-           loadprevioussettings.h
+           loadprevioussettings.h \
+           outputbox.h
 
 FORMS += \
          datapaths.ui \
@@ -56,7 +57,8 @@ SOURCES += \
            matlaboutputwindowthread.cpp \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
-           loadprevioussettings.cpp
+           loadprevioussettings.cpp \
+           outputbox.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
 

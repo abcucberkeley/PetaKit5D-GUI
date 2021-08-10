@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
     // Output Window Threading
-    mOutputWindow = new matlabOutputWindow(this);
-    mOutputWindowThread = new matlabOutputWindowThread(this);
+    mOutputWindow = new matlabOutputWindow(jobLogPaths,this);
+    mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
     connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
 
 

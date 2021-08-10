@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <unordered_map>
 #include "matlaboutputwindowthread.h"
+#include "outputbox.h"
 
 namespace Ui {
 class matlabOutputWindow;
@@ -17,10 +18,10 @@ class matlabOutputWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit matlabOutputWindow(QWidget *parent = nullptr);
+    explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
-    //void onAddButton();
+    void onUpdateOutputForm();
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -28,6 +29,8 @@ private:
     Ui::matlabOutputWindow *ui;
     matlabOutputWindowThread *mOWThread;
     std::vector<std::pair<QHBoxLayout*,QPushButton*>> outputWidgets;
+    std::unordered_map<int,std::string> *jobLogPaths;
+    outputBox mainBox;
 };
 
 #endif // MATLABOUTPUTWINDOW_H

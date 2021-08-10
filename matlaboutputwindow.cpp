@@ -6,58 +6,45 @@
 #include "ui_matlaboutputwindow.h"
 
 
-matlabOutputWindow::matlabOutputWindow(QWidget *parent) :
+matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::matlabOutputWindow)
 {
     ui->setupUi(this);
 
-    mOWThread = new matlabOutputWindowThread(this);
+    this->jobLogPaths = &jobLogPaths;
 
-    QScrollArea* QSAMain = new QScrollArea(this);
-    QSAMain->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    QSAMain->setWidgetResizable(true);
+    mOWThread = new matlabOutputWindowThread(jobLogPaths,this);
+    connect(mOWThread,&matlabOutputWindowThread::updateOutputForm,this,&matlabOutputWindow::onUpdateOutputForm);
 
     QWidget* containerMain = new QWidget(this);
-    QVBoxLayout* VBoxMain = new QVBoxLayout(containerMain);
+    mainBox = outputBox(new QScrollArea(this),containerMain,new QVBoxLayout(containerMain));
 
     //VBoxMain->addWidget(new QLabel("Something else", this));
 
     for(int i = 0; i < 6; i++){
-    QScrollArea* QSA = new QScrollArea(this);
-    QSA->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    //QSA->setAlignment(Qt::AlignTop);
-    QSA->setWidgetResizable(true);
-
-
-    //QHBoxLayout* HBox = new QHBoxLayout(QSA);
     QWidget* container = new QWidget(this);
-    QVBoxLayout* VBox = new QVBoxLayout(container);
+    outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
 
     for(int j = 0; j < 80; j++){
     QPushButton* button = new QPushButton(this);
     button->setText("job"+QString::number(j));
-    VBox->addWidget(button);
+    //nBox.vBox->addWidget(button);
+    nBox.addToVBox(button);
     }
 
-    container->setLayout(VBox);
-    QSA->setWidget(container);
+    container->setLayout(nBox.vBox);
+    nBox.scrollArea->setWidget(container);
 
     //ui->verticalLayout_2->addWidget(new QLabel("Something else", this));
-    VBoxMain->addWidget(new QLabel("Job"+QString::number(i),this));
-    VBoxMain->addWidget(QSA);
+    mainBox.vBox->addWidget(new QLabel("Job"+QString::number(i),this));
+    mainBox.vBox->addWidget(nBox.scrollArea);
     }
 
-    containerMain->setLayout(VBoxMain);
-    QSAMain->setWidget(containerMain);
+    containerMain->setLayout(mainBox.vBox);
+    mainBox.scrollArea->setWidget(containerMain);
 
-    //VBoxMain->addWidget(new QLabel("Something else 3", this));
-
-    ui->verticalLayout_2->addWidget(QSAMain);
-    //ui->verticalLayout_2->addLayout(VBox);
-
-    //QSA->addLayout(HBox);
-    //VBox->addStretch();
+    ui->verticalLayout_2->addWidget(mainBox.scrollArea);
 
 }
 
@@ -68,4 +55,8 @@ matlabOutputWindow::~matlabOutputWindow()
 
 void matlabOutputWindow::closeEvent(QCloseEvent *event){
     event->ignore();
+}
+
+void matlabOutputWindow::onUpdateOutputForm(){
+
 }
