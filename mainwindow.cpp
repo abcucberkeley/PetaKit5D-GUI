@@ -868,7 +868,7 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
-    std::string mainPath = dPaths.at(0).masterPath;
+    std::string mainPath = dPaths.at(0).masterPath+"/job_logs";
 
     // Check for job log directory for main job
     std::string jobLogCopy = guiVals.jobLogDir;
