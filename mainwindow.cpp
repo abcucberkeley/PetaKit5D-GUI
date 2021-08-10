@@ -35,8 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Output Window Threading
     mOutputWindow = new matlabOutputWindow(jobLogPaths,this);
-    mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
-    connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
+    //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
+    //connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
 
 
     // Disable all tabs except the main one on startup

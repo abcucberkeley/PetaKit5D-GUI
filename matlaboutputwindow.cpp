@@ -16,6 +16,7 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
 
     mOWThread = new matlabOutputWindowThread(jobLogPaths,this);
     connect(mOWThread,&matlabOutputWindowThread::updateOutputForm,this,&matlabOutputWindow::onUpdateOutputForm);
+    mOWThread->start(QThread::NormalPriority);
 
     QWidget* containerMain = new QWidget(this);
     mainBox = outputBox(new QScrollArea(this),containerMain,new QVBoxLayout(containerMain));
