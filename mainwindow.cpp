@@ -34,10 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
     // Output Window Threading
-    /*mOutputWindow = new matlabOutputWindow(this);
+    mOutputWindow = new matlabOutputWindow(this);
     mOutputWindowThread = new matlabOutputWindowThread(this);
     connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
-    */
+
 
     // Disable all tabs except the main one on startup
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->DSR),false);
@@ -71,11 +71,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setCurrentWidget(ui->Main);
 
     // Job Output
-    /*if(!mOutputWindow->isVisible()){
+    if(!mOutputWindow->isVisible()){
         mOutputWindow->setModal(false);
         mOutputWindow->show();
-    }*/
-
+    }
 
 }
 
@@ -96,7 +95,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 
     // Close output window if visible
-    //if(mOutputWindow) mOutputWindow->close();
+    if(mOutputWindow) mOutputWindow->close();
 }
 
 // Write user settings
@@ -868,8 +867,26 @@ void MainWindow::on_submitButton_clicked()
     //
     //
 
-    // Set main path. This is where all the output files made by the GUI will be stored.
+    // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
     std::string mainPath = dPaths.at(0).masterPath;
+
+    // Check for job log directory for main job
+    std::string jobLogCopy = guiVals.jobLogDir;
+    if(ui->parseClusterCheckBox->isChecked()){
+    QDir dir(QString::fromStdString(guiVals.jobLogDir));
+    if (!dir.exists()){
+        QDir mDir(QString::fromStdString(mainPath));
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+        guiVals.jobLogDir = mainPath;
+        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir << " as the job log directory instead." << std::endl;
+    }
+    else mainPath = guiVals.jobLogDir;
+    }
+
+    // Reset jobLogDir to what it was before at the end of this function
+
 
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
@@ -1517,7 +1534,10 @@ void MainWindow::on_submitButton_clicked()
         funcType="DeconOnly";
     }
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mainPath);
+    emit jobStart(outA, data, funcType, mainPath ,jobLogPaths);
+
+    // Reset jobLogDir
+    guiVals.jobLogDir = jobLogCopy;
 
 
 }
@@ -2115,6 +2135,8 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     std::string mainPath = cropDPaths.at(0).masterPath;
 
+
+
     // Data Path
     data.push_back(factory.createCharArray(mainPath));
 
@@ -2215,7 +2237,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     std::string funcType = "crop";
 
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mainPath);
+    emit jobStart(outA, data, funcType, mainPath,jobLogPaths);
 }
 
 void MainWindow::selectFolderPath(){

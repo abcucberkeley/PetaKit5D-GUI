@@ -105,7 +105,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath);
+    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath, std::unordered_map<int,std::string> &jobLogPaths);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -125,6 +125,7 @@ private:
     std::vector<std::string> lsImagePaths;
     std::vector<std::string> backgroundPaths;
     std::vector<std::string> psfFullPaths;
+    std::unordered_map<int,std::string> jobLogPaths;
     bool loadSettings;
     void checkLoadPrevSettings();
     QString mostRecentDir;
