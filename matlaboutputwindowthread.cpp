@@ -8,7 +8,6 @@ matlabOutputWindowThread::matlabOutputWindowThread(std::unordered_map<int,std::s
 }
 
 void matlabOutputWindowThread::run(){
-
     while(true){
         sleep(5);
         std::map<int,std::map<std::string,std::string>> fNames;
@@ -17,7 +16,8 @@ void matlabOutputWindowThread::run(){
             QDirIterator it(QString::fromStdString(path.second),{QDir::NoDotAndDotDot,QDir::Files});
             while(it.hasNext()) fNames.at(path.first).emplace(it.next().toStdString(),it.next().toStdString());
         }
-        emit updateOutputForm(fNames);
+        std::string test = "testing";
+        emit updateOutputForm();
     }
 }
 

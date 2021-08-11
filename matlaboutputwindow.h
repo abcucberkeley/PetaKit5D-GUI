@@ -21,7 +21,8 @@ public:
     explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
-    void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames);
+    //void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames);
+    void onUpdateOutputForm();
 private slots:
     void onJobButtonClicked();
 protected:

@@ -16,7 +16,8 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
     this->jobLogPaths = &jobLogPaths;
 
     mOWThread = new matlabOutputWindowThread(jobLogPaths,this);
-    connect(mOWThread,&matlabOutputWindowThread::updateOutputForm,this,&matlabOutputWindow::onUpdateOutputForm);
+    connect(mOWThread, &matlabOutputWindowThread::updateOutputForm, this, &matlabOutputWindow::onUpdateOutputForm);
+    //std::cout << connected << std::endl;
     mOWThread->start(QThread::NormalPriority);
 
     QWidget* containerMain = new QWidget(this);
@@ -60,8 +61,9 @@ void matlabOutputWindow::closeEvent(QCloseEvent *event){
     event->ignore();
 }
 
-void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames){
-    for(auto &path : fNames){
+//void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames){
+void matlabOutputWindow::onUpdateOutputForm(){
+    /*for(auto &path : fNames){
         QWidget* container = new QWidget(this);
         outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
 
@@ -79,7 +81,9 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,st
 
         mainBox.vBox->addWidget(new QLabel("Job"+QString::number(path.first),this));
         mainBox.vBox->addWidget(nBox.scrollArea);
-    }
+    }*/
+
+    std::cout << "testing"<< std::endl;
 
 }
 
