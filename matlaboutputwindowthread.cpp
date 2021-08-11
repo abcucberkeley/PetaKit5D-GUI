@@ -11,11 +11,13 @@ void matlabOutputWindowThread::run(){
 
     while(true){
         sleep(5);
-        std::unordered_map<int,std::unordered_map<std::string,std::string>> fNames;
+        std::map<int,std::map<std::string,std::string>> fNames;
         for(auto &path : *jobLogPaths){
+            fNames.emplace(path.first,std::map<std::string,std::string>());
             QDirIterator it(QString::fromStdString(path.second),{QDir::NoDotAndDotDot,QDir::Files});
-            while(it.hasNext()) std::cout << it.next().toStdString() << std::endl;
+            while(it.hasNext()) fNames.at(path.first).emplace(it.next().toStdString(),it.next().toStdString());
         }
+        emit updateOutputForm(fNames);
     }
 }
 

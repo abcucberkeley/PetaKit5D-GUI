@@ -14,7 +14,7 @@ public:
 public slots:
     void onAddOutputIDAndPath(const unsigned int mThreadID, const std::string mainPath);
 signals:
-    void updateOutputForm();
+    void updateOutputForm(std::map<int,std::map<std::string,std::string>> fNames);
 private:
     std::unordered_map<unsigned int, std::pair<std::string,bool>> jobPaths;
     std::unordered_map<int,std::string> *jobLogPaths;

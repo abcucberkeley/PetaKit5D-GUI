@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QCloseEvent>
 #include <QScrollArea>
+#include <iostream>
 #include "matlaboutputwindow.h"
 #include "ui_matlaboutputwindow.h"
 
@@ -23,6 +24,7 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
 
     //VBoxMain->addWidget(new QLabel("Something else", this));
 
+    /*
     for(int i = 0; i < 6; i++){
     QWidget* container = new QWidget(this);
     outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
@@ -34,16 +36,16 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
     nBox.addToVBox(button);
     }
 
-    container->setLayout(nBox.vBox);
-    nBox.scrollArea->setWidget(container);
+    nBox.container->setLayout(nBox.vBox);
+    nBox.scrollArea->setWidget(nBox.container);
 
     //ui->verticalLayout_2->addWidget(new QLabel("Something else", this));
     mainBox.vBox->addWidget(new QLabel("Job"+QString::number(i),this));
     mainBox.vBox->addWidget(nBox.scrollArea);
-    }
+    }*/
 
-    containerMain->setLayout(mainBox.vBox);
-    mainBox.scrollArea->setWidget(containerMain);
+    mainBox.container->setLayout(mainBox.vBox);
+    mainBox.scrollArea->setWidget(mainBox.container);
 
     ui->verticalLayout_2->addWidget(mainBox.scrollArea);
 
@@ -58,6 +60,30 @@ void matlabOutputWindow::closeEvent(QCloseEvent *event){
     event->ignore();
 }
 
-void matlabOutputWindow::onUpdateOutputForm(){
+void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames){
+    for(auto &path : fNames){
+        QWidget* container = new QWidget(this);
+        outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
 
+        for(auto &subPath : path.second){
+           QPushButton* button = new QPushButton(this);
+           QFileInfo filePath(QString::fromStdString(subPath.second));
+           button->setText(filePath.baseName());
+           button->setObjectName(filePath.absoluteFilePath());
+           connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
+           nBox.vBox->addWidget(button);
+        }
+
+        nBox.container->setLayout(nBox.vBox);
+        nBox.scrollArea->setWidget(nBox.container);
+
+        mainBox.vBox->addWidget(new QLabel("Job"+QString::number(path.first),this));
+        mainBox.vBox->addWidget(nBox.scrollArea);
+    }
+
+}
+
+void matlabOutputWindow::onJobButtonClicked(){
+    QString button = ((QPushButton*)sender())->objectName();
+    std::cout << button.toStdString() << std::endl;
 }
