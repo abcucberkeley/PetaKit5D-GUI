@@ -55,39 +55,58 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
 matlabOutputWindow::~matlabOutputWindow()
 {
     delete ui;
+    mOWThread->terminate();
 }
 
 void matlabOutputWindow::closeEvent(QCloseEvent *event){
     event->ignore();
 }
 
-//void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames){
-void matlabOutputWindow::onUpdateOutputForm(){
-    /*for(auto &path : fNames){
+//void matlabOutputWindow::onUpdateOutputForm(QString &test){
+//void matlabOutputWindow::onUpdateOutputForm(QMap<int,QMap<QString,QString>> fNames){
+void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> *fNames, QMutex *fileNamesLock){
+    fileNamesLock->lock();
+    //std::map<int,std::map<std::string,std::string>> fNamesCopy = std::move(fNames);
+    for(auto &path : *fNames){
+
+        outputBox nBox;
+        bool addLayout = false;
+        if(buttons.find(path.first) == buttons.end()){
+        addLayout = true;
         QWidget* container = new QWidget(this);
-        outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
+        nBox = outputBox(new QScrollArea(this),container,new QVBoxLayout(container));
+        buttons.emplace(path.first,std::make_pair(nBox,std::unordered_map<std::string,QPushButton*>()));
+        }
+        else nBox = buttons.at(path.first).first;
 
         for(auto &subPath : path.second){
-           QPushButton* button = new QPushButton(this);
-           QFileInfo filePath(QString::fromStdString(subPath.second));
-           button->setText(filePath.baseName());
-           button->setObjectName(filePath.absoluteFilePath());
-           connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
-           nBox.vBox->addWidget(button);
+           if(buttons.at(path.first).second.find(subPath.second) == buttons.at(path.first).second.end()){
+               QPushButton* button = new QPushButton(this);
+               QFileInfo filePath(QString::fromStdString(subPath.second));
+               button->setText(filePath.fileName());
+               button->setObjectName(filePath.absoluteFilePath());
+               buttons.at(path.first).second.emplace(button->objectName().toStdString(),button);
+               connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
+               nBox.vBox->addWidget(button);
+           }
         }
 
+        if(addLayout){
         nBox.container->setLayout(nBox.vBox);
         nBox.scrollArea->setWidget(nBox.container);
 
         mainBox.vBox->addWidget(new QLabel("Job"+QString::number(path.first),this));
         mainBox.vBox->addWidget(nBox.scrollArea);
-    }*/
-
-    std::cout << "testing"<< std::endl;
+        }
+    }
+    //std::cout << "testing" << std::endl;
+    //std::cout << test.toStdString() << std::endl;
+    fileNamesLock->unlock();
 
 }
 
 void matlabOutputWindow::onJobButtonClicked(){
     QString button = ((QPushButton*)sender())->objectName();
-    std::cout << button.toStdString() << std::endl;
+    //std::cout << button.toStdString() << std::endl;
+    QDesktopServices::openUrl(button);
 }

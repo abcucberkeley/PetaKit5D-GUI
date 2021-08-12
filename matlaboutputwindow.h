@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QMessageBox>
 #include <QHBoxLayout>
+#include <QDesktopServices>
 #include <unordered_map>
 #include "matlaboutputwindowthread.h"
 #include "outputbox.h"
@@ -21,8 +22,9 @@ public:
     explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
-    //void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> fNames);
-    void onUpdateOutputForm();
+    //void onUpdateOutputForm(QString &test);
+    //void onUpdateOutputForm(QMap<int,QMap<QString,QString>> fNames);
+    void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> *fNames, QMutex *fileNamesLock);
 private slots:
     void onJobButtonClicked();
 protected:
@@ -31,7 +33,8 @@ protected:
 private:
     Ui::matlabOutputWindow *ui;
     matlabOutputWindowThread *mOWThread;
-    std::vector<std::pair<QHBoxLayout*,QPushButton*>> outputWidgets;
+    //std::vector<std::pair<QHBoxLayout*,QPushButton*>> outputWidgets;
+    std::unordered_map<int,std::pair<outputBox,std::unordered_map<std::string,QPushButton*>>> buttons;
     std::unordered_map<int,std::string> *jobLogPaths;
     outputBox mainBox;
 };
