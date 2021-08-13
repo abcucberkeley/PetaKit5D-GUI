@@ -1,7 +1,7 @@
 #include "matlaboutputthread.h"
 
-matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath, const unsigned int &mThreadID) :
-    QThread(parent), output(output), mainPath(mainPath), mThreadID(mThreadID), jobFinished(false)
+matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
+    QThread(parent), output(output), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID), jobFinished(false)
 {
 
 }
@@ -12,15 +12,12 @@ matlabOutputThread::~matlabOutputThread(){
 
 void matlabOutputThread::run(){
     std::string nOut;
-
-    // Code for job logs
-    /*
-    QDir dir(QString::fromStdString(mainPath+"/jobOutput"));
-    if (!dir.exists()) dir.mkpath(".");
-    QString filename=dir.absolutePath()+QString::fromStdString("/job")+QString::number(mThreadID)+QDateTime::currentDateTime().toString("_yyyyMMdd_HH_mm_ss")+QString::fromStdString(".txt");
-    */
-
+    QString jobFileName;
     // Collect string from matlab thread
+    if(!std::get<2>(mPathJNameParseCluster)){
+        jobFileName = QString::fromStdString(std::get<0>(mPathJNameParseCluster))+"/"+QString::fromStdString(std::get<1>(mPathJNameParseCluster))+QDateTime::currentDateTime().toString("_yyyyMMdd_HHmmss")+".out";
+        jobFileName.replace(" ", "_");
+    }
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){
         sleep(2);
         std::string mString = convertUTF16StringToUTF8String(output.get()->str());
@@ -39,16 +36,15 @@ void matlabOutputThread::run(){
         }
 
         // Code for job logs
-        /*
-        QFile file(filename);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Append))
-        {
-            QTextStream stream(&file);
-            stream << QString::fromStdString(mString);
+        if(!std::get<2>(mPathJNameParseCluster) && !jobFileName.isEmpty()){
+            QFile file(jobFileName);
+            if (file.open(QIODevice::WriteOnly | QIODevice::Append))
+            {
+                QTextStream stream(&file);
+                stream << QString::fromStdString(mString);
+            }
         }
-        */
-
-        std::cout << mString;
+        else std::cout << mString;
     }
 }
 

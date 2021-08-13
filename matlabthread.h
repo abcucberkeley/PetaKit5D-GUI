@@ -14,7 +14,7 @@ class matlabThread : public QThread
 {
     Q_OBJECT
 public:
-    matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &mainPath, const unsigned int &mThreadID);
+    matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, const unsigned int &mThreadID);
     ~matlabThread();
     void run();
 public slots:
@@ -28,7 +28,7 @@ private:
     std::string funcType;
     size_t outA;
     std::vector<matlab::data::Array> data;
-    std::string mainPath;
+    std::tuple<std::string, std::string, bool> mPathJNameParseCluster;
     unsigned int mThreadID;
 };
 

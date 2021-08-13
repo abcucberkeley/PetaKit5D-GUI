@@ -7,8 +7,8 @@ QT += widgets
 VERSION = 0.1.0.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
-MATLAB_VER_WIN = R2021a
-MATLAB_VER_CLUSTER = r2021a
+MATLAB_VER_WIN = R2020b
+MATLAB_VER_CLUSTER = r2020b
 
 MATLAB_ROOT_WIN = C:/Program Files/MATLAB
 MATLAB_ROOT_CLUSTER = /global/software/sl-7.x86_64/modules/tools/matlab

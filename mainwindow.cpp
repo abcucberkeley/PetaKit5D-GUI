@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
     // Output Window Threading
-    mOutputWindow = new matlabOutputWindow(jobLogPaths,this);
-    //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
+    mOutputWindow = new matlabOutputWindow(jobLogPaths,jobNames,this);
+    //mOutputWindowThread = new matlabOutputWindowThrrhead(jobLogPaths,this);
     //connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
 
 
@@ -872,7 +872,7 @@ void MainWindow::on_submitButton_clicked()
 
     // Check for job log directory for main job
     std::string jobLogCopy = guiVals.jobLogDir;
-    if(ui->parseClusterCheckBox->isChecked()){
+    //if(ui->parseClusterCheckBox->isChecked()){
     QDir dir(QString::fromStdString(guiVals.jobLogDir));
     if (!dir.exists()){
         QDir mDir(QString::fromStdString(mainPath));
@@ -883,7 +883,7 @@ void MainWindow::on_submitButton_clicked()
         std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir << " as the job log directory instead." << std::endl;
     }
     else mainPath = guiVals.jobLogDir;
-    }
+    //}
 
     // Reset jobLogDir to what it was before at the end of this function
 
@@ -1533,8 +1533,27 @@ void MainWindow::on_submitButton_clicked()
     if(ui->deconOnlyCheckBox->isChecked()){
         funcType="DeconOnly";
     }
+
+    auto mPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text().toStdString(),ui->parseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mainPath ,jobLogPaths);
+    emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
+
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,ui->jobNameLineEdit->text().toStdString());
+
+    QString currJobText = ui->jobNameLineEdit->text();
+    if(currJobText.contains("Job ") && currJobText.back().isDigit()){
+        for(int i = currJobText.size()-1; i >= 0; i--){
+            if(currJobText.back().isDigit()){
+                currJobText.chop(1);
+            }
+            else{
+                currJobText.append(QString::number(currJob+1));
+                ui->jobNameLineEdit->setText(currJobText);
+                break;
+            }
+        }
+    }
 
     // Reset jobLogDir
     guiVals.jobLogDir = jobLogCopy;
@@ -2237,7 +2256,8 @@ void MainWindow::on_cropSubmitButton_clicked()
     std::string funcType = "crop";
 
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mainPath,jobLogPaths);
+    auto cMPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text().toStdString(),ui->parseClusterCheckBox->isChecked());
+    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
 void MainWindow::selectFolderPath(){

@@ -19,7 +19,7 @@ class matlabOutputWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent = nullptr);
+    explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, std::unordered_map<int,std::string> &jobNames, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
     //void onUpdateOutputForm(QString &test);
@@ -36,6 +36,7 @@ private:
     //std::vector<std::pair<QHBoxLayout*,QPushButton*>> outputWidgets;
     std::unordered_map<int,std::pair<outputBox,std::unordered_map<std::string,QPushButton*>>> buttons;
     std::unordered_map<int,std::string> *jobLogPaths;
+    std::unordered_map<int,std::string> *jobNames;
     outputBox mainBox;
 };
 

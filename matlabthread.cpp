@@ -1,7 +1,7 @@
 #include "matlabthread.h"
 
-matlabThread::matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &mainPath, const unsigned int &mThreadID) :
-    QThread(parent), funcType(funcType), outA(outA), data(data), mainPath(mainPath), mThreadID(mThreadID)
+matlabThread::matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
+    QThread(parent), funcType(funcType), outA(outA), data(data), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID)
 {
 
 }
@@ -36,7 +36,7 @@ void matlabThread::run(){
 
     // Create string buffer for standard output
     std::shared_ptr<StringBuf> output = std::make_shared<StringBuf>();
-    mOutThread = new matlabOutputThread(this, output, mainPath,mThreadID);
+    mOutThread = new matlabOutputThread(this, output, mPathJNameParseCluster, mThreadID);
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);
     mOutThread->start(QThread::NormalPriority);
 
@@ -64,6 +64,9 @@ void matlabThread::run(){
     mOutThread->wait();
 
     if(jobSuccess) std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
-    else std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION." << std::endl;
+    else{
+        if(std::get<2>(mPathJNameParseCluster)) std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION." << std::endl;
+        else std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+    }
 }
 
