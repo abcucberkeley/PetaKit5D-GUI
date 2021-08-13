@@ -5,6 +5,7 @@
 #include <iostream>
 #include "matlaboutputwindow.h"
 #include "ui_matlaboutputwindow.h"
+#include "jobtext.h"
 
 
 matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, QWidget *parent) :
@@ -108,5 +109,9 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,st
 void matlabOutputWindow::onJobButtonClicked(){
     QString button = ((QPushButton*)sender())->objectName();
     //std::cout << button.toStdString() << std::endl;
-    QDesktopServices::openUrl(button);
+    //QDesktopServices::openUrl(button);
+    jobText *jText = new jobText(button,this);
+    jText->setModal(false);
+    jText->show();
+
 }
