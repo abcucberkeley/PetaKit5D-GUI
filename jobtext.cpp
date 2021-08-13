@@ -8,8 +8,9 @@ jobText::jobText(QString textFile, QWidget *parent) :
     ui(new Ui::jobText)
 {
     ui->setupUi(this);
-
+    setWindowTitle(textFile);
     QFile file(textFile);
+
 
     QString line;
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
