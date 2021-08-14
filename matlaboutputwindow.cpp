@@ -24,26 +24,6 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobL
     QWidget* containerMain = new QWidget(this);
     mainBox = outputBox(new QScrollArea(this),containerMain,new QVBoxLayout(containerMain));
 
-    /*
-    for(int i = 0; i < 6; i++){
-    QWidget* container = new QWidget(this);
-    outputBox nBox(new QScrollArea(this),container,new QVBoxLayout(container));
-
-    for(int j = 0; j < 80; j++){
-    QPushButton* button = new QPushButton(this);
-    button->setText("job"+QString::number(j));
-    //nBox.vBox->addWidget(button);
-    nBox.addToVBox(button);
-    }
-
-    nBox.container->setLayout(nBox.vBox);
-    nBox.scrollArea->setWidget(nBox.container);
-
-    //ui->verticalLayout_2->addWidget(new QLabel("Something else", this));
-    mainBox.vBox->addWidget(new QLabel("Job"+QString::number(i),this));
-    mainBox.vBox->addWidget(nBox.scrollArea);
-    }*/
-
     mainBox.container->setLayout(mainBox.vBox);
     mainBox.scrollArea->setWidget(mainBox.container);
 
@@ -84,7 +64,6 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<std::string,st
                button->setObjectName(filePath.absoluteFilePath());
                buttons.at(path.first).second.emplace(button->objectName().toStdString(),button);
                connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
-               //nBox.vBox->addWidget(button);
                nBox.vBox->insertWidget(nBox.vBox->count()-1,button);
            }
         }

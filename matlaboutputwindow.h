@@ -22,8 +22,6 @@ public:
     explicit matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, std::unordered_map<int,std::string> &jobNames, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
-    //void onUpdateOutputForm(QString &test);
-    //void onUpdateOutputForm(QMap<int,QMap<QString,QString>> fNames);
     void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> *fNames, QMutex *fileNamesLock);
 private slots:
     void onJobButtonClicked();
@@ -33,7 +31,6 @@ protected:
 private:
     Ui::matlabOutputWindow *ui;
     matlabOutputWindowThread *mOWThread;
-    //std::vector<std::pair<QHBoxLayout*,QPushButton*>> outputWidgets;
     std::unordered_map<int,std::pair<outputBox,std::unordered_map<std::string,QPushButton*>>> buttons;
     std::unordered_map<int,std::string> *jobLogPaths;
     std::unordered_map<int,std::string> *jobNames;
