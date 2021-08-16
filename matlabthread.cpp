@@ -63,10 +63,10 @@ void matlabThread::run(){
     emit jobFinish(true);
     mOutThread->wait();
 
-    if(jobSuccess) std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
+    if(jobSuccess) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" Finished" << std::endl;
     else{
-        if(std::get<2>(mPathJNameParseCluster)) std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION." << std::endl;
-        else std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+        if(std::get<2>(mPathJNameParseCluster)) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" has Failed. MATLAB EXCEPTION." << std::endl;
+        else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
     }
 }
 

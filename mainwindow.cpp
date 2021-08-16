@@ -56,9 +56,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     QCoreApplication::setApplicationVersion(VERSION_STRING);
     if(savedVersion == QCoreApplication::applicationVersion()){
-    // Restore previous settings if user says yes
-    checkLoadPrevSettings();
-    if(loadSettings) readSettings();
+        // Restore previous settings if user says yes
+        checkLoadPrevSettings();
+        if(loadSettings) readSettings();
     }
     else{
         // If saved version is not the current version then reset values to avoid corruption

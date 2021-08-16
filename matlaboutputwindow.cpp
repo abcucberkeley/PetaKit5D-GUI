@@ -8,7 +8,7 @@
 #include "jobtext.h"
 
 
-matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::string> &jobLogPaths, std::unordered_map<int,std::string> &jobNames, QWidget *parent) :
+matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::pair<std::string,QDateTime>> &jobLogPaths, std::unordered_map<int,std::string> &jobNames, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::matlabOutputWindow)
 {
