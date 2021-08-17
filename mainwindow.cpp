@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Output Window Threading
     mOutputWindow = new matlabOutputWindow(jobLogPaths,jobNames,this);
-    //mOutputWindowThread = new matlabOutputWindowThrrhead(jobLogPaths,this);
+    //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
     //connect(mThreadManager, &matlabThreadManager::addOutputIDAndPath, mOutputWindowThread, &matlabOutputWindowThread::onAddOutputIDAndPath);
 
 

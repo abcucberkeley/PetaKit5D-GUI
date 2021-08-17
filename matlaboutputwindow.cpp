@@ -34,7 +34,7 @@ matlabOutputWindow::matlabOutputWindow(std::unordered_map<int,std::pair<std::str
 matlabOutputWindow::~matlabOutputWindow()
 {
     delete ui;
-    mOWThread->terminate();
+    if(!mOWThread->isFinished()) mOWThread->terminate();
 }
 
 void matlabOutputWindow::closeEvent(QCloseEvent *event){
