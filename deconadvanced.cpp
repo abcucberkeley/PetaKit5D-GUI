@@ -13,10 +13,10 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     gVals = &guiVals;
 
     // Set the vals in the window to the ones passed in
-    ui->cppDeconPathLineEdit->setText(QString::fromStdString(guiVals.cppDeconPath));
-    ui->loadModulesLineEdit->setText(QString::fromStdString(guiVals.loadModules));
-    ui->cudaDeconPathLineEdit->setText(QString::fromStdString(guiVals.cudaDeconPath));
-    ui->otfgenPathLineEdit->setText(QString::fromStdString(guiVals.OTFGENPath));
+    ui->cppDeconPathLineEdit->setText(guiVals.cppDeconPath);
+    ui->loadModulesLineEdit->setText(guiVals.loadModules);
+    ui->cudaDeconPathLineEdit->setText(guiVals.cudaDeconPath);
+    ui->otfgenPathLineEdit->setText(guiVals.OTFGENPath);
     if(guiVals.RLMethod == "original") ui->rlMethodOriginalRadioButton->setChecked(true);
     else if(guiVals.RLMethod == "simplified"){
         ui->rlMethodSimplifiedRadioButton->setChecked(true);
@@ -56,10 +56,10 @@ void deconAdvanced::on_cancelButton_clicked()
 // Close the window and save the current vals
 void deconAdvanced::on_submitButton_clicked()
 {
-    gVals->cppDeconPath = ui->cppDeconPathLineEdit->text().toStdString();
-    gVals->loadModules = ui->loadModulesLineEdit->text().toStdString();
-    gVals->cudaDeconPath = ui->cudaDeconPathLineEdit->text().toStdString();
-    gVals->OTFGENPath = ui->otfgenPathLineEdit->text().toStdString();
+    gVals->cppDeconPath = ui->cppDeconPathLineEdit->text();
+    gVals->loadModules = ui->loadModulesLineEdit->text();
+    gVals->cudaDeconPath = ui->cudaDeconPathLineEdit->text();
+    gVals->OTFGENPath = ui->otfgenPathLineEdit->text();
     if(ui->rlMethodOriginalRadioButton->isChecked()) gVals->RLMethod = "original";
     else if (ui->rlMethodSimplifiedRadioButton->isChecked()) gVals->RLMethod = "simplified";
     else if (ui->rlMethodCudaGenRadioButton->isChecked()) gVals->RLMethod = "cudagen";
@@ -73,7 +73,7 @@ void deconAdvanced::on_submitButton_clicked()
 void deconAdvanced::on_cppDeconPathBrowseButton_clicked()
 {
     QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the CPP Decon File",QDir::homePath());
-    if(file_path.absoluteFilePath().toStdString() != "") ui->cppDeconPathLineEdit->setText(file_path.absoluteFilePath());
+    if(!file_path.absoluteFilePath().isEmpty()) ui->cppDeconPathLineEdit->setText(file_path.absoluteFilePath());
 }
 
 void deconAdvanced::on_cppDeconPathLineEdit_textChanged(const QString &arg1)
@@ -84,7 +84,7 @@ void deconAdvanced::on_cppDeconPathLineEdit_textChanged(const QString &arg1)
 void deconAdvanced::on_cudaDeconPathBrowseButton_clicked()
 {
     QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the CUDA Decon File",QDir::homePath());
-    if(file_path.absoluteFilePath().toStdString() != "") ui->cudaDeconPathLineEdit->setText(file_path.absoluteFilePath());
+    if(!file_path.absoluteFilePath().isEmpty()) ui->cudaDeconPathLineEdit->setText(file_path.absoluteFilePath());
 }
 
 void deconAdvanced::on_cudaDeconPathLineEdit_textChanged(const QString &arg1)
@@ -95,7 +95,7 @@ void deconAdvanced::on_cudaDeconPathLineEdit_textChanged(const QString &arg1)
 void deconAdvanced::on_otfgenPathBrowseButton_clicked()
 {
     QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the OTFGEN File",QDir::homePath());
-    if(file_path.absoluteFilePath().toStdString() != "") ui->otfgenPathLineEdit->setText(file_path.absoluteFilePath());
+    if(!file_path.absoluteFilePath().isEmpty()) ui->otfgenPathLineEdit->setText(file_path.absoluteFilePath());
 }
 
 void deconAdvanced::on_otfgenPathLineEdit_textChanged(const QString &arg1)

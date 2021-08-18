@@ -36,15 +36,15 @@ class GUIvals{
         // DSR Advanced Settings
         bool BKRemoval;
         double LowerLimit;
-        std::string resampleType;
+        QString resampleType;
         uint64_t resample;
 
         // Decon Advanced Settings
-        std::string cppDeconPath;
-        std::string loadModules;
-        std::string cudaDeconPath;
-        std::string OTFGENPath;
-        std::string RLMethod;
+        QString cppDeconPath;
+        QString loadModules;
+        QString cudaDeconPath;
+        QString OTFGENPath;
+        QString RLMethod;
         bool fixIter;
         double errThresh;
         bool debug;
@@ -52,15 +52,15 @@ class GUIvals{
 
         // Job Advanced Settings
         bool largeFile;
-        std::string jobLogDir;
-        std::string uuid;
+        QString jobLogDir;
+        QString uuid;
         uint64_t maxTrialNum;
         uint64_t unitWaitTime;
         uint64_t minModifyTime;
         uint64_t maxModifyTime;
         uint64_t maxWaitLoopNum;
-        std::string MatlabLaunchStr;
-        std::string SlurmParam;
+        QString MatlabLaunchStr;
+        QString SlurmParam;
 
         GUIvals() : skewAngle{32.45},
                     xyPixelSize{.108},
@@ -105,7 +105,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<std::string,QDateTime>> &jobLogPaths);
+    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -122,11 +122,11 @@ private:
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
     std::vector<dataPath> cropDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
-    std::vector<std::string> lsImagePaths;
-    std::vector<std::string> backgroundPaths;
-    std::vector<std::string> psfFullPaths;
-    std::unordered_map<int,std::pair<std::string,QDateTime>> jobLogPaths;
-    std::unordered_map<int,std::string> jobNames;
+    std::vector<QString> lsImagePaths;
+    std::vector<QString> backgroundPaths;
+    std::vector<QString> psfFullPaths;
+    std::unordered_map<int,std::pair<QString,QDateTime>> jobLogPaths;
+    std::unordered_map<int,QString> jobNames;
     bool loadSettings;
     void checkLoadPrevSettings();
     QString mostRecentDir;

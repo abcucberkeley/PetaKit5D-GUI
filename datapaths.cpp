@@ -31,7 +31,7 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
 }
 
 // For PSF data paths
-dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent) :
+dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -57,7 +57,7 @@ dataPaths::dataPaths(std::vector<std::string> &psfPaths, bool folder, QString &m
 }
 
 // For other data paths
-dataPaths::dataPaths(std::vector<std::string> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
+dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -110,11 +110,11 @@ void dataPaths::on_dataPathSubmitButton_clicked()
 
     bool found = false;
     for(const auto &cPath : currPaths){
-        if(cPath.second.masterPath.empty()) continue;
+        if(cPath.second.masterPath.isEmpty()) continue;
 
         found = false;
         for(const auto &path : paths){
-            if(cPath.second.masterPath == std::get<2>(path)->text().toStdString()){
+            if(cPath.second.masterPath == std::get<2>(path)->text()){
                 found = true;
                 break;
             }
@@ -126,13 +126,13 @@ void dataPaths::on_dataPathSubmitButton_clicked()
 
     for(const auto &path : paths){
         if(std::get<2>(path)->text().isEmpty()) continue;
-        if(currPaths.find(std::get<2>(path)->text().toStdString()) == currPaths.end()){
-            currPaths.emplace(std::get<2>(path)->text().toStdString(),dataPath(std::get<2>(path)->text().toStdString(),std::get<10>(path)->isChecked(),std::get<6>(path)->text().toStdString(),std::get<8>(path)->value(),std::unordered_map<std::string,std::pair<bool,std::string>>()));
+        if(currPaths.find(std::get<2>(path)->text()) == currPaths.end()){
+            currPaths.emplace(std::get<2>(path)->text(),dataPath(std::get<2>(path)->text(),std::get<10>(path)->isChecked(),std::get<6>(path)->text(),std::get<8>(path)->value(),std::unordered_map<QString,std::pair<bool,QString>>()));
         }
         else{
-            currPaths.at(std::get<2>(path)->text().toStdString()).includeMaster = std::get<10>(path)->isChecked();
-            currPaths.at(std::get<2>(path)->text().toStdString()).pattern = std::get<6>(path)->text().toStdString();
-            currPaths.at(std::get<2>(path)->text().toStdString()).maxDepth = std::get<8>(path)->value();
+            currPaths.at(std::get<2>(path)->text()).includeMaster = std::get<10>(path)->isChecked();
+            currPaths.at(std::get<2>(path)->text()).pattern = std::get<6>(path)->text();
+            currPaths.at(std::get<2>(path)->text()).maxDepth = std::get<8>(path)->value();
 
         }
     }
@@ -152,7 +152,7 @@ void dataPaths::on_dataPathSubmitButton_clicked()
 void dataPaths::on_dataPathSubmitButton_clickedOther(){
     dataHand->clear();
     for(const auto &path : paths){
-        dataHand->push_back(std::get<2>(path)->text().toStdString());
+        dataHand->push_back(std::get<2>(path)->text());
     }
     dataPaths::close();
 }
@@ -166,14 +166,14 @@ void dataPaths::on_dataPathBrowseButton_clicked()
 
     if(folder){
         QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
+        if(!folder_path.absoluteFilePath().isEmpty()){
             currQLE->setText(folder_path.absoluteFilePath());
             *mostRecentDir = folder_path.absoluteFilePath();
         }
     }
     else{
         QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
+        if(!file_path.absoluteFilePath().isEmpty()){
            currQLE->setText(file_path.absoluteFilePath());
             *mostRecentDir = file_path.absolutePath();
         }
@@ -198,16 +198,16 @@ void dataPaths::on_dataPathFindButton_clicked(){
         return;
     }
 
-    if(currPaths.find(std::get<2>(paths.at(currTuple))->text().toStdString()) == currPaths.end()){
-        currPaths.emplace(std::get<2>(paths.at(currTuple))->text().toStdString(),dataPath(std::get<2>(paths.at(currTuple))->text().toStdString(),std::get<10>(paths.at(currTuple))->isChecked(),std::get<6>(paths.at(currTuple))->text().toStdString(),std::get<8>(paths.at(currTuple))->value(),std::unordered_map<std::string,std::pair<bool,std::string>>()));
+    if(currPaths.find(std::get<2>(paths.at(currTuple))->text()) == currPaths.end()){
+        currPaths.emplace(std::get<2>(paths.at(currTuple))->text(),dataPath(std::get<2>(paths.at(currTuple))->text(),std::get<10>(paths.at(currTuple))->isChecked(),std::get<6>(paths.at(currTuple))->text(),std::get<8>(paths.at(currTuple))->value(),std::unordered_map<QString,std::pair<bool,QString>>()));
     }
     else{
-        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).includeMaster = std::get<10>(paths.at(currTuple))->isChecked();
-        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).pattern = std::get<6>(paths.at(currTuple))->text().toStdString();
-        currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()).maxDepth = std::get<8>(paths.at(currTuple))->value();
+        currPaths.at(std::get<2>(paths.at(currTuple))->text()).includeMaster = std::get<10>(paths.at(currTuple))->isChecked();
+        currPaths.at(std::get<2>(paths.at(currTuple))->text()).pattern = std::get<6>(paths.at(currTuple))->text();
+        currPaths.at(std::get<2>(paths.at(currTuple))->text()).maxDepth = std::get<8>(paths.at(currTuple))->value();
 
     }
-    dataPathsRecursive dPR(currPaths.at(std::get<2>(paths.at(currTuple))->text().toStdString()),this);
+    dataPathsRecursive dPR(currPaths.at(std::get<2>(paths.at(currTuple))->text()),this);
     dPR.setModal(true);
     dPR.exec();
 }
@@ -258,8 +258,8 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
 
     // Add the text box
     QLineEdit* QLE = new QLineEdit(this);
-    if(!psf && !otherData) QLE->setText(QString::fromStdString(currPath.masterPath));
-    else if(size_t(i) < dataHand->size() && !dataHand->at(i).empty()) QLE->setText(QString::fromStdString(dataHand->at(i)));
+    if(!psf && !otherData) QLE->setText(currPath.masterPath);
+    else if(size_t(i) < dataHand->size() && !dataHand->at(i).isEmpty()) QLE->setText(dataHand->at(i));
     QLE->setMinimumWidth(150);
     connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     QHBox->addWidget(QLE);
@@ -288,7 +288,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
 
     // Add the text box for Pattern
     QLineEdit* QLEP = new QLineEdit(this);
-    QLEP->setText(QString::fromStdString(currPath.pattern));
+    QLEP->setText(currPath.pattern);
     //QLEP->setMinimumWidth(150);
     connect(QLEP,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     if(psf || otherData) QLEP->setVisible(false);

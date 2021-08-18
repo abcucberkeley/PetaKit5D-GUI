@@ -4,7 +4,7 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 0.1.1.0
+VERSION = 0.2.1.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 MATLAB_VER_WIN = R2020b
@@ -64,6 +64,14 @@ SOURCES += \
            outputbox.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
+
+# remove possible other optimization flags
+QMAKE_CXXFLAGS_RELEASE -= -O
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+
+# add the desired -O3 if not present
+QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {
 LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \

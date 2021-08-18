@@ -1,6 +1,6 @@
 #include "matlaboutputthread.h"
 
-matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
+matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
     QThread(parent), output(output), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID), jobFinished(false)
 {
 
@@ -15,7 +15,7 @@ void matlabOutputThread::run(){
     QString jobFileName;
     // Collect string from matlab thread
     if(!std::get<2>(mPathJNameParseCluster)){
-        jobFileName = QString::fromStdString(std::get<0>(mPathJNameParseCluster))+"/"+QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_")+QString::fromStdString(std::get<1>(mPathJNameParseCluster))+".out";
+        jobFileName = std::get<0>(mPathJNameParseCluster)+"/"+std::get<1>(mPathJNameParseCluster)+".out";
         jobFileName.replace(" ", "_");
     }
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){

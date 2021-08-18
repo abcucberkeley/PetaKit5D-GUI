@@ -19,10 +19,10 @@ class matlabOutputWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit matlabOutputWindow(std::unordered_map<int,std::pair<std::string,QDateTime>> &jobLogPaths, std::unordered_map<int,std::string> &jobNames, QWidget *parent = nullptr);
+    explicit matlabOutputWindow(std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, std::unordered_map<int,QString> &jobNames, QWidget *parent = nullptr);
     ~matlabOutputWindow();
 public slots:
-    void onUpdateOutputForm(std::map<int,std::map<std::string,std::string>> *fNames, QMutex *fileNamesLock);
+    void onUpdateOutputForm(std::map<int,std::map<QString,QString>> *fNames, QMutex *fileNamesLock);
 private slots:
     void onJobButtonClicked();
 protected:
@@ -31,9 +31,9 @@ protected:
 private:
     Ui::matlabOutputWindow *ui;
     matlabOutputWindowThread *mOWThread;
-    std::unordered_map<int,std::pair<outputBox,std::unordered_map<std::string,QPushButton*>>> buttons;
-    std::unordered_map<int,std::pair<std::string,QDateTime>> *jobLogPaths;
-    std::unordered_map<int,std::string> *jobNames;
+    std::unordered_map<int,std::pair<outputBox,std::unordered_map<QString,QPushButton*>>> buttons;
+    std::unordered_map<int,std::pair<QString,QDateTime>> *jobLogPaths;
+    std::unordered_map<int,QString> *jobNames;
     outputBox mainBox;
 };
 
