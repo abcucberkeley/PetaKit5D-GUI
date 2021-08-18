@@ -65,6 +65,14 @@ SOURCES += \
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
 
+# remove possible other optimization flags
+QMAKE_CXXFLAGS_RELEASE -= -O
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+
+# add the desired -O3 if not present
+QMAKE_CXXFLAGS_RELEASE *= -O3
+
 unix:!macx {
 LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \
         "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabDataArray.so"
@@ -80,14 +88,6 @@ LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -lli
 
 
 INCLUDEPATH += "$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/include"
-
-# remove possible other optimization flags
-QMAKE_CXXFLAGS_RELEASE -= -O
-QMAKE_CXXFLAGS_RELEASE -= -O1
-QMAKE_CXXFLAGS_RELEASE -= -O2
-
-# add the desired -O3 if not present
-QMAKE_CXXFLAGS_RELEASE *= -O3
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
