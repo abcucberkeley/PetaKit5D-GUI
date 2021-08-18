@@ -1,6 +1,6 @@
 #include "matlabthread.h"
 
-matlabThread::matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, std::tuple<std::string, std::string, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
+matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
     QThread(parent), funcType(funcType), outA(outA), data(data), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID)
 {
 
@@ -63,10 +63,10 @@ void matlabThread::run(){
     emit jobFinish(true);
     mOutThread->wait();
 
-    if(jobSuccess) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" Finished" << std::endl;
+    if(jobSuccess) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" Finished" << std::endl;
     else{
-        if(std::get<2>(mPathJNameParseCluster)) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" has Failed. MATLAB EXCEPTION." << std::endl;
-        else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster) << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+        if(std::get<2>(mPathJNameParseCluster)) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION." << std::endl;
+        else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
     }
 }
 

@@ -13,7 +13,7 @@ DSRadvanced::DSRadvanced(GUIvals &guiVals, QWidget *parent) :
     // set the vals in the window to the ones passed in
     ui->bkRemovalCheckBox->setChecked(guiVals.BKRemoval);
     ui->lowerLimitSpinBox->setValue(guiVals.LowerLimit);
-    ui->resampleTypeComboBox->setCurrentText(QString::fromStdString(guiVals.resampleType));
+    ui->resampleTypeComboBox->setCurrentText(guiVals.resampleType);
     ui->resampleSpinBox->setValue(guiVals.resample);
 
 }
@@ -34,7 +34,7 @@ void DSRadvanced::on_submitButton_clicked()
 {
     gVals->BKRemoval = ui->bkRemovalCheckBox->isChecked();
     gVals->LowerLimit = ui->lowerLimitSpinBox->value();
-    gVals->resampleType = ui->resampleTypeComboBox->currentText().toStdString();
+    gVals->resampleType = ui->resampleTypeComboBox->currentText();
     gVals->resample = ui->resampleSpinBox->value();
     DSRadvanced::close();
 }

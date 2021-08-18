@@ -111,9 +111,9 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < dPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("dPathsimasterPath", QString::fromStdString(dPaths.at(i).masterPath));
+        settings.setValue("dPathsimasterPath", dPaths.at(i).masterPath);
         settings.setValue("dPathsiincludeMaster", dPaths.at(i).includeMaster);
-        settings.setValue("dPathsipattern", QString::fromStdString(dPaths.at(i).pattern));
+        settings.setValue("dPathsipattern", dPaths.at(i).pattern);
         settings.setValue("dPathsimaxDepth", dPaths.at(i).maxDepth);
     }
     settings.endArray();
@@ -134,7 +134,7 @@ void MainWindow::writeSettings()
         j = 0;
         for(const auto &path : dPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"subPathi",QString::fromStdString(path.second.second));
+            settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"subPathi",path.second.second);
             j++;
         }
         settings.endArray();
@@ -219,7 +219,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < lsImagePaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("LSImagePathsi", QString::fromStdString(lsImagePaths.at(i)));
+        settings.setValue("LSImagePathsi", lsImagePaths.at(i));
     }
     settings.endArray();
 
@@ -227,7 +227,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < backgroundPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("BackgroundPathsi", QString::fromStdString(backgroundPaths.at(i)));
+        settings.setValue("BackgroundPathsi", backgroundPaths.at(i));
     }
     settings.endArray();
 
@@ -235,7 +235,7 @@ void MainWindow::writeSettings()
 
     settings.setValue("BKRemoval",guiVals.BKRemoval);
     settings.setValue("LowerLimit",guiVals.LowerLimit);
-    settings.setValue("resampleType",QString::fromStdString(guiVals.resampleType));
+    settings.setValue("resampleType",guiVals.resampleType);
     settings.setValue("resample",QVariant::fromValue(guiVals.resample));
 
     // Save Stitch Settings
@@ -274,11 +274,11 @@ void MainWindow::writeSettings()
 
     // Save Decon Advaced Settings
 
-    settings.setValue("cppDeconPath",QString::fromStdString(guiVals.cppDeconPath));
-    settings.setValue("loadModules",QString::fromStdString(guiVals.loadModules));
-    settings.setValue("cudaDeconPath",QString::fromStdString(guiVals.cudaDeconPath));
-    settings.setValue("OTFGENPath",QString::fromStdString(guiVals.OTFGENPath));
-    settings.setValue("RLMethod",QString::fromStdString(guiVals.RLMethod));
+    settings.setValue("cppDeconPath",guiVals.cppDeconPath);
+    settings.setValue("loadModules",guiVals.loadModules);
+    settings.setValue("cudaDeconPath",guiVals.cudaDeconPath);
+    settings.setValue("OTFGENPath",guiVals.OTFGENPath);
+    settings.setValue("RLMethod",guiVals.RLMethod);
     settings.setValue("fixIter", guiVals.fixIter);
     settings.setValue("errThresh", guiVals.errThresh);
     settings.setValue("debug", guiVals.debug);
@@ -288,7 +288,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("psfFullpathsi", QString::fromStdString(psfFullPaths.at(i)));
+        settings.setValue("psfFullpathsi", psfFullPaths.at(i));
     }
     settings.endArray();
 
@@ -304,15 +304,15 @@ void MainWindow::writeSettings()
     // Save Advanced Job Settings
 
     settings.setValue("largeFile",QVariant::fromValue(guiVals.largeFile));
-    settings.setValue("jobLogDir",QString::fromStdString(guiVals.jobLogDir));
-    settings.setValue("uuid",QString::fromStdString(guiVals.uuid));
+    settings.setValue("jobLogDir",guiVals.jobLogDir);
+    settings.setValue("uuid",guiVals.uuid);
     settings.setValue("maxTrialNum",QVariant::fromValue(guiVals.maxTrialNum));
     settings.setValue("unitWaitTime",QVariant::fromValue(guiVals.unitWaitTime));
     settings.setValue("minModifyTime",QVariant::fromValue(guiVals.minModifyTime));
     settings.setValue("maxModifyTime",QVariant::fromValue(guiVals.maxModifyTime));
     settings.setValue("maxWaitLoopNum",QVariant::fromValue(guiVals.maxWaitLoopNum));
-    settings.setValue("MatlabLaunchStr",QString::fromStdString(guiVals.MatlabLaunchStr));
-    settings.setValue("SlurmParam",QString::fromStdString(guiVals.SlurmParam));
+    settings.setValue("MatlabLaunchStr",guiVals.MatlabLaunchStr);
+    settings.setValue("SlurmParam",guiVals.SlurmParam);
 
     // ********* Save Crop Settings *********
 
@@ -321,9 +321,9 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < cropDPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("cropDPathsimasterPath", QString::fromStdString(cropDPaths.at(i).masterPath));
+        settings.setValue("cropDPathsimasterPath", cropDPaths.at(i).masterPath);
         settings.setValue("cropDPathsiincludeMaster", cropDPaths.at(i).includeMaster);
-        settings.setValue("cropDPathsipattern", QString::fromStdString(cropDPaths.at(i).pattern));
+        settings.setValue("cropDPathsipattern", cropDPaths.at(i).pattern);
         settings.setValue("cropDPathsimaxDepth", cropDPaths.at(i).maxDepth);
     }
     settings.endArray();
@@ -344,7 +344,7 @@ void MainWindow::writeSettings()
         j = 0;
         for(const auto &path : cropDPaths.at(i).subPaths){
             settings.setArrayIndex(j);
-            settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi",QString::fromStdString(path.second.second));
+            settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi",path.second.second);
             j++;
         }
         settings.endArray();
@@ -412,15 +412,15 @@ void MainWindow::readSettings()
     for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
         dPaths.push_back(dataPath());
-        dPaths.at(i).masterPath = settings.value("dPathsimasterPath").toString().toStdString();
+        dPaths.at(i).masterPath = settings.value("dPathsimasterPath").toString();
         dPaths.at(i).includeMaster = settings.value("dPathsiincludeMaster").toBool();
-        dPaths.at(i).pattern = settings.value("dPathsipattern").toString().toStdString();
+        dPaths.at(i).pattern = settings.value("dPathsipattern").toString();
         dPaths.at(i).maxDepth = settings.value("dPathsimaxDepth").toInt();
     }
     settings.endArray();
 
     for(size_t i = 0; i < dPaths.size(); i++){
-        std::vector<std::string> subPaths;
+        std::vector<QString> subPaths;
         std::vector<bool> include;
 
         size = settings.beginReadArray(QString::number(i)+"bool");
@@ -433,7 +433,7 @@ void MainWindow::readSettings()
         size = settings.beginReadArray(QString::number(i)+"subPath");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            subPaths.push_back(settings.value("i"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString().toStdString());
+            subPaths.push_back(settings.value("i"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString());
         }
         settings.endArray();
 
@@ -542,7 +542,7 @@ void MainWindow::readSettings()
     for(int i = 0; i < size; i++)
     {
         settings.setArrayIndex(i);
-        lsImagePaths.push_back(settings.value("LSImagePathsi").toString().toStdString());
+        lsImagePaths.push_back(settings.value("LSImagePathsi").toString());
     }
     settings.endArray();
 
@@ -550,7 +550,7 @@ void MainWindow::readSettings()
     for(int i = 0; i < size; i++)
     {
         settings.setArrayIndex(i);
-        backgroundPaths.push_back(settings.value("BackgroundPathsi").toString().toStdString());
+        backgroundPaths.push_back(settings.value("BackgroundPathsi").toString());
     }
     settings.endArray();
 
@@ -558,7 +558,7 @@ void MainWindow::readSettings()
 
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
     guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
-    guiVals.resampleType = settings.value("resampleType").toString().toStdString();
+    guiVals.resampleType = settings.value("resampleType").toString();
     guiVals.resample = settings.value("resample").toULongLong();
 
     // Read Stitch Settings
@@ -596,11 +596,11 @@ void MainWindow::readSettings()
 
     // Read Decon Advaced Settings
 
-    guiVals.cppDeconPath = settings.value("cppDeconPath").toString().toStdString();
-    guiVals.loadModules = settings.value("loadModules").toString().toStdString();
-    guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString().toStdString();
-    guiVals.OTFGENPath = settings.value("OTFGENPath").toString().toStdString();
-    guiVals.RLMethod = settings.value("RLMethod").toString().toStdString();
+    guiVals.cppDeconPath = settings.value("cppDeconPath").toString();
+    guiVals.loadModules = settings.value("loadModules").toString();
+    guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString();
+    guiVals.OTFGENPath = settings.value("OTFGENPath").toString();
+    guiVals.RLMethod = settings.value("RLMethod").toString();
     guiVals.fixIter = settings.value("fixIter").toBool();
     guiVals.errThresh = settings.value("errThresh").toDouble();
     guiVals.debug = settings.value("debug").toBool();
@@ -611,7 +611,7 @@ void MainWindow::readSettings()
     for(int i = 0; i < size; i++)
     {
         settings.setArrayIndex(i);
-        psfFullPaths.push_back(settings.value("psfFullpathsi").toString().toStdString());
+        psfFullPaths.push_back(settings.value("psfFullpathsi").toString());
     }
     settings.endArray();
 
@@ -627,15 +627,15 @@ void MainWindow::readSettings()
     // Save Advanced Job Settings
 
     guiVals.largeFile = settings.value("largeFile").toBool();
-    guiVals.jobLogDir = settings.value("jobLogDir").toString().toStdString();
-    guiVals.uuid = settings.value("uuid").toString().toStdString();
+    guiVals.jobLogDir = settings.value("jobLogDir").toString();
+    guiVals.uuid = settings.value("uuid").toString();
     guiVals.maxTrialNum = settings.value("maxTrialNum").toULongLong();
     guiVals.unitWaitTime = settings.value("unitWaitTime").toULongLong();
     guiVals.minModifyTime = settings.value("minModifyTime").toULongLong();
     guiVals.maxModifyTime = settings.value("maxModifyTime").toULongLong();
     guiVals.maxWaitLoopNum = settings.value("maxWaitLoopNum").toULongLong();
-    guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString().toStdString();
-    guiVals.SlurmParam = settings.value("SlurmParam").toString().toStdString();
+    guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString();
+    guiVals.SlurmParam = settings.value("SlurmParam").toString();
 
     // ********* Read Crop Settings *********
 
@@ -644,15 +644,15 @@ void MainWindow::readSettings()
     for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
         cropDPaths.push_back(dataPath());
-        cropDPaths.at(i).masterPath = settings.value("cropDPathsimasterPath").toString().toStdString();
+        cropDPaths.at(i).masterPath = settings.value("cropDPathsimasterPath").toString();
         cropDPaths.at(i).includeMaster = settings.value("cropDPathsiincludeMaster").toBool();
-        cropDPaths.at(i).pattern = settings.value("cropDPathsipattern").toString().toStdString();
+        cropDPaths.at(i).pattern = settings.value("cropDPathsipattern").toString();
         cropDPaths.at(i).maxDepth = settings.value("cropDPathsimaxDepth").toInt();
     }
     settings.endArray();
 
     for(size_t i = 0; i < cropDPaths.size(); i++){
-        std::vector<std::string> subPaths;
+        std::vector<QString> subPaths;
         std::vector<bool> include;
 
         size = settings.beginReadArray("crop"+QString::number(i)+"bool");
@@ -665,7 +665,7 @@ void MainWindow::readSettings()
         size = settings.beginReadArray("crop"+QString::number(i)+"subPath");
         for(int j = 0; j < size; j++){
             settings.setArrayIndex(j);
-            subPaths.push_back(settings.value("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString().toStdString());
+            subPaths.push_back(settings.value("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString());
         }
         settings.endArray();
 
@@ -788,7 +788,7 @@ void MainWindow::on_submitButton_clicked()
     std::cout << "Amount of c " << std::endl;
     std::cout << "Amount of children found : " << widgetList.count() << std::endl;
     for(auto widget : widgetList){
-        if(widget->objectName().toStdString().find("CheckBox") != std::string::npos){
+        if(widget->objectName().toStdString().find("CheckBox") != QString::npos){
             std::cout << widget->objectName().toStdString() << std::endl;
         }
     }
@@ -803,18 +803,18 @@ void MainWindow::on_submitButton_clicked()
     // Error if data path does not exist when submit is pressed
     for(size_t i = 0; i < dPaths.size(); i++){
         if(dPaths.at(i).includeMaster){
-            if(!QFileInfo::exists(QString::fromStdString(dPaths.at(i).masterPath))){
+            if(!QFileInfo::exists(dPaths.at(i).masterPath)){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + dPaths.at(i).masterPath + "\" does not exist!"));
+                messageBox.warning(0,"Error","Data path \"" + dPaths.at(i).masterPath + "\" does not exist!");
                 messageBox.setFixedSize(500,200);
                 return;
             }
         }
         for (const auto &subPath : dPaths.at(i).subPaths){
             if(subPath.second.first){
-                if(!QFileInfo::exists(QString::fromStdString(subPath.second.second))){
+                if(!QFileInfo::exists(subPath.second.second)){
                     QMessageBox messageBox;
-                    messageBox.warning(0,"Error",QString::fromStdString("Data path \"" + subPath.second.second + "\" does not exist!"));
+                    messageBox.warning(0,"Error","Data path \"" + subPath.second.second + "\" does not exist!");
                     messageBox.setFixedSize(500,200);
                     return;
                 }
@@ -830,16 +830,16 @@ void MainWindow::on_submitButton_clicked()
         return;
     }
     else{
-        for(const std::string &path : psfFullPaths){
-            if(path.empty()){
+        for(const QString &path : psfFullPaths){
+            if(path.isEmpty()){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error",QString::fromStdString("One of the PSF paths is empty!"));
+                messageBox.warning(0,"Error","One of the PSF paths is empty!");
                 messageBox.setFixedSize(500,200);
                 return;
             }
-            else if(!QFileInfo::exists(QString::fromStdString(path))){
+            else if(!QFileInfo::exists(path)){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error",QString::fromStdString("Psf path \"" + path + "\" does not exist!"));
+                messageBox.warning(0,"Error","Psf path \"" + path + "\" does not exist!");
                 messageBox.setFixedSize(500,200);
                 return;
             }
@@ -868,19 +868,19 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
-    std::string mainPath = dPaths.at(0).masterPath+"/job_logs";
+    QString mainPath = dPaths.at(0).masterPath+"/job_logs";
 
     // Check for job log directory for main job
-    std::string jobLogCopy = guiVals.jobLogDir;
+    QString jobLogCopy = guiVals.jobLogDir;
     //if(ui->parseClusterCheckBox->isChecked()){
-    QDir dir(QString::fromStdString(guiVals.jobLogDir));
+    QDir dir(guiVals.jobLogDir);
     if (!dir.exists()){
-        QDir mDir(QString::fromStdString(mainPath));
+        QDir mDir(mainPath);
         if(!mDir.exists()){
             mDir.mkpath(".");
         }
         guiVals.jobLogDir = mainPath;
-        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir << " as the job log directory instead." << std::endl;
+        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
     }
     else mainPath = guiVals.jobLogDir;
     //}
@@ -893,12 +893,12 @@ void MainWindow::on_submitButton_clicked()
         unsigned long long numPaths = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
-                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()) numPaths++;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    QDirIterator it(subPath.second.second,QDir::Files);
                     if(it.hasNext()) numPaths++;
                 }
             }
@@ -907,21 +907,21 @@ void MainWindow::on_submitButton_clicked()
         size_t currPath = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
-                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
                 currPath++;
                 }
-                else std::cout << "WARNING: Data Path: " << path.masterPath << " not included because it contains no files. Continuing." << std::endl;
+                else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    QDirIterator it(subPath.second.second,QDir::Files);
                     if(it.hasNext()){
-                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
                         currPath++;
                     }
-                    else std::cout << "WARNING: Data Path: " << subPath.second.second << " not included because it contains no files. Continuing." << std::endl;
+                    else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
                 }
             }
         }
@@ -962,10 +962,10 @@ void MainWindow::on_submitButton_clicked()
         }
         // Use custom patterns
         else{
-            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
-            std::string pattern;
-            std::vector<std::string> patterns;
-            for(size_t i = 0; i < patternLine.size(); i++){
+            QString patternLine = ui->customPatternsLineEdit->text();
+            QString pattern;
+            std::vector<QString> patterns;
+            for(int i = 0; i < patternLine.size(); i++){
                 if(patternLine.at(i) == ','){
                     patterns.push_back(pattern);
                     pattern.clear();
@@ -979,7 +979,7 @@ void MainWindow::on_submitButton_clicked()
             matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
             for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns.at(i));
+                channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
             }
             data.push_back(channelPatterns);
         }
@@ -1050,34 +1050,33 @@ void MainWindow::on_submitButton_clicked()
 
         // Decon Advanced settings
 
-        if(!guiVals.cppDeconPath.empty()){
+        if(!guiVals.cppDeconPath.isEmpty()){
             data.push_back(factory.createCharArray("cppDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cppDeconPath));
+            data.push_back(factory.createCharArray(guiVals.cppDeconPath.toStdString()));
         }
-        if(!guiVals.loadModules.empty()){
+        if(!guiVals.loadModules.isEmpty()){
             data.push_back(factory.createCharArray("loadModules"));
-            data.push_back(factory.createCharArray(guiVals.loadModules));
+            data.push_back(factory.createCharArray(guiVals.loadModules.toStdString()));
         }
-        if(!guiVals.cudaDeconPath.empty()){
+        if(!guiVals.cudaDeconPath.isEmpty()){
             data.push_back(factory.createCharArray("cudaDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cudaDeconPath));
+            data.push_back(factory.createCharArray(guiVals.cudaDeconPath.toStdString()));
         }
-        if(!guiVals.OTFGENPath.empty()){
+        if(!guiVals.OTFGENPath.isEmpty()){
             data.push_back(factory.createCharArray("OTFGENPath"));
-            data.push_back(factory.createCharArray(guiVals.OTFGENPath));
+            data.push_back(factory.createCharArray(guiVals.OTFGENPath.toStdString()));
         }
 
         if(psfFullPaths.size()){
             data.push_back(factory.createCharArray("psfFullpaths"));
             matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
             for(size_t i = 0; i < psfFullPaths.size(); i++){
-                std::cout << psfFullPaths[i] << std::endl;
-                psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
+                psfMPaths[i] = factory.createCharArray(psfFullPaths[i].toStdString());
             }
             data.push_back(psfMPaths);
         }
         data.push_back(factory.createCharArray("RLMethod"));
-        data.push_back(factory.createCharArray(guiVals.RLMethod));
+        data.push_back(factory.createCharArray(guiVals.RLMethod.toStdString()));
 
         //----TESTING ERR THRESH VALS------
 
@@ -1115,14 +1114,14 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("largeFile"));
         data.push_back(factory.createScalar<bool>(guiVals.largeFile));
 
-        if(!guiVals.jobLogDir.empty()){
+        if(!guiVals.jobLogDir.isEmpty()){
             data.push_back(factory.createCharArray("jobLogDir"));
-            data.push_back(factory.createCharArray(guiVals.jobLogDir));
+            data.push_back(factory.createCharArray(guiVals.jobLogDir.toStdString()));
         }
 
-        if(!guiVals.uuid.empty()){
+        if(!guiVals.uuid.isEmpty()){
             data.push_back(factory.createCharArray("uuid"));
-            data.push_back(factory.createCharArray(guiVals.uuid));
+            data.push_back(factory.createCharArray(guiVals.uuid.toStdString()));
         }
 
         data.push_back(factory.createCharArray("maxTrialNum"));
@@ -1134,14 +1133,14 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("maxWaitLoopNum"));
         data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
 
-        if(!guiVals.MatlabLaunchStr.empty()){
+        if(!guiVals.MatlabLaunchStr.isEmpty()){
             data.push_back(factory.createCharArray("MatlabLaunchStr"));
-            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
+            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
         }
 
-        if(!guiVals.SlurmParam.empty()){
+        if(!guiVals.SlurmParam.isEmpty()){
             data.push_back(factory.createCharArray("SlurmParam"));
-            data.push_back(factory.createCharArray(guiVals.SlurmParam));
+            data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
         }
     }
     else{
@@ -1150,12 +1149,12 @@ void MainWindow::on_submitButton_clicked()
         unsigned long long numPaths = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
-                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()) numPaths++;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    QDirIterator it(subPath.second.second,QDir::Files);
                     if(it.hasNext()) numPaths++;
                 }
             }
@@ -1164,21 +1163,21 @@ void MainWindow::on_submitButton_clicked()
         size_t currPath = 0;
         for(const auto &path : dPaths){
             if(path.includeMaster){
-                QDirIterator it(QString::fromStdString(path.masterPath),QDir::Files);
+                QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath);
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
                 currPath++;
                 }
-                else std::cout << "WARNING: Data Path: " << path.masterPath << " not included because it contains no files. Continuing." << std::endl;
+                else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
             }
             for(const auto &subPath : path.subPaths){
                 if(subPath.second.first){
-                    QDirIterator it(QString::fromStdString(subPath.second.second),QDir::Files);
+                    QDirIterator it(subPath.second.second,QDir::Files);
                     if(it.hasNext()){
-                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second);
+                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
                         currPath++;
                     }
-                    else std::cout << "WARNING: Data Path: " << subPath.second.second << " not included because it contains no files. Continuing." << std::endl;
+                    else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
                 }
             }
         }
@@ -1225,10 +1224,10 @@ void MainWindow::on_submitButton_clicked()
         }
         // Use custom patterns
         else{
-            std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
-            std::string pattern;
-            std::vector<std::string> patterns;
-            for(size_t i = 0; i < patternLine.size(); i++){
+            QString patternLine = ui->customPatternsLineEdit->text();
+            QString pattern;
+            std::vector<QString> patterns;
+            for(int i = 0; i < patternLine.size(); i++){
                 if(patternLine.at(i) == ','){
                     patterns.push_back(pattern);
                     pattern.clear();
@@ -1242,7 +1241,7 @@ void MainWindow::on_submitButton_clicked()
             matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
             for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns.at(i));
+                channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
             }
             data.push_back(channelPatterns);
 
@@ -1332,7 +1331,7 @@ void MainWindow::on_submitButton_clicked()
             data.push_back(factory.createCharArray("LSImagePaths"));
             matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
             for(size_t i = 0; i < lsImagePaths.size(); i++){
-                lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i]);
+                lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i].toStdString());
             }
             data.push_back(lsImageMPaths);
         }
@@ -1341,7 +1340,7 @@ void MainWindow::on_submitButton_clicked()
             data.push_back(factory.createCharArray("BackgroundPaths"));
             matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
             for(size_t i = 0; i < backgroundPaths.size(); i++){
-                backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i]);
+                backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i].toStdString());
             }
             data.push_back(backgroundMPaths);
         }
@@ -1356,7 +1355,7 @@ void MainWindow::on_submitButton_clicked()
 
         // TODO: Update Resample
         data.push_back(factory.createCharArray("resampleType"));
-        data.push_back(factory.createCharArray(guiVals.resampleType));
+        data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
 
         if(guiVals.resample){
             data.push_back(factory.createCharArray("resample"));
@@ -1430,34 +1429,33 @@ void MainWindow::on_submitButton_clicked()
 
         // Decon Advanced settings
 
-        if(!guiVals.cppDeconPath.empty()){
+        if(!guiVals.cppDeconPath.isEmpty()){
             data.push_back(factory.createCharArray("cppDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cppDeconPath));
+            data.push_back(factory.createCharArray(guiVals.cppDeconPath.toStdString()));
         }
-        if(!guiVals.loadModules.empty()){
+        if(!guiVals.loadModules.isEmpty()){
             data.push_back(factory.createCharArray("loadModules"));
-            data.push_back(factory.createCharArray(guiVals.loadModules));
+            data.push_back(factory.createCharArray(guiVals.loadModules.toStdString()));
         }
-        if(!guiVals.cudaDeconPath.empty()){
+        if(!guiVals.cudaDeconPath.isEmpty()){
             data.push_back(factory.createCharArray("cudaDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cudaDeconPath));
+            data.push_back(factory.createCharArray(guiVals.cudaDeconPath.toStdString()));
         }
-        if(!guiVals.OTFGENPath.empty()){
+        if(!guiVals.OTFGENPath.isEmpty()){
             data.push_back(factory.createCharArray("OTFGENPath"));
-            data.push_back(factory.createCharArray(guiVals.OTFGENPath));
+            data.push_back(factory.createCharArray(guiVals.OTFGENPath.toStdString()));
         }
 
         if(psfFullPaths.size()){
             data.push_back(factory.createCharArray("psfFullpaths"));
             matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
             for(size_t i = 0; i < psfFullPaths.size(); i++){
-                std::cout << psfFullPaths[i] << std::endl;
-                psfMPaths[i] = factory.createCharArray(psfFullPaths[i]);
+                psfMPaths[i] = factory.createCharArray(psfFullPaths[i].toStdString());
             }
             data.push_back(psfMPaths);
         }
         data.push_back(factory.createCharArray("RLMethod"));
-        data.push_back(factory.createCharArray(guiVals.RLMethod));
+        data.push_back(factory.createCharArray(guiVals.RLMethod.toStdString()));
 
         data.push_back(factory.createCharArray("fixIter"));
         data.push_back(factory.createScalar<bool>(guiVals.fixIter));
@@ -1493,14 +1491,14 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("largeFile"));
         data.push_back(factory.createScalar<bool>(guiVals.largeFile));
 
-        if(!guiVals.jobLogDir.empty()){
+        if(!guiVals.jobLogDir.isEmpty()){
             data.push_back(factory.createCharArray("jobLogDir"));
-            data.push_back(factory.createCharArray(guiVals.jobLogDir));
+            data.push_back(factory.createCharArray(guiVals.jobLogDir.toStdString()));
         }
 
-        if(!guiVals.uuid.empty()){
+        if(!guiVals.uuid.isEmpty()){
             data.push_back(factory.createCharArray("uuid"));
-            data.push_back(factory.createCharArray(guiVals.uuid));
+            data.push_back(factory.createCharArray(guiVals.uuid.toStdString()));
         }
 
         data.push_back(factory.createCharArray("maxTrialNum"));
@@ -1518,28 +1516,28 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("maxWaitLoopNum"));
         data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
 
-        if(!guiVals.MatlabLaunchStr.empty()){
+        if(!guiVals.MatlabLaunchStr.isEmpty()){
             data.push_back(factory.createCharArray("MatlabLaunchStr"));
-            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr));
+            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
         }
 
-        if(!guiVals.SlurmParam.empty()){
+        if(!guiVals.SlurmParam.isEmpty()){
             data.push_back(factory.createCharArray("SlurmParam"));
-            data.push_back(factory.createCharArray(guiVals.SlurmParam));
+            data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
         }
     }
-    std::string funcType;
+    QString funcType;
 
     if(ui->deconOnlyCheckBox->isChecked()){
         funcType="DeconOnly";
     }
 
-    auto mPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text().toStdString(),ui->parseClusterCheckBox->isChecked());
+    auto mPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text(),ui->parseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
 
     size_t currJob = jobNames.size()+1;
-    jobNames.emplace(currJob,ui->jobNameLineEdit->text().toStdString());
+    jobNames.emplace(currJob,ui->jobNameLineEdit->text());
 
     QString currJobText = ui->jobNameLineEdit->text();
     if(currJobText.contains("Job ") && currJobText.back().isDigit()){
@@ -1925,7 +1923,7 @@ void MainWindow::on_addPathsButton_clicked()
     for(const auto &path : *addPathsDataPaths){
         if(path.includeMaster){
             // Looking for channel patterns in the given directory
-            QDirIterator cPath(QString::fromStdString(path.masterPath));
+            QDirIterator cPath(path.masterPath);
             QString c;
             QRegularExpression re("Cam\\w_ch\\d");
             QRegularExpressionMatch rmatch;
@@ -1942,7 +1940,7 @@ void MainWindow::on_addPathsButton_clicked()
         for(const auto &subPath : path.subPaths){
             if(subPath.second.first){
                 // Looking for channel patterns in the given directory
-                QDirIterator cPath(QString::fromStdString(subPath.second.second));
+                QDirIterator cPath(subPath.second.second);
                 QString c;
                 QRegularExpression re("Cam\\w_ch\\d");
                 QRegularExpressionMatch rmatch;
@@ -2079,11 +2077,11 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
         }
     }
     else{
-        std::string patternLine = ui->customPatternsLineEdit->text().toStdString();
-        std::string pattern;
-        for(size_t i = 0; i < patternLine.size(); i++){
+        QString patternLine = ui->customPatternsLineEdit->text();
+        QString pattern;
+        for(int i = 0; i < patternLine.size(); i++){
             if(patternLine.at(i) == ','){
-                channelNames.push_back(QString::fromStdString(pattern));
+                channelNames.push_back(pattern);
                 pattern.clear();
             }
             else{
@@ -2091,7 +2089,7 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
             }
         }
         if(pattern.size()){
-            channelNames.push_back(QString::fromStdString(pattern));
+            channelNames.push_back(pattern);
         }
     }
     dataPaths daPaths(psfFullPaths, false, mostRecentDir, channelNames);
@@ -2152,12 +2150,12 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    std::string mainPath = cropDPaths.at(0).masterPath;
+    QString mainPath = cropDPaths.at(0).masterPath;
 
 
 
     // Data Path
-    data.push_back(factory.createCharArray(mainPath));
+    data.push_back(factory.createCharArray(mainPath.toStdString()));
 
     // Result Path
     data.push_back(factory.createCharArray(ui->cropResultPathLineEdit->text().toStdString()));
@@ -2193,10 +2191,10 @@ void MainWindow::on_cropSubmitButton_clicked()
     }
     // Use custom patterns
     else{
-        std::string patternLine = ui->cropCustomPatternsLineEdit->text().toStdString();
-        std::string pattern;
-        std::vector<std::string> patterns;
-        for(size_t i = 0; i < patternLine.size(); i++){
+        QString patternLine = ui->cropCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
             if(patternLine.at(i) == ','){
                 patterns.push_back(pattern);
                 pattern.clear();
@@ -2210,7 +2208,7 @@ void MainWindow::on_cropSubmitButton_clicked()
         matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
         for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns.at(i));
+            channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
         }
         data.push_back(channelPatterns);
 
@@ -2253,10 +2251,10 @@ void MainWindow::on_cropSubmitButton_clicked()
         data.push_back(factory.createCharArray(ui->cropUuidLineEdit->text().toStdString()));
     }
 
-    std::string funcType = "crop";
+    QString funcType = "crop";
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text().toStdString(),ui->parseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text(),ui->parseClusterCheckBox->isChecked());
     emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 

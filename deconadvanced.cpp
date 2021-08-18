@@ -13,10 +13,10 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     gVals = &guiVals;
 
     // Set the vals in the window to the ones passed in
-    ui->cppDeconPathLineEdit->setText(QString::fromStdString(guiVals.cppDeconPath));
-    ui->loadModulesLineEdit->setText(QString::fromStdString(guiVals.loadModules));
-    ui->cudaDeconPathLineEdit->setText(QString::fromStdString(guiVals.cudaDeconPath));
-    ui->otfgenPathLineEdit->setText(QString::fromStdString(guiVals.OTFGENPath));
+    ui->cppDeconPathLineEdit->setText(guiVals.cppDeconPath);
+    ui->loadModulesLineEdit->setText(guiVals.loadModules);
+    ui->cudaDeconPathLineEdit->setText(guiVals.cudaDeconPath);
+    ui->otfgenPathLineEdit->setText(guiVals.OTFGENPath);
     if(guiVals.RLMethod == "original") ui->rlMethodOriginalRadioButton->setChecked(true);
     else if(guiVals.RLMethod == "simplified"){
         ui->rlMethodSimplifiedRadioButton->setChecked(true);
@@ -56,10 +56,10 @@ void deconAdvanced::on_cancelButton_clicked()
 // Close the window and save the current vals
 void deconAdvanced::on_submitButton_clicked()
 {
-    gVals->cppDeconPath = ui->cppDeconPathLineEdit->text().toStdString();
-    gVals->loadModules = ui->loadModulesLineEdit->text().toStdString();
-    gVals->cudaDeconPath = ui->cudaDeconPathLineEdit->text().toStdString();
-    gVals->OTFGENPath = ui->otfgenPathLineEdit->text().toStdString();
+    gVals->cppDeconPath = ui->cppDeconPathLineEdit->text();
+    gVals->loadModules = ui->loadModulesLineEdit->text();
+    gVals->cudaDeconPath = ui->cudaDeconPathLineEdit->text();
+    gVals->OTFGENPath = ui->otfgenPathLineEdit->text();
     if(ui->rlMethodOriginalRadioButton->isChecked()) gVals->RLMethod = "original";
     else if (ui->rlMethodSimplifiedRadioButton->isChecked()) gVals->RLMethod = "simplified";
     else if (ui->rlMethodCudaGenRadioButton->isChecked()) gVals->RLMethod = "cudagen";
