@@ -54,7 +54,7 @@ void jobAdvanced::on_submitButton_clicked()
 void jobAdvanced::on_jobLogDirBrowseButton_clicked()
 {
     QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Make and Select the Results Folder",QDir::homePath());
-    if(folder_path.absolutePath().toStdString() != "") ui->jobLogDirLineEdit->setText(folder_path.absolutePath());
+    if(!folder_path.absolutePath().isEmpty()) ui->jobLogDirLineEdit->setText(folder_path.absoluteFilePath());
 }
 
 void jobAdvanced::on_jobLogDirLineEdit_textChanged(const QString &arg1)

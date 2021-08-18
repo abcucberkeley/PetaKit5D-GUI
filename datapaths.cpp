@@ -166,14 +166,14 @@ void dataPaths::on_dataPathBrowseButton_clicked()
 
     if(folder){
         QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
-        if(folder_path.absoluteFilePath().toStdString() != ""){
+        if(!folder_path.absoluteFilePath().isEmpty()){
             currQLE->setText(folder_path.absoluteFilePath());
             *mostRecentDir = folder_path.absoluteFilePath();
         }
     }
     else{
         QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
-        if(file_path.absoluteFilePath().toStdString() != ""){
+        if(!file_path.absoluteFilePath().isEmpty()){
            currQLE->setText(file_path.absoluteFilePath());
             *mostRecentDir = file_path.absolutePath();
         }

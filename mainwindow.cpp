@@ -868,7 +868,10 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
-    QString mainPath = dPaths.at(0).masterPath+"/job_logs";
+    //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
+    QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
+    QString mainPath = dPaths.at(0).masterPath+"/job_logs/"+timeJobName;
 
     // Check for job log directory for main job
     QString jobLogCopy = guiVals.jobLogDir;
@@ -882,7 +885,13 @@ void MainWindow::on_submitButton_clicked()
         guiVals.jobLogDir = mainPath;
         std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
     }
-    else mainPath = guiVals.jobLogDir;
+    else{
+        mainPath = guiVals.jobLogDir+"/"+timeJobName;
+        QDir mDir(mainPath);
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+    }
     //}
 
     // Reset jobLogDir to what it was before at the end of this function
@@ -1373,7 +1382,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("imageListFullpaths"));
         data.push_back(factory.createCharArray(ui->imageListFullPathsLineEdit->text().toStdString()));
 
-        if(!ui->axisOrderLineEdit->text().toStdString().empty()){
+        if(!ui->axisOrderLineEdit->text().isEmpty()){
             data.push_back(factory.createCharArray("axisOrder"));
             data.push_back(factory.createCharArray(ui->axisOrderLineEdit->text().toStdString()));
         }
@@ -1532,7 +1541,7 @@ void MainWindow::on_submitButton_clicked()
         funcType="DeconOnly";
     }
 
-    auto mPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text(),ui->parseClusterCheckBox->isChecked());
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
 
@@ -1563,7 +1572,7 @@ void MainWindow::on_submitButton_clicked()
 void MainWindow::on_resultsDirBrowseButton_clicked()
 {
     QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Results Folder",mostRecentDir);
-    if(folder_path.baseName().toStdString() != ""){
+    if(!folder_path.baseName().isEmpty()){
         ui->resultsDirLineEdit->setText(folder_path.baseName());
         mostRecentDir = folder_path.absoluteFilePath();
     }
@@ -1974,7 +1983,7 @@ void MainWindow::on_addPathsButton_clicked()
 void MainWindow::on_imageListFullPathsBrowseButton_clicked()
 {
     QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Image List Full Paths File",mostRecentDir);
-    if(file_path.absoluteFilePath().toStdString() != ""){
+    if(!file_path.absoluteFilePath().isEmpty()){
         ui->imageListFullPathsLineEdit->setText(file_path.absoluteFilePath());
         mostRecentDir = file_path.absolutePath();
     }
@@ -2270,7 +2279,7 @@ void MainWindow::selectFolderPath(){
     }
 
     QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Folder",mostRecentDir);
-    if(folder_path.absoluteFilePath().toStdString() != ""){
+    if(!folder_path.absoluteFilePath().isEmpty()){
         result->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
     }

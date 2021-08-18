@@ -15,7 +15,7 @@ void matlabOutputThread::run(){
     QString jobFileName;
     // Collect string from matlab thread
     if(!std::get<2>(mPathJNameParseCluster)){
-        jobFileName = std::get<0>(mPathJNameParseCluster)+"/"+QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_")+std::get<1>(mPathJNameParseCluster)+".out";
+        jobFileName = std::get<0>(mPathJNameParseCluster)+"/"+std::get<1>(mPathJNameParseCluster)+".out";
         jobFileName.replace(" ", "_");
     }
     while(!jobFinished || nOut.size() != convertUTF16StringToUTF8String(output.get()->str()).size()){
