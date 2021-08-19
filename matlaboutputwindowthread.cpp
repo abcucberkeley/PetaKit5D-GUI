@@ -23,13 +23,13 @@ void matlabOutputWindowThread::run(){
 
                 if(QFileInfo(nFile).birthTime().isValid()){
                     if(path.second.second < QFileInfo(nFile).birthTime()){
-                        fNames.at(path.first).emplace(nFile,nFile);
+                        fNames[path.first].emplace(nFile,nFile);
                         existingPaths.emplace(nFile,nFile);
                     }
                 }
                 else{
                     if(path.second.second < QFileInfo(nFile).lastModified()){
-                        fNames.at(path.first).emplace(nFile,nFile);
+                        fNames[path.first].emplace(nFile,nFile);
                         existingPaths.emplace(nFile,nFile);
                     }
                 }

@@ -41,7 +41,7 @@ void matlabThreadManager::run(){
     jobLogPaths->emplace(mThreadID,std::make_pair(std::get<0>(mPathJNameParseCluster),QDateTime::currentDateTime()));
     outputLock->unlock();
 
-    mThreads.at(mThreadID)->start(QThread::TimeCriticalPriority);
+    mThreads[mThreadID]->start(QThread::TimeCriticalPriority);
 
 
 

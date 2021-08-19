@@ -54,15 +54,15 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<QString,QStrin
         buttons.emplace(path.first,std::make_pair(nBox,std::unordered_map<QString,QPushButton*>()));
         nBox.vBox->addStretch();
         }
-        else nBox = buttons.at(path.first).first;
+        else nBox = buttons[path.first].first;
 
         for(auto &subPath : path.second){
-           if(buttons.at(path.first).second.find(subPath.second) == buttons.at(path.first).second.end()){
+           if(buttons[path.first].second.find(subPath.second) == buttons[path.first].second.end()){
                QPushButton* button = new QPushButton(this);
                QFileInfo filePath(subPath.second);
                button->setText(filePath.fileName());
                button->setObjectName(filePath.absoluteFilePath());
-               buttons.at(path.first).second.emplace(button->objectName(),button);
+               buttons[path.first].second.emplace(button->objectName(),button);
                connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
                nBox.vBox->insertWidget(nBox.vBox->count()-1,button);
            }

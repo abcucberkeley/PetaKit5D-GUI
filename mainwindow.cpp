@@ -111,10 +111,10 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < dPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("dPathsimasterPath", dPaths.at(i).masterPath);
-        settings.setValue("dPathsiincludeMaster", dPaths.at(i).includeMaster);
-        settings.setValue("dPathsipattern", dPaths.at(i).pattern);
-        settings.setValue("dPathsimaxDepth", dPaths.at(i).maxDepth);
+        settings.setValue("dPathsimasterPath", dPaths[i].masterPath);
+        settings.setValue("dPathsiincludeMaster", dPaths[i].includeMaster);
+        settings.setValue("dPathsipattern", dPaths[i].pattern);
+        settings.setValue("dPathsimaxDepth", dPaths[i].maxDepth);
     }
     settings.endArray();
 
@@ -123,7 +123,7 @@ void MainWindow::writeSettings()
     {
         settings.beginWriteArray(QString::number(i)+"bool");
         unsigned int j = 0;
-        for(const auto &path : dPaths.at(i).subPaths){
+        for(const auto &path : dPaths[i].subPaths){
             settings.setArrayIndex(j);
             settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"booli",path.second.first);
             j++;
@@ -132,7 +132,7 @@ void MainWindow::writeSettings()
 
         settings.beginWriteArray(QString::number(i)+"subPath");
         j = 0;
-        for(const auto &path : dPaths.at(i).subPaths){
+        for(const auto &path : dPaths[i].subPaths){
             settings.setArrayIndex(j);
             settings.setValue("i"+QString::number(i)+"j"+QString::number(j)+"subPathi",path.second.second);
             j++;
@@ -219,7 +219,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < lsImagePaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("LSImagePathsi", lsImagePaths.at(i));
+        settings.setValue("LSImagePathsi", lsImagePaths[i]);
     }
     settings.endArray();
 
@@ -227,7 +227,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < backgroundPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("BackgroundPathsi", backgroundPaths.at(i));
+        settings.setValue("BackgroundPathsi", backgroundPaths[i]);
     }
     settings.endArray();
 
@@ -288,7 +288,7 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("psfFullpathsi", psfFullPaths.at(i));
+        settings.setValue("psfFullpathsi", psfFullPaths[i]);
     }
     settings.endArray();
 
@@ -321,10 +321,10 @@ void MainWindow::writeSettings()
     for(unsigned int i = 0; i < cropDPaths.size(); i++)
     {
         settings.setArrayIndex(i);
-        settings.setValue("cropDPathsimasterPath", cropDPaths.at(i).masterPath);
-        settings.setValue("cropDPathsiincludeMaster", cropDPaths.at(i).includeMaster);
-        settings.setValue("cropDPathsipattern", cropDPaths.at(i).pattern);
-        settings.setValue("cropDPathsimaxDepth", cropDPaths.at(i).maxDepth);
+        settings.setValue("cropDPathsimasterPath", cropDPaths[i].masterPath);
+        settings.setValue("cropDPathsiincludeMaster", cropDPaths[i].includeMaster);
+        settings.setValue("cropDPathsipattern", cropDPaths[i].pattern);
+        settings.setValue("cropDPathsimaxDepth", cropDPaths[i].maxDepth);
     }
     settings.endArray();
 
@@ -333,7 +333,7 @@ void MainWindow::writeSettings()
     {
         settings.beginWriteArray("crop"+QString::number(i)+"bool");
         unsigned int j = 0;
-        for(const auto &path : cropDPaths.at(i).subPaths){
+        for(const auto &path : cropDPaths[i].subPaths){
             settings.setArrayIndex(j);
             settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"booli",path.second.first);
             j++;
@@ -342,7 +342,7 @@ void MainWindow::writeSettings()
 
         settings.beginWriteArray("crop"+QString::number(i)+"subPath");
         j = 0;
-        for(const auto &path : cropDPaths.at(i).subPaths){
+        for(const auto &path : cropDPaths[i].subPaths){
             settings.setArrayIndex(j);
             settings.setValue("cropi"+QString::number(i)+"j"+QString::number(j)+"subPathi",path.second.second);
             j++;
@@ -412,10 +412,10 @@ void MainWindow::readSettings()
     for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
         dPaths.push_back(dataPath());
-        dPaths.at(i).masterPath = settings.value("dPathsimasterPath").toString();
-        dPaths.at(i).includeMaster = settings.value("dPathsiincludeMaster").toBool();
-        dPaths.at(i).pattern = settings.value("dPathsipattern").toString();
-        dPaths.at(i).maxDepth = settings.value("dPathsimaxDepth").toInt();
+        dPaths[i].masterPath = settings.value("dPathsimasterPath").toString();
+        dPaths[i].includeMaster = settings.value("dPathsiincludeMaster").toBool();
+        dPaths[i].pattern = settings.value("dPathsipattern").toString();
+        dPaths[i].maxDepth = settings.value("dPathsimaxDepth").toInt();
     }
     settings.endArray();
 
@@ -438,7 +438,7 @@ void MainWindow::readSettings()
         settings.endArray();
 
         for(int j = 0; j < size; j++){
-            dPaths.at(i).subPaths.emplace(subPaths.at(j),std::make_pair(include.at(j),subPaths.at(j)));
+            dPaths[i].subPaths.emplace(subPaths[j],std::make_pair(include[j],subPaths[j]));
         }
 
     }
@@ -644,10 +644,10 @@ void MainWindow::readSettings()
     for (int i = 0; i < size; i++){
         settings.setArrayIndex(i);
         cropDPaths.push_back(dataPath());
-        cropDPaths.at(i).masterPath = settings.value("cropDPathsimasterPath").toString();
-        cropDPaths.at(i).includeMaster = settings.value("cropDPathsiincludeMaster").toBool();
-        cropDPaths.at(i).pattern = settings.value("cropDPathsipattern").toString();
-        cropDPaths.at(i).maxDepth = settings.value("cropDPathsimaxDepth").toInt();
+        cropDPaths[i].masterPath = settings.value("cropDPathsimasterPath").toString();
+        cropDPaths[i].includeMaster = settings.value("cropDPathsiincludeMaster").toBool();
+        cropDPaths[i].pattern = settings.value("cropDPathsipattern").toString();
+        cropDPaths[i].maxDepth = settings.value("cropDPathsimaxDepth").toInt();
     }
     settings.endArray();
 
@@ -670,7 +670,7 @@ void MainWindow::readSettings()
         settings.endArray();
 
         for(int j = 0; j < size; j++){
-            cropDPaths.at(i).subPaths.emplace(subPaths.at(j),std::make_pair(include.at(j),subPaths.at(j)));
+            cropDPaths[i].subPaths.emplace(subPaths[j],std::make_pair(include[j],subPaths[j]));
         }
 
     }
@@ -802,15 +802,15 @@ void MainWindow::on_submitButton_clicked()
 
     // Error if data path does not exist when submit is pressed
     for(size_t i = 0; i < dPaths.size(); i++){
-        if(dPaths.at(i).includeMaster){
-            if(!QFileInfo::exists(dPaths.at(i).masterPath)){
+        if(dPaths[i].includeMaster){
+            if(!QFileInfo::exists(dPaths[i].masterPath)){
                 QMessageBox messageBox;
-                messageBox.warning(0,"Error","Data path \"" + dPaths.at(i).masterPath + "\" does not exist!");
+                messageBox.warning(0,"Error","Data path \"" + dPaths[i].masterPath + "\" does not exist!");
                 messageBox.setFixedSize(500,200);
                 return;
             }
         }
-        for (const auto &subPath : dPaths.at(i).subPaths){
+        for (const auto &subPath : dPaths[i].subPaths){
             if(subPath.second.first){
                 if(!QFileInfo::exists(subPath.second.second)){
                     QMessageBox messageBox;
@@ -871,7 +871,7 @@ void MainWindow::on_submitButton_clicked()
     //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
     QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
-    QString mainPath = dPaths.at(0).masterPath+"/job_logs/"+timeJobName;
+    QString mainPath = dPaths[0].masterPath+"/job_logs/"+timeJobName;
 
     // Check for job log directory for main job
     QString jobLogCopy = guiVals.jobLogDir;
@@ -975,12 +975,12 @@ void MainWindow::on_submitButton_clicked()
             QString pattern;
             std::vector<QString> patterns;
             for(int i = 0; i < patternLine.size(); i++){
-                if(patternLine.at(i) == ','){
+                if(patternLine[i] == ','){
                     patterns.push_back(pattern);
                     pattern.clear();
                 }
                 else{
-                    pattern.push_back(patternLine.at(i));
+                    pattern.push_back(patternLine[i]);
                 }
             }
             if(pattern.size()) patterns.push_back(pattern);
@@ -988,7 +988,7 @@ void MainWindow::on_submitButton_clicked()
             matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
             for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
+                channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
             }
             data.push_back(channelPatterns);
         }
@@ -1237,12 +1237,12 @@ void MainWindow::on_submitButton_clicked()
             QString pattern;
             std::vector<QString> patterns;
             for(int i = 0; i < patternLine.size(); i++){
-                if(patternLine.at(i) == ','){
+                if(patternLine[i] == ','){
                     patterns.push_back(pattern);
                     pattern.clear();
                 }
                 else{
-                    pattern.push_back(patternLine.at(i));
+                    pattern.push_back(patternLine[i]);
                 }
             }
             if(pattern.size()) patterns.push_back(pattern);
@@ -1250,7 +1250,7 @@ void MainWindow::on_submitButton_clicked()
             matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
             for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
+                channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
             }
             data.push_back(channelPatterns);
 
@@ -1545,8 +1545,9 @@ void MainWindow::on_submitButton_clicked()
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
 
+    // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
-    jobNames.emplace(currJob,ui->jobNameLineEdit->text());
+    jobNames.emplace(currJob,timeJobName);
 
     QString currJobText = ui->jobNameLineEdit->text();
     if(currJobText.contains("Job ") && currJobText.back().isDigit()){
@@ -2089,12 +2090,12 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
         QString patternLine = ui->customPatternsLineEdit->text();
         QString pattern;
         for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine.at(i) == ','){
+            if(patternLine[i] == ','){
                 channelNames.push_back(pattern);
                 pattern.clear();
             }
             else{
-                pattern.push_back(patternLine.at(i));
+                pattern.push_back(patternLine[i]);
             }
         }
         if(pattern.size()){
@@ -2159,7 +2160,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = cropDPaths.at(0).masterPath;
+    QString mainPath = cropDPaths[0].masterPath;
 
 
 
@@ -2204,12 +2205,12 @@ void MainWindow::on_cropSubmitButton_clicked()
         QString pattern;
         std::vector<QString> patterns;
         for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine.at(i) == ','){
+            if(patternLine[i] == ','){
                 patterns.push_back(pattern);
                 pattern.clear();
             }
             else{
-                pattern.push_back(patternLine.at(i));
+                pattern.push_back(patternLine[i]);
             }
         }
         if(pattern.size()) patterns.push_back(pattern);
@@ -2217,7 +2218,7 @@ void MainWindow::on_cropSubmitButton_clicked()
         matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
 
         for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns.at(i).toStdString());
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
         }
         data.push_back(channelPatterns);
 
