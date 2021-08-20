@@ -1,17 +1,25 @@
 #include "matlabthread.h"
 
-matlabThread::matlabThread(QObject *parent, const std::string &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, const std::string &mainPath, const unsigned int &mThreadID) :
-    QThread(parent), funcType(funcType), outA(outA), data(data), mainPath(mainPath), mThreadID(mThreadID)
+matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_t &outA, const std::vector<matlab::data::Array> &data, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
+    QThread(parent), mOutThread(nullptr), funcType(funcType), outA(outA), data(data), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID)
 {
 
 }
 
 matlabThread::~matlabThread(){
-    if(!mOutThread->isFinished()) mOutThread->terminate();
+    if(matlabPtr){
+        if(!mOutThread->isFinished()) {
+            mOutThread->terminate();
+        }
+    }
 }
 
 void matlabThread::run(){
     // Start matlab and add needed paths
+    bool jobSuccess = true;
+
+    // Try catch for matlab errors
+    try{
     matlabPtr = startMATLAB();
 
     // Check if Windows or Cluster then add Repo to the path
@@ -36,12 +44,12 @@ void matlabThread::run(){
 
     // Create string buffer for standard output
     std::shared_ptr<StringBuf> output = std::make_shared<StringBuf>();
-    mOutThread = new matlabOutputThread(this, output, mainPath,mThreadID);
+    mOutThread = new matlabOutputThread(this, output, mPathJNameParseCluster, mThreadID);
     connect(this, &matlabThread::jobFinish, mOutThread, &matlabOutputThread::onJobFinish);
     mOutThread->start(QThread::NormalPriority);
 
-    bool jobSuccess = true;
-    try{
+
+
     if (funcType == "crop"){
         matlabPtr->feval(u"XR_crop_dataset",outA,data,output);
     }
@@ -60,10 +68,16 @@ void matlabThread::run(){
     // Close MATLAB session by deleting the unique pointer (Still testing)
     matlabPtr.reset();
 
-    emit jobFinish(true);
-    mOutThread->wait();
+    if(matlabPtr){
+        emit jobFinish(true);
+        mOutThread->wait();
+    }
 
-    if(jobSuccess) std::cout << "Matlab Job " << mThreadID << " Finished" << std::endl;
-    else std::cout << "Matlab Job " << mThreadID << " has Failed. MATLAB EXCEPTION." << std::endl;
+    if(jobSuccess) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" Finished" << std::endl;
+    else{
+        //if(std::get<2>(mPathJNameParseCluster))
+        std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION." << std::endl;
+        //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+    }
 }
 

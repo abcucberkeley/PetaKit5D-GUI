@@ -13,14 +13,14 @@ class matlabOutputThread : public QThread
 {
     Q_OBJECT
 public:
-    matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, const std::string &mainPath, const unsigned int &mThreadID);
+    matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID);
     ~matlabOutputThread();
     void run();
 public slots:
     void onJobFinish(bool jobFinished);
 private:
     std::shared_ptr<StringBuf> output;
-    std::string mainPath;
+    std::tuple<QString, QString, bool> mPathJNameParseCluster;
     unsigned int mThreadID;
     bool jobFinished;
 };

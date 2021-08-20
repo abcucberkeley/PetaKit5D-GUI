@@ -18,19 +18,20 @@ public:
     ~matlabThreadManager();
     void run();
 public slots:
-    void onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, std::string &funcType, std::string &mainPath);
+    void onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
 signals:
     void enableSubmitButton();
-    void addOutputIDAndPath(const unsigned int mThreadID, const std::string mainPath);
+    void addOutputIDAndPath(const unsigned int mThreadID, const QString mainPath);
 private:
     std::unordered_map<unsigned int, matlabThread*> mThreads;
     std::unique_ptr<MATLABEngine> matlabPtr;
     matlab::data::ArrayFactory factory;
     QMutex *outputLock;
+    std::tuple<QString, QString, bool> mPathJNameParseCluster;
+    std::unordered_map<int,std::pair<QString,QDateTime>> *jobLogPaths;
     size_t outA;
     std::vector<matlab::data::Array> data;
-    std::string funcType;
-    std::string mainPath;
+    QString funcType;
 
 };
 

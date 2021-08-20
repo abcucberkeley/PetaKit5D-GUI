@@ -1,6 +1,8 @@
 #ifndef DATAPATH_H
 #define DATAPATH_H
 #include <unordered_map>
+#include <QString>
+#include <QHash>
 
 // Class used to store a data path. A data path consists of:
 // A masterPath
@@ -11,18 +13,19 @@
 // for subDirs
 // An unordered map that contains a list of subPaths and whether or not they
 // are currently going to be submitted for a job.
+
 class dataPath
 {
 public:
     dataPath();
-    dataPath(std::string masterPath, bool includeMaster, std::string pattern, int maxDepth, std::unordered_map<std::string,std::pair<bool, std::string>> subPaths);
+    dataPath(QString masterPath, bool includeMaster, QString pattern, int maxDepth, std::unordered_map<QString,std::pair<bool, QString>> subPaths);
     bool operator<(const dataPath &dPath);
 
-    std::string masterPath;
+    QString masterPath;
     bool includeMaster;
-    std::string pattern;
+    QString pattern;
     int maxDepth;
-    std::unordered_map<std::string,std::pair<bool, std::string>> subPaths;
+    std::unordered_map<QString,std::pair<bool, QString>> subPaths;
 
 /*private:
     size_t numPaths;*/

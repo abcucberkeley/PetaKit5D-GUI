@@ -8,7 +8,7 @@ dataPath::dataPath()
 }
 
 // Constructor to allow custom input
-dataPath::dataPath(std::string masterPath, bool includeMaster, std::string pattern, int maxDepth, std::unordered_map<std::string,std::pair<bool, std::string>> subPaths) :
+dataPath::dataPath(QString masterPath, bool includeMaster, QString pattern, int maxDepth, std::unordered_map<QString,std::pair<bool, QString>> subPaths) :
     masterPath(masterPath), includeMaster(includeMaster), pattern(pattern), maxDepth(maxDepth), subPaths(subPaths)
 
 {

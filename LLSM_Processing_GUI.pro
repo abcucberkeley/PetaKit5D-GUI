@@ -4,7 +4,7 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 0.1.0.0
+VERSION = 0.2.1.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 MATLAB_VER_WIN = R2020b
@@ -21,6 +21,7 @@ HEADERS += \
            deconadvanced.h \
            dsradvanced.h \
            jobadvanced.h \
+           jobtext.h \
            mainadvanced.h \
            mainwindow.h \
            matlaboutputthread.h \
@@ -28,7 +29,8 @@ HEADERS += \
            matlaboutputwindowthread.h \
            matlabthread.h \
            matlabthreadmanager.h \
-           loadprevioussettings.h
+           loadprevioussettings.h \
+           outputbox.h
 
 FORMS += \
          datapaths.ui \
@@ -36,6 +38,7 @@ FORMS += \
          deconadvanced.ui \
          dsradvanced.ui \
          jobadvanced.ui \
+         jobtext.ui \
          mainadvanced.ui \
          mainwindow.ui \
          matlaboutputwindow.ui \
@@ -48,6 +51,7 @@ SOURCES += \
            deconadvanced.cpp \
            dsradvanced.cpp \
            jobadvanced.cpp \
+           jobtext.cpp \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
@@ -56,9 +60,18 @@ SOURCES += \
            matlaboutputwindowthread.cpp \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
-           loadprevioussettings.cpp
+           loadprevioussettings.cpp \
+           outputbox.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
+
+# remove possible other optimization flags
+QMAKE_CXXFLAGS_RELEASE -= -O
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+
+# add the desired -O3 if not present
+QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {
 LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \
