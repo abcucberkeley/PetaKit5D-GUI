@@ -7,7 +7,7 @@ matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_
 }
 
 matlabThread::~matlabThread(){
-    if(matlabPtr){
+    if(mOutThread){
         if(!mOutThread->isFinished()) {
             mOutThread->terminate();
         }
@@ -68,7 +68,7 @@ void matlabThread::run(){
     // Close MATLAB session by deleting the unique pointer (Still testing)
     matlabPtr.reset();
 
-    if(matlabPtr){
+    if(mOutThread){
         emit jobFinish(true);
         mOutThread->wait();
     }
