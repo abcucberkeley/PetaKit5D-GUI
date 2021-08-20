@@ -12,16 +12,17 @@ dataPathsRecursive::dataPathsRecursive(dataPath &currPaths, QWidget *parent) :
     this->currPath = currPaths.masterPath;
     this->maxDepth = currPaths.maxDepth;
 
-    if(currPath.isEmpty()){
-        return;
-    }
+    // Normalize files names with / and count them to get our depth
     QString currPathQ = currPath;
     currPathQ.replace('\\','/');
     while(currPathQ.back() == '/') currPathQ.chop(1);
     int currPathDepth = currPathQ.count('/');
     QDirIterator it(currPathQ,{QDir::NoDotAndDotDot,QDir::Dirs},QDirIterator::Subdirectories);
 
+    // Add a spacer item to bring boxes to the top of the layout
     ui->dataPathsRecursiveVerticalLayout->addStretch();
+
+    // Grab all file paths within our depth range
     int i = 0;
     while(it.hasNext()){
         QString checkString = it.next();
@@ -62,7 +63,7 @@ void dataPathsRecursive::makeNewPath(int i, QString currPath){
     QCheckBox* QCB = new QCheckBox(this);
     QCB->setObjectName(QString("dataPathRecursiveCheckBox")+QString::number(i));
     if(currPaths->find(currPath) != currPaths->end()){
-        QCB->setChecked(currPaths->at(currPath).first);
+        QCB->setChecked(currPaths->operator[](currPath).first);
     }
     //connect(QCB,&QCheckBox::stateChanged,this,&dataPaths::on_dataPathCheckBox_stateChanged);
     QHBox->addWidget(QCB);
@@ -111,7 +112,7 @@ void dataPathsRecursive::on_submitButton_clicked()
     for(const auto &path : paths){
         if(currPaths->find(std::get<3>(path)->text()) == currPaths->end()) currPaths->emplace(std::get<3>(path)->text(),std::make_pair(std::get<2>(path)->isChecked(),std::get<3>(path)->text()));
         else{
-            currPaths->at(std::get<3>(path)->text()).first = std::get<2>(path)->isChecked();
+            currPaths->operator[](std::get<3>(path)->text()).first = std::get<2>(path)->isChecked();
         }
     }
     dataPathsRecursive::close();

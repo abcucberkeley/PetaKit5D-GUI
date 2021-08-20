@@ -72,7 +72,7 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<QString,QStrin
         nBox.container->setLayout(nBox.vBox);
         nBox.scrollArea->setWidget(nBox.container);
 
-        mainBox.vBox->addWidget(new QLabel("<b>"+jobNames->at(path.first)+"</b>",this));
+        mainBox.vBox->addWidget(new QLabel("<b>"+jobNames->operator[](path.first)+"</b>",this));
         mainBox.vBox->addWidget(nBox.scrollArea);
         }
     }

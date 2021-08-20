@@ -918,8 +918,8 @@ void MainWindow::on_submitButton_clicked()
             if(path.includeMaster){
                 QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
+                    dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                    currPath++;
                 }
                 else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
             }
@@ -1174,8 +1174,8 @@ void MainWindow::on_submitButton_clicked()
             if(path.includeMaster){
                 QDirIterator it(path.masterPath,QDir::Files);
                 if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
+                    dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                    currPath++;
                 }
                 else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
             }

@@ -18,14 +18,14 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
     dpHand = &dPaths;
 
     for(size_t i = 0; i < dpHand->size(); i++){
-        currPaths.emplace(dpHand->at(i).masterPath,dpHand->at(i));
+        currPaths.emplace(dpHand->operator[](i).masterPath,dpHand->operator[](i));
     }
     connect(ui->addPathButton,&QPushButton::clicked,this,&dataPaths::on_dataPathAddPathButton_clicked);
     connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clicked);
 
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < dPaths.size(); i++){
-        makeNewPath(i,dpHand->at(i));
+        makeNewPath(i,dpHand->operator[](i));
     }
 
 }
@@ -174,7 +174,7 @@ void dataPaths::on_dataPathBrowseButton_clicked()
     else{
         QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
         if(!file_path.absoluteFilePath().isEmpty()){
-           currQLE->setText(file_path.absoluteFilePath());
+            currQLE->setText(file_path.absoluteFilePath());
             *mostRecentDir = file_path.absolutePath();
         }
     }
@@ -259,7 +259,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     // Add the text box
     QLineEdit* QLE = new QLineEdit(this);
     if(!psf && !otherData) QLE->setText(currPath.masterPath);
-    else if(size_t(i) < dataHand->size() && !dataHand->at(i).isEmpty()) QLE->setText(dataHand->at(i));
+    else if(size_t(i) < dataHand->size() && !dataHand->operator[](i).isEmpty()) QLE->setText(dataHand->operator[](i));
     QLE->setMinimumWidth(150);
     connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
     QHBox->addWidget(QLE);
