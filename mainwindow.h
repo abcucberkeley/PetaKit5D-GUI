@@ -6,6 +6,7 @@
 #include "datapath.h"
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
+#include "datapathcheck.h"
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QFileDialog>

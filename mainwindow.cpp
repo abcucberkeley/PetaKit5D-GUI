@@ -795,8 +795,52 @@ void MainWindow::on_submitButton_clicked()
     return;
     */
 
+    // Testing data path check form
+    std::vector<QString> patterns;
+    if(!ui->customPatternsCheckBox->isChecked()){
+        if(channelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < channelWidgets.size(); i++){
+                if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            patterns.resize(indexes.size());
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(channelWidgets[i].first->text());
+
+                patterns[cpi] = toPlain.toPlainText();
+                cpi++;
+            }
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->customPatternsLineEdit->text();
+        QString pattern;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+    }
+    dataPathCheck dPC(dPaths,patterns,ui->dzLineEdit->text());
+    dPC.setModal(true);
+    dPC.exec();
+    return;
+
     // Save settings in case of crash
     writeSettings();
+
 
     // TODO: Seperate functions for error checking
 

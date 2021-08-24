@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dataPathCheck</class>
+ <widget class="QDialog" name="dataPathCheck">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Check Data Paths</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="8,1">
+   <item>
+    <layout class="QVBoxLayout" name="mainVerticalLayout"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="submitButtonsHorizontalLayout">
+     <item>
+      <widget class="QPushButton" name="cancelPushButton">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="submitPushButton">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Submit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
