@@ -114,6 +114,7 @@ protected:
 private:
     void writeSettings();
     void readSettings();
+    void submitSettings(bool checkDataPaths);
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
     matlabOutputWindowThread *mOutputWindowThread;

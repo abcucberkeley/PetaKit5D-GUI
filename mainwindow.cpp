@@ -796,6 +796,7 @@ void MainWindow::on_submitButton_clicked()
     */
 
     // Testing data path check form
+    if(ui->checkDataPathsCheckBox->isChecked()){
     std::vector<QString> patterns;
     if(!ui->customPatternsCheckBox->isChecked()){
         if(channelWidgets.size()){
@@ -837,6 +838,7 @@ void MainWindow::on_submitButton_clicked()
     dPC.setModal(true);
     dPC.exec();
     return;
+    }
 
     // Save settings in case of crash
     writeSettings();
@@ -895,6 +897,10 @@ void MainWindow::on_submitButton_clicked()
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
+    submitSettings(false);
+}
+
+void MainWindow::submitSettings(bool checkDataPaths){
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
 
@@ -1609,8 +1615,6 @@ void MainWindow::on_submitButton_clicked()
 
     // Reset jobLogDir
     guiVals.jobLogDir = jobLogCopy;
-
-
 }
 
 // Browse for Result Dir Folder
