@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(ui->tabWidget);
 
     // Matlab Threading and connecting signals/slots
-    mThreadManager = new matlabThreadManager(outputLock,this);
+    mThreadManager = new matlabThreadManager(jobLogPaths,outputLock,this);
     connect(this, &MainWindow::jobStart, mThreadManager, &matlabThreadManager::onJobStart);
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
@@ -897,10 +897,13 @@ void MainWindow::on_submitButton_clicked()
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
-    submitSettings(false);
+    matlabJobSettings submission = submitSettings(false,ui->dzLineEdit->text());
+    //QString test = std::get<0>(submission.mPathJNameParseCluster);
+    //qDebug() << test;
+    emit jobStart(submission);
 }
 
-void MainWindow::submitSettings(bool checkDataPaths){
+matlabJobSettings MainWindow::submitSettings(bool checkDataPaths, QString dz){
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
 
@@ -1050,7 +1053,7 @@ void MainWindow::submitSettings(bool checkDataPaths){
         data.push_back(factory.createScalar<double>(guiVals.skewAngle));
 
         data.push_back(factory.createCharArray("dz"));
-        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+        data.push_back(factory.createScalar<double>(dz.toDouble()));
 
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
@@ -1313,7 +1316,7 @@ void MainWindow::submitSettings(bool checkDataPaths){
         data.push_back(factory.createScalar<double>(guiVals.skewAngle));
 
         data.push_back(factory.createCharArray("dz"));
-        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+        data.push_back(factory.createScalar<double>(dz.toDouble()));
 
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
@@ -1593,7 +1596,7 @@ void MainWindow::submitSettings(bool checkDataPaths){
 
     auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
+    //emit jobStart(outA, data, funcType, mPJNPC);
 
     // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
@@ -1615,6 +1618,8 @@ void MainWindow::submitSettings(bool checkDataPaths){
 
     // Reset jobLogDir
     guiVals.jobLogDir = jobLogCopy;
+
+    return matlabJobSettings(outA,data,funcType,mPJNPC);
 }
 
 // Browse for Result Dir Folder
@@ -2313,7 +2318,7 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text(),ui->parseClusterCheckBox->isChecked());
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(matlabJobSettings(outA, data, funcType,cMPJNPC));
 }
 
 void MainWindow::selectFolderPath(){

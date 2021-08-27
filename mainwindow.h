@@ -7,6 +7,7 @@
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include "datapathcheck.h"
+#include "matlabjobsettings.h"
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QFileDialog>
@@ -106,7 +107,7 @@ public:
 public slots:
     void onEnableSubmitButton();
 signals:
-    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
+    void jobStart(const matlabJobSettings &newJob);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -114,7 +115,7 @@ protected:
 private:
     void writeSettings();
     void readSettings();
-    void submitSettings(bool checkDataPaths);
+    matlabJobSettings submitSettings(bool checkDataPaths, QString dz);
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
     matlabOutputWindowThread *mOutputWindowThread;

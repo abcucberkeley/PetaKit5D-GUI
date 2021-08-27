@@ -5,8 +5,8 @@
 
 
 // Object that creates this thread is the parent
-matlabThreadManager::matlabThreadManager(QMutex &outputLock, QObject *parent) :
-    QThread(parent), outputLock(&outputLock), jobLogPaths(nullptr), outA(1)
+matlabThreadManager::matlabThreadManager(std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, QMutex &outputLock, QObject *parent) :
+    QThread(parent), outputLock(&outputLock), jobLogPaths(&jobLogPaths)
 {
 
 }
@@ -28,17 +28,17 @@ void matlabThreadManager::run(){
     std::cout << "Ready for new job!" << std::endl;
     outputLock->unlock();
 
-    // Once outA is set to 0, we can create a new matlab thread for the job
-    while(outA){
+    // When the job queue is not empty, we can create a new matlab thread for the job
+    while(jobQueue.empty()){
         sleep(1);
     }
 
     // Create new matlab thread
-    mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, data, mPathJNameParseCluster, mThreadID));
+    mThreads.emplace(mThreadID, new matlabThread(this, jobQueue.front().funcType, jobQueue.front().outA, jobQueue.front().data, jobQueue.front().mPathJNameParseCluster, mThreadID));
 
     outputLock->lock();
-    std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" Submitted" << std::endl;
-    jobLogPaths->emplace(mThreadID,std::make_pair(std::get<0>(mPathJNameParseCluster),QDateTime::currentDateTime()));
+    std::cout << "Matlab Job \"" << std::get<1>(jobQueue.front().mPathJNameParseCluster).toStdString() << "\" Submitted" << std::endl;
+    jobLogPaths->emplace(mThreadID,std::make_pair(std::get<0>(jobQueue.front().mPathJNameParseCluster),QDateTime::currentDateTime()));
     outputLock->unlock();
 
     mThreads[mThreadID]->start(QThread::TimeCriticalPriority);
@@ -49,20 +49,20 @@ void matlabThreadManager::run(){
     //emit addOutputIDAndPath(mThreadID, mainPath);
 
     mThreadID++;
-    outA = 1;
-    data.clear();
+    jobQueueLock.lock();
+    jobQueue.pop_front();
+    jobQueueLock.unlock();
+
     emit enableSubmitButton();
     }
 
 }
 
 // Sets data and outA (given by the GUI signal) when a job is about to start. This will let the MATLAB thread instantly start that job.
-void matlabThreadManager::onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths){
+void matlabThreadManager::onJobStart(const matlabJobSettings &newJob){
     std::cout << "Starting job" << std::endl;
-    this->data = std::move(data);
-    this->funcType = std::move(funcType);
-    this->mPathJNameParseCluster = std::move(mPathJNameParseCluster);
-    if(!this->jobLogPaths) this->jobLogPaths = &jobLogPaths;
-    this->outA = std::move(outA);
+    jobQueueLock.lock();
+    jobQueue.push_back(newJob);
+    jobQueueLock.unlock();
 }
 

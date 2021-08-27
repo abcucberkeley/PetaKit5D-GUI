@@ -25,6 +25,7 @@ HEADERS += \
            jobtext.h \
            mainadvanced.h \
            mainwindow.h \
+           matlabjobsettings.h \
            matlaboutputthread.h \
            matlaboutputwindow.h \
            matlaboutputwindowthread.h \
@@ -58,6 +59,7 @@ SOURCES += \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
+           matlabjobsettings.cpp \
            matlaboutputthread.cpp \
            matlaboutputwindow.cpp \
            matlaboutputwindowthread.cpp \
