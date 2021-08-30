@@ -1,9 +1,11 @@
 #include "datapathcheck.h"
 #include "ui_datapathcheck.h"
 
-dataPathCheck::dataPathCheck(const std::vector<dataPath> &dPaths, const std::vector<QString> &patterns, const QString stepSize, QWidget *parent) :
+dataPathCheck::dataPathCheck(std::unordered_map<QString,std::vector<dataPath>>& jobSplitter, const std::vector<dataPath> &dPaths, const std::vector<QString> &patterns, const QString stepSize, bool &cancel, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::dataPathCheck)
+    ui(new Ui::dataPathCheck),
+    jobSplitter(&jobSplitter),
+    cancel(&cancel)
 {
     ui->setupUi(this);
 
@@ -77,6 +79,7 @@ dataPathCheck::~dataPathCheck()
 {
     delete ui;
 }
+
 /*
 void dataPathCheck::makeNewPathName(const QString &pathName){
     QHBoxLayout* nHBox = new QHBoxLayout(this);
@@ -107,6 +110,8 @@ void dataPathCheck::makeNewPath(const QString &dPathName, const QString &stepSiz
     stepSizeLineEdit->setMaximumWidth(40);
     stepSizeLineEdit->setText(stepSize);
     nHBox->addWidget(stepSizeLineEdit);
+
+    lineEdits.push_back(std::make_pair(dataPathLineEdit,stepSizeLineEdit));
 }
 
 
@@ -115,12 +120,20 @@ void dataPathCheck::makeNewPath(const QString &dPathName, const QString &stepSiz
 
 void dataPathCheck::on_cancelPushButton_clicked()
 {
+    *cancel = true;
     dataPathCheck::close();
 }
 
 
 void dataPathCheck::on_submitPushButton_clicked()
 {
+    jobSplitter->clear();
+    for(auto &lE : lineEdits){
+        if(jobSplitter->find(lE.second->text()) == jobSplitter->end()){
+            jobSplitter->emplace(lE.second->text(),std::vector<dataPath>());
+        }
+        jobSplitter->operator[](lE.second->text()).push_back(dataPath(lE.first->text(),true,QString(),1,std::unordered_map<QString,std::pair<bool, QString>>()));
+    }
     dataPathCheck::close();
 }
 

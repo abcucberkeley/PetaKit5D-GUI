@@ -18,7 +18,7 @@ class dataPathCheck : public QDialog
     Q_OBJECT
 
 public:
-    explicit dataPathCheck(const std::vector<dataPath> &dPaths, const std::vector<QString> &patterns, const QString stepSize, QWidget *parent = nullptr);
+    explicit dataPathCheck(std::unordered_map<QString,std::vector<dataPath>>& jobSplitter, const std::vector<dataPath> &dPaths, const std::vector<QString> &patterns, const QString stepSize, bool &cancel, QWidget *parent = nullptr);
     ~dataPathCheck();
 
 private slots:
@@ -32,6 +32,9 @@ private:
 
     Ui::dataPathCheck *ui;
     outputBox mainBox;
+    std::vector<std::pair<QLineEdit*,QLineEdit*>> lineEdits;
+    std::unordered_map<QString,std::vector<dataPath>> *jobSplitter;
+    bool *cancel;
     //std::vector<dataPath> *dPaths;
 };
 

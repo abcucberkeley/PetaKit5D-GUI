@@ -795,6 +795,9 @@ void MainWindow::on_submitButton_clicked()
     return;
     */
 
+    // Save settings in case of crash
+    writeSettings();
+
     // Testing data path check form
     if(ui->checkDataPathsCheckBox->isChecked()){
     std::vector<QString> patterns;
@@ -834,15 +837,16 @@ void MainWindow::on_submitButton_clicked()
         }
         if(pattern.size()) patterns.push_back(pattern);
     }
-    dataPathCheck dPC(dPaths,patterns,ui->dzLineEdit->text());
+    bool cancel = false;
+    dataPathCheck dPC(jobSplitter,dPaths,patterns,ui->dzLineEdit->text(),cancel);
     dPC.setModal(true);
     dPC.exec();
+    if(cancel) return;
+    for(auto &job : jobSplitter){
+        emit jobStart(submitSettings(job.first,job.second));
+    }
     return;
     }
-
-    // Save settings in case of crash
-    writeSettings();
-
 
     // TODO: Seperate functions for error checking
 
@@ -897,13 +901,13 @@ void MainWindow::on_submitButton_clicked()
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
-    matlabJobSettings submission = submitSettings(false,ui->dzLineEdit->text());
+    //matlabJobSettings submission = submitSettings(false,ui->dzLineEdit->text());
     //QString test = std::get<0>(submission.mPathJNameParseCluster);
     //qDebug() << test;
-    emit jobStart(submission);
+    emit jobStart(submitSettings(ui->dzLineEdit->text(),dPaths));
 }
 
-matlabJobSettings MainWindow::submitSettings(bool checkDataPaths, QString dz){
+matlabJobSettings MainWindow::submitSettings(QString dz, std::vector<dataPath> dPaths){
     // We need this to convert C++ vars to MATLAB vars
     matlab::data::ArrayFactory factory;
 
@@ -921,8 +925,7 @@ matlabJobSettings MainWindow::submitSettings(bool checkDataPaths, QString dz){
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
-    //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
-    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
     QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
     QString mainPath = dPaths[0].masterPath+"/job_logs/"+timeJobName;
 

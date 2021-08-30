@@ -115,13 +115,14 @@ protected:
 private:
     void writeSettings();
     void readSettings();
-    matlabJobSettings submitSettings(bool checkDataPaths, QString dz);
+    matlabJobSettings submitSettings(QString dz, std::vector<dataPath> dPaths);
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
     matlabOutputWindowThread *mOutputWindowThread;
     QMutex outputLock;
     GUIvals guiVals;
     std::vector<dataPath> dPaths;
+    std::unordered_map<QString,std::vector<dataPath>> jobSplitter;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
     std::vector<dataPath> cropDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
