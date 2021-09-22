@@ -15,6 +15,12 @@ mainAdvanced::mainAdvanced(GUIvals& guiVals, QWidget *parent) :
     ui->xyPixelSizeSpinBox->setValue(guiVals.xyPixelSize);
     ui->reverseCheckBox->setChecked(guiVals.Reverse);
     ui->sCMOSCameraFlipCheckBox->setChecked(guiVals.sCMOSCameraFlip);
+    ui->resampleTypeComboBox->setCurrentText(guiVals.resampleType);
+    ui->resampleEnabledCheckBox->setChecked(guiVals.resampleEnabled);
+    ui->resampleYSpinBox->setValue(guiVals.resample[0]);
+    ui->resampleXSpinBox->setValue(guiVals.resample[1]);
+    ui->resampleZSpinBox->setValue(guiVals.resample[2]);
+
 }
 
 mainAdvanced::~mainAdvanced()
@@ -35,5 +41,21 @@ void mainAdvanced::on_submitButton_clicked()
     gVals->xyPixelSize = ui->xyPixelSizeSpinBox->value();
     gVals->Reverse = ui->reverseCheckBox->isChecked();
     gVals->sCMOSCameraFlip = ui->sCMOSCameraFlipCheckBox->isChecked();
+    gVals->resampleType = ui->resampleTypeComboBox->currentText();
+    gVals->resampleEnabled = ui->resampleEnabledCheckBox->isChecked();
+    gVals->resample[0] = ui->resampleYSpinBox->value();
+    gVals->resample[1] = ui->resampleXSpinBox->value();
+    gVals->resample[2] = ui->resampleZSpinBox->value();
     mainAdvanced::close();
 }
+
+void mainAdvanced::on_resampleEnabledCheckBox_stateChanged(int arg1)
+{
+   ui->resampleYLabel->setEnabled(arg1);
+   ui->resampleYSpinBox->setEnabled(arg1);
+   ui->resampleXLabel->setEnabled(arg1);
+   ui->resampleXSpinBox->setEnabled(arg1);
+   ui->resampleZLabel->setEnabled(arg1);
+   ui->resampleZSpinBox->setEnabled(arg1);
+}
+

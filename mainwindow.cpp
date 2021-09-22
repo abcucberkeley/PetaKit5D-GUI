@@ -175,6 +175,7 @@ void MainWindow::writeSettings()
 
     settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
+    settings.setValue("dzFromEncoder",ui->dzFromEncoderCheckBox->isChecked());
     settings.setValue("xyPixelSize",guiVals.xyPixelSize);
     settings.setValue("Reverse",guiVals.Reverse);
     settings.setValue("objectiveScan",ui->objectiveScanCheckBox->isChecked());
@@ -236,7 +237,10 @@ void MainWindow::writeSettings()
     settings.setValue("BKRemoval",guiVals.BKRemoval);
     settings.setValue("LowerLimit",guiVals.LowerLimit);
     settings.setValue("resampleType",guiVals.resampleType);
-    settings.setValue("resample",QVariant::fromValue(guiVals.resample));
+    settings.setValue("resampleEnabled",guiVals.resampleEnabled);
+    settings.setValue("resampleY",QVariant::fromValue(guiVals.resample[0]));
+    settings.setValue("resampleX",QVariant::fromValue(guiVals.resample[1]));
+    settings.setValue("resampleZ",QVariant::fromValue(guiVals.resample[2]));
 
     // Save Stitch Settings
 
@@ -499,6 +503,7 @@ void MainWindow::readSettings()
 
     guiVals.skewAngle = settings.value("skewAngle").toDouble();
     ui->dzLineEdit->setText(settings.value("dz").toString());
+    ui->dzFromEncoderCheckBox->setChecked(settings.value("dzFromEncoder").toBool());
     guiVals.xyPixelSize = settings.value("xyPixelSize").toDouble();
     guiVals.Reverse = settings.value("Reverse").toBool();
     ui->objectiveScanCheckBox->setChecked(settings.value("objectiveScan").toBool());
@@ -559,7 +564,10 @@ void MainWindow::readSettings()
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
     guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
     guiVals.resampleType = settings.value("resampleType").toString();
-    guiVals.resample = settings.value("resample").toULongLong();
+    guiVals.resampleEnabled =settings.value("resampleEnabled").toBool();
+    guiVals.resample[0] = settings.value("resampleY").toDouble();
+    guiVals.resample[1] = settings.value("resampleX").toDouble();
+    guiVals.resample[2] = settings.value("resampleZ").toDouble();
 
     // Read Stitch Settings
     ui->stitchPipelineComboBox->setCurrentText(settings.value("stitchPipeline").toString());
@@ -1002,6 +1010,10 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("dz"));
         data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
 
+        //**** For when dzFromEncoder is implemented into the decon wrapper ****
+        //data.push_back(factory.createCharArray("dzFromEncoder"));
+        //data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
+
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
 
@@ -1265,6 +1277,9 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("dz"));
         data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
 
+        data.push_back(factory.createCharArray("dzFromEncoder"));
+        data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
+
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
 
@@ -1276,6 +1291,14 @@ void MainWindow::on_submitButton_clicked()
 
         data.push_back(factory.createCharArray("sCMOSCameraFlip"));
         data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
+
+        data.push_back(factory.createCharArray("resampleType"));
+        data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
+
+        if(guiVals.resampleEnabled){
+            data.push_back(factory.createCharArray("resample"));
+            data.push_back(factory.createArray<double>({1,3},{guiVals.resample[0],guiVals.resample[1],guiVals.resample[2]}));
+        }
 
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
@@ -1363,13 +1386,13 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
 
         // TODO: Update Resample
-        data.push_back(factory.createCharArray("resampleType"));
-        data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
+        //data.push_back(factory.createCharArray("resampleType"));
+        //data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
 
-        if(guiVals.resample){
-            data.push_back(factory.createCharArray("resample"));
-            data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
-        }
+        //if(guiVals.resample){
+        //    data.push_back(factory.createCharArray("resample"));
+        //    data.push_back(factory.createScalar<uint64_t>(guiVals.resample));
+        //}
 
         // Stitch Settings
 
@@ -1398,6 +1421,7 @@ void MainWindow::on_submitButton_clicked()
 
         // Bound box crop
         if(ui->boundBoxCheckBox->isChecked()){
+            data.push_back(factory.createCharArray("boundboxCrop"));
             data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
         }
 

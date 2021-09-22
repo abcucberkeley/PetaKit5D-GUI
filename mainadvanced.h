@@ -21,6 +21,8 @@ private slots:
 
     void on_submitButton_clicked();
 
+    void on_resampleEnabledCheckBox_stateChanged(int arg1);
+
 private:
     Ui::mainAdvanced *ui;
     GUIvals* gVals;

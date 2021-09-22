@@ -37,7 +37,8 @@ class GUIvals{
         bool BKRemoval;
         double LowerLimit;
         QString resampleType;
-        uint64_t resample;
+        bool resampleEnabled;
+        std::vector<double> resample;
 
         // Decon Advanced Settings
         QString cppDeconPath;
@@ -69,7 +70,8 @@ class GUIvals{
                     BKRemoval{false},
                     LowerLimit{.4},
                     resampleType{"isotropic"},
-                    resample{0},
+                    resampleEnabled{false},
+                    resample{1.0,1.0,1.0},
                     cppDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/RLDecon_CPU/20200718/build-cluster/cpuDeconv"},
                     loadModules{"module load gcc/4.8.5; module load fftw/3.3.6-gcc; module load boost/1.65.1-gcc; module load libtiff/4.1.0; "},
                     cudaDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/cudaDeconv"},

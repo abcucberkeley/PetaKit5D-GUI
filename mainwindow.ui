@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="font">
@@ -97,9 +97,9 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>210</x>
         <y>170</y>
-        <width>146</width>
+        <width>396</width>
         <height>25</height>
        </rect>
       </property>
@@ -124,6 +124,38 @@
         <widget class="QLineEdit" name="dzLineEdit">
          <property name="text">
           <string>.5</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="dzFromEncoderLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+           <strikeout>false</strikeout>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="text">
+          <string>Get Step Size from Encoder</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="dzFromEncoderCheckBox">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
