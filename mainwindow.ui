@@ -139,7 +139,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Get Step Size from Encoder:</string>
+          <string>Get Step Size from Encoder</string>
          </property>
         </widget>
        </item>

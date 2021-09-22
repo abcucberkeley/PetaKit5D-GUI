@@ -291,7 +291,7 @@
     <rect>
      <x>220</x>
      <y>230</y>
-     <width>271</width>
+     <width>334</width>
      <height>26</height>
     </rect>
    </property>
@@ -311,7 +311,20 @@
      </widget>
     </item>
     <item>
+     <widget class="QCheckBox" name="resampleEnabledCheckBox">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="resampleYLabel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -325,17 +338,20 @@
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="resampleYSpinBox">
-      <property name="minimum">
-       <number>0</number>
+     <widget class="QDoubleSpinBox" name="resampleYSpinBox">
+      <property name="enabled">
+       <bool>false</bool>
       </property>
       <property name="value">
-       <number>1</number>
+       <double>1.000000000000000</double>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="resampleXLabel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -349,14 +365,20 @@
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="resampleXSpinBox">
+     <widget class="QDoubleSpinBox" name="resampleXSpinBox">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="value">
-       <number>1</number>
+       <double>1.000000000000000</double>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="resampleZLabel">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -370,9 +392,12 @@
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="resampleZSpinBox">
+     <widget class="QDoubleSpinBox" name="resampleZSpinBox">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="value">
-       <number>1</number>
+       <double>1.000000000000000</double>
       </property>
      </widget>
     </item>

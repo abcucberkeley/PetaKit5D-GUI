@@ -237,6 +237,7 @@ void MainWindow::writeSettings()
     settings.setValue("BKRemoval",guiVals.BKRemoval);
     settings.setValue("LowerLimit",guiVals.LowerLimit);
     settings.setValue("resampleType",guiVals.resampleType);
+    settings.setValue("resampleEnabled",guiVals.resampleEnabled);
     settings.setValue("resampleY",QVariant::fromValue(guiVals.resample[0]));
     settings.setValue("resampleX",QVariant::fromValue(guiVals.resample[1]));
     settings.setValue("resampleZ",QVariant::fromValue(guiVals.resample[2]));
@@ -563,9 +564,10 @@ void MainWindow::readSettings()
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
     guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
     guiVals.resampleType = settings.value("resampleType").toString();
-    guiVals.resample[0] = settings.value("resampleY").toULongLong();
-    guiVals.resample[1] = settings.value("resampleX").toULongLong();
-    guiVals.resample[2] = settings.value("resampleZ").toULongLong();
+    guiVals.resampleEnabled =settings.value("resampleEnabled").toBool();
+    guiVals.resample[0] = settings.value("resampleY").toDouble();
+    guiVals.resample[1] = settings.value("resampleX").toDouble();
+    guiVals.resample[2] = settings.value("resampleZ").toDouble();
 
     // Read Stitch Settings
     ui->stitchPipelineComboBox->setCurrentText(settings.value("stitchPipeline").toString());
@@ -1293,8 +1295,10 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("resampleType"));
         data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
 
-        data.push_back(factory.createCharArray("resample"));
-        data.push_back(factory.createArray<double>({1,3},{static_cast<double>(guiVals.resample[0]),static_cast<double>(guiVals.resample[1]),static_cast<double>(guiVals.resample[2])}));
+        if(guiVals.resampleEnabled){
+            data.push_back(factory.createCharArray("resample"));
+            data.push_back(factory.createArray<double>({1,3},{guiVals.resample[0],guiVals.resample[1],guiVals.resample[2]}));
+        }
 
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
