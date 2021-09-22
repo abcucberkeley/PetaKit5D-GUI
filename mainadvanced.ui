@@ -291,7 +291,7 @@
     <rect>
      <x>220</x>
      <y>230</y>
-     <width>334</width>
+     <width>401</width>
      <height>26</height>
     </rect>
    </property>
@@ -406,7 +406,4 @@
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="Dimensions"/>
- </buttongroups>
 </ui>

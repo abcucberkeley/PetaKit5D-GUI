@@ -4,7 +4,7 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 0.2.1.0
+VERSION = 0.2.1.1
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 MATLAB_VER_WIN = R2020b
