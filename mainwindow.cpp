@@ -175,6 +175,7 @@ void MainWindow::writeSettings()
 
     settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
+    settings.setValue("dzFromEncoder",ui->dzFromEncoderCheckBox->isChecked());
     settings.setValue("xyPixelSize",guiVals.xyPixelSize);
     settings.setValue("Reverse",guiVals.Reverse);
     settings.setValue("objectiveScan",ui->objectiveScanCheckBox->isChecked());
@@ -499,6 +500,7 @@ void MainWindow::readSettings()
 
     guiVals.skewAngle = settings.value("skewAngle").toDouble();
     ui->dzLineEdit->setText(settings.value("dz").toString());
+    ui->dzFromEncoderCheckBox->setChecked(settings.value("dzFromEncoder").toBool());
     guiVals.xyPixelSize = settings.value("xyPixelSize").toDouble();
     guiVals.Reverse = settings.value("Reverse").toBool();
     ui->objectiveScanCheckBox->setChecked(settings.value("objectiveScan").toBool());
@@ -1002,6 +1004,9 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createCharArray("dz"));
         data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
 
+        data.push_back(factory.createCharArray("dzFromEncoder"));
+        data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
+
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
 
@@ -1264,6 +1269,10 @@ void MainWindow::on_submitButton_clicked()
 
         data.push_back(factory.createCharArray("dz"));
         data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+
+        // TODO: ****For when dzFromEncoder is implemented in the decon wrapper****
+        //data.push_back(factory.createCharArray("dzFromEncoder"));
+        //.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
 
         data.push_back(factory.createCharArray("xyPixelSize"));
         data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
