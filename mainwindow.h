@@ -89,7 +89,7 @@ class GUIvals{
                     minModifyTime{1},
                     maxModifyTime{10},
                     maxWaitLoopNum{10},
-                    MatlabLaunchStr{"module load matlab/r2020b; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
+                    MatlabLaunchStr{"module load matlab/r2021a; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
                     SlurmParam{"-p abc --qos abc_normal -n1 --mem-per-cpu=21418M"}
         {
 

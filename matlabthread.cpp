@@ -33,14 +33,16 @@ void matlabThread::run(){
         matlab::data::CharArray newDir = factory.createCharArray("/clusterfs/fiona/ABCcode/XR_Repository");
         matlabPtr->feval(u"cd",newDir);
         matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
-        matlabPtr->feval(u"addpath",newGen);
+        matlabPtr->feval(u"addpath",newGen);       
     }
 
     //TESTING
-    //std::vector<matlab::data::Array> setup;
-    //setup.push_back(factory.createStructArray({0,0},{}));
-    //setup.push_back(factory.createScalar<bool>(true));
-    //matlabPtr->feval(u"setup",([],true));
+    std::vector<matlab::data::Array> setup;
+    size_t empty = 0;
+    setup.push_back(factory.createEmptyArray(empty));
+    setup.push_back(factory.createScalar<bool>(true));
+    //matlabPtr->feval(u"setup",factory.createArray<double>({0,0},{}),factory.createScalar<bool>(true));
+    matlabPtr->feval(u"setup",0,setup);
 
     // Create string buffer for standard output
     std::shared_ptr<StringBuf> output = std::make_shared<StringBuf>();
