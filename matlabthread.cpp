@@ -38,8 +38,8 @@ void matlabThread::run(){
 
     //TESTING
     std::vector<matlab::data::Array> setup;
-    size_t empty = 0;
-    setup.push_back(factory.createEmptyArray(empty));
+    //size_t empty = 0;
+    setup.push_back(factory.createEmptyArray());
     setup.push_back(factory.createScalar<bool>(true));
     //matlabPtr->feval(u"setup",factory.createArray<double>({0,0},{}),factory.createScalar<bool>(true));
     matlabPtr->feval(u"setup",0,setup);
