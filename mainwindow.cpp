@@ -837,7 +837,7 @@ void MainWindow::on_submitButton_clicked()
         messageBox.setFixedSize(500,200);
         return;
     }
-    else{
+    else if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked())){
         for(const QString &path : psfFullPaths){
             if(path.isEmpty()){
                 QMessageBox messageBox;
