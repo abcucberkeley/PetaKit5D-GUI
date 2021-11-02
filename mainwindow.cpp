@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
 
+    // Connect Sim Recon signals
+    connect(ui->simReconAddPathsButton,&QPushButton::clicked,this,&MainWindow::on_addPathsButton_clicked);
+
     // Connect crop signals
     connect(ui->cropAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
     connect(ui->cropResultPathBrowseButton, &QPushButton::clicked, this, &MainWindow::selectFolderPath);
@@ -1931,8 +1934,14 @@ void MainWindow::on_addPathsButton_clicked()
     QWidget* addPathsCurrWidget = ui->Main;
     QHBoxLayout* addPathsCurrLayout = ui->horizontalLayout_4;
 
-    // Data Paths for crop
-    if(((QPushButton *)sender())->objectName().contains("crop")){
+    // Data Paths for other modules
+    if(((QPushButton *)sender())->objectName().contains("simRecon")){
+        addPathsDataPaths = &simReconDPaths;
+        addPathsChannelWidgets = &simReconChannelWidgets;
+        addPathsCurrWidget = ui->simRecon;
+        addPathsCurrLayout = ui->simReconChannelPatternsHorizontalLayout;
+    }
+    else if(((QPushButton *)sender())->objectName().contains("crop")){
         addPathsDataPaths = &cropDPaths;
         addPathsChannelWidgets = &cropChannelWidgets;
         addPathsCurrWidget = ui->Crop;
@@ -2164,6 +2173,134 @@ void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
     }
 }
 
+void MainWindow::on_simReconSubmitButton_clicked()
+{
+    writeSettings();
+
+    // TODO: Seperate functions for error checking
+
+    // Error if data path does not exist when submit is pressed
+    for(size_t i = 0; i < simReconDPaths.size(); i++){
+        if(simReconDPaths[i].includeMaster){
+            if(!QFileInfo::exists(simReconDPaths[i].masterPath)){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error","Data path \"" + simReconDPaths[i].masterPath + "\" does not exist!");
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+        }
+        for (const auto &subPath : simReconDPaths[i].subPaths){
+            if(subPath.second.first){
+                if(!QFileInfo::exists(subPath.second.second)){
+                    QMessageBox messageBox;
+                    messageBox.warning(0,"Error","Data path \"" + subPath.second.second + "\" does not exist!");
+                    messageBox.setFixedSize(500,200);
+                    return;
+                }
+            }
+        }
+    }
+
+    // Error if decon is set but no psf paths are set
+    if((ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked()) && !simReconPsfFullPaths.size()){
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","Recon is set but there are no psf paths set");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+    else if((ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked())){
+        for(const QString &path : simReconPsfFullPaths){
+            if(path.isEmpty()){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error","One of the PSF paths is empty!");
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+            else if(!QFileInfo::exists(path)){
+                QMessageBox messageBox;
+                messageBox.warning(0,"Error","Psf path \"" + path + "\" does not exist!");
+                messageBox.setFixedSize(500,200);
+                return;
+            }
+        }
+    }
+
+
+
+    // Make it so the user can't submit another job while we are submitting this one
+    ui->submitButton->setEnabled(false);
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    //
+    //
+    // TODO: GOING TO REDO THIS PORTION AND MAKE A FUNCTION SO I CAN SUPPORT MULTIPLE SCRIPTS EASIER
+    //
+    //
+
+    // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
+    //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
+    QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
+    QString mainPath = simReconDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    // Check for job log directory for main job
+    QString jobLogCopy = guiVals.jobLogDir;
+    QDir dir(guiVals.jobLogDir);
+    if (!dir.exists()){
+        QDir mDir(mainPath);
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+        guiVals.jobLogDir = mainPath;
+        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
+    }
+    else{
+        mainPath = guiVals.jobLogDir+"/"+timeJobName;
+        QDir mDir(mainPath);
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+    }
+
+
+
+
+    QString funcType = "simRecon";
+
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
+    // Send data to the MATLAB thread
+    emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
+
+    // Still deciding which name I want to show to the user
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
+
+    QString currJobText = ui->jobNameLineEdit->text();
+    if(currJobText.contains("Job ") && currJobText.back().isDigit()){
+        for(int i = currJobText.size()-1; i >= 0; i--){
+            if(currJobText.back().isDigit()){
+                currJobText.chop(1);
+            }
+            else{
+                currJobText.append(QString::number(currJob+1));
+                ui->jobNameLineEdit->setText(currJobText);
+                break;
+            }
+        }
+    }
+
+    // Reset jobLogDir
+    guiVals.jobLogDir = jobLogCopy;
+}
 
 void MainWindow::on_cropSubmitButton_clicked()
 {

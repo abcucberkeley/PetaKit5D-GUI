@@ -30,7 +30,9 @@ HEADERS += \
            matlabthread.h \
            matlabthreadmanager.h \
            loadprevioussettings.h \
-           outputbox.h
+           outputbox.h \
+           simreconmainadvanced.h \
+           simreconreconadvanced.h
 
 FORMS += \
          datapaths.ui \
@@ -42,7 +44,9 @@ FORMS += \
          mainadvanced.ui \
          mainwindow.ui \
          matlaboutputwindow.ui \
-         loadprevioussettings.ui
+         loadprevioussettings.ui \
+         simreconmainadvanced.ui \
+         simreconreconadvanced.ui
 
 SOURCES += \
            datapath.cpp \
@@ -61,16 +65,18 @@ SOURCES += \
            matlabthread.cpp \
            matlabthreadmanager.cpp \
            loadprevioussettings.cpp \
-           outputbox.cpp
+           outputbox.cpp \
+           simreconmainadvanced.cpp \
+           simreconreconadvanced.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
 
-# remove possible other optimization flags
+# Remove possible other optimization flags
 QMAKE_CXXFLAGS_RELEASE -= -O
 QMAKE_CXXFLAGS_RELEASE -= -O1
 QMAKE_CXXFLAGS_RELEASE -= -O2
 
-# add the desired -O3 if not present
+# Add -O3 if not present
 QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {

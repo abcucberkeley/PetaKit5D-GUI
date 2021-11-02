@@ -91,10 +91,21 @@ class GUIvals{
                     maxWaitLoopNum{10},
                     MatlabLaunchStr{"module load matlab/r2021a; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
                     SlurmParam{"-p abc --qos abc_normal -n1 --mem-per-cpu=21418M"}
-        {
+        {}
 
-        }
+};
 
+class simReconVals{
+    public:
+        // Main Advanced Settings
+        double skewAngle;
+        double xyPixelSize;
+        bool Reverse;
+
+        simReconVals(): skewAngle{32.45},
+                        xyPixelSize{.108},
+                        Reverse{true}
+        {}
 };
 
 class MainWindow : public QMainWindow
@@ -122,6 +133,14 @@ private:
     GUIvals guiVals;
     std::vector<dataPath> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
+
+    // Sim Recon
+    simReconVals simreconVals;
+    std::vector<QString> simReconPsfFullPaths;
+    std::vector<dataPath> simReconDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> simReconChannelWidgets;
+
+    // Crop
     std::vector<dataPath> cropDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
     std::vector<QString> lsImagePaths;
@@ -195,6 +214,8 @@ private slots:
     void on_deconOnlyCheckBox_stateChanged(int arg1);
 
     void on_customPatternsCheckBox_stateChanged(int arg1);
+
+    void on_simReconSubmitButton_clicked();
 
     void on_cropSubmitButton_clicked();
 
