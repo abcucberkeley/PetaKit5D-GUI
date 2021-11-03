@@ -463,10 +463,10 @@ void MainWindow::writeSettings()
     // Job Advanced settings
     settings.setValue("simReconjobLogDir",simreconVals.jobLogDir);
     settings.setValue("simReconuuid",simreconVals.uuid);
-    settings.setValue("simReconmaxTrialNum",simreconVals.maxTrialNum);
-    settings.setValue("simReconunitWaitTime",simreconVals.unitWaitTime);
-    settings.setValue("simReconparPoolSize",simreconVals.parPoolSize);
-    settings.setValue("simReconmaxModifyTime",simreconVals.maxModifyTime);
+    settings.setValue("simReconmaxTrialNum",QVariant::fromValue(simreconVals.maxTrialNum));
+    settings.setValue("simReconunitWaitTime",QVariant::fromValue(simreconVals.unitWaitTime));
+    settings.setValue("simReconparPoolSize",QVariant::fromValue(simreconVals.parPoolSize));
+    settings.setValue("simReconmaxModifyTime",QVariant::fromValue(simreconVals.maxModifyTime));
 
 
     // ********* Save Crop Settings *********
