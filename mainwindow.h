@@ -23,7 +23,7 @@ using namespace matlab::engine;
 
 
 
-// Class to hold options from the user
+// Class to hold advanced options from the user
 class GUIvals{
     public:
 
@@ -95,6 +95,7 @@ class GUIvals{
 
 };
 
+// Class to hold advanced options for Sim Recon
 class simReconVals{
     public:
         // Main Advanced Settings
@@ -102,9 +103,64 @@ class simReconVals{
         double xyPixelSize;
         bool Reverse;
 
+        // Recon Advanced Settings
+        bool islattice;
+        double NA_det;
+        double NA_ext;
+        double nimm;
+        double wvl_em;
+        double wvl_ext;
+        double w;
+        bool normalize_orientations;
+        QString resultsDirName;
+        bool perdecomp;
+        bool edgeTaper;
+        double edgeTaperVal;
+        double intThresh;
+        double occThresh;
+        bool useGPU;
+        QString gpuPrecision;
+        double Overlap;
+        std::vector<double> ChunkSize;
+        double reconBatchNum;
+
+        // Job Advanced Settings
+        QString jobLogDir;
+        QString uuid;
+        uint64_t maxTrialNum;
+        uint64_t unitWaitTime;
+        uint64_t parPoolSize;
+        uint64_t maxModifyTime;
+
         simReconVals(): skewAngle{32.45},
                         xyPixelSize{.108},
-                        Reverse{true}
+                        Reverse{true},
+                        islattice{true},
+                        NA_det{1.0},
+                        NA_ext{0.55},
+                        nimm{1.33},
+                        wvl_em{0.605},
+                        wvl_ext{0.560},
+                        w{5e-3},
+                        normalize_orientations{false},
+                        resultsDirName{"sim_recon"},
+                        perdecomp{true},
+                        edgeTaper{false},
+                        edgeTaperVal{0.1},
+                        intThresh{1},
+                        occThresh{0.8},
+                        useGPU{true},
+                        gpuPrecision{"single"},
+                        Overlap{128},
+                        ChunkSize{32,32,32},
+                        reconBatchNum{5},
+                        jobLogDir{"../job_logs"},
+                        uuid{""},
+                        maxTrialNum{3},
+                        unitWaitTime{2},
+                        parPoolSize{24},
+                        maxModifyTime{10}
+
         {}
 };
 
@@ -220,6 +276,16 @@ private slots:
     void on_cropSubmitButton_clicked();
 
     void selectFolderPath();
+
+    void on_simReconPsfFullAddPathsButton_clicked();
+
+    void on_simReconCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_simReconMainAdvancedSettingsButton_clicked();
+
+    void on_simReconReconAdvancedSettingsButton_clicked();
+
+    void on_simReconJobAdvancedSettingsButton_clicked();
 
 private:
     Ui::MainWindow *ui;

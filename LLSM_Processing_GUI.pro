@@ -31,6 +31,7 @@ HEADERS += \
            matlabthreadmanager.h \
            loadprevioussettings.h \
            outputbox.h \
+           simreconjobadvanced.h \
            simreconmainadvanced.h \
            simreconreconadvanced.h
 
@@ -45,6 +46,7 @@ FORMS += \
          mainwindow.ui \
          matlaboutputwindow.ui \
          loadprevioussettings.ui \
+         simreconjobadvanced.ui \
          simreconmainadvanced.ui \
          simreconreconadvanced.ui
 
@@ -66,6 +68,7 @@ SOURCES += \
            matlabthreadmanager.cpp \
            loadprevioussettings.cpp \
            outputbox.cpp \
+           simreconjobadvanced.cpp \
            simreconmainadvanced.cpp \
            simreconreconadvanced.cpp
 

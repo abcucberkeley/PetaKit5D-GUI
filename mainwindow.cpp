@@ -4,10 +4,14 @@
 #include "dsradvanced.h"
 #include "deconadvanced.h"
 #include "jobadvanced.h"
+#include "simreconmainadvanced.h"
+#include "simreconreconadvanced.h"
+#include "simreconjobadvanced.h"
 #include "datapaths.h"
 #include "loadprevioussettings.h"
 #include <QTextDocument>
 #include <QObjectList>
+#include <QtMath>
 
 
 using namespace matlab::engine;
@@ -757,6 +761,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton(){
 
+    ui->simReconSubmitButton->setEnabled(true);
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
 
@@ -2271,12 +2276,296 @@ void MainWindow::on_simReconSubmitButton_clicked()
         }
     }
 
+    unsigned long long numPaths = 0;
+    for(const auto &path : simReconDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path : simReconDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    // Main Settings
+
+    // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
+    // TODO: FIX LOGIC FOR DECON ONLY
+    data.push_back(factory.createCharArray("Overwrite"));
+    data.push_back(factory.createScalar<bool>(ui->simReconDeskewOverwriteDataCheckBox->isChecked() || ui->simReconReconOnlyOverwriteDataCheckBox->isChecked()));
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->simReconCustomPatternsCheckBox->isChecked()){
+        if(simReconChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < simReconChannelWidgets.size(); i++){
+                if(simReconChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(simReconChannelWidgets[i].first->text());
+
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->simReconCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
+        }
+        data.push_back(channelPatterns);
+    }
+
+    data.push_back(factory.createCharArray("dz"));
+    data.push_back(factory.createScalar<double>(ui->simReconDZLineEdit->text().toDouble()));
+
+    // This needs to change FIX
+    data.push_back(factory.createCharArray("Save16bit"));
+    data.push_back(factory.createScalar<bool>(ui->simReconDeskewSave16BitCheckBox->isChecked() || ui->simReconReconOnlySave16BitCheckBox->isChecked()));
+
+    // This needs to change FIX
+    //data.push_back(factory.createCharArray("onlyFirstTP"));
+    //data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
+
+
+    // Main Advanced Settings
+    data.push_back(factory.createCharArray("SkewAngle"));
+    data.push_back(factory.createScalar<double>(simreconVals.skewAngle));
+
+    data.push_back(factory.createCharArray("xyPixelSize"));
+    data.push_back(factory.createScalar<double>(simreconVals.xyPixelSize));
+
+    data.push_back(factory.createCharArray("Reverse"));
+    data.push_back(factory.createScalar<bool>(simreconVals.Reverse));
+
+    // Pipeline Setting
+    data.push_back(factory.createCharArray("Deskew"));
+    data.push_back(factory.createScalar<bool>(ui->simReconDeskewCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("Recon"));
+    data.push_back(factory.createScalar<bool>(ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked()));
+
+    // Deskew Settings
+
+    // None for now
+
+    // Recon Settings
+    data.push_back(factory.createCharArray("Background"));
+    data.push_back(factory.createScalar<uint64_t>(ui->simReconBackgroundIntensityLineEdit->text().toULongLong()));
+
+    //data.push_back(factory.createCharArray("dzPSF"));
+    //data.push_back(factory.createScalar<double>(ui->simReconDZPSFLineEdit->text().toDouble()));
+
+    if(simReconPsfFullPaths.size()){
+        data.push_back(factory.createCharArray("PSFs"));
+        matlab::data::CellArray psfMPaths = factory.createCellArray({1,simReconPsfFullPaths.size()});
+        for(size_t i = 0; i < simReconPsfFullPaths.size(); i++){
+            psfMPaths[i] = factory.createCharArray(simReconPsfFullPaths[i].toStdString());
+        }
+        data.push_back(psfMPaths);
+    }
+
+    // calculate pxl dim data/psf
+    data.push_back(factory.createCharArray("pxl_dim_data"));
+    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZLineEdit->text().toDouble())*qRadiansToDegrees(qSin(simreconVals.skewAngle))}));
+
+    data.push_back(factory.createCharArray("pxl_dim_PSF"));
+    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZPSFLineEdit->text().toDouble())*qRadiansToDegrees(qSin(simreconVals.skewAngle))}));
+
+    data.push_back(factory.createCharArray("nphases"));
+    data.push_back(factory.createScalar<double>(ui->simReconNPhasesLineEdit->text().toDouble()));
+
+    // Number of orders matches number of phases for now
+    data.push_back(factory.createCharArray("norders"));
+    data.push_back(factory.createScalar<double>(ui->simReconNPhasesLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("norientations"));
+    data.push_back(factory.createScalar<double>(ui->simReconNOrientationsLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("lattice_period"));
+    data.push_back(factory.createScalar<double>(ui->simReconLatticePeriodLineEdit->text().toDouble()));
+
+    // calculate phase step
+    data.push_back(factory.createCharArray("phase_step"));
+    data.push_back(factory.createScalar<double>(ui->simReconLatticePeriodLineEdit->text().toDouble()/ui->simReconNPhasesLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("EdgeErosion"));
+    data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+
+    data.push_back(factory.createCharArray("ErodeBefore"));
+    data.push_back(factory.createScalar<bool>(ui->simReconErodeBeforeCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("ErodeAfter"));
+    data.push_back(factory.createScalar<bool>(ui->simReconErodeAfterCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("apodize"));
+    data.push_back(factory.createScalar<bool>(ui->simReconApodizeCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("DS"));
+    data.push_back(factory.createScalar<bool>(ui->simReconDeskewedCheckBox->isChecked()));
+
+    // Recon Advanced settings
+    data.push_back(factory.createCharArray("islattice"));
+    data.push_back(factory.createScalar<bool>(simreconVals.islattice));
+
+    data.push_back(factory.createCharArray("NA_det"));
+    data.push_back(factory.createScalar<double>(simreconVals.NA_det));
+
+    data.push_back(factory.createCharArray("NA_ext"));
+    data.push_back(factory.createScalar<double>(simreconVals.NA_ext));
+
+    data.push_back(factory.createCharArray("nimm"));
+    data.push_back(factory.createScalar<double>(simreconVals.nimm));
+
+    data.push_back(factory.createCharArray("wvl_em"));
+    data.push_back(factory.createScalar<double>(simreconVals.wvl_em));
+
+    data.push_back(factory.createCharArray("wvl_ext"));
+    data.push_back(factory.createScalar<double>(simreconVals.wvl_ext));
+
+    data.push_back(factory.createCharArray("w"));
+    data.push_back(factory.createScalar<double>(simreconVals.w));
+
+    data.push_back(factory.createCharArray("normalize_orientations"));
+    data.push_back(factory.createScalar<bool>(simreconVals.normalize_orientations));
+
+    data.push_back(factory.createCharArray("resultsDirName"));
+    data.push_back(factory.createCharArray(simreconVals.resultsDirName.toStdString()));
+
+    data.push_back(factory.createCharArray("perdecomp"));
+    data.push_back(factory.createScalar<bool>(simreconVals.perdecomp));
+
+    data.push_back(factory.createCharArray("edgeTaper"));
+    data.push_back(factory.createScalar<bool>(simreconVals.edgeTaper));
+
+    data.push_back(factory.createCharArray("edgeTaperVal"));
+    data.push_back(factory.createScalar<double>(simreconVals.edgeTaperVal));
+
+    data.push_back(factory.createCharArray("intThresh"));
+    data.push_back(factory.createScalar<double>(simreconVals.intThresh));
+
+    data.push_back(factory.createCharArray("occThresh"));
+    data.push_back(factory.createScalar<double>(simreconVals.occThresh));
+
+    data.push_back(factory.createCharArray("useGPU"));
+    data.push_back(factory.createScalar<bool>(simreconVals.useGPU));
+
+    data.push_back(factory.createCharArray("gpuPrecision"));
+    data.push_back(factory.createCharArray(simreconVals.gpuPrecision.toStdString()));
+
+    data.push_back(factory.createCharArray("Overlap"));
+    data.push_back(factory.createScalar<double>(simreconVals.Overlap));
+
+    data.push_back(factory.createCharArray("ChunkSize"));
+    data.push_back(factory.createArray<double>({1,3},{simreconVals.ChunkSize[0],simreconVals.ChunkSize[1],simreconVals.ChunkSize[2]}));
+
+    data.push_back(factory.createCharArray("reconBatchNum"));
+    data.push_back(factory.createScalar<double>(simreconVals.reconBatchNum));
+
+    // Job Settings
+
+    data.push_back(factory.createCharArray("parseCluster"));
+    data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("cpusPerTask"));
+    data.push_back(factory.createScalar<uint64_t>(ui->simReconCpusPerTaskLineEdit->text().toULongLong()));
+
+    //data.push_back(factory.createCharArray("cpuOnlyNodes"));
+    //data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+
+    // Advanced Job Settings
+
+    if(!simreconVals.jobLogDir.isEmpty()){
+        data.push_back(factory.createCharArray("jobLogDir"));
+        data.push_back(factory.createCharArray(simreconVals.jobLogDir.toStdString()));
+    }
+
+    if(!simreconVals.uuid.isEmpty()){
+        data.push_back(factory.createCharArray("uuid"));
+        data.push_back(factory.createCharArray(simreconVals.uuid.toStdString()));
+    }
+
+    data.push_back(factory.createCharArray("maxTrialNum"));
+    data.push_back(factory.createScalar<uint64_t>(simreconVals.maxTrialNum));
+
+    data.push_back(factory.createCharArray("unitWaitTime"));
+    data.push_back(factory.createScalar<uint64_t>(simreconVals.unitWaitTime));
+
+    data.push_back(factory.createCharArray("parPoolSize"));
+    data.push_back(factory.createScalar<uint64_t>(simreconVals.parPoolSize));
+
+    data.push_back(factory.createCharArray("maxModifyTime"));
+    data.push_back(factory.createScalar<uint64_t>(simreconVals.maxModifyTime));
+
+    /*
+    if(!guiVals.MatlabLaunchStr.isEmpty()){
+        data.push_back(factory.createCharArray("MatlabLaunchStr"));
+        data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
+    }
+
+    if(!guiVals.SlurmParam.isEmpty()){
+        data.push_back(factory.createCharArray("SlurmParam"));
+        data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
+    }
+    */
 
 
 
     QString funcType = "simRecon";
 
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
     emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
 
@@ -2284,7 +2573,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     size_t currJob = jobNames.size()+1;
     jobNames.emplace(currJob,timeJobName);
 
-    QString currJobText = ui->jobNameLineEdit->text();
+    QString currJobText = ui->simReconJobNameLineEdit->text();
     if(currJobText.contains("Job ") && currJobText.back().isDigit()){
         for(int i = currJobText.size()-1; i >= 0; i--){
             if(currJobText.back().isDigit()){
@@ -2292,14 +2581,14 @@ void MainWindow::on_simReconSubmitButton_clicked()
             }
             else{
                 currJobText.append(QString::number(currJob+1));
-                ui->jobNameLineEdit->setText(currJobText);
+                ui->simReconJobNameLineEdit->setText(currJobText);
                 break;
             }
         }
     }
 
     // Reset jobLogDir
-    guiVals.jobLogDir = jobLogCopy;
+    simreconVals.jobLogDir = jobLogCopy;
 }
 
 void MainWindow::on_cropSubmitButton_clicked()
@@ -2322,8 +2611,6 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = cropDPaths[0].masterPath;
-
-
 
     // Data Path
     data.push_back(factory.createCharArray(mainPath.toStdString()));
@@ -2445,5 +2732,67 @@ void MainWindow::selectFolderPath(){
         result->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
     }
+}
+
+
+void MainWindow::on_simReconPsfFullAddPathsButton_clicked()
+{
+    std::vector<QString> channelNames;
+    if(!ui->simReconCustomPatternsCheckBox->isChecked()){
+        for(auto i : simReconChannelWidgets){
+            if(i.second->isChecked()){
+                channelNames.push_back(i.first->text());
+            }
+        }
+    }
+    else{
+        QString patternLine = ui->simReconCustomPatternsLineEdit->text();
+        QString pattern;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                channelNames.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()){
+            channelNames.push_back(pattern);
+        }
+    }
+    dataPaths daPaths(simReconPsfFullPaths, false, mostRecentDir, channelNames);
+    daPaths.setModal(true);
+    daPaths.exec();
+}
+
+
+void MainWindow::on_simReconCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->simReconCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_simReconMainAdvancedSettingsButton_clicked()
+{
+    simReconMainAdvanced srmAdvanced(simreconVals);
+    srmAdvanced.setModal(true);
+    srmAdvanced.exec();
+}
+
+
+void MainWindow::on_simReconReconAdvancedSettingsButton_clicked()
+{
+    simReconReconAdvanced srrAdvanced(simreconVals);
+    srrAdvanced.setModal(true);
+    srrAdvanced.exec();
+}
+
+
+void MainWindow::on_simReconJobAdvancedSettingsButton_clicked()
+{
+    simReconJobAdvanced srjAdvanced(simreconVals);
+    srjAdvanced.setModal(true);
+    srjAdvanced.exec();
 }
 

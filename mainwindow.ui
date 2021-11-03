@@ -3626,7 +3626,7 @@
          <item>
           <widget class="QLineEdit" name="simReconDZPSFLineEdit">
            <property name="text">
-            <string>.1</string>
+            <string>.2</string>
            </property>
           </widget>
          </item>
@@ -3915,7 +3915,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_134">
          <item>
-          <widget class="QLabel" name="simReconApodizeLabel_2">
+          <widget class="QLabel" name="simReconDeskewedLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -3929,7 +3929,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="simReconApodizeCheckBox_2">
+          <widget class="QCheckBox" name="simReconDeskewedCheckBox">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
