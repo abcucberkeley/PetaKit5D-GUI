@@ -12,7 +12,7 @@ simReconJobAdvanced::simReconJobAdvanced(simReconVals& simreconVals, QWidget *pa
     ui->uuidLineEdit->setText(simreconVals.uuid);
     ui->maxTrialNumSpinBox->setValue(simreconVals.maxTrialNum);
     ui->unitWaitTimeSpinBox->setValue(simreconVals.unitWaitTime);
-    ui->parPoolSizeSpinBox->setValue(simreconVals.maxModifyTime);
+    ui->parPoolSizeSpinBox->setValue(simreconVals.parPoolSize);
 }
 
 simReconJobAdvanced::~simReconJobAdvanced()

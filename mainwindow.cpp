@@ -325,6 +325,150 @@ void MainWindow::writeSettings()
     settings.setValue("MatlabLaunchStr",guiVals.MatlabLaunchStr);
     settings.setValue("SlurmParam",guiVals.SlurmParam);
 
+    // ********* Save Sim Recon Settings *********
+
+    settings.beginWriteArray("simReconDPaths");
+    for(unsigned int i = 0; i < simReconDPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("simReconDPathsimasterPath", simReconDPaths[i].masterPath);
+        settings.setValue("simReconDPathsiincludeMaster", simReconDPaths[i].includeMaster);
+        settings.setValue("simReconDPathsipattern", simReconDPaths[i].pattern);
+        settings.setValue("simReconDPathsimaxDepth", simReconDPaths[i].maxDepth);
+    }
+    settings.endArray();
+
+
+    for(unsigned int i = 0; i < simReconDPaths.size(); i++)
+    {
+        settings.beginWriteArray("simRecon"+QString::number(i)+"bool");
+        unsigned int j = 0;
+        for(const auto &path : simReconDPaths[i].subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue("simReconi"+QString::number(i)+"j"+QString::number(j)+"booli",path.second.first);
+            j++;
+        }
+        settings.endArray();
+
+        settings.beginWriteArray("simRecon"+QString::number(i)+"subPath");
+        j = 0;
+        for(const auto &path : simReconDPaths[i].subPaths){
+            settings.setArrayIndex(j);
+            settings.setValue("simReconi"+QString::number(i)+"j"+QString::number(j)+"subPathi",path.second.second);
+            j++;
+        }
+        settings.endArray();
+
+
+    }
+
+
+    // Save Main Settings
+
+    settings.setValue("simReconDeskew",ui->simReconDeskewCheckBox->isChecked());
+    settings.setValue("simReconDeskewRecon",ui->simReconDeskewReconCheckBox->isChecked());
+    settings.setValue("simReconDeskewOverwriteData",ui->simReconDeskewOverwriteDataCheckBox->isChecked());
+    settings.setValue("simReconDeskewSave16Bit",ui->simReconDeskewSave16BitCheckBox->isChecked());
+    settings.setValue("simReconDeskewOnlyFirstTP",ui->simReconDeskewOnlyFirstTPCheckBox->isChecked());
+
+    settings.setValue("simReconReconOnly",ui->simReconReconOnlyCheckBox->isChecked());
+    settings.setValue("simReconReconOnlyOverwriteData",ui->simReconReconOnlyOverwriteDataCheckBox->isChecked());
+    settings.setValue("simReconReconOnlySave16Bit",ui->simReconReconOnlySave16BitCheckBox->isChecked());
+    settings.setValue("simReconReconOnlyOnlyFirstTP",ui->simReconReconOnlyOnlyFirstTPCheckBox->isChecked());
+
+    settings.setValue("simReconStreaming",ui->simReconStreamingCheckBox->isChecked());
+
+    // SAVE FOR CHANNEL PATTERNS
+    settings.beginWriteArray("simReconChannelLabels");
+    for(unsigned int i = 0; i < simReconChannelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("simReconChannelLabelsi", simReconChannelWidgets[i].first->text());
+    }
+    settings.endArray();
+
+    settings.beginWriteArray("simReconChannelChecks");
+    for(unsigned int i = 0; i < simReconChannelWidgets.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("simReconChannelChecksi", simReconChannelWidgets[i].second->isChecked());
+    }
+    settings.endArray();
+
+    // Save custom patterns
+    settings.setValue("simReconCustomPatternsCheckBox",ui->simReconCustomPatternsCheckBox->isChecked());
+    settings.setValue("simReconCustomPatterns", ui->simReconCustomPatternsLineEdit->text());
+
+    settings.setValue("simReconDZ",ui->simReconDZLineEdit->text());
+
+    // Save Main Advanced settings
+    settings.setValue("simReconskewAngle",simreconVals.skewAngle);
+    settings.setValue("simReconxyPixelSize",simreconVals.xyPixelSize);
+    settings.setValue("simReconReverse",simreconVals.Reverse);
+
+    // Deskew settings (Empty for now)
+
+    // Recon settings
+
+    settings.setValue("simReconBackgroundIntensity",ui->simReconBackgroundIntensityLineEdit->text());
+    settings.setValue("simReconDZPSF",ui->simReconDZPSFLineEdit->text());
+
+    settings.beginWriteArray("simReconPsfFullPaths");
+    for(unsigned int i = 0; i < simReconPsfFullPaths.size(); i++)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("simReconPsfFullPathsi", simReconPsfFullPaths[i]);
+    }
+    settings.endArray();
+
+    settings.setValue("simReconNPhases",ui->simReconNPhasesLineEdit->text());
+    settings.setValue("simReconNOrientations",ui->simReconNOrientationsLineEdit->text());
+    settings.setValue("simReconLatticePeriod",ui->simReconLatticePeriodLineEdit->text());
+    settings.setValue("simReconEdgeErosion",ui->simReconEdgeErosionLineEdit->text());
+    settings.setValue("simReconErodeBefore",ui->simReconErodeBeforeCheckBox->isChecked());
+    settings.setValue("simReconErodeAfter",ui->simReconErodeAfterCheckBox->isChecked());
+    settings.setValue("simReconApodize",ui->simReconApodizeCheckBox->isChecked());
+    settings.setValue("simReconDeskewed",ui->simReconDeskewedCheckBox->isChecked());
+
+    // Recon Advanced Settings
+
+    settings.setValue("simReconislattice",simreconVals.islattice);
+    settings.setValue("simReconNA_det",simreconVals.NA_det);
+    settings.setValue("simReconNA_ext",simreconVals.NA_ext);
+    settings.setValue("simReconnimm",simreconVals.nimm);
+    settings.setValue("simReconwvl_em",simreconVals.wvl_em);
+    settings.setValue("simReconwvl_ext",simreconVals.wvl_ext);
+    settings.setValue("simReconw",simreconVals.w);
+    settings.setValue("simReconnormalize_orientations",simreconVals.normalize_orientations);
+    settings.setValue("simReconresultsDirName",simreconVals.resultsDirName);
+    settings.setValue("simReconperdecomp",simreconVals.perdecomp);
+    settings.setValue("simReconedgeTaper",simreconVals.edgeTaper);
+    settings.setValue("simReconedgeTaperVal",simreconVals.edgeTaperVal);
+    settings.setValue("simReconintThresh",simreconVals.intThresh);
+    settings.setValue("simReconoccThresh",simreconVals.occThresh);
+    settings.setValue("simReconuseGPU",simreconVals.useGPU);
+    settings.setValue("simRecongpuPrecision",simreconVals.gpuPrecision);
+    settings.setValue("simReconOverlap",simreconVals.Overlap);
+    settings.setValue("simReconChunkSizeY",simreconVals.ChunkSize[0]);
+    settings.setValue("simReconChunkSizeX",simreconVals.ChunkSize[1]);
+    settings.setValue("simReconChunkSizeZ",simreconVals.ChunkSize[2]);
+    settings.setValue("simReconreconBatchNum",simreconVals.reconBatchNum);
+
+    // Job Settings
+
+    settings.setValue("simReconParseCluster",ui->simReconParseClusterCheckBox->isChecked());
+    settings.setValue("simReconCpusPerTask",ui->simReconCpusPerTaskLineEdit->text());
+    settings.setValue("simReconCpuOnlyNodes",ui->simReconCpuOnlyNodesCheckBox->isChecked());
+
+    // Job Advanced settings
+    settings.setValue("simReconjobLogDir",simreconVals.jobLogDir);
+    settings.setValue("simReconuuid",simreconVals.uuid);
+    settings.setValue("simReconmaxTrialNum",simreconVals.maxTrialNum);
+    settings.setValue("simReconunitWaitTime",simreconVals.unitWaitTime);
+    settings.setValue("simReconparPoolSize",simreconVals.parPoolSize);
+    settings.setValue("simReconmaxModifyTime",simreconVals.maxModifyTime);
+
+
     // ********* Save Crop Settings *********
 
     // Save Data Paths
@@ -639,7 +783,7 @@ void MainWindow::readSettings()
     ui->cpuOnlyNodesCheckBox->setChecked(settings.value("cpuOnlyNodes").toBool());
 
 
-    // Save Advanced Job Settings
+    // Read Advanced Job Settings
 
     guiVals.largeFile = settings.value("largeFile").toBool();
     guiVals.jobLogDir = settings.value("jobLogDir").toString();
@@ -651,6 +795,169 @@ void MainWindow::readSettings()
     guiVals.maxWaitLoopNum = settings.value("maxWaitLoopNum").toULongLong();
     guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString();
     guiVals.SlurmParam = settings.value("SlurmParam").toString();
+
+    // ********* Read Sim Recon Settings *********
+
+    // Read Data Paths
+    size = settings.beginReadArray("simReconDPaths");
+    for (int i = 0; i < size; i++){
+        settings.setArrayIndex(i);
+        simReconDPaths.push_back(dataPath());
+        simReconDPaths[i].masterPath = settings.value("simReconDPathsimasterPath").toString();
+        simReconDPaths[i].includeMaster = settings.value("simReconDPathsiincludeMaster").toBool();
+        simReconDPaths[i].pattern = settings.value("simReconDPathsipattern").toString();
+        simReconDPaths[i].maxDepth = settings.value("simReconDPathsimaxDepth").toInt();
+    }
+    settings.endArray();
+
+    for(size_t i = 0; i < simReconDPaths.size(); i++){
+        std::vector<QString> subPaths;
+        std::vector<bool> include;
+
+        size = settings.beginReadArray("simRecon"+QString::number(i)+"bool");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            include.push_back(settings.value("simReconi"+QString::number(i)+"j"+QString::number(j)+"booli").toBool());
+        }
+        settings.endArray();
+
+        size = settings.beginReadArray("simRecon"+QString::number(i)+"subPath");
+        for(int j = 0; j < size; j++){
+            settings.setArrayIndex(j);
+            subPaths.push_back(settings.value("simReconi"+QString::number(i)+"j"+QString::number(j)+"subPathi").toString());
+        }
+        settings.endArray();
+
+        for(int j = 0; j < size; j++){
+            simReconDPaths[i].subPaths.emplace(subPaths[j],std::make_pair(include[j],subPaths[j]));
+        }
+
+    }
+
+    // Read Main Settings
+
+    ui->simReconDeskewCheckBox->setChecked(settings.value("simReconDeskew").toBool());
+    ui->simReconDeskewReconCheckBox->setChecked(settings.value("simReconDeskewRecon").toBool());
+    ui->simReconDeskewOverwriteDataCheckBox->setChecked(settings.value("simReconDeskewOverwriteData").toBool());
+    ui->simReconDeskewSave16BitCheckBox->setChecked(settings.value("simReconDeskewSave16Bit").toBool());
+    ui->simReconDeskewOnlyFirstTPCheckBox->setChecked(settings.value("simReconDeskewOnlyFirstTP").toBool());
+
+    ui->simReconReconOnlyCheckBox->setChecked(settings.value("simReconReconOnly").toBool());
+    ui->simReconReconOnlyOverwriteDataCheckBox->setChecked(settings.value("simReconReconOnlyOverwriteData").toBool());
+    ui->simReconReconOnlySave16BitCheckBox->setChecked(settings.value("simReconReconOnlySave16Bit").toBool());
+    ui->simReconReconOnlyOnlyFirstTPCheckBox->setChecked(settings.value("simReconReconOnlyOnlyFirstTP").toBool());
+
+    ui->simReconStreamingCheckBox->setChecked(settings.value("simReconStreaming").toBool());
+
+    // READ FOR CHANNEL PATTERNS
+
+    // temp vectors to hold labels and checkbox values
+    std::vector<QString> simReconTLabels;
+    std::vector<bool> simReconTChecks;
+
+    // Read labels and checks into vectors
+    size = settings.beginReadArray("simReconChannelLabels");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        simReconTLabels.push_back(settings.value("simReconChannelLabelsi").toString());
+    }
+    settings.endArray();
+
+    size = settings.beginReadArray("simReconChannelChecks");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        simReconTChecks.push_back(settings.value("simReconChannelChecksi").toBool());
+    }
+    settings.endArray();
+
+    // Read custom patterns
+    ui->simReconCustomPatternsCheckBox->setChecked(settings.value("simReconCustomPatternsCheckBox").toBool());
+    ui->simReconCustomPatternsLineEdit->setText(settings.value("simReconCustomPatterns").toString());
+
+    // Create widgets and put them in channelWidgets
+    for(size_t i = 0; i < simReconTLabels.size(); i++){
+        QLabel* label = new QLabel(ui->simReconMain);
+        label->setTextFormat(Qt::RichText);
+        label->setText("<b>"+simReconTLabels[i]+"<\b>");
+        ui->simReconChannelPatternsHorizontalLayout->addWidget(label);
+
+        QCheckBox* checkBox = new QCheckBox(ui->simReconMain);
+        checkBox->setChecked(simReconTChecks[i]);
+        ui->simReconChannelPatternsHorizontalLayout->addWidget(checkBox);
+
+        simReconChannelWidgets.push_back(std::make_pair(label,checkBox));
+
+    }
+
+    ui->simReconDZLineEdit->setText(settings.value("simReconDZ").toString());
+
+    // Read Main Advanced settings
+    simreconVals.skewAngle = settings.value("simReconskewAngle").toDouble();
+    simreconVals.xyPixelSize = settings.value("simReconxyPixelSize").toDouble();
+    simreconVals.Reverse = settings.value("simReconReverse").toBool();
+
+    // Deskew settings (Empty for now)
+
+    // Recon settings
+    ui->simReconBackgroundIntensityLineEdit->setText(settings.value("simReconBackgroundIntensity").toString());
+    ui->simReconDZPSFLineEdit->setText(settings.value("simReconDZPSF").toString());
+
+    size = settings.beginReadArray("simReconPsfFullPaths");
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        simReconPsfFullPaths.push_back(settings.value("simReconPsfFullPathsi").toString());
+    }
+    settings.endArray();
+
+    ui->simReconNPhasesLineEdit->setText(settings.value("simReconNPhases").toString());
+    ui->simReconNOrientationsLineEdit->setText(settings.value("simReconNOrientations").toString());
+    ui->simReconLatticePeriodLineEdit->setText(settings.value("simReconLatticePeriod").toString());
+    ui->simReconEdgeErosionLineEdit->setText(settings.value("simReconEdgeErosion").toString());
+    ui->simReconErodeBeforeCheckBox->setChecked(settings.value("simReconErodeBefore").toBool());
+    ui->simReconErodeAfterCheckBox->setChecked(settings.value("simReconErodeAfter").toBool());
+    ui->simReconApodizeCheckBox->setChecked(settings.value("simReconApodize").toBool());
+    ui->simReconDeskewedCheckBox->setChecked(settings.value("simReconDeskewed").toBool());
+
+    // Recon Advanced Settings
+
+    simreconVals.islattice = settings.value("simReconislattice").toBool();
+    simreconVals.NA_det = settings.value("simReconNA_det").toDouble();
+    simreconVals.NA_ext = settings.value("simReconNA_ext").toDouble();
+    simreconVals.nimm = settings.value("simReconnimm").toDouble();
+    simreconVals.wvl_em = settings.value("simReconwvl_em").toDouble();
+    simreconVals.wvl_ext = settings.value("simReconwvl_ext").toDouble();
+    simreconVals.w = settings.value("simReconw").toDouble();
+    simreconVals.normalize_orientations = settings.value("simReconnormalize_orientations").toBool();
+    simreconVals.resultsDirName = settings.value("simReconresultsDirName").toString();
+    simreconVals.perdecomp = settings.value("simReconperdecomp").toBool();
+    simreconVals.edgeTaper = settings.value("simReconedgeTaper").toBool();
+    simreconVals.edgeTaperVal = settings.value("simReconedgeTaperVal").toBool();
+    simreconVals.intThresh = settings.value("simReconintThresh").toDouble();
+    simreconVals.occThresh = settings.value("simReconoccThresh").toDouble();
+    simreconVals.useGPU = settings.value("simReconuseGPU").toBool();
+    simreconVals.gpuPrecision = settings.value("simRecongpuPrecision").toString();
+    simreconVals.Overlap = settings.value("simReconOverlap").toDouble();
+    simreconVals.ChunkSize[0] = settings.value("simReconChunkSizeY").toDouble();
+    simreconVals.ChunkSize[1] = settings.value("simReconChunkSizeX").toDouble();
+    simreconVals.ChunkSize[2] = settings.value("simReconChunkSizeZ").toDouble();
+    simreconVals.reconBatchNum = settings.value("simReconreconBatchNum").toDouble();
+
+    // Job Settings
+
+    ui->simReconParseClusterCheckBox->setChecked(settings.value("simReconParseCluster").toBool());
+    ui->simReconCpusPerTaskLineEdit->setText(settings.value("simReconCpusPerTask").toString());
+    ui->simReconCpuOnlyNodesCheckBox->setChecked(settings.value("simReconCpuOnlyNodes").toBool());
+
+    // Job Advanced settings
+    simreconVals.jobLogDir = settings.value("simReconjobLogDir").toString();
+    simreconVals.uuid = settings.value("simReconuuid").toString();
+    simreconVals.maxTrialNum = settings.value("simReconmaxTrialNum").toDouble();
+    simreconVals.unitWaitTime = settings.value("simReconunitWaitTime").toDouble();
+    simreconVals.parPoolSize = settings.value("simReconparPoolSize").toDouble();
+    simreconVals.maxModifyTime = settings.value("simReconmaxModifyTime").toDouble();
 
     // ********* Read Crop Settings *********
 
@@ -2183,6 +2490,14 @@ void MainWindow::on_simReconSubmitButton_clicked()
     writeSettings();
 
     // TODO: Seperate functions for error checking
+
+    // Error if no data paths are set
+    if(!simReconDPaths.size()){
+        QMessageBox messageBox;
+        messageBox.warning(0,"Error","There are no data paths set.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
 
     // Error if data path does not exist when submit is pressed
     for(size_t i = 0; i < simReconDPaths.size(); i++){
