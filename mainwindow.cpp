@@ -2569,22 +2569,22 @@ void MainWindow::on_simReconSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
     //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
-    QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
+    QString timeJobName = dateTime+QString(ui->simReconJobNameLineEdit->text()).replace(" ","_");
     QString mainPath = simReconDPaths[0].masterPath+"/job_logs/"+timeJobName;
 
     // Check for job log directory for main job
-    QString jobLogCopy = guiVals.jobLogDir;
-    QDir dir(guiVals.jobLogDir);
+    QString jobLogCopy = simreconVals.jobLogDir;
+    QDir dir(simreconVals.jobLogDir);
     if (!dir.exists()){
         QDir mDir(mainPath);
         if(!mDir.exists()){
             mDir.mkpath(".");
         }
-        guiVals.jobLogDir = mainPath;
-        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
+        simreconVals.jobLogDir = mainPath;
+        std::cout << "Chosen job log directory does not exist! Using " << simreconVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
     }
     else{
-        mainPath = guiVals.jobLogDir+"/"+timeJobName;
+        mainPath = simreconVals.jobLogDir+"/"+timeJobName;
         QDir mDir(mainPath);
         if(!mDir.exists()){
             mDir.mkpath(".");
@@ -2832,7 +2832,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     // Job Settings
 
     data.push_back(factory.createCharArray("parseCluster"));
-    data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+    data.push_back(factory.createScalar<bool>(ui->simReconParseClusterCheckBox->isChecked()));
 
     data.push_back(factory.createCharArray("cpusPerTask"));
     data.push_back(factory.createScalar<uint64_t>(ui->simReconCpusPerTaskLineEdit->text().toULongLong()));

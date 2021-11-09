@@ -1478,7 +1478,7 @@
        <rect>
         <x>560</x>
         <y>230</y>
-        <width>122</width>
+        <width>147</width>
         <height>26</height>
        </rect>
       </property>
@@ -1517,7 +1517,7 @@
        <rect>
         <x>680</x>
         <y>230</y>
-        <width>121</width>
+        <width>146</width>
         <height>26</height>
        </rect>
       </property>
@@ -1556,7 +1556,7 @@
        <rect>
         <x>430</x>
         <y>270</y>
-        <width>131</width>
+        <width>150</width>
         <height>26</height>
        </rect>
       </property>
@@ -1595,7 +1595,7 @@
        <rect>
         <x>560</x>
         <y>270</y>
-        <width>127</width>
+        <width>151</width>
         <height>26</height>
        </rect>
       </property>
@@ -1634,7 +1634,7 @@
        <rect>
         <x>680</x>
         <y>270</y>
-        <width>126</width>
+        <width>150</width>
         <height>26</height>
        </rect>
       </property>
@@ -1994,7 +1994,7 @@
        <rect>
         <x>430</x>
         <y>230</y>
-        <width>131</width>
+        <width>146</width>
         <height>26</height>
        </rect>
       </property>
@@ -2761,7 +2761,7 @@
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -4291,7 +4291,7 @@
          <rect>
           <x>300</x>
           <y>0</y>
-          <width>201</width>
+          <width>208</width>
           <height>25</height>
          </rect>
         </property>
@@ -4793,7 +4793,7 @@
          <rect>
           <x>40</x>
           <y>180</y>
-          <width>381</width>
+          <width>453</width>
           <height>31</height>
          </rect>
         </property>
@@ -4907,7 +4907,7 @@
          <rect>
           <x>40</x>
           <y>220</y>
-          <width>394</width>
+          <width>465</width>
           <height>31</height>
          </rect>
         </property>
@@ -5150,7 +5150,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
