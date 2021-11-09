@@ -2734,10 +2734,10 @@ void MainWindow::on_simReconSubmitButton_clicked()
 
     // calculate pxl dim data/psf
     data.push_back(factory.createCharArray("pxl_dim_data"));
-    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZLineEdit->text().toDouble())*qRadiansToDegrees(qSin(simreconVals.skewAngle))}));
+    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle))}));
 
     data.push_back(factory.createCharArray("pxl_dim_PSF"));
-    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZPSFLineEdit->text().toDouble())*qRadiansToDegrees(qSin(simreconVals.skewAngle))}));
+    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZPSFLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle))}));
 
     data.push_back(factory.createCharArray("nphases"));
     data.push_back(factory.createScalar<double>(ui->simReconNPhasesLineEdit->text().toDouble()));
