@@ -2761,7 +2761,7 @@
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -2929,7 +2929,7 @@
          <rect>
           <x>300</x>
           <y>10</y>
-          <width>211</width>
+          <width>221</width>
           <height>51</height>
          </rect>
         </property>
@@ -3444,7 +3444,7 @@
          <rect>
           <x>170</x>
           <y>40</y>
-          <width>511</width>
+          <width>551</width>
           <height>71</height>
          </rect>
         </property>
