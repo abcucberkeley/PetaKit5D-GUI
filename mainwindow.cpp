@@ -2683,6 +2683,9 @@ void MainWindow::on_simReconSubmitButton_clicked()
         data.push_back(channelPatterns);
     }
 
+    data.push_back(factory.createCharArray("Streaming"));
+    data.push_back(factory.createScalar<bool>(ui->simReconStreamingCheckBox->isChecked()));
+
     data.push_back(factory.createCharArray("dz"));
     data.push_back(factory.createScalar<double>(ui->simReconDZLineEdit->text().toDouble()));
 
