@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Decon),false);
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job),false);
 
+    ui->simReconTab->setTabEnabled(ui->simReconTab->indexOf(ui->simReconDeskew),false);
+
     // Set most recent Dir to Home initially
     mostRecentDir = QDir::homePath();
 
@@ -3112,5 +3114,29 @@ void MainWindow::on_simReconJobAdvancedSettingsButton_clicked()
     simReconJobAdvanced srjAdvanced(simreconVals);
     srjAdvanced.setModal(true);
     srjAdvanced.exec();
+}
+
+
+void MainWindow::on_simReconMainNextButton_clicked()
+{
+    ui->simReconTab->setCurrentWidget(ui->simReconRecon);
+}
+
+
+void MainWindow::on_simReconReconPreviousButton_clicked()
+{
+    ui->simReconTab->setCurrentWidget(ui->simReconMain);
+}
+
+
+void MainWindow::on_simReconReconNextButton_clicked()
+{
+    ui->simReconTab->setCurrentWidget(ui->simReconJob);
+}
+
+
+void MainWindow::on_simReconJobPreviousButton_clicked()
+{
+    ui->simReconTab->setCurrentWidget(ui->simReconRecon);
 }
 

@@ -3406,6 +3406,9 @@
        <attribute name="title">
         <string>Deskew</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Disabled for now</string>
+       </attribute>
        <widget class="QPushButton" name="dsrPreviousButton_3">
         <property name="geometry">
          <rect>
@@ -3429,9 +3432,9 @@
        <widget class="QPushButton" name="dsrAdvancedSettingsButton_3">
         <property name="geometry">
          <rect>
-          <x>610</x>
+          <x>600</x>
           <y>20</y>
-          <width>161</width>
+          <width>171</width>
           <height>23</height>
          </rect>
         </property>

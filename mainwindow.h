@@ -287,6 +287,14 @@ private slots:
 
     void on_simReconJobAdvancedSettingsButton_clicked();
 
+    void on_simReconMainNextButton_clicked();
+
+    void on_simReconReconPreviousButton_clicked();
+
+    void on_simReconReconNextButton_clicked();
+
+    void on_simReconJobPreviousButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
