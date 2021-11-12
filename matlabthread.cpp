@@ -58,6 +58,9 @@ void matlabThread::run(){
     else if(funcType == "DeconOnly"){
         matlabPtr->feval(u"XR_decon_data_wrapper",outA,data,output);
     }
+    else if(funcType == "simRecon"){
+        matlabPtr->feval(u"simReconAutomaticProcessing",outA,data,output);
+    }
     else{
         matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data,output);
     }
