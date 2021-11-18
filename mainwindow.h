@@ -21,12 +21,9 @@ QT_END_NAMESPACE
 
 using namespace matlab::engine;
 
-
-
 // Class to hold advanced options from the user
 class GUIvals{
     public:
-
         // Main Advanced Settings
         double skewAngle;
         double xyPixelSize;
@@ -92,7 +89,6 @@ class GUIvals{
                     MatlabLaunchStr{"module load matlab/r2021a; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
                     SlurmParam{"-p abc --qos abc_normal -n1 --mem-per-cpu=21418M"}
         {}
-
 };
 
 // Class to hold advanced options for Sim Recon
@@ -171,8 +167,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 public slots:
     void onEnableSubmitButton();
+
 signals:
     void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
 
@@ -198,12 +196,15 @@ private:
 
     // Crop
     std::vector<dataPath> cropDPaths;
-    std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
+    std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;\
+
     std::vector<QString> lsImagePaths;
     std::vector<QString> backgroundPaths;
     std::vector<QString> psfFullPaths;
+
     std::unordered_map<int,std::pair<QString,QDateTime>> jobLogPaths;
     std::unordered_map<int,QString> jobNames;
+
     bool loadSettings;
     void checkLoadPrevSettings();
     QString mostRecentDir;

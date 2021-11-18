@@ -20,12 +20,12 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
     for(size_t i = 0; i < dpHand->size(); i++){
         currPaths.emplace(dpHand->operator[](i).masterPath,dpHand->operator[](i));
     }
-    connect(ui->addPathButton,&QPushButton::clicked,this,&dataPaths::on_dataPathAddPathButton_clicked);
-    connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clicked);
+    connect(ui->addPathButton, &QPushButton::clicked, this, &dataPaths::on_dataPathAddPathButton_clicked);
+    connect(ui->submitButton, &QPushButton::clicked, this ,&dataPaths::on_dataPathSubmitButton_clicked);
 
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < dPaths.size(); i++){
-        makeNewPath(i,dpHand->operator[](i));
+        makeNewPath(i, dpHand->operator[](i));
     }
 
 }
@@ -51,7 +51,7 @@ dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostR
 
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < channelNames.size(); i++){
-        makeNewPath(i,dataPath(),true,channelNames[i]);
+        makeNewPath(i, dataPath(), true, channelNames[i]);
     }
 
 }
@@ -107,7 +107,6 @@ void dataPaths::on_cancelButton_clicked()
 // Close the window and save the values currently in the boxes (even if they are empty currently)
 void dataPaths::on_dataPathSubmitButton_clicked()
 {
-
     bool found = false;
     for(const auto &cPath : currPaths){
         if(cPath.second.masterPath.isEmpty()) continue;
@@ -123,7 +122,6 @@ void dataPaths::on_dataPathSubmitButton_clicked()
         if(currPaths.empty()) break;
     }
 
-
     for(const auto &path : paths){
         if(std::get<2>(path)->text().isEmpty()) continue;
         if(currPaths.find(std::get<2>(path)->text()) == currPaths.end()){
@@ -133,7 +131,6 @@ void dataPaths::on_dataPathSubmitButton_clicked()
             currPaths[std::get<2>(path)->text()].includeMaster = std::get<10>(path)->isChecked();
             currPaths[std::get<2>(path)->text()].pattern = std::get<6>(path)->text();
             currPaths[std::get<2>(path)->text()].maxDepth = std::get<8>(path)->value();
-
         }
     }
 
@@ -161,7 +158,6 @@ void dataPaths::on_dataPathSubmitButton_clickedOther(){
 // All of these set the data paths based on the selected folder and set the tool tips to the data path
 void dataPaths::on_dataPathBrowseButton_clicked()
 {
-
     QLineEdit* currQLE = std::get<2>(paths[getCurrPathIndex(((QPushButton*)sender())->objectName())]);
 
     if(folder){
@@ -187,8 +183,8 @@ void dataPaths::on_dataPathLineEdit_textChanged(const QString &arg1)
 }
 
 // Searchs for possible subDirs. Opens up a seperate form.
-void dataPaths::on_dataPathFindButton_clicked(){
-
+void dataPaths::on_dataPathFindButton_clicked()
+{
     int currTuple = getCurrPathIndex(((QPushButton*)sender())->objectName());
 
     if(std::get<2>(paths[currTuple])->text().isEmpty()){
@@ -212,8 +208,8 @@ void dataPaths::on_dataPathFindButton_clicked(){
     dPR.exec();
 }
 
-void dataPaths::on_dataPathRemoveButton_clicked(){
-
+void dataPaths::on_dataPathRemoveButton_clicked()
+{
     int currTuple = getCurrPathIndex(((QPushButton*)sender())->objectName());
 
     // Delete elems in Tuple
@@ -244,7 +240,8 @@ void dataPaths::on_dataPathRemoveButton_clicked(){
 
 }
 
-void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelName, bool otherData){
+void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelName, bool otherData)
+{
     // Add a horizontal layout to the form
     QHBoxLayout* QHBox = new QHBoxLayout(this);
     ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
@@ -335,7 +332,8 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));
 }
 
-int dataPaths::getCurrPathIndex(QString currWidgetName){
+int dataPaths::getCurrPathIndex(QString currWidgetName)
+{
     int currChar = currWidgetName.size()-1;
     QString currIndexString;
     while(currChar >= 0){
@@ -345,6 +343,5 @@ int dataPaths::getCurrPathIndex(QString currWidgetName){
         else break;
         currChar--;
     }
-
     return currIndexString.toInt();
 }
