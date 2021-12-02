@@ -22,6 +22,7 @@ HEADERS += \
            dsradvanced.h \
            jobadvanced.h \
            jobtext.h \
+           jobtextmanager.h \
            mainadvanced.h \
            mainwindow.h \
            matlaboutputthread.h \
@@ -33,7 +34,8 @@ HEADERS += \
            outputbox.h \
            simreconjobadvanced.h \
            simreconmainadvanced.h \
-           simreconreconadvanced.h
+           simreconreconadvanced.h \
+           submissionchecks.h
 
 FORMS += \
          datapaths.ui \
@@ -58,6 +60,7 @@ SOURCES += \
            dsradvanced.cpp \
            jobadvanced.cpp \
            jobtext.cpp \
+           jobtextmanager.cpp \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
@@ -70,7 +73,8 @@ SOURCES += \
            outputbox.cpp \
            simreconjobadvanced.cpp \
            simreconmainadvanced.cpp \
-           simreconreconadvanced.cpp
+           simreconreconadvanced.cpp \
+           submissionchecks.cpp
 
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
 

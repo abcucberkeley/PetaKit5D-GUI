@@ -9,6 +9,7 @@
 #include "simreconjobadvanced.h"
 #include "datapaths.h"
 #include "loadprevioussettings.h"
+#include "submissionchecks.h"
 #include <QTextDocument>
 #include <QObjectList>
 #include <QtMath>
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Job), false);
 
     ui->simReconTab->setTabEnabled(ui->simReconTab->indexOf(ui->simReconDeskew),false);
+    ui->simReconTab->setCurrentWidget(ui->simReconMain);
 
     // Set most recent Dir to Home initially
     mostRecentDir = QDir::homePath();
@@ -1075,18 +1077,14 @@ void MainWindow::on_submitButton_clicked()
     for(size_t i = 0; i < dPaths.size(); i++){
         if(dPaths[i].includeMaster){
             if(!QFileInfo::exists(dPaths[i].masterPath)){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","Data path \"" + dPaths[i].masterPath + "\" does not exist!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("Data path \"" + dPaths[i].masterPath + "\" does not exist!");
                 return;
             }
         }
         for (const auto &subPath : dPaths[i].subPaths){
             if(subPath.second.first){
                 if(!QFileInfo::exists(subPath.second.second)){
-                    QMessageBox messageBox;
-                    messageBox.warning(0,"Error","Data path \"" + subPath.second.second + "\" does not exist!");
-                    messageBox.setFixedSize(500,200);
+                    messageBoxError("Data path \"" + subPath.second.second + "\" does not exist!");
                     return;
                 }
             }
@@ -1095,23 +1093,17 @@ void MainWindow::on_submitButton_clicked()
 
     // Error if decon is set but no psf paths are set
     if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
-        QMessageBox messageBox;
-        messageBox.warning(0,"Error","Decon is set but there are no psf paths set");
-        messageBox.setFixedSize(500,200);
+        messageBoxError("Decon is set but there are no psf paths set");
         return;
     }
     else if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked())){
         for(const QString &path : psfFullPaths){
             if(path.isEmpty()){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","One of the PSF paths is empty!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("One of the PSF paths is empty!");
                 return;
             }
             else if(!QFileInfo::exists(path)){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","Psf path \"" + path + "\" does not exist!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("Psf path \"" + path + "\" does not exist!");
                 return;
             }
         }
@@ -1135,30 +1127,16 @@ void MainWindow::on_submitButton_clicked()
     //
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
-    //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
     QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
     QString mainPath = dPaths[0].masterPath+"/job_logs/"+timeJobName;
 
-    // Check for job log directory for main job
-    QString jobLogCopy = guiVals.jobLogDir;
-    QDir dir(guiVals.jobLogDir);
-    if (!dir.exists()){
-        QDir mDir(mainPath);
-        if(!mDir.exists()){
-            mDir.mkpath(".");
-        }
-        guiVals.jobLogDir = mainPath;
-        std::cout << "Chosen job log directory does not exist! Using " << guiVals.jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
-    }
-    else{
-        mainPath = guiVals.jobLogDir+"/"+timeJobName;
-        QDir mDir(mainPath);
-        if(!mDir.exists()){
-            mDir.mkpath(".");
-        }
-    }
     // We reset jobLogDir to what it was before at the end of this function
+    QString jobLogCopy = guiVals.jobLogDir;
+
+    // Check for job log directory for main job
+    checkJobLogDir(guiVals, mainPath, timeJobName);
+
 
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
@@ -1246,7 +1224,6 @@ void MainWindow::on_submitButton_clicked()
             if(pattern.size()) patterns.push_back(pattern);
 
             matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-
             for(size_t i = 0; i < patterns.size(); i++){
                 channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
             }
@@ -1964,25 +1941,19 @@ void MainWindow::on_mainNextButton_clicked()
 {
     // Error if no data paths set
     if(!dPaths.size()){
-        QMessageBox messageBox;
-        messageBox.warning(0,"Error","No data paths are set. Please set at least one data path before continuing.");
-        messageBox.setFixedSize(500,200);
+        messageBoxError("No data paths are set. Please set at least one data path before continuing.");
         return;
     }
 
     // Error if no channel patterns set
     if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-        QMessageBox messageBox;
-        messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
-        messageBox.setFixedSize(500,200);
+        messageBoxError("No channel patterns set. Please set at least one pattern before continuing.");
         return;
     }
     for(size_t i = 0; i < channelWidgets.size(); i++){
         if(channelWidgets[i].second->isChecked()) break;
         if(i == channelWidgets.size()-1 && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-            QMessageBox messageBox;
-            messageBox.warning(0,"Error","No channel patterns set. Please set at least one pattern before continuing.");
-            messageBox.setFixedSize(500,200);
+            messageBoxError("No channel patterns set. Please set at least one pattern before continuing.");
             return;
         }
     }
@@ -2376,9 +2347,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
 
     // Error if no data paths are set
     if(!simReconDPaths.size()){
-        QMessageBox messageBox;
-        messageBox.warning(0,"Error","There are no data paths set.");
-        messageBox.setFixedSize(500,200);
+        messageBoxError("There are no data paths set.");
         return;
     }
 
@@ -2386,18 +2355,14 @@ void MainWindow::on_simReconSubmitButton_clicked()
     for(size_t i = 0; i < simReconDPaths.size(); i++){
         if(simReconDPaths[i].includeMaster){
             if(!QFileInfo::exists(simReconDPaths[i].masterPath)){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","Data path \"" + simReconDPaths[i].masterPath + "\" does not exist!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("Data path \"" + simReconDPaths[i].masterPath + "\" does not exist!");
                 return;
             }
         }
         for (const auto &subPath : simReconDPaths[i].subPaths){
             if(subPath.second.first){
                 if(!QFileInfo::exists(subPath.second.second)){
-                    QMessageBox messageBox;
-                    messageBox.warning(0,"Error","Data path \"" + subPath.second.second + "\" does not exist!");
-                    messageBox.setFixedSize(500,200);
+                    messageBoxError("Data path \"" + subPath.second.second + "\" does not exist!");
                     return;
                 }
             }
@@ -2406,23 +2371,17 @@ void MainWindow::on_simReconSubmitButton_clicked()
 
     // Error if decon is set but no psf paths are set
     if((ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked()) && !simReconPsfFullPaths.size()){
-        QMessageBox messageBox;
-        messageBox.warning(0,"Error","Recon is set but there are no psf paths set");
-        messageBox.setFixedSize(500,200);
+        messageBoxError("Recon is set but there are no psf paths set");
         return;
     }
     else if((ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked())){
         for(const QString &path : simReconPsfFullPaths){
             if(path.isEmpty()){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","One of the PSF paths is empty!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("One of the PSF paths is empty!");
                 return;
             }
             else if(!QFileInfo::exists(path)){
-                QMessageBox messageBox;
-                messageBox.warning(0,"Error","Psf path \"" + path + "\" does not exist!");
-                messageBox.setFixedSize(500,200);
+                messageBoxError("Psf path \"" + path + "\" does not exist!");
                 return;
             }
         }
