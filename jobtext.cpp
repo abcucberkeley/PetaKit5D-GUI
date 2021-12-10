@@ -1,6 +1,7 @@
 #include "jobtext.h"
 #include "ui_jobtext.h"
 #include "jobtextmanager.h"
+#include <iostream>
 #include <QFile>
 #include <QTextStream>
 #include <QCloseEvent>
@@ -25,6 +26,7 @@ jobText::jobText(QString textFile, QWidget *parent) :
         while (!stream.atEnd()){
             line.append(stream.readLine()+"\n");
         }
+        // testing
         ui->jobTextOutput->setText(line);
     }
     file.close();
@@ -61,6 +63,12 @@ void jobText::onUpdateTextWindow(){
                 line.append(stream.readLine()+"\n");
             }
             ui->jobTextOutput->setText(line);
+            /*
+            QString appText = line.simplified().remove(ui->jobTextOutput->toPlainText().simplified());
+            if(!appText.simplified().isEmpty()){
+                ui->jobTextOutput->append(appText.simplified());
+            }*/
+            // try appending here instead
         }
         file.close();
         reading = false;

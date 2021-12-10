@@ -9,7 +9,7 @@ jobTextManager::jobTextManager(QObject *parent) :
 void jobTextManager::run(){
     while(textWindowOpen && parent){
             emit updateTextWindow();
-            sleep(5);
+            sleep(60);
     }
 }
 
