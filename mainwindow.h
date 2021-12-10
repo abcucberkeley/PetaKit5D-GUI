@@ -296,6 +296,12 @@ private slots:
 
     void on_simReconJobPreviousButton_clicked();
 
+    void on_parallelRsyncSubmitButton_clicked();
+
+    void on_parallelRsyncSourceBrowseButton_clicked();
+
+    void on_parallelRsyncDestBrowseButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
