@@ -1339,7 +1339,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
 
         data.push_back(factory.createCharArray("DeconIter"));
-        data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
+        data.push_back(factory.createScalar<double>(ui->deconIterationsLineEdit->text().toDouble()));
 
         data.push_back(factory.createCharArray("rotatePSF"));
         data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
@@ -1702,7 +1702,7 @@ void MainWindow::on_submitButton_clicked()
         data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
 
         data.push_back(factory.createCharArray("DeconIter"));
-        data.push_back(factory.createScalar<uint64_t>(ui->deconIterationsLineEdit->text().toULongLong()));
+        data.push_back(factory.createScalar<double>(ui->deconIterationsLineEdit->text().toDouble()));
 
         data.push_back(factory.createCharArray("rotatedPSF"));
         data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
