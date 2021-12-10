@@ -61,6 +61,9 @@ void matlabThread::run(){
     else if(funcType == "simRecon"){
         matlabPtr->feval(u"simReconAutomaticProcessing",outA,data,output);
     }
+    else if(funcType == "parallelRsync"){
+        matlabPtr->feval(u"XR_parallel_rsync_wrapper",outA,data,output);
+    }
     else{
         matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data,output);
     }

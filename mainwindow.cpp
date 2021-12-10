@@ -1023,6 +1023,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton()
 {
+    ui->parallelRsyncSubmitButton->setEnabled(true);
     ui->simReconSubmitButton->setEnabled(true);
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
@@ -2848,7 +2849,7 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     QString funcType = "crop";
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, ui->jobNameLineEdit->text(),ui->parseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->parseClusterCheckBox->isChecked());
     emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
@@ -2946,3 +2947,63 @@ void MainWindow::on_simReconJobPreviousButton_clicked()
 {
     ui->simReconTab->setCurrentWidget(ui->simReconRecon);
 }
+
+void MainWindow::on_parallelRsyncSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->parallelRsyncSubmitButton->setEnabled(false);
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = ui->parallelRsyncSourceLineEdit->text();
+
+    // Source
+    data.push_back(factory.createCharArray(ui->parallelRsyncSourceLineEdit->text().toStdString()));
+
+    // Destination
+    data.push_back(factory.createCharArray(ui->parallelRsyncDestLineEdit->text().toStdString()));
+
+    data.push_back(factory.createCharArray("cpusPerTask"));
+    data.push_back(factory.createScalar<uint64_t>(ui->parallelRsyncCpusPerTaskLineEdit->text().toULongLong()));
+
+    data.push_back(factory.createCharArray("numStream"));
+    data.push_back(factory.createScalar<uint64_t>(ui->parallelRsyncNumStreamLineEdit->text().toULongLong()));
+
+    QString funcType = "parallelRsync";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Parallel Rsync"),true);
+    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+}
+
+
+void MainWindow::on_parallelRsyncSourceBrowseButton_clicked()
+{
+    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Source Folder",mostRecentDir);
+    if(!folder_path.absoluteFilePath().isEmpty()){
+        ui->parallelRsyncSourceLineEdit->setText(folder_path.absoluteFilePath());
+        mostRecentDir = folder_path.absoluteFilePath();
+    }
+}
+
+
+void MainWindow::on_parallelRsyncDestBrowseButton_clicked()
+{
+    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Destination Folder",mostRecentDir);
+    if(!folder_path.absoluteFilePath().isEmpty()){
+        ui->parallelRsyncDestLineEdit->setText(folder_path.absoluteFilePath());
+        mostRecentDir = folder_path.absoluteFilePath();
+    }
+}
+
