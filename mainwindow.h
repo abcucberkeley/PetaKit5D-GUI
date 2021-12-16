@@ -196,7 +196,14 @@ private:
 
     // Crop
     std::vector<dataPath> cropDPaths;
-    std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;\
+    std::vector<std::pair<QLabel*,QCheckBox*>> cropChannelWidgets;
+
+    // FFT Analysis
+    std::vector<dataPath> fftAnalysisDPaths;
+
+    // FSC Analysis
+    std::vector<dataPath> fscAnalysisDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
     std::vector<QString> lsImagePaths;
     std::vector<QString> backgroundPaths;
@@ -301,6 +308,12 @@ private slots:
     void on_parallelRsyncSourceBrowseButton_clicked();
 
     void on_parallelRsyncDestBrowseButton_clicked();
+
+    void on_fftAnalysisSubmitButton_clicked();
+
+    void on_fftAnalysisAddPathsButton_clicked();
+
+    void on_fscAnalysisSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;

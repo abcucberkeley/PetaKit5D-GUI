@@ -40,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cropJobLogDirBrowseButton, &QPushButton::clicked, this, &MainWindow::selectFolderPath);
     //connect(ui->cropSubmitButton,&QPushButton::clicked, this, &MainWindow::on_submitButton_clicked);
 
+    // Connect FSC Analysis signals
+    connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Output Window Threading
     mOutputWindow = new matlabOutputWindow(jobLogPaths,jobNames,this);
     //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
@@ -1024,6 +1027,8 @@ void MainWindow::readSettings()
 void MainWindow::onEnableSubmitButton()
 {
     ui->parallelRsyncSubmitButton->setEnabled(true);
+    ui->fftAnalysisSubmitButton->setEnabled(true);
+    ui->fscAnalysisSubmitButton->setEnabled(true);
     ui->simReconSubmitButton->setEnabled(true);
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
@@ -2129,6 +2134,13 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsCurrWidget = ui->Crop;
         addPathsCurrLayout = ui->cropChannelPatternsHorizontalLayout;
     }
+    else if(((QPushButton *)sender())->objectName().contains("fscAnalysis")){
+        addPathsDataPaths = &fscAnalysisDPaths;
+        addPathsChannelWidgets = &fscAnalysisChannelWidgets;
+        addPathsCurrWidget = ui->fscAnalysis;
+        addPathsCurrLayout = ui->fscAnalysisChannelPatternsHorizontalLayout;
+    }
+
 
     dataPaths daPaths(*addPathsDataPaths, true, mostRecentDir);
     daPaths.setModal(true);
@@ -3005,5 +3017,273 @@ void MainWindow::on_parallelRsyncDestBrowseButton_clicked()
         ui->parallelRsyncDestLineEdit->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
     }
+}
+
+
+void MainWindow::on_fftAnalysisSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->fftAnalysisSubmitButton->setEnabled(false);
+
+    if(!fftAnalysisDPaths.size()) return;
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = fftAnalysisDPaths[0].masterPath;
+
+
+    // DATA PATH
+    // TODO: Make function for this
+    unsigned long long numPaths = 0;
+    for(const auto &path : fftAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path : fftAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    data.push_back(factory.createCharArray("Overwrite"));
+    data.push_back(factory.createScalar<bool>(ui->fftAnalysisOverwriteCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("xyPixelSize"));
+    data.push_back(factory.createScalar<double>(ui->fftAnalysisXyPixelSizeSpinBox->value()));
+
+    data.push_back(factory.createCharArray("dz"));
+    data.push_back(factory.createScalar<double>(ui->fftAnalysisDzLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("N"));
+    data.push_back(factory.createArray<double>({1,3},{ui->fftAnalysisNYSpinBox->value(),ui->fftAnalysisNXSpinBox->value(),ui->fftAnalysisNZSpinBox->value()}));
+
+    data.push_back(factory.createCharArray("save3DStack"));
+    data.push_back(factory.createScalar<bool>(ui->fftAnalysisSave3DStackCheckBox->isChecked()));
+
+    QString funcType = "fftAnalysis";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("FFT Analysis"),true);
+    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+}
+
+
+void MainWindow::on_fftAnalysisAddPathsButton_clicked()
+{
+    dataPaths daPaths(fftAnalysisDPaths, true, mostRecentDir);
+    daPaths.setModal(true);
+    daPaths.exec();
+}
+
+void MainWindow::on_fscAnalysisSubmitButton_clicked()
+{
+    // TODO: Write a function for this stuff
+
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->fscAnalysisSubmitButton->setEnabled(false);
+
+    if(!fscAnalysisDPaths.size()) return;
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = fscAnalysisDPaths[0].masterPath;
+
+    // Data Paths
+    unsigned long long numPaths = 0;
+    for(const auto &path : fscAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path : fscAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->fscAnalysisCustomPatternsCheckBox->isChecked()){
+        if(fscAnalysisChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < fscAnalysisChannelWidgets.size(); i++){
+                if(fscAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(fscAnalysisChannelWidgets[i].first->text());
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->fscAnalysisCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
+        }
+        data.push_back(channelPatterns);
+    }
+
+    // Currently not used
+    data.push_back(factory.createCharArray("Channels"));
+    QString patternLine = ui->fscAnalysisChannelsLineEdit->text();
+    QString pattern;
+    std::vector<QString> patterns;
+    for(int i = 0; i < patternLine.size(); i++){
+        if(patternLine[i] == ','){
+            patterns.push_back(pattern);
+            pattern.clear();
+        }
+        else{
+            pattern.push_back(patternLine[i]);
+        }
+    }
+    if(pattern.size()) patterns.push_back(pattern);
+
+    matlab::data::Array channelPatterns = factory.createArray<double>({1,patterns.size()});
+    for(size_t i = 0; i < patterns.size(); i++){
+        channelPatterns[i] = patterns[i].toDouble();
+    }
+    data.push_back(channelPatterns);
+
+    data.push_back(factory.createCharArray("xyPixelSize"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisXyPixelSizeSpinBox->value()));
+
+    data.push_back(factory.createCharArray("dz"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisDzLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("dr"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisDrLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("dtheta"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisDthetaLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("resThreshMethod"));
+    data.push_back(factory.createCharArray(ui->fscAnalysisResThreshMethodLineEdit->text().toStdString()));
+
+    data.push_back(factory.createCharArray("resThresh"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisResTheshLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("resAxis"));
+    data.push_back(factory.createCharArray(ui->fscAnalysisResAxisLineEdit->text().toStdString()));
+
+    data.push_back(factory.createCharArray("N"));
+    data.push_back(factory.createArray<double>({1,3},{ui->fscAnalysisNYSpinBox->value(),ui->fscAnalysisNXSpinBox->value(),ui->fscAnalysisNZSpinBox->value()}));
+
+    if(ui->fscAnalysisBoundBoxCheckBox->isChecked()){
+        data.push_back(factory.createCharArray("bbox"));
+        data.push_back(factory.createArray<int>({1,6},{ui->fscAnalysisBoundBoxYMinSpinBox->value(),ui->fscAnalysisBoundBoxXMinSpinBox->value(),ui->fscAnalysisBoundBoxZMinSpinBox->value(),ui->fscAnalysisBoundBoxYMaxSpinBox->value(), ui->fscAnalysisBoundBoxXMaxSpinBox->value(), ui->fscAnalysisBoundBoxZMaxSpinBox->value()}));
+    }
+
+    data.push_back(factory.createCharArray("suffix"));
+    data.push_back(factory.createCharArray(ui->fscAnalysisSuffixLineEdit->text().toStdString()));
+
+    data.push_back(factory.createCharArray("iterInterval"));
+    data.push_back(factory.createScalar<double>(ui->fscAnalysisIterIntervalLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("masterCompute"));
+    data.push_back(factory.createScalar<bool>(ui->fscAnalysisMasterComputeCheckBox->isChecked()));
+
+
+    QString funcType = "fscAnalysis";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
+    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
