@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect FSC Analysis signals
     connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
+    // Connect psfDetectionAnalysis signals
+    connect(ui->psfDetectionAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Output Window Threading
     mOutputWindow = new matlabOutputWindow(jobLogPaths,jobNames,this);
     //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
@@ -2140,6 +2143,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsCurrWidget = ui->fscAnalysis;
         addPathsCurrLayout = ui->fscAnalysisChannelPatternsHorizontalLayout;
     }
+    else if(((QPushButton *)sender())->objectName().contains("psfDetectionAnalysis")){
+        addPathsDataPaths = &psfDetectionAnalysisDPaths;
+        addPathsChannelWidgets = &psfDetectionAnalysisChannelWidgets;
+        addPathsCurrWidget = ui->psfDetectionAnalysis;
+        addPathsCurrLayout = ui->psfDetectionAnalysisChannelPatternsHorizontalLayout;
+    }
 
 
     dataPaths daPaths(*addPathsDataPaths, true, mostRecentDir);
@@ -3220,7 +3229,6 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
         data.push_back(channelPatterns);
     }
 
-    // Currently not used
     data.push_back(factory.createCharArray("Channels"));
     QString patternLine = ui->fscAnalysisChannelsLineEdit->text();
     QString pattern;
@@ -3287,3 +3295,193 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
+
+void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
+{
+    // TODO: Write a function for this stuff
+
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->psfDetectionAnalysisSubmitButton->setEnabled(false);
+
+    if(!psfDetectionAnalysisDPaths.size()) return;
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = psfDetectionAnalysisDPaths[0].masterPath;
+
+    // Data Paths
+    unsigned long long numPaths = 0;
+    for(const auto &path : psfDetectionAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path : psfDetectionAnalysisDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked()){
+        if(psfDetectionAnalysisChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < psfDetectionAnalysisChannelWidgets.size(); i++){
+                if(psfDetectionAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(psfDetectionAnalysisChannelWidgets[i].first->text());
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->psfDetectionAnalysisCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
+        }
+        data.push_back(channelPatterns);
+    }
+
+    data.push_back(factory.createCharArray("Channels"));
+    QString patternLine = ui->psfDetectionAnalysisChannelsLineEdit->text();
+    QString pattern;
+    std::vector<QString> patterns;
+    for(int i = 0; i < patternLine.size(); i++){
+        if(patternLine[i] == ','){
+            patterns.push_back(pattern);
+            pattern.clear();
+        }
+        else{
+            pattern.push_back(patternLine[i]);
+        }
+    }
+    if(pattern.size()) patterns.push_back(pattern);
+
+    matlab::data::Array channelPatterns = factory.createArray<double>({1,patterns.size()});
+    for(size_t i = 0; i < patterns.size(); i++){
+        channelPatterns[i] = patterns[i].toDouble();
+    }
+    data.push_back(channelPatterns);
+
+    data.push_back(factory.createCharArray("RWFn"));
+    QString RWFnpatternLine = ui->psfDetectionAnalysisRWFnLineEdit->text();
+    QString RWFnpattern;
+    std::vector<QString> RWFnpatterns;
+    for(int i = 0; i < RWFnpatternLine.size(); i++){
+        if(RWFnpatternLine[i] == ','){
+            RWFnpatterns.push_back(pattern);
+            RWFnpattern.clear();
+        }
+        else{
+            RWFnpattern.push_back(patternLine[i]);
+        }
+    }
+    if(RWFnpattern.size()) RWFnpatterns.push_back(pattern);
+
+    matlab::data::CellArray RWFnPatternsF = factory.createCellArray({1,RWFnpatterns.size()});
+    for(size_t i = 0; i < RWFnpatterns.size(); i++){
+        RWFnPatternsF[i] = RWFnpatterns[i].toStdString();
+    }
+    data.push_back(RWFnPatternsF);
+
+    data.push_back(factory.createCharArray("xyPixelSize"));
+    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisXyPixelSizeSpinBox->value()));
+
+    data.push_back(factory.createCharArray("dz"));
+    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisDzLineEdit->text().toDouble()));
+
+    data.push_back(factory.createCharArray("angle"));
+    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisSkewAngleSpinBox->text().toDouble()));
+
+    data.push_back(factory.createCharArray("sourceStr"));
+    data.push_back(factory.createCharArray(ui->psfDetectionAnalysisSourceStrLineEdit->text().toStdString()));
+
+    if(ui->psfDetectionAnalysisAnalysisOnlyRadioButton->isChecked()){
+        data.push_back(factory.createCharArray("Deskew"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisDeskewCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("flipZstack"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisFlipZStackCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("ObjectiveScan"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisObjectiveScanCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("ZstageScan"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisZStageScanCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("Save16bit"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisSave16BitCheckBox->isChecked()));
+
+        data.push_back(factory.createCharArray("masterCompute"));
+        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisMasterComputeCheckBox->isChecked()));
+    }
+    else{
+        data.push_back(factory.createCharArray("cropSize"));
+        data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisCropSizeYDoubleSpinBox->value(),ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->value(),ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->value()}));
+
+        data.push_back(factory.createCharArray("distThresh"));
+        data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->value()}));
+    }
+}

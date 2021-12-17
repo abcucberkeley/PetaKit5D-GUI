@@ -205,6 +205,10 @@ private:
     std::vector<dataPath> fscAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
+    // psfDetectionAnalysis
+    std::vector<dataPath> psfDetectionAnalysisDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> psfDetectionAnalysisChannelWidgets;
+
     std::vector<QString> lsImagePaths;
     std::vector<QString> backgroundPaths;
     std::vector<QString> psfFullPaths;
@@ -314,6 +318,8 @@ private slots:
     void on_fftAnalysisAddPathsButton_clicked();
 
     void on_fscAnalysisSubmitButton_clicked();
+
+    void on_psfDetectionAnalysisSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;

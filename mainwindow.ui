@@ -22,7 +22,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>801</width>
+      <width>800</width>
       <height>561</height>
      </rect>
     </property>
@@ -4156,12 +4156,12 @@
        <rect>
         <x>-4</x>
         <y>-1</y>
-        <width>801</width>
+        <width>800</width>
         <height>541</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -6627,7 +6627,7 @@
        <attribute name="title">
         <string>PSF Detection/Analysis</string>
        </attribute>
-       <widget class="QLabel" name="fscAnalysisLabel_3">
+       <widget class="QLabel" name="psfDetectionAnalysisLabel">
         <property name="geometry">
          <rect>
           <x>220</x>
@@ -6658,7 +6658,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_87">
          <item>
-          <widget class="QLabel" name="fscAnalysisCustomPatternsLabel_3">
+          <widget class="QLabel" name="psfDetectionAnalysisCustomPatternsLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -6674,7 +6674,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="fscAnalysisCustomPatternsCheckBox_3">
+          <widget class="QCheckBox" name="psfDetectionAnalysisCustomPatternsCheckBox">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
@@ -6684,7 +6684,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fscAnalysisCustomPatternsLineEdit_3">
+          <widget class="QLineEdit" name="psfDetectionAnalysisCustomPatternsLineEdit">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -6695,7 +6695,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QLabel" name="fscAnalysisDataPathsLabel_3">
+       <widget class="QLabel" name="psfDetectionAnalysisDataPathsLabel">
         <property name="geometry">
          <rect>
           <x>270</x>
@@ -6717,7 +6717,7 @@
          <string>Data Paths</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="fscAnalysisAddPathsButton_3">
+       <widget class="QPushButton" name="psfDetectionAnalysisAddPathsButton">
         <property name="geometry">
          <rect>
           <x>370</x>
@@ -6739,9 +6739,9 @@
           <height>25</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="fscAnalysisChannelPatternsHorizontalLayout_3">
+        <layout class="QHBoxLayout" name="psfDetectionAnalysisChannelPatternsHorizontalLayout">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelPatternsLabel_3">
+          <widget class="QLabel" name="psfDetectionAnalysisChannelPatternsLabel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -6763,7 +6763,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="fscAnalysisHorizontalSpacer_3">
+          <spacer name="psfDetectionAnalysisHorizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -6791,7 +6791,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_88">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelsLabel_2">
+          <widget class="QLabel" name="psfDetectionAnalysisChannelsLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -6807,7 +6807,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fscAnalysisChannelsLineEdit_2">
+          <widget class="QLineEdit" name="psfDetectionAnalysisChannelsLineEdit">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -6834,7 +6834,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_89">
            <item>
-            <widget class="QLabel" name="fscAnalysisXyPixelSizeLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisXyPixelSizeLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6851,7 +6851,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisXyPixelSizeSpinBox_2">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisXyPixelSizeSpinBox">
              <property name="toolTip">
               <string>Microns</string>
              </property>
@@ -6874,7 +6874,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_90">
            <item>
-            <widget class="QLabel" name="fscAnalysisDzLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisDzLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6890,7 +6890,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="fscAnalysisDzLineEdit_2">
+            <widget class="QLineEdit" name="psfDetectionAnalysisDzLineEdit">
              <property name="text">
               <string>.1</string>
              </property>
@@ -6901,7 +6901,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_91">
            <item>
-            <widget class="QLabel" name="skewAngleLabel">
+            <widget class="QLabel" name="psfDetectionAnalysisSkewAngleLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6918,7 +6918,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="skewAngleSpinBox">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisSkewAngleSpinBox">
              <property name="toolTip">
               <string>Degrees</string>
              </property>
@@ -6947,7 +6947,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_93">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisDeskewLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6963,7 +6963,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_2">
+            <widget class="QCheckBox" name="psfDetectionAnalysisDeskewCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -6977,7 +6977,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_95">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_3">
+            <widget class="QLabel" name="psfDetectionAnalysisFlipZStackLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6993,7 +6993,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_3">
+            <widget class="QCheckBox" name="psfDetectionAnalysisFlipZStackCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -7004,7 +7004,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_96">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_4">
+            <widget class="QLabel" name="psfDetectionAnalysisObjectiveScanLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -7020,7 +7020,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_4">
+            <widget class="QCheckBox" name="psfDetectionAnalysisObjectiveScanCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -7031,7 +7031,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_97">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_5">
+            <widget class="QLabel" name="psfDetectionAnalysisZStageScanLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -7047,7 +7047,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_5">
+            <widget class="QCheckBox" name="psfDetectionAnalysisZStageScanCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -7058,7 +7058,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_98">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_6">
+            <widget class="QLabel" name="psfDetectionAnalysisSave16BitLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -7074,7 +7074,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_6">
+            <widget class="QCheckBox" name="psfDetectionAnalysisSave16BitCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -7098,7 +7098,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_99">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelsLabel_3">
+          <widget class="QLabel" name="psfDetectionAnalysisRWFnLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7114,7 +7114,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fscAnalysisChannelsLineEdit_3">
+          <widget class="QLineEdit" name="psfDetectionAnalysisRWFnLineEdit">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -7139,7 +7139,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_100">
          <item>
-          <widget class="QLabel" name="fscAnalysisDataPathsLabel_4">
+          <widget class="QLabel" name="psfDetectionAnalysisModeLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7157,7 +7157,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_101">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_7">
+            <widget class="QLabel" name="psfDetectionAnalysisAnalysisOnlyLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -7173,7 +7173,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="fftAnalysisSave3DStackRadioButton_7">
+            <widget class="QRadioButton" name="psfDetectionAnalysisAnalysisOnlyRadioButton">
              <property name="text">
               <string/>
              </property>
@@ -7190,7 +7190,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_102">
            <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel_8">
+            <widget class="QLabel" name="psfDetectionAnalysisDetectionAndAnalysisLabel">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -7206,7 +7206,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="fftAnalysisSave3DStackRadioButton_8">
+            <widget class="QRadioButton" name="psfDetectionAnalysisDetectionAndAnalysisRadioButton">
              <property name="text">
               <string/>
              </property>
@@ -7230,7 +7230,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_103">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelsLabel_4">
+          <widget class="QLabel" name="psfDetectionAnalysisSourceStrLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7246,7 +7246,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fscAnalysisChannelsLineEdit_4">
+          <widget class="QLineEdit" name="psfDetectionAnalysisSourceStrLineEdit">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -7271,7 +7271,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_104">
          <item>
-          <widget class="QLabel" name="fftAnalysisSave3DStackLabel_9">
+          <widget class="QLabel" name="psfDetectionAnalysisMasterComputeLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7287,7 +7287,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox_7">
+          <widget class="QCheckBox" name="psfDetectionAnalysisMasterComputeCheckBox">
            <property name="text">
             <string/>
            </property>
@@ -7306,7 +7306,7 @@
         </property>
         <layout class="QHBoxLayout" name="fscAnalysisBoundBoxMinHorizontalLayout_2">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelsLabel_5">
+          <widget class="QLabel" name="psfDetectionAnalysisCropSizeLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7324,7 +7324,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxYMinHorizontalLayout_2">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxYMinLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisCropSizeYLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7341,7 +7341,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxYMinDoubleSpinBox_2">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeYDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7358,7 +7358,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxXMinHorizontalLayout_2">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxXMinLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisCropSizeXLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7375,7 +7375,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxXMinDoubleSpinBox_2">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeXDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7392,7 +7392,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxZMinHorizontalLayout_2">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxZMinLabel_2">
+            <widget class="QLabel" name="psfDetectionAnalysisCropSizeZLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7409,7 +7409,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxZMinDoubleSpinBox_2">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeZDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7436,7 +7436,7 @@
         </property>
         <layout class="QHBoxLayout" name="fscAnalysisBoundBoxMinHorizontalLayout_3">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelsLabel_6">
+          <widget class="QLabel" name="psfDetectionAnalysisDistThreshLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7454,7 +7454,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxYMinHorizontalLayout_3">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxYMinLabel_3">
+            <widget class="QLabel" name="psfDetectionAnalysisDistThreshYLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7471,7 +7471,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxYMinDoubleSpinBox_3">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshYDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7488,7 +7488,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxXMinHorizontalLayout_3">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxXMinLabel_3">
+            <widget class="QLabel" name="psfDetectionAnalysisDistThreshXLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7505,7 +7505,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxXMinDoubleSpinBox_3">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshXDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7522,7 +7522,7 @@
          <item>
           <layout class="QHBoxLayout" name="fscAnalysisBoundBoxZMinHorizontalLayout_3">
            <item>
-            <widget class="QLabel" name="fscAnalysisBoundBoxZMinLabel_3">
+            <widget class="QLabel" name="psfDetectionAnalysisDistThreshZLabel">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7539,7 +7539,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="fscAnalysisBoundBoxZMinDoubleSpinBox_3">
+            <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshZDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -7554,6 +7554,26 @@
           </layout>
          </item>
         </layout>
+       </widget>
+       <widget class="QPushButton" name="psfDetectionAnalysisSubmitButton">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>410</y>
+          <width>111</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Submit</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tiffZarrConverter">
