@@ -64,6 +64,12 @@ void matlabThread::run(){
     else if(funcType == "parallelRsync"){
         matlabPtr->feval(u"XR_parallel_rsync_wrapper",outA,data,output);
     }
+    else if(funcType == "fftAnalysis"){
+        matlabPtr->feval(u"XR_fftSpectrumComputingWrapper",outA,data,output);
+    }
+    else if(funcType == "fscAnalysis"){
+        matlabPtr->feval(u"XR_FSC_analysis_wrapper",outA,data,output);
+    }
     else{
         matlabPtr->feval(u"XR_microscopeAutomaticProcessing",outA,data,output);
     }
