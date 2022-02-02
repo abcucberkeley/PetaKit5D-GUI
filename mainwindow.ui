@@ -5403,7 +5403,7 @@
          <rect>
           <x>260</x>
           <y>240</y>
-          <width>137</width>
+          <width>151</width>
           <height>21</height>
          </rect>
         </property>
@@ -5637,7 +5637,7 @@
          <rect>
           <x>280</x>
           <y>0</y>
-          <width>251</width>
+          <width>231</width>
           <height>51</height>
          </rect>
         </property>
@@ -5725,7 +5725,7 @@
        <widget class="QWidget" name="layoutWidget_37">
         <property name="geometry">
          <rect>
-          <x>320</x>
+          <x>360</x>
           <y>210</y>
           <width>171</width>
           <height>25</height>
@@ -5830,7 +5830,7 @@
        <widget class="QWidget" name="layoutWidget_40">
         <property name="geometry">
          <rect>
-          <x>190</x>
+          <x>220</x>
           <y>270</y>
           <width>331</width>
           <height>26</height>
@@ -5934,7 +5934,7 @@
          <rect>
           <x>120</x>
           <y>310</y>
-          <width>133</width>
+          <width>151</width>
           <height>21</height>
          </rect>
         </property>
@@ -6300,7 +6300,7 @@
          <rect>
           <x>460</x>
           <y>400</y>
-          <width>162</width>
+          <width>181</width>
           <height>21</height>
          </rect>
         </property>
@@ -6934,9 +6934,9 @@
        <widget class="QWidget" name="horizontalLayoutWidget_23">
         <property name="geometry">
          <rect>
-          <x>120</x>
+          <x>100</x>
           <y>230</y>
-          <width>606</width>
+          <width>631</width>
           <height>25</height>
          </rect>
         </property>
@@ -7301,7 +7301,7 @@
           <height>31</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="fscAnalysisBoundBoxMinHorizontalLayout_2">
+        <layout class="QHBoxLayout" name="psfDetectionAnalysisCropSizeHorizontalLayout">
          <item>
           <widget class="QLabel" name="psfDetectionAnalysisCropSizeLabel">
            <property name="font">
@@ -7319,7 +7319,7 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxYMinHorizontalLayout_2">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisCropSizeYHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisCropSizeYLabel">
              <property name="enabled">
@@ -7353,7 +7353,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxXMinHorizontalLayout_2">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisCropSizeXMinHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisCropSizeXLabel">
              <property name="enabled">
@@ -7387,7 +7387,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxZMinHorizontalLayout_2">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisZHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisCropSizeZLabel">
              <property name="enabled">
@@ -7431,7 +7431,7 @@
           <height>31</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="fscAnalysisBoundBoxMinHorizontalLayout_3">
+        <layout class="QHBoxLayout" name="psfDetectionAnalysisDistThreshHorizontalLayout">
          <item>
           <widget class="QLabel" name="psfDetectionAnalysisDistThreshLabel">
            <property name="font">
@@ -7449,7 +7449,7 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxYMinHorizontalLayout_3">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisDistThreshYHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisDistThreshYLabel">
              <property name="enabled">
@@ -7483,7 +7483,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxXMinHorizontalLayout_3">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisDistThreshXHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisDistThreshXLabel">
              <property name="enabled">
@@ -7517,7 +7517,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="fscAnalysisBoundBoxZMinHorizontalLayout_3">
+          <layout class="QHBoxLayout" name="psfDetectionAnalysisDistThreshZHorizontalLayout">
            <item>
             <widget class="QLabel" name="psfDetectionAnalysisDistThreshZLabel">
              <property name="enabled">
@@ -7588,7 +7588,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_86">
          <item>
-          <widget class="QLabel" name="fscAnalysisCustomPatternsLabel_2">
+          <widget class="QLabel" name="tiffZarrConverterCustomPatternsLabel">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -7604,7 +7604,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="fscAnalysisCustomPatternsCheckBox_2">
+          <widget class="QCheckBox" name="tiffZarrConverterCustomPatternsCheckBox">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
@@ -7614,7 +7614,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fscAnalysisCustomPatternsLineEdit_2">
+          <widget class="QLineEdit" name="tiffZarrConverterCustomPatternsLineEdit_">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -7625,7 +7625,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QPushButton" name="fscAnalysisAddPathsButton_2">
+       <widget class="QPushButton" name="tiffZarrConverterAddPathsButton">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -7647,9 +7647,9 @@
           <height>25</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="fscAnalysisChannelPatternsHorizontalLayout_2">
+        <layout class="QHBoxLayout" name="tiffZarrConverterChannelPatternsHorizontalLayout">
          <item>
-          <widget class="QLabel" name="fscAnalysisChannelPatternsLabel_2">
+          <widget class="QLabel" name="tiffZarrConverterChannelPatternsLabel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -7671,7 +7671,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="fscAnalysisHorizontalSpacer_2">
+          <spacer name="tiffZarrConverterHorizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -7688,7 +7688,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QLabel" name="fscAnalysisDataPathsLabel_2">
+       <widget class="QLabel" name="tiffZarrConverterDataPathsLabel">
         <property name="geometry">
          <rect>
           <x>260</x>
@@ -7710,7 +7710,7 @@
          <string>Data Paths</string>
         </property>
        </widget>
-       <widget class="QLabel" name="fscAnalysisLabel_2">
+       <widget class="QLabel" name="tiffZarrConverterAnalysisLabel">
         <property name="geometry">
          <rect>
           <x>240</x>
@@ -7729,6 +7729,768 @@
         <property name="text">
          <string>Tiff/Zarr Converter</string>
         </property>
+       </widget>
+       <widget class="QPushButton" name="tiffZarrConverterSubmitButton">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>440</y>
+          <width>111</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Submit</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget_31">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>140</y>
+          <width>461</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeHorizontalLayout">
+         <item>
+          <widget class="QLabel" name="tiffZarrConverterBlockSizeLabel">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="text">
+            <string>Block Size</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeYHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeYLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Y:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterBlockSizeYDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>256.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeXHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeXLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>X:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterBlockSizeXDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>128.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeZHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeZLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Z:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterBlockSizeZDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>201.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget_32">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>180</y>
+          <width>461</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeHorizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="tiffZarrConverterBlockSizeLabel_2">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="text">
+            <string>Flipped Tile</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeYHorizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeYLabel_2">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Y:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeXHorizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeXLabel_2">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>X:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterBlockSizeXDoubleSpinBox_2">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>128.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterBlockSizeZHorizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterBlockSizeZLabel_2">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Z:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterBlockSizeZDoubleSpinBox_2">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>201.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget_33">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>220</y>
+          <width>461</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="tiffZarrConverterResampleHorizontalLayout">
+         <item>
+          <widget class="QLabel" name="tiffZarrConverterResampleLabel">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="text">
+            <string>Resample</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterResampleYHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterResampleYLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Y:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterResampleYDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>256.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterResampleXHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterResampleXLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>X:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterResampleXDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>128.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterResampleZHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterResampleZLabel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Z:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="tiffZarrConverterResampleZDoubleSpinBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>201.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_11">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>260</y>
+          <width>110</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="tiffZarrConverterPartialFileHorizontalLayout">
+         <item>
+          <widget class="QLabel" name="tiffZarrConverterPartialFileLabel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Partial File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="tiffZarrConverterPartialFileCheckBox">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_49">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>250</y>
+          <width>491</width>
+          <height>251</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="tiffZarrConverterParseClusterVerticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterParseClusterHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterParseClusterLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Parse Cluster</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="tiffZarrConverterParseClusterCheckBox">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterCpusPerTaskHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterCpusPerTaskLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>CPUs Per Task</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="tiffZarrConverterCpusPerTaskLineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>20</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="tiffZarrConverterCpusPerTaskHorizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>200</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterMasterComputeHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterMasterComputeLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Use Master Compute Node</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="tiffZarrConverterMasterComputeCheckBox">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterCpuOnlyNodesHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterCpuOnlyNodesLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>CPU Only Nodes</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="tiffZarrConverterCpuOnlyNodesCheckBox">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterJobLogDirHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterJobLogDirLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Job Log Dir</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="tiffZarrConverterJobLogDirLineEdit">
+             <property name="text">
+              <string>../job_logs</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="tiffZarrConverterJobLogDirBrowseButton">
+             <property name="text">
+              <string>Browse</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterUuidHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterUuidLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>uuid</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="tiffZarrConverterUuidLineEdit">
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="tiffZarrConverterUuidHorizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>200</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterMaxTrialNumHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterMaxTrialNumLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Max Trial Num</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="tiffZarrConverterMaxTrialNumLineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>20</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="tiffZarrConverterMaxTrialNumHorizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>200</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tiffZarrConverterUnitWaitTimeHorizontalLayout">
+           <item>
+            <widget class="QLabel" name="tiffZarrConverterUnitWaitTimeLabel">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Unit Wait Time</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="tiffZarrConverterUnitWaitTimeLineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>20</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>30</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="tiffZarrConverterUnitWaitTimeHorizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>200</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>
