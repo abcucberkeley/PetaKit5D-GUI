@@ -46,6 +46,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect psfDetectionAnalysis signals
     connect(ui->psfDetectionAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
+    // Connect tiffZarrConverter signals
+    connect(ui->tiffZarrConverterAddPathsButton,&QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Output Window Threading
     mOutputWindow = new matlabOutputWindow(jobLogPaths,jobNames,this);
     //mOutputWindowThread = new matlabOutputWindowThread(jobLogPaths,this);
@@ -1035,6 +1038,7 @@ void MainWindow::onEnableSubmitButton()
     ui->simReconSubmitButton->setEnabled(true);
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
+    ui->tiffZarrConverterSubmitButton->setEnabled(true);
 }
 
 // Open DSR Advanced Settings
@@ -2148,6 +2152,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsChannelWidgets = &psfDetectionAnalysisChannelWidgets;
         addPathsCurrWidget = ui->psfDetectionAnalysis;
         addPathsCurrLayout = ui->psfDetectionAnalysisChannelPatternsHorizontalLayout;
+    }
+    else if(((QPushButton *)sender())->objectName().contains("tiffZarrConverter")){
+        addPathsDataPaths = &tiffZarrConverterDPaths;
+        addPathsChannelWidgets = &tiffZarrConverterChannelWidgets;
+        addPathsCurrWidget = ui->tiffZarrConverter;
+        addPathsCurrLayout = ui->tiffZarrConverterChannelPatternsHorizontalLayout;
     }
 
 
@@ -3485,3 +3495,119 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
         data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->value()}));
     }
 }
+
+
+void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->tiffZarrConverterSubmitButton->setEnabled(false);
+
+    if(!tiffZarrConverterDPaths.size()) return;
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = tiffZarrConverterDPaths[0].masterPath;
+
+    // Data Paths
+    unsigned long long numPaths = 0;
+    for(const auto &path : tiffZarrConverterDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path : tiffZarrConverterDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked()){
+        if(psfDetectionAnalysisChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i < psfDetectionAnalysisChannelWidgets.size(); i++){
+                if(psfDetectionAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(psfDetectionAnalysisChannelWidgets[i].first->text());
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->psfDetectionAnalysisCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
+        }
+        data.push_back(channelPatterns);
+    }
+
+    if(ui->tiffZarrConverterTiffToZarrRadioButton->isChecked()){
+
+    }
+    else{
+
+    }
+}
+

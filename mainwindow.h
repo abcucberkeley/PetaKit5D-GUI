@@ -209,6 +209,10 @@ private:
     std::vector<dataPath> psfDetectionAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> psfDetectionAnalysisChannelWidgets;
 
+    // tiffZarrConverter
+    std::vector<dataPath> tiffZarrConverterDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> tiffZarrConverterChannelWidgets;
+
     std::vector<QString> lsImagePaths;
     std::vector<QString> backgroundPaths;
     std::vector<QString> psfFullPaths;
@@ -320,6 +324,8 @@ private slots:
     void on_fscAnalysisSubmitButton_clicked();
 
     void on_psfDetectionAnalysisSubmitButton_clicked();
+
+    void on_tiffZarrConverterSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;
