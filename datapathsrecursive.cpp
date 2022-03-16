@@ -97,6 +97,9 @@ void dataPathsRecursive::on_cancelButton_clicked()
 void dataPathsRecursive::on_submitButton_clicked()
 {
     bool found = false;
+    // Vector of paths that will be erased because they are no longer in the window
+    std::vector<QString> toBeErased;
+
     for(const auto &cPath : *currPaths){
         found = false;
         for(const auto &path : paths){
@@ -105,8 +108,12 @@ void dataPathsRecursive::on_submitButton_clicked()
                 break;
             }
         }
-        if(!found) currPaths->erase(cPath.second.second);
-        if(currPaths->empty()) break;
+        //if(!found) currPaths->erase(cPath.second.second);
+        if(!found) toBeErased.push_back(cPath.second.second);
+    }
+
+    for(QString &badPath : toBeErased){
+        currPaths->erase(badPath);
     }
 
     for(const auto &path : paths){

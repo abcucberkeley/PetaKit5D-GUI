@@ -108,6 +108,9 @@ void dataPaths::on_cancelButton_clicked()
 void dataPaths::on_dataPathSubmitButton_clicked()
 {
     bool found = false;
+    // Vector of paths that will be erased because they are no longer in the window
+    std::vector<QString> toBeErased;
+
     for(const auto &cPath : currPaths){
         if(cPath.second.masterPath.isEmpty()) continue;
 
@@ -118,8 +121,11 @@ void dataPaths::on_dataPathSubmitButton_clicked()
                 break;
             }
         }
-        if(!found) currPaths.erase(cPath.second.masterPath);
-        if(currPaths.empty()) break;
+        if(!found) toBeErased.push_back(cPath.second.masterPath);
+    }
+
+    for(QString &badPath : toBeErased){
+        currPaths.erase(badPath);
     }
 
     for(const auto &path : paths){
