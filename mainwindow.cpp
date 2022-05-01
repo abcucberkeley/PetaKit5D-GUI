@@ -1272,8 +1272,8 @@ void MainWindow::on_submitButton_clicked()
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
         data.push_back(factory.createCharArray("Save16bit"));
-        if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-        else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
+        if (ui->deconOnlySave16BitCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
+        else data.push_back(factory.createScalar<bool>(false));
 
         // This needs to change FIX
         data.push_back(factory.createCharArray("onlyFirstTP"));
