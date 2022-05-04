@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect FSC Analysis signals
     connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
+    // Connect mipGenerator signals
+    connect(ui->mipGeneratorAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Connect psfDetectionAnalysis signals
     connect(ui->psfDetectionAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
@@ -1032,6 +1035,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton()
 {
+    ui->mipGeneratorSubmitButton->setEnabled(true);
     ui->parallelRsyncSubmitButton->setEnabled(true);
     ui->fftAnalysisSubmitButton->setEnabled(true);
     ui->fscAnalysisSubmitButton->setEnabled(true);
@@ -2147,6 +2151,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsCurrWidget = ui->fscAnalysis;
         addPathsCurrLayout = ui->fscAnalysisChannelPatternsHorizontalLayout;
     }
+    else if(((QPushButton *)sender())->objectName().contains("mipGenerator")){
+        addPathsDataPaths = &mipGeneratorDPaths;
+        addPathsChannelWidgets = &mipGeneratorChannelWidgets;
+        addPathsCurrWidget = ui->mipGenerator;
+        addPathsCurrLayout = ui->mipGeneratorChannelPatternsHorizontalLayout;
+    }
     else if(((QPushButton *)sender())->objectName().contains("psfDetectionAnalysis")){
         addPathsDataPaths = &psfDetectionAnalysisDPaths;
         addPathsChannelWidgets = &psfDetectionAnalysisChannelWidgets;
@@ -2880,7 +2890,7 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     QString funcType = "crop";
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->parseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->cropParseClusterCheckBox->isChecked());
     emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
@@ -3609,5 +3619,152 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     else{
 
     }
+}
+
+
+void MainWindow::on_mipGeneratorSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->mipGeneratorSubmitButton->setEnabled(false);
+
+    // We need this to convert C++ vars to MATLAB vars
+    matlab::data::ArrayFactory factory;
+
+    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
+    size_t outA = 0;
+    std::vector<matlab::data::Array> data;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = mipGeneratorDPaths[0].masterPath;
+
+    // Data Paths
+    unsigned long long numPaths = 0;
+    for(const auto &path :  mipGeneratorDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()) numPaths++;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()) numPaths++;
+            }
+        }
+    }
+    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
+    size_t currPath = 0;
+    for(const auto &path :  mipGeneratorDPaths){
+        if(path.includeMaster){
+            QDirIterator it(path.masterPath,QDir::Files);
+            if(it.hasNext()){
+                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
+                currPath++;
+            }
+            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+        }
+        for(const auto &subPath : path.subPaths){
+            if(subPath.second.first){
+                QDirIterator it(subPath.second.second,QDir::Files);
+                if(it.hasNext()){
+                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
+                    currPath++;
+                }
+                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
+            }
+        }
+    }
+    data.push_back(dataPaths_exps);
+
+    // Channel Patterns
+    data.push_back(factory.createCharArray("ChannelPatterns"));
+    if(!ui->mipGeneratorCustomPatternsCheckBox->isChecked()){
+        if( mipGeneratorChannelWidgets.size()){
+            // Grab indexes of checked boxes
+            std::vector<int> indexes;
+            for(size_t i = 0; i <  mipGeneratorChannelWidgets.size(); i++){
+                if( mipGeneratorChannelWidgets[i].second->isChecked()) indexes.push_back(i);
+            }
+            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
+            int cpi = 0;
+            // Go through checked indexes and the label text (channel pattern) in the cell array
+            for(int i : indexes){
+                // Convert from rich text to plain text
+                QTextDocument toPlain;
+                toPlain.setHtml(mipGeneratorChannelWidgets[i].first->text());
+                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
+                cpi++;
+            }
+            data.push_back(channelPatterns);
+        }
+    }
+    // Use custom patterns
+    else{
+        QString patternLine = ui->mipGeneratorCustomPatternsLineEdit->text();
+        QString pattern;
+        std::vector<QString> patterns;
+        for(int i = 0; i < patternLine.size(); i++){
+            if(patternLine[i] == ','){
+                patterns.push_back(pattern);
+                pattern.clear();
+            }
+            else{
+                pattern.push_back(patternLine[i]);
+            }
+        }
+        if(pattern.size()) patterns.push_back(pattern);
+
+        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+        for(size_t i = 0; i < patterns.size(); i++){
+            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
+        }
+        data.push_back(channelPatterns);
+    }
+
+    data.push_back(factory.createCharArray("axis"));
+    data.push_back(factory.createArray<double>({1,3},{static_cast<double>(ui->mipGeneratorAxisYSpinBox->value()),static_cast<double>(ui->mipGeneratorAxisXSpinBox->value()),static_cast<double>(ui->mipGeneratorAxisZSpinBox->value())}));
+
+    data.push_back(factory.createCharArray("zarrFile"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorZarrFileCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("largeZarr"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorLargeZarrCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("Save16bit"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorSave16BitCheckBox->isChecked()));
+
+    // Job Settings
+    data.push_back(factory.createCharArray("parseCluster"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorParseClusterCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("masterCompute"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorMasterComputeCheckBox->isChecked()));
+
+    data.push_back(factory.createCharArray("cpusPerTask"));
+    data.push_back(factory.createScalar<uint64_t>(ui->mipGeneratorCpusPerTaskLineEdit->text().toULongLong()));
+
+    data.push_back(factory.createCharArray("cpuOnlyNodes"));
+    data.push_back(factory.createScalar<bool>(ui->mipGeneratorCpuOnlyNodesCheckBox->isChecked()));
+
+    // Advanced Job Settings
+    if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
+        data.push_back(factory.createCharArray("jobLogDir"));
+        data.push_back(factory.createCharArray(ui->mipGeneratorJobLogDirLineEdit->text().toStdString()));
+    }
+
+    if(!ui->mipGeneratorUuidLineEdit->text().isEmpty()){
+        data.push_back(factory.createCharArray("uuid"));
+        data.push_back(factory.createCharArray(ui->mipGeneratorUuidLineEdit->text().toStdString()));
+    }
+
+    QString funcType = "mipGenerator";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
+    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
 }
 
