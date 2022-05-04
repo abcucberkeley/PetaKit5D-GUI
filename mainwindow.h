@@ -205,6 +205,10 @@ private:
     std::vector<dataPath> fscAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
+    // mipGenerator
+    std::vector<dataPath> mipGeneratorDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> mipGeneratorChannelWidgets;
+
     // psfDetectionAnalysis
     std::vector<dataPath> psfDetectionAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> psfDetectionAnalysisChannelWidgets;
@@ -326,6 +330,8 @@ private slots:
     void on_psfDetectionAnalysisSubmitButton_clicked();
 
     void on_tiffZarrConverterSubmitButton_clicked();
+
+    void on_mipGeneratorSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;

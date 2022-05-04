@@ -27,6 +27,7 @@ void checkJobLogDir(T &submissionVals, QString &mainPath, const QString &timeJob
         }
         QFile setP(mainPath);
         setP.setPermissions({QFileDevice::Permission::ReadUser,QFileDevice::Permission::WriteUser,QFileDevice::Permission::ExeUser,QFileDevice::Permission::ReadGroup,QFileDevice::Permission::WriteGroup,QFileDevice::Permission::ExeGroup,QFileDevice::Permission::ReadOther,QFileDevice::Permission::ExeOther});
+        submissionVals.jobLogDir = mainPath;
     }
 }
 
