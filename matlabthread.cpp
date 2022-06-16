@@ -24,7 +24,7 @@ void matlabThread::run(){
 
     // Check if Windows or Cluster then add Repo to the path
     if(QSysInfo::productType().contains("win",Qt::CaseInsensitive)){
-        matlab::data::CharArray newDir = factory.createCharArray(QCoreApplication::applicationDirPath().toStdString()+"/XR_Repository");
+        matlab::data::CharArray newDir = factory.createCharArray(QCoreApplication::applicationDirPath().toStdString()+"/LLSM3DTools");
         matlabPtr->feval(u"cd",newDir);
         matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
         matlabPtr->feval(u"addpath",newGen);
