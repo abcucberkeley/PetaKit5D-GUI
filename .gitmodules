@@ -1,3 +1,3 @@
-[submodule "XR_Repository"]
-	path = XR_Repository
-	url = https://github.com/abcucberkeley/XR_Repository
+[submodule "LLSM3DTools"]
+	path = LLSM3DTools
+	url = https://github.com/abcucberkeley/LLSM3DTools
