@@ -87,8 +87,8 @@ QMAKE_CXXFLAGS_RELEASE -= -O2
 QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {
-LIBS += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64/libMatlabEngine.so" \
-        "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64/libMatlabDataArray.so"
+LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabEngine \
+        -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
 
 INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
 }
