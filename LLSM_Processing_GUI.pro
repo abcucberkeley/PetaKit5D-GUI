@@ -8,10 +8,10 @@ VERSION = 0.4.0.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 MATLAB_VER_WIN = R2022a
-MATLAB_VER_CLUSTER = r2021a
+MATLAB_VER_LINUX = R2022b
 
 MATLAB_ROOT_WIN = C:/Program Files/MATLAB
-MATLAB_ROOT_CLUSTER = /global/software/sl-7.x86_64/modules/tools/matlab
+MATLAB_ROOT_LINUX = /usr/local/MATLAB
 
 # Input
 HEADERS += \
@@ -87,10 +87,10 @@ QMAKE_CXXFLAGS_RELEASE -= -O2
 QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {
-LIBS += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabEngine.so" \
-        "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/bin/glnxa64/libMatlabDataArray.so"
+LIBS += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64/libMatlabEngine.so" \
+        "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64/libMatlabDataArray.so"
 
-INCLUDEPATH += "$${MATLAB_ROOT_CLUSTER}/$${MATLAB_VER_CLUSTER}/extern/include"
+INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
 }
 
 win32 {
