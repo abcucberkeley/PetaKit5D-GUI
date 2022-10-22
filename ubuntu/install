@@ -1,0 +1,77 @@
+#!/bin/bash
+BASEDIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+MATLABROOT=/usr/local/MATLAB/R2022b
+RAWBIN=$BASEDIR/bin/rawBin/
+DOWNLOAD=false
+REPOOWNER=abcucberkeley
+
+USAGE="$(basename "$0") [options] -- program to install the LLSM_Processing_GUI
+
+Options:
+ -d		Attempts to download and use the latest LLSM3DTools dev branch
+ -h		Shows this help text
+ -m <path>	Specifies the matlab root (default: /usr/local/MATLAB/R2022b)"
+
+while getopts dhm: flag
+do
+    case "${flag}" in
+		d)	DOWNLOAD=true;;
+		h)	echo "$USAGE"
+			exit 0;;
+        m)	MATLABROOT=${OPTARG};;
+		?)  echo "$USAGE"
+            exit 0;;
+    esac
+done
+OMATLABROOT=$MATLABROOT
+MATLABROOT=$MATLABROOT/extern/bin/glnxa64/
+FILEDA=$MATLABROOT/libMatlabDataArray.so
+FILEE=$MATLABROOT/libMatlabEngine.so
+if test -f "$FILEDA" && test -f "$FILEE"; then
+    echo "$FILEDA found!"
+	echo "$FILEE found!"
+else
+	echo "ERROR: Needed matlab libs were not found"
+	echo "Double check your matlab root: $OMATLABROOT"
+	exit 0
+fi
+
+FEXEC=$BASEDIR/bin/LLSM_Processing_GUI
+
+#Create the new executable
+echo "#!/bin/bash
+BASEDIR=\$( cd -- \"\$( dirname -- \"\${BASH_SOURCE[0]}\" )\" &> /dev/null && pwd )
+export LD_LIBRARY_PATH=\$BASEDIR/../lib:\$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$MATLABROOT:\$LD_LIBRARY_PATH
+\$BASEDIR/rawBin/LLSM_Processing_GUI_raw" > $FEXEC
+
+chmod 777 $FEXEC
+
+# Pull the latest version of LLSM3DTools from the dev branch
+if [ "$DOWNLOAD" = true ] ; then
+    wget https://github.com/abcucberkeley/LLSM3DTools/tarball/dev -O $RAWBIN/LLSM3DTools.tar.gz
+fi
+
+if test ! -f "$RAWBIN/LLSM3DTools.tar.gz"; then
+	echo "ERROR: $RAWBIN/LLSM3DTools.tar.gz was not found"
+	echo "Try downloading it with the -d flag enabled. Example: ./install -d"
+	exit 0
+fi
+
+echo "Unpacking LLSM3DTools"
+tar -xf $RAWBIN/LLSM3DTools.tar.gz -C $RAWBIN
+
+# Change the intial name of LLSM3DTools
+INITIALDIR=$(find $RAWBIN -maxdepth 1 -type d -name "*$REPOOWNER*" -print -quit)
+NEWDIR=$RAWBIN/LLSM3DTools
+
+# Replace the current LLSM3DTools if it already exits
+if [ -d "$NEWDIR" ]; then
+  rm -r $NEWDIR
+fi
+
+mv $INITIALDIR $NEWDIR
+
+echo "Install successful!"
+echo "Your executable is: $FEXEC"
+

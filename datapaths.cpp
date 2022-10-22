@@ -167,14 +167,14 @@ void dataPaths::on_dataPathBrowseButton_clicked()
     QLineEdit* currQLE = std::get<2>(paths[getCurrPathIndex(((QPushButton*)sender())->objectName())]);
 
     if(folder){
-        QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir);
+        QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select the Data Folder",*mostRecentDir));
         if(!folder_path.absoluteFilePath().isEmpty()){
             currQLE->setText(folder_path.absoluteFilePath());
             *mostRecentDir = folder_path.absoluteFilePath();
         }
     }
     else{
-        QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir);
+        QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the Data File",*mostRecentDir));
         if(!file_path.absoluteFilePath().isEmpty()){
             currQLE->setText(file_path.absoluteFilePath());
             *mostRecentDir = file_path.absolutePath();

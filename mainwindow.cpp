@@ -1807,7 +1807,7 @@ void MainWindow::on_submitButton_clicked()
 // Browse for Result Dir Folder
 void MainWindow::on_resultsDirBrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Results Folder",mostRecentDir);
+    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select or Create and Select the Results Folder",mostRecentDir));
     if(!folder_path.baseName().isEmpty()){
         ui->resultsDirLineEdit->setText(folder_path.baseName());
         mostRecentDir = folder_path.absoluteFilePath();
@@ -2229,7 +2229,7 @@ void MainWindow::on_addPathsButton_clicked()
 
 void MainWindow::on_imageListFullPathsBrowseButton_clicked()
 {
-    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the Image List Full Paths File",mostRecentDir);
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the Image List Full Paths File",mostRecentDir));
     if(!file_path.absoluteFilePath().isEmpty()){
         ui->imageListFullPathsLineEdit->setText(file_path.absoluteFilePath());
         mostRecentDir = file_path.absolutePath();
@@ -2904,7 +2904,7 @@ void MainWindow::selectFolderPath(){
         result = ui->cropJobLogDirLineEdit;
     }
 
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select or Create and Select the Folder",mostRecentDir);
+    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select or Create and Select the Folder",mostRecentDir));
     if(!folder_path.absoluteFilePath().isEmpty()){
         result->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
@@ -3031,7 +3031,7 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
 
 void MainWindow::on_parallelRsyncSourceBrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Source Folder",mostRecentDir);
+    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select the Source Folder",mostRecentDir));
     if(!folder_path.absoluteFilePath().isEmpty()){
         ui->parallelRsyncSourceLineEdit->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
@@ -3041,7 +3041,7 @@ void MainWindow::on_parallelRsyncSourceBrowseButton_clicked()
 
 void MainWindow::on_parallelRsyncDestBrowseButton_clicked()
 {
-    QFileInfo folder_path = QFileDialog::getExistingDirectory(this,"Select the Destination Folder",mostRecentDir);
+    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select the Destination Folder",mostRecentDir));
     if(!folder_path.absoluteFilePath().isEmpty()){
         ui->parallelRsyncDestLineEdit->setText(folder_path.absoluteFilePath());
         mostRecentDir = folder_path.absoluteFilePath();
