@@ -72,7 +72,7 @@ void deconAdvanced::on_submitButton_clicked()
 
 void deconAdvanced::on_cppDeconPathBrowseButton_clicked()
 {
-    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the CPP Decon File",QDir::homePath());
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the CPP Decon File",QDir::homePath()));
     if(!file_path.absoluteFilePath().isEmpty()) ui->cppDeconPathLineEdit->setText(file_path.absoluteFilePath());
 }
 
@@ -83,7 +83,7 @@ void deconAdvanced::on_cppDeconPathLineEdit_textChanged(const QString &arg1)
 
 void deconAdvanced::on_cudaDeconPathBrowseButton_clicked()
 {
-    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the CUDA Decon File",QDir::homePath());
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the CUDA Decon File",QDir::homePath()));
     if(!file_path.absoluteFilePath().isEmpty()) ui->cudaDeconPathLineEdit->setText(file_path.absoluteFilePath());
 }
 
@@ -94,7 +94,7 @@ void deconAdvanced::on_cudaDeconPathLineEdit_textChanged(const QString &arg1)
 
 void deconAdvanced::on_otfgenPathBrowseButton_clicked()
 {
-    QFileInfo file_path = QFileDialog::getOpenFileName(this,"Select the OTFGEN File",QDir::homePath());
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the OTFGEN File",QDir::homePath()));
     if(!file_path.absoluteFilePath().isEmpty()) ui->otfgenPathLineEdit->setText(file_path.absoluteFilePath());
 }
 

@@ -7,6 +7,9 @@ QT += widgets
 VERSION = 0.4.0.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
+CONFIG += c++17
+
+
 MATLAB_VER_WIN = R2022a
 MATLAB_VER_LINUX = R2022b
 
@@ -87,6 +90,11 @@ QMAKE_CXXFLAGS_RELEASE -= -O2
 QMAKE_CXXFLAGS_RELEASE *= -O3
 
 unix:!macx {
+CONFIG += static
+QMAKE_CXXFLAGS += -static
+#QMAKE_CXXFLAGS += "-fno-sized-deallocation"
+
+
 LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabEngine \
         -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
 
