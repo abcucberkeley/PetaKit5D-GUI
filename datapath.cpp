@@ -15,7 +15,14 @@ dataPath::dataPath(QString masterPath, bool includeMaster, QString pattern, int 
 
 }
 
+// Needed this one for Clang
+// Sorting for this class is done through the masterPath member
+bool dataPath::operator<(const dataPath &dPath) const{
+    return this->masterPath < dPath.masterPath;
+}
+
 // Sorting for this class is done through the masterPath member
 bool dataPath::operator<(const dataPath &dPath){
     return this->masterPath < dPath.masterPath;
 }
+

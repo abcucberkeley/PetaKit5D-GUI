@@ -12,9 +12,11 @@ CONFIG += c++17
 
 MATLAB_VER_WIN = R2022a
 MATLAB_VER_LINUX = R2022b
+MATLAB_VER_MAC = R2022b
 
 MATLAB_ROOT_WIN = C:/Program Files/MATLAB
 MATLAB_ROOT_LINUX = /usr/local/MATLAB
+MATLAB_ROOT_MAC = /Applications/MATLAB_
 
 # Input
 HEADERS += \
@@ -99,6 +101,14 @@ LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatl
         -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
 
 INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
+}
+
+macx{
+LIBS += -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabEngine \
+        -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabDataArray
+
+
+INCLUDEPATH += "$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/include"
 }
 
 win32 {

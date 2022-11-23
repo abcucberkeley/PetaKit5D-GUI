@@ -19,7 +19,9 @@ class dataPath
 public:
     dataPath();
     dataPath(QString masterPath, bool includeMaster, QString pattern, int maxDepth, std::unordered_map<QString,std::pair<bool, QString>> subPaths);
+
     bool operator<(const dataPath &dPath);
+    bool operator<(const dataPath &dPath) const;
 
     QString masterPath;
     bool includeMaster;
