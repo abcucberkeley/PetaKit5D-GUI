@@ -1,5 +1,6 @@
 #include "matlabthreadmanager.h"
-#include "mainwindow.h"
+#include "matlabthread.h"
+#include <iostream>
 
 
 
@@ -34,7 +35,7 @@ void matlabThreadManager::run(){
     }
 
     // Create new matlab thread
-    mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, data, mPathJNameParseCluster, mThreadID));
+    mThreads.emplace(mThreadID, new matlabThread(this, funcType, outA, args, mPathJNameParseCluster, mThreadID, isMcc, pathToMatlab));
 
     outputLock->lock();
     std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" Submitted" << std::endl;
@@ -50,19 +51,21 @@ void matlabThreadManager::run(){
 
     mThreadID++;
     outA = 1;
-    data.clear();
+    //data.clear();
     emit enableSubmitButton();
     }
 
 }
 
 // Sets data and outA (given by the GUI signal) when a job is about to start. This will let the MATLAB thread instantly start that job.
-void matlabThreadManager::onJobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths){
+void matlabThreadManager::onJobStart(std::string &args, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, bool isMcc, const std::string &pathToMatlab){
     std::cout << "Starting job" << std::endl;
-    this->data = std::move(data);
+    this->args = std::move(args);
     this->funcType = std::move(funcType);
     this->mPathJNameParseCluster = std::move(mPathJNameParseCluster);
     if(!this->jobLogPaths) this->jobLogPaths = &jobLogPaths;
-    this->outA = std::move(outA);
+    this->outA = 0;
+    this->isMcc = isMcc;
+    this->pathToMatlab = pathToMatlab;
 }
 

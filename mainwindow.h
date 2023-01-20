@@ -4,8 +4,6 @@
 #include "matlabthreadmanager.h"
 #include "matlaboutputwindow.h"
 #include "datapath.h"
-#include "MatlabEngine.hpp"
-#include "MatlabDataArray.hpp"
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QFileDialog>
@@ -18,8 +16,6 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
-using namespace matlab::engine;
 
 // Class to hold advanced options from the user
 class GUIvals{
@@ -172,12 +168,17 @@ public slots:
     void onEnableSubmitButton();
 
 signals:
-    void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
+    //void jobStart(size_t &outA, std::vector<matlab::data::Array> &data, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths);
+    void jobStart(std::string &args, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, bool isMcc, const std::string &pathToMatlab);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
+    // Using compiled scripts or matlab
+    bool isMcc;
+    std::string pathToMatlab;
+
     void writeSettings();
     void readSettings();
     matlabThreadManager *mThreadManager;

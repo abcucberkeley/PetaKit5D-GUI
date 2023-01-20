@@ -1,5 +1,7 @@
 #include "matlaboutputthread.h"
 
+// NOTE: This will probably now be unused since we do not use the matlab c++ api anymore
+/*
 matlabOutputThread::matlabOutputThread(QObject *parent, std::shared_ptr<StringBuf> output, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID) :
     QThread(parent), output(output), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID), jobFinished(false)
 {
@@ -51,3 +53,4 @@ void matlabOutputThread::run(){
 void matlabOutputThread::onJobFinish(bool jobFinished){
     this->jobFinished = jobFinished;
 }
+*/

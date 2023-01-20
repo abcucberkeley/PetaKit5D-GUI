@@ -1,12 +1,9 @@
 #ifndef MATLABOUTPUTTHREAD_H
 #define MATLABOUTPUTTHREAD_H
 
-#include "MatlabEngine.hpp"
-#include "MatlabDataArray.hpp"
 #include <QtCore>
 #include <QThread>
-
-using namespace matlab::engine;
+/*
 typedef std::basic_stringbuf<char16_t> StringBuf;
 
 class matlabOutputThread : public QThread
@@ -24,5 +21,6 @@ private:
     unsigned int mThreadID;
     bool jobFinished;
 };
+*/
 
 #endif // MATLABOUTPUTTHREAD_H

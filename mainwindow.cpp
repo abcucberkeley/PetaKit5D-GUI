@@ -10,17 +10,21 @@
 #include "datapaths.h"
 #include "loadprevioussettings.h"
 #include "submissionchecks.h"
+#include "matlabhelperfunctions.h"
 #include <QTextDocument>
 #include <QObjectList>
 #include <QtMath>
 
-using namespace matlab::engine;
+//using namespace matlab::engine;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // check if using compiled scripts or matlab
+    // isMcc = true;
 
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
@@ -75,11 +79,12 @@ MainWindow::MainWindow(QWidget *parent)
     QString savedVersion = settings.value("version").toString();
     settings.endGroup();
 
-    QCoreApplication::setApplicationVersion(VERSION_STRING);
-    if(savedVersion == QCoreApplication::applicationVersion()){
-        // Restore previous settings if user says yes
-        checkLoadPrevSettings();
-        if(loadSettings) readSettings();
+    //QCoreApplication::setApplicationVersion(VERSION_STRING);
+    //if(savedVersion == QCoreApplication::applicationVersion()){
+    // Restore previous settings if user says yes
+    checkLoadPrevSettings();
+    if(loadSettings) readSettings();
+    /*
     }
     else{
         // If saved version is not the current version then reset values to avoid corruption
@@ -87,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent)
         std::cout << "New Version has been detected. Resetting saved settings to avoid corruption." << std::endl;
         outputLock.unlock();
     }
+    */
 
     // Set current tab to the main tab
     ui->tabWidget->setCurrentWidget(ui->Main);
@@ -1129,12 +1135,7 @@ void MainWindow::on_submitButton_clicked()
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -1148,6 +1149,15 @@ void MainWindow::on_submitButton_clicked()
     QString timeJobName = dateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
     QString mainPath = dPaths[0].masterPath+"/job_logs/"+timeJobName;
 
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
     // We reset jobLogDir to what it was before at the end of this function
     QString jobLogCopy = guiVals.jobLogDir;
 
@@ -1157,619 +1167,476 @@ void MainWindow::on_submitButton_clicked()
 
     if(ui->deconOnlyCheckBox->isChecked()){
         // Data Paths
-        unsigned long long numPaths = 0;
-        for(const auto &path : dPaths){
-            if(path.includeMaster){
-                QDirIterator it(path.masterPath,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-            for(const auto &subPath : path.subPaths){
-                if(subPath.second.first){
-                    QDirIterator it(subPath.second.second,QDir::Files);
-                    if(it.hasNext()) numPaths++;
-                }
-            }
-        }
-        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-        size_t currPath = 0;
-        for(const auto &path : dPaths){
-            if(path.includeMaster){
-                QDirIterator it(path.masterPath,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-            for(const auto &subPath : path.subPaths){
-                if(subPath.second.first){
-                    QDirIterator it(subPath.second.second,QDir::Files);
-                    if(it.hasNext()){
-                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                        currPath++;
-                    }
-                    else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-                }
-            }
-        }
-        data.push_back(dataPaths_exps);
+        addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc);
 
         // Main Settings
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
         // TODO: FIX LOGIC FOR DECON ONLY
-        data.push_back(factory.createCharArray("Overwrite"));
-        if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
-        else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
+        addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
+        if(ui->deconOnlyCheckBox->isChecked()) addBoolToArgs(args,false,prependedString);
+        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) addBoolToArgs(args,true,prependedString);
+        else{
+            std::vector<std::string> OverwriteV = {btosM(ui->deskewOverwriteDataCheckBox->isChecked()),btosM(ui->rotateOverwriteDataCheckBox->isChecked()),btosM(ui->stitchOverwriteDataCheckBox->isChecked()),btosM(false),btosM(false)};
+            addArrayToArgs(args,OverwriteV,false,prependedString,"[]",isMcc);
+        }
 
         // Channel Patterns
-        data.push_back(factory.createCharArray("ChannelPatterns"));
-        if(!ui->customPatternsCheckBox->isChecked()){
-            if(channelWidgets.size()){
-                // Grab indexes of checked boxes
-                std::vector<int> indexes;
-                for(size_t i = 0; i < channelWidgets.size(); i++){
-                    if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
-                }
-                matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-                int cpi = 0;
-                // Go through checked indexes and the label text (channel pattern) in the cell array
-                for(int i : indexes){
-                    // Convert from rich text to plain text
-                    QTextDocument toPlain;
-                    toPlain.setHtml(channelWidgets[i].first->text());
-                    channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                    cpi++;
-                }
-                data.push_back(channelPatterns);
-            }
-        }
-        // Use custom patterns
-        else{
-            QString patternLine = ui->customPatternsLineEdit->text();
-            QString pattern;
-            std::vector<QString> patterns;
-            for(int i = 0; i < patternLine.size(); i++){
-                if(patternLine[i] == ','){
-                    patterns.push_back(pattern);
-                    pattern.clear();
-                }
-                else{
-                    pattern.push_back(patternLine[i]);
-                }
-            }
-            if(pattern.size()) patterns.push_back(pattern);
-
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-            for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-            }
-            data.push_back(channelPatterns);
-        }
+        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
 
         // Currently not used
         //data.push_back(factory.createCharArray("Channels"));
         //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
-        data.push_back(factory.createCharArray("SkewAngle"));
-        data.push_back(factory.createScalar<double>(guiVals.skewAngle));
+        addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
 
-        data.push_back(factory.createCharArray("dz"));
-        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
 
         //**** For when dzFromEncoder is implemented into the decon wrapper ****
         //data.push_back(factory.createCharArray("dzFromEncoder"));
         //data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
 
-        data.push_back(factory.createCharArray("xyPixelSize"));
-        data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
 
-        data.push_back(factory.createCharArray("Reverse"));
-        data.push_back(factory.createScalar<bool>(guiVals.Reverse));
+        addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.Reverse,prependedString);
 
-        data.push_back(factory.createCharArray("ObjectiveScan"));
-        data.push_back(factory.createScalar<bool>(ui->objectiveScanCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
+        addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("sCMOSCameraFlip"));
-        data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
+        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
 
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
-        data.push_back(factory.createCharArray("Save16bit"));
-        if (ui->deconOnlySave16BitCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
-        else data.push_back(factory.createScalar<bool>(false));
+        addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+        if (ui->deconOnlySave16BitCheckBox->isChecked()) addBoolToArgs(args,true,prependedString);
+        else addBoolToArgs(args,false,prependedString);
 
         // This needs to change FIX
-        data.push_back(factory.createCharArray("onlyFirstTP"));
-        data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
+        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
 
         // Pipeline Setting
-        data.push_back(factory.createCharArray("Decon"));
-        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
+        addCharArrayToArgs(args,"Decon",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked(),prependedString);
 
         // Change later
         //data.push_back(factory.createCharArray("RotateAfterDecon"));
         //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
         // Decon Settings
-        data.push_back(factory.createCharArray("cudaDecon"));
-        data.push_back(factory.createScalar<bool>(ui->cudaDeconRadioButton->isChecked()));
+        addCharArrayToArgs(args,"cudaDecon",prependedString,isMcc);
+        addBoolToArgs(args,ui->cudaDeconRadioButton->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("cppDecon"));
-        data.push_back(factory.createScalar<bool>(ui->cppDeconRadioButton->isChecked()));
+        addCharArrayToArgs(args,"cppDecon",prependedString,isMcc);
+        addBoolToArgs(args,ui->cppDeconRadioButton->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("Background"));
-        data.push_back(factory.createScalar<uint64_t>(ui->backgroundIntensityLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"Background",prependedString,isMcc);
+        addScalarToArgs(args,ui->backgroundIntensityLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("dzPSF"));
-        data.push_back(factory.createScalar<double>(ui->dzPSFLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"dzPSF",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzPSFLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("EdgeErosion"));
-        data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"EdgeErosion",prependedString,isMcc);
+        addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("ErodeByFTP"));
-        data.push_back(factory.createScalar<bool>(ui->erodeByFTPCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
+        addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("deconRotate"));
-        data.push_back(factory.createScalar<bool>(ui->deconRotateCheckBox->isChecked()));
+        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
+        addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
 
         // Decon Advanced settings
         if(!guiVals.cppDeconPath.isEmpty()){
-            data.push_back(factory.createCharArray("cppDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cppDeconPath.toStdString()));
+            addCharArrayToArgs(args,"cppDeconPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.cppDeconPath.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.loadModules.isEmpty()){
-            data.push_back(factory.createCharArray("loadModules"));
-            data.push_back(factory.createCharArray(guiVals.loadModules.toStdString()));
+            addCharArrayToArgs(args,"loadModules",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.loadModules.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.cudaDeconPath.isEmpty()){
-            data.push_back(factory.createCharArray("cudaDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cudaDeconPath.toStdString()));
+            addCharArrayToArgs(args,"cudaDeconPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.cudaDeconPath.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.OTFGENPath.isEmpty()){
-            data.push_back(factory.createCharArray("OTFGENPath"));
-            data.push_back(factory.createCharArray(guiVals.OTFGENPath.toStdString()));
+            addCharArrayToArgs(args,"OTFGENPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.OTFGENPath.toStdString(),prependedString,isMcc);
         }
 
         if(psfFullPaths.size()){
-            data.push_back(factory.createCharArray("psfFullpaths"));
-            matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+            addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
+            std::vector<std::string> psfMPaths;
             for(size_t i = 0; i < psfFullPaths.size(); i++){
-                psfMPaths[i] = factory.createCharArray(psfFullPaths[i].toStdString());
+                psfMPaths.push_back(psfFullPaths[i].toStdString());
             }
-            data.push_back(psfMPaths);
+            addArrayToArgs(args,psfMPaths,true,prependedString,"{}",isMcc);
         }
-        data.push_back(factory.createCharArray("RLMethod"));
-        data.push_back(factory.createCharArray(guiVals.RLMethod.toStdString()));
+        addCharArrayToArgs(args,"RLMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
 
-        data.push_back(factory.createCharArray("fixIter"));
-        data.push_back(factory.createScalar<bool>(guiVals.fixIter));
+        addCharArrayToArgs(args,"fixIter",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.fixIter,prependedString);
 
-        data.push_back(factory.createCharArray("errThresh"));
-        data.push_back(factory.createScalar<double>(guiVals.errThresh));
+        addCharArrayToArgs(args,"errThresh",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.errThresh),prependedString);
 
-        data.push_back(factory.createCharArray("debug"));
-        data.push_back(factory.createScalar<bool>(guiVals.debug));
+        addCharArrayToArgs(args,"debug",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.debug,prependedString);
 
-        data.push_back(factory.createCharArray("GPUJob"));
-        data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
+        addCharArrayToArgs(args,"GPUJob",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.gpuJob,prependedString);
 
-        data.push_back(factory.createCharArray("DeconIter"));
-        data.push_back(factory.createScalar<double>(ui->deconIterationsLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"DeconIter",prependedString,isMcc);
+        addScalarToArgs(args,ui->deconIterationsLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("rotatePSF"));
-        data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
+        addCharArrayToArgs(args,"rotatePSF",prependedString,isMcc);
+        addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
 
         // Job Settings
-        data.push_back(factory.createCharArray("parseCluster"));
-        data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+        addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+        addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("cpusPerTask"));
-        data.push_back(factory.createScalar<uint64_t>(ui->cpusPerTaskLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+        addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("cpuOnlyNodes"));
-        data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+        addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
+        addBoolToArgs(args,ui->cpuOnlyNodesCheckBox->isChecked(),prependedString);
 
         // Advanced Job Settings
-        data.push_back(factory.createCharArray("largeFile"));
-        data.push_back(factory.createScalar<bool>(guiVals.largeFile));
+        addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.largeFile,prependedString);
 
         if(!guiVals.jobLogDir.isEmpty()){
-            data.push_back(factory.createCharArray("jobLogDir"));
-            data.push_back(factory.createCharArray(guiVals.jobLogDir.toStdString()));
+            addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
         }
 
         if(!guiVals.uuid.isEmpty()){
-            data.push_back(factory.createCharArray("uuid"));
-            data.push_back(factory.createCharArray(guiVals.uuid.toStdString()));
+            addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
         }
 
-        data.push_back(factory.createCharArray("maxTrialNum"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.maxTrialNum));
+        addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxTrialNum),prependedString);
 
-        data.push_back(factory.createCharArray("unitWaitTime"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.unitWaitTime));
+        addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
 
-        data.push_back(factory.createCharArray("maxWaitLoopNum"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
+        addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
 
         if(!guiVals.MatlabLaunchStr.isEmpty()){
-            data.push_back(factory.createCharArray("MatlabLaunchStr"));
-            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
+            addCharArrayToArgs(args,"MatlabLaunchStr",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.MatlabLaunchStr.toStdString(),prependedString,isMcc);
         }
 
         if(!guiVals.SlurmParam.isEmpty()){
-            data.push_back(factory.createCharArray("SlurmParam"));
-            data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
+            addCharArrayToArgs(args,"SlurmParam",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.SlurmParam.toStdString(),prependedString,isMcc);
         }
     }
     else{
         // Data Paths
-        unsigned long long numPaths = 0;
-        for(const auto &path : dPaths){
-            if(path.includeMaster){
-                QDirIterator it(path.masterPath,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-            for(const auto &subPath : path.subPaths){
-                if(subPath.second.first){
-                    QDirIterator it(subPath.second.second,QDir::Files);
-                    if(it.hasNext()) numPaths++;
-                }
-            }
-        }
-        matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-        size_t currPath = 0;
-        for(const auto &path : dPaths){
-            if(path.includeMaster){
-                QDirIterator it(path.masterPath,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-            for(const auto &subPath : path.subPaths){
-                if(subPath.second.first){
-                    QDirIterator it(subPath.second.second,QDir::Files);
-                    if(it.hasNext()){
-                        dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                        currPath++;
-                    }
-                    else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-                }
-            }
-        }
-        data.push_back(dataPaths_exps);
+        addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc);
 
         // Main Settings
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
         // TODO: FIX LOGIC FOR DECON ONLY
-        data.push_back(factory.createCharArray("Overwrite"));
-        if(ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(true));
-        else data.push_back(factory.createArray<bool>({1,5},{ui->deskewOverwriteDataCheckBox->isChecked(),ui->rotateOverwriteDataCheckBox->isChecked(),ui->stitchOverwriteDataCheckBox->isChecked(),false,false}));
+        addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
+        if(ui->deconOnlyCheckBox->isChecked()) addBoolToArgs(args,false,prependedString);
+        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) addBoolToArgs(args,true,prependedString);
+        else{
+            std::vector<std::string> OverwriteV = {btosM(ui->deskewOverwriteDataCheckBox->isChecked()),btosM(ui->rotateOverwriteDataCheckBox->isChecked()),btosM(ui->stitchOverwriteDataCheckBox->isChecked()),btosM(false),btosM(false)};
+            addArrayToArgs(args,OverwriteV,false,prependedString,"[]",isMcc);
+        }
 
-        data.push_back(factory.createCharArray("Streaming"));
-        data.push_back(factory.createScalar<bool>(ui->streamingCheckBox->isChecked()));
+        addCharArrayToArgs(args,"Streaming",prependedString,isMcc);
+        addBoolToArgs(args,ui->streamingCheckBox->isChecked(),prependedString);
 
         // Channel Patterns
-        data.push_back(factory.createCharArray("ChannelPatterns"));
-        if(!ui->customPatternsCheckBox->isChecked()){
+        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
 
-            if(channelWidgets.size()){
-                // Grab indexes of checked boxes
-                std::vector<int> indexes;
-                for(size_t i = 0; i < channelWidgets.size(); i++){
-                    if(channelWidgets[i].second->isChecked()) indexes.push_back(i);
-                }
-                matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-                int cpi = 0;
-                // Go through checked indexes and the label text (channel pattern) in the cell array
-                for(int i : indexes){
-
-                    // Convert from rich text to plain text
-                    QTextDocument toPlain;
-                    toPlain.setHtml(channelWidgets[i].first->text());
-                    channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                    cpi++;
-                }
-                data.push_back(channelPatterns);
-            }
-
-        }
-        // Use custom patterns
-        else{
-            QString patternLine = ui->customPatternsLineEdit->text();
-            QString pattern;
-            std::vector<QString> patterns;
-            for(int i = 0; i < patternLine.size(); i++){
-                if(patternLine[i] == ','){
-                    patterns.push_back(pattern);
-                    pattern.clear();
-                }
-                else{
-                    pattern.push_back(patternLine[i]);
-                }
-            }
-            if(pattern.size()) patterns.push_back(pattern);
-
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-
-            for(size_t i = 0; i < patterns.size(); i++){
-                channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-            }
-            data.push_back(channelPatterns);
-
-        }
         // Currently not used
         //data.push_back(factory.createCharArray("Channels"));
         //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
-        data.push_back(factory.createCharArray("SkewAngle"));
-        data.push_back(factory.createScalar<double>(guiVals.skewAngle));
+        addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
 
-        data.push_back(factory.createCharArray("dz"));
-        data.push_back(factory.createScalar<double>(ui->dzLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("dzFromEncoder"));
-        data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
+        addCharArrayToArgs(args,"dzFromEncoder",prependedString,isMcc);
+        addBoolToArgs(args,ui->dzFromEncoderCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("xyPixelSize"));
-        data.push_back(factory.createScalar<double>(guiVals.xyPixelSize));
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
 
-        data.push_back(factory.createCharArray("Reverse"));
-        data.push_back(factory.createScalar<bool>(guiVals.Reverse));
+        addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.Reverse,prependedString);
 
-        data.push_back(factory.createCharArray("ObjectiveScan"));
-        data.push_back(factory.createScalar<bool>(ui->objectiveScanCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
+        addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("sCMOSCameraFlip"));
-        data.push_back(factory.createScalar<bool>(guiVals.sCMOSCameraFlip));
+        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
 
-        data.push_back(factory.createCharArray("resampleType"));
-        data.push_back(factory.createCharArray(guiVals.resampleType.toStdString()));
+        addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.resampleType.toStdString(),prependedString,isMcc);
+
+
 
         if(guiVals.resampleEnabled){
-            data.push_back(factory.createCharArray("resample"));
-            data.push_back(factory.createArray<double>({1,3},{guiVals.resample[0],guiVals.resample[1],guiVals.resample[2]}));
-        }
+            addCharArrayToArgs(args,"resample",prependedString,isMcc);
+            std::vector<std::string> resampleV = {std::to_string(guiVals.resample[0]),std::to_string(guiVals.resample[1]),std::to_string(guiVals.resample[2])};
+            addArrayToArgs(args,resampleV,false,prependedString,"[]",isMcc);
+       }
 
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
-        data.push_back(factory.createCharArray("Save16bit"));
-        if (ui->deconOnlyCheckBox->isChecked()) data.push_back(factory.createScalar<bool>(false));
-        else data.push_back(factory.createArray<bool>({1,4},{ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked(),ui->stitchSave16BitCheckBox->isChecked(),false,false}));
+        addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+        std::vector<std::string> Save16bitV = {btosM(ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked()),btosM(ui->stitchSave16BitCheckBox->isChecked()),btosM(false),btosM(false)};
+        addArrayToArgs(args,Save16bitV,false,prependedString,"[]",isMcc);
 
         // This needs to change FIX
-        data.push_back(factory.createCharArray("onlyFirstTP"));
-        data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
+        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
 
         // Pipeline Settings
         // TODO: Test this Logic more
         if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked()) && ui->deskewAndRotateCheckBox->isChecked()){
-            data.push_back(factory.createCharArray("DSRCombined"));
-            data.push_back(factory.createScalar<bool>(true));
+            addCharArrayToArgs(args,"DSRCombined",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
 
-            data.push_back(factory.createCharArray("Deskew"));
-            data.push_back(factory.createScalar<bool>(true));
+            addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
 
-            data.push_back(factory.createCharArray("Rotate"));
-            data.push_back(factory.createScalar<bool>(true));
-
+            addCharArrayToArgs(args,"Rotate",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
         }
         else{
-            data.push_back(factory.createCharArray("DSRCombined"));
-            data.push_back(factory.createScalar<bool>(false));
+            addCharArrayToArgs(args,"DSRCombined",prependedString,isMcc);
+            addBoolToArgs(args,false,prependedString);
 
-            data.push_back(factory.createCharArray("Deskew"));
-            data.push_back(factory.createScalar<bool>(ui->deskewCheckBox->isChecked()));
+            addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+            addBoolToArgs(args,ui->deskewCheckBox->isChecked(),prependedString);
 
-            data.push_back(factory.createCharArray("Rotate"));
-            data.push_back(factory.createScalar<bool>(ui->rotateCheckBox->isChecked()));
+            addCharArrayToArgs(args,"Rotate",prependedString,isMcc);
+            addBoolToArgs(args,ui->rotateCheckBox->isChecked(),prependedString);
         }
 
-        data.push_back(factory.createCharArray("Stitch"));
-        data.push_back(factory.createScalar<bool>(ui->stitchCheckBox->isChecked()));
+        addCharArrayToArgs(args,"Stitch",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("Decon"));
-        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()));
+        addCharArrayToArgs(args,"Decon",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked(),prependedString);
 
         // Change later
         //data.push_back(factory.createCharArray("RotateAfterDecon"));
         //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
         // DSR Settings
-        data.push_back(factory.createCharArray("parseSettingFile"));
-        data.push_back(factory.createScalar<bool>(ui->parseSettingsFileCheckBox->isChecked()));
+        addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
+        addBoolToArgs(args,ui->parseSettingsFileCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("flipZstack"));
-        data.push_back(factory.createScalar<bool>(ui->flipZStackCheckBox->isChecked()));
+        addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
+        addBoolToArgs(args,ui->flipZStackCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("LLFFCorrection"));
-        data.push_back(factory.createScalar<bool>(ui->llffCorrectionCheckBox->isChecked()));
+        addCharArrayToArgs(args,"LLFFCorrection",prependedString,isMcc);
+        addBoolToArgs(args,ui->llffCorrectionCheckBox->isChecked(),prependedString);
 
         if(lsImagePaths.size()){
-            data.push_back(factory.createCharArray("LSImagePaths"));
-            matlab::data::CellArray lsImageMPaths = factory.createCellArray({1,lsImagePaths.size()});
+            addCharArrayToArgs(args,"LSImagePaths",prependedString,isMcc);
+            std::vector<std::string> lsImageMPaths;
             for(size_t i = 0; i < lsImagePaths.size(); i++){
-                lsImageMPaths[i] = factory.createCharArray(lsImagePaths[i].toStdString());
+                lsImageMPaths.push_back(lsImagePaths[i].toStdString());
             }
-            data.push_back(lsImageMPaths);
+            addArrayToArgs(args,lsImageMPaths,true,prependedString,"{}",isMcc);
         }
 
         if(backgroundPaths.size()){
-            data.push_back(factory.createCharArray("BackgroundPaths"));
-            matlab::data::CellArray backgroundMPaths = factory.createCellArray({1,backgroundPaths.size()});
+            addCharArrayToArgs(args,"BackgroundPaths",prependedString,isMcc);
+            std::vector<std::string> backgroundMPaths;
             for(size_t i = 0; i < backgroundPaths.size(); i++){
-                backgroundMPaths[i] = factory.createCharArray(backgroundPaths[i].toStdString());
+                backgroundMPaths.push_back(backgroundPaths[i].toStdString());
             }
-            data.push_back(backgroundMPaths);
+            addArrayToArgs(args,backgroundMPaths,true,prependedString,"{}",isMcc);
         }
 
         // DSR Advanced Settings
-        data.push_back(factory.createCharArray("BKRemoval"));
-        data.push_back(factory.createScalar<bool>(guiVals.BKRemoval));
+        addCharArrayToArgs(args,"BKRemoval",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.BKRemoval,prependedString);
 
-        data.push_back(factory.createCharArray("LowerLimit"));
-        data.push_back(factory.createScalar<double>(guiVals.LowerLimit));
+        addCharArrayToArgs(args,"LowerLimit",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.LowerLimit),prependedString);
 
         // Stitch Settings
-        data.push_back(factory.createCharArray("stitchPipeline"));
-        data.push_back(factory.createCharArray(ui->stitchPipelineComboBox->currentText().toStdString()));
+        addCharArrayToArgs(args,"stitchPipeline",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
 
-        data.push_back(factory.createCharArray("stitchResultDir"));
-        data.push_back(factory.createCharArray(ui->resultsDirLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"stitchResultDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->resultsDirLineEdit->text().toStdString(),prependedString,isMcc);
 
-        data.push_back(factory.createCharArray("imageListFullpaths"));
-        data.push_back(factory.createCharArray(ui->imageListFullPathsLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"imageListFullpaths",prependedString,isMcc);
+        std::vector<std::string> imageListFullpathsV = {ui->imageListFullPathsLineEdit->text().toStdString()};
+        addArrayToArgs(args,imageListFullpathsV,true,prependedString,"{}",isMcc);
 
         if(!ui->axisOrderLineEdit->text().isEmpty()){
-            data.push_back(factory.createCharArray("axisOrder"));
-            data.push_back(factory.createCharArray(ui->axisOrderLineEdit->text().toStdString()));
+            addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->axisOrderLineEdit->text().toStdString(),prependedString,isMcc);
         }
 
-        data.push_back(factory.createCharArray("BlendMethod"));
-        data.push_back(factory.createCharArray(ui->blendMethodComboBox->currentText().toStdString()));
+        addCharArrayToArgs(args,"BlendMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->blendMethodComboBox->currentText().toStdString(),prependedString,isMcc);
 
-        data.push_back(factory.createCharArray("xcorrShift"));
-        data.push_back(factory.createScalar<bool>(ui->xCorrShiftCheckBox->isChecked()));
+        addCharArrayToArgs(args,"xcorrShift",prependedString,isMcc);
+        addBoolToArgs(args,ui->xCorrShiftCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("xcorrMode"));
-        data.push_back(factory.createCharArray(ui->xCorrModeComboBox->currentText().toStdString()));
+        addCharArrayToArgs(args,"xcorrMode",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->xCorrModeComboBox->currentText().toStdString(),prependedString,isMcc);
 
         if(ui->boundBoxCheckBox->isChecked()){
-            data.push_back(factory.createCharArray("boundboxCrop"));
-            data.push_back(factory.createArray<int>({1,6},{ui->boundBoxYMinSpinBox->value(),ui->boundBoxXMinSpinBox->value(),ui->boundBoxZMinSpinBox->value(),ui->boundBoxYMaxSpinBox->value(), ui->boundBoxXMaxSpinBox->value(), ui->boundBoxZMaxSpinBox->value()}));
+            addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);
+            std::vector<std::string> boundboxCropV = {ui->boundBoxYMinSpinBox->text().toStdString(),ui->boundBoxXMinSpinBox->text().toStdString(),ui->boundBoxZMinSpinBox->text().toStdString(),ui->boundBoxYMaxSpinBox->text().toStdString(), ui->boundBoxXMaxSpinBox->text().toStdString(), ui->boundBoxZMaxSpinBox->text().toStdString()};
+            addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
         }
 
         if(!ui->primaryCHLineEdit->text().isEmpty()){
-            data.push_back(factory.createCharArray("primaryCh"));
-            data.push_back(factory.createCharArray(ui->primaryCHLineEdit->text().toStdString()));
+            addCharArrayToArgs(args,"primaryCh",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->primaryCHLineEdit->text().toStdString(),prependedString,isMcc);
         }
 
         // Decon Settings
-        data.push_back(factory.createCharArray("cudaDecon"));
-        data.push_back(factory.createScalar<bool>(ui->cudaDeconRadioButton->isChecked()));
+        addCharArrayToArgs(args,"cudaDecon",prependedString,isMcc);
+        addBoolToArgs(args,ui->cudaDeconRadioButton->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("cppDecon"));
-        data.push_back(factory.createScalar<bool>(ui->cppDeconRadioButton->isChecked()));
+        addCharArrayToArgs(args,"cppDecon",prependedString,isMcc);
+        addBoolToArgs(args,ui->cppDeconRadioButton->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("DS"));
-        data.push_back(factory.createScalar<bool>(ui->deskewDeconCheckBox->isChecked()));
+        addCharArrayToArgs(args,"DS",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("DSR"));
-        data.push_back(factory.createScalar<bool>(ui->deskewAndRotateDeconCheckBox->isChecked()));
+        addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("Background"));
-        data.push_back(factory.createScalar<uint64_t>(ui->backgroundIntensityLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"Background",prependedString,isMcc);
+        addScalarToArgs(args,ui->backgroundIntensityLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("dzPSF"));
-        data.push_back(factory.createScalar<double>(ui->dzPSFLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"dzPSF",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzPSFLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("EdgeErosion"));
-        data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"EdgeErosion",prependedString,isMcc);
+        addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("ErodeByFTP"));
-        data.push_back(factory.createScalar<bool>(ui->erodeByFTPCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
+        addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("deconRotate"));
-        data.push_back(factory.createScalar<bool>(ui->deconRotateCheckBox->isChecked()));
+        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
+        addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
 
         // Decon Advanced settings
         if(!guiVals.cppDeconPath.isEmpty()){
-            data.push_back(factory.createCharArray("cppDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cppDeconPath.toStdString()));
+            addCharArrayToArgs(args,"cppDeconPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.cppDeconPath.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.loadModules.isEmpty()){
-            data.push_back(factory.createCharArray("loadModules"));
-            data.push_back(factory.createCharArray(guiVals.loadModules.toStdString()));
+            addCharArrayToArgs(args,"loadModules",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.loadModules.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.cudaDeconPath.isEmpty()){
-            data.push_back(factory.createCharArray("cudaDeconPath"));
-            data.push_back(factory.createCharArray(guiVals.cudaDeconPath.toStdString()));
+            addCharArrayToArgs(args,"cudaDeconPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.cudaDeconPath.toStdString(),prependedString,isMcc);
         }
         if(!guiVals.OTFGENPath.isEmpty()){
-            data.push_back(factory.createCharArray("OTFGENPath"));
-            data.push_back(factory.createCharArray(guiVals.OTFGENPath.toStdString()));
+            addCharArrayToArgs(args,"OTFGENPath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.OTFGENPath.toStdString(),prependedString,isMcc);
         }
 
         if(psfFullPaths.size()){
-            data.push_back(factory.createCharArray("psfFullpaths"));
-            matlab::data::CellArray psfMPaths = factory.createCellArray({1,psfFullPaths.size()});
+            addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
+            std::vector<std::string> psfMPaths;
             for(size_t i = 0; i < psfFullPaths.size(); i++){
-                psfMPaths[i] = factory.createCharArray(psfFullPaths[i].toStdString());
+                psfMPaths.push_back(psfFullPaths[i].toStdString());
             }
-            data.push_back(psfMPaths);
+            addArrayToArgs(args,psfMPaths,true,prependedString,"{}",isMcc);
         }
-        data.push_back(factory.createCharArray("RLMethod"));
-        data.push_back(factory.createCharArray(guiVals.RLMethod.toStdString()));
 
-        data.push_back(factory.createCharArray("fixIter"));
-        data.push_back(factory.createScalar<bool>(guiVals.fixIter));
+        addCharArrayToArgs(args,"RLMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
 
-        data.push_back(factory.createCharArray("errThresh"));
-        data.push_back(factory.createScalar<double>(guiVals.errThresh));
+        addCharArrayToArgs(args,"fixIter",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.fixIter,prependedString);
 
-        data.push_back(factory.createCharArray("debug"));
-        data.push_back(factory.createScalar<bool>(guiVals.debug));
+        addCharArrayToArgs(args,"errThresh",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.errThresh),prependedString);
 
-        data.push_back(factory.createCharArray("GPUJob"));
-        data.push_back(factory.createScalar<bool>(guiVals.gpuJob));
+        addCharArrayToArgs(args,"debug",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.debug,prependedString);
 
-        data.push_back(factory.createCharArray("DeconIter"));
-        data.push_back(factory.createScalar<double>(ui->deconIterationsLineEdit->text().toDouble()));
+        addCharArrayToArgs(args,"GPUJob",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.gpuJob,prependedString);
 
-        data.push_back(factory.createCharArray("rotatedPSF"));
-        data.push_back(factory.createScalar<bool>(ui->rotatePSFCheckBox->isChecked()));
+        addCharArrayToArgs(args,"DeconIter",prependedString,isMcc);
+        addScalarToArgs(args,ui->deconIterationsLineEdit->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"rotatedPSF",prependedString,isMcc);
+        addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
+
+
 
         // Job Settings
-        data.push_back(factory.createCharArray("parseCluster"));
-        data.push_back(factory.createScalar<bool>(ui->parseClusterCheckBox->isChecked()));
+        addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+        addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("cpusPerTask"));
-        data.push_back(factory.createScalar<uint64_t>(ui->cpusPerTaskLineEdit->text().toULongLong()));
+        addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+        addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-        data.push_back(factory.createCharArray("cpuOnlyNodes"));
-        data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
+        addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
+        addBoolToArgs(args,ui->cpuOnlyNodesCheckBox->isChecked(),prependedString);
 
         // Advanced Job Settings
-        data.push_back(factory.createCharArray("largeFile"));
-        data.push_back(factory.createScalar<bool>(guiVals.largeFile));
+        addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.largeFile,prependedString);
 
         if(!guiVals.jobLogDir.isEmpty()){
-            data.push_back(factory.createCharArray("jobLogDir"));
-            data.push_back(factory.createCharArray(guiVals.jobLogDir.toStdString()));
+            addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
         }
 
         if(!guiVals.uuid.isEmpty()){
-            data.push_back(factory.createCharArray("uuid"));
-            data.push_back(factory.createCharArray(guiVals.uuid.toStdString()));
+            addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
         }
 
-        data.push_back(factory.createCharArray("maxTrialNum"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.maxTrialNum));
+        addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxTrialNum),prependedString);
 
-        data.push_back(factory.createCharArray("unitWaitTime"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.unitWaitTime));
+        addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
 
-        data.push_back(factory.createCharArray("minModifyTime"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.minModifyTime));
+        addCharArrayToArgs(args,"minModifyTime",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.minModifyTime),prependedString);
 
-        data.push_back(factory.createCharArray("maxModifyTime"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.maxModifyTime));
+        addCharArrayToArgs(args,"maxModifyTime",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxModifyTime),prependedString);
 
-        data.push_back(factory.createCharArray("maxWaitLoopNum"));
-        data.push_back(factory.createScalar<uint64_t>(guiVals.maxWaitLoopNum));
+        addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
 
         if(!guiVals.MatlabLaunchStr.isEmpty()){
-            data.push_back(factory.createCharArray("MatlabLaunchStr"));
-            data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
+            addCharArrayToArgs(args,"MatlabLaunchStr",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.MatlabLaunchStr.toStdString(),prependedString,isMcc);
         }
 
         if(!guiVals.SlurmParam.isEmpty()){
-            data.push_back(factory.createCharArray("SlurmParam"));
-            data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
+            addCharArrayToArgs(args,"SlurmParam",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.SlurmParam.toStdString(),prependedString,isMcc);
         }
     }
     QString funcType;
@@ -1778,9 +1645,9 @@ void MainWindow::on_submitButton_clicked()
         funcType="DeconOnly";
     }
 
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
@@ -2352,7 +2219,8 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
 void MainWindow::checkLoadPrevSettings()
 {
     loadSettings = false;
-    loadPreviousSettings lPSettings(loadSettings);
+
+    loadPreviousSettings lPSettings(loadSettings,isMcc,pathToMatlab);
     lPSettings.setModal(true);
     lPSettings.exec();
 }
@@ -2432,12 +2300,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -2471,274 +2334,212 @@ void MainWindow::on_simReconSubmitButton_clicked()
         }
     }
 
-    unsigned long long numPaths = 0;
-    for(const auto &path : simReconDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path : simReconDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
+    else{
+        prependedString = ",";
     }
-    data.push_back(dataPaths_exps);
+
+    addDataPathsToArgs(args,firstPrependedString,simReconDPaths,isMcc);
 
     // Main Settings
     // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
     // TODO: FIX LOGIC FOR DECON ONLY
-    data.push_back(factory.createCharArray("Overwrite"));
-    data.push_back(factory.createScalar<bool>(ui->simReconDeskewOverwriteDataCheckBox->isChecked() || ui->simReconReconOnlyOverwriteDataCheckBox->isChecked()));
 
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->simReconCustomPatternsCheckBox->isChecked()){
-        if(simReconChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < simReconChannelWidgets.size(); i++){
-                if(simReconChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(simReconChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
-    else{
-        QString patternLine = ui->simReconCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
+    addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconDeskewOverwriteDataCheckBox->isChecked() || ui->simReconReconOnlyOverwriteDataCheckBox->isChecked(),prependedString);
 
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,simReconChannelWidgets,ui->simReconCustomPatternsCheckBox->isChecked(),ui->simReconCustomPatternsLineEdit->text(),prependedString,isMcc);
 
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
-    }
+    addCharArrayToArgs(args,"Streaming",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconStreamingCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("Streaming"));
-    data.push_back(factory.createScalar<bool>(ui->simReconStreamingCheckBox->isChecked()));
-
-    data.push_back(factory.createCharArray("dz"));
-    data.push_back(factory.createScalar<double>(ui->simReconDZLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconDZLineEdit->text().toStdString(),prependedString);
 
     // This needs to change FIX
-    data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createScalar<bool>(ui->simReconDeskewSave16BitCheckBox->isChecked() || ui->simReconReconOnlySave16BitCheckBox->isChecked()));
+    addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconDeskewSave16BitCheckBox->isChecked() || ui->simReconReconOnlySave16BitCheckBox->isChecked(),prependedString);
 
     // This needs to change FIX
     //data.push_back(factory.createCharArray("onlyFirstTP"));
     //data.push_back(factory.createScalar<bool>(ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked()));
 
     // Main Advanced Settings
-    data.push_back(factory.createCharArray("SkewAngle"));
-    data.push_back(factory.createScalar<double>(simreconVals.skewAngle));
 
-    data.push_back(factory.createCharArray("xyPixelSize"));
-    data.push_back(factory.createScalar<double>(simreconVals.xyPixelSize));
+    addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.skewAngle),prependedString);
 
-    data.push_back(factory.createCharArray("Reverse"));
-    data.push_back(factory.createScalar<bool>(simreconVals.Reverse));
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.xyPixelSize),prependedString);
+
+    addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.Reverse,prependedString);
 
     // Pipeline Setting
-    data.push_back(factory.createCharArray("Deskew"));
-    data.push_back(factory.createScalar<bool>(ui->simReconDeskewCheckBox->isChecked()));
+    addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconDeskewCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("Recon"));
-    data.push_back(factory.createScalar<bool>(ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked()));
+    addCharArrayToArgs(args,"Recon",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconReconOnlyCheckBox->isChecked() || ui->simReconDeskewReconCheckBox->isChecked(),prependedString);
 
     // Deskew Settings
     // None for now
 
     // Recon Settings
-    data.push_back(factory.createCharArray("Background"));
-    data.push_back(factory.createScalar<uint64_t>(ui->simReconBackgroundIntensityLineEdit->text().toULongLong()));
+
+    addCharArrayToArgs(args,"Background",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconBackgroundIntensityLineEdit->text().toStdString(),prependedString);
 
     //data.push_back(factory.createCharArray("dzPSF"));
     //data.push_back(factory.createScalar<double>(ui->simReconDZPSFLineEdit->text().toDouble()));
 
     if(simReconPsfFullPaths.size()){
-        data.push_back(factory.createCharArray("PSFs"));
-        matlab::data::CellArray psfMPaths = factory.createCellArray({1,simReconPsfFullPaths.size()});
+        addCharArrayToArgs(args,"PSFs",prependedString,isMcc);
+        std::vector<std::string> psfMPaths;
         for(size_t i = 0; i < simReconPsfFullPaths.size(); i++){
-            psfMPaths[i] = factory.createCharArray(simReconPsfFullPaths[i].toStdString());
+            psfMPaths.push_back(simReconPsfFullPaths[i].toStdString());
         }
-        data.push_back(psfMPaths);
+        addArrayToArgs(args,psfMPaths,true,prependedString,"{}",isMcc);
     }
 
     // calculate pxl dim data/psf
-    data.push_back(factory.createCharArray("pxl_dim_data"));
-    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle))}));
+    addCharArrayToArgs(args,"pxl_dim_data",prependedString,isMcc);
+    std::vector<std::string> pxl_dim_dataV = {std::to_string(simreconVals.xyPixelSize),std::to_string(simreconVals.xyPixelSize),std::to_string((ui->simReconDZLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle)))};
+    addArrayToArgs(args,pxl_dim_dataV,false,prependedString,"[]",isMcc);
 
-    data.push_back(factory.createCharArray("pxl_dim_PSF"));
-    data.push_back(factory.createArray<double>({1,3},{simreconVals.xyPixelSize,simreconVals.xyPixelSize,(ui->simReconDZPSFLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle))}));
+    addCharArrayToArgs(args,"pxl_dim_PSF",prependedString,isMcc);
+    std::vector<std::string> pxl_dim_PSFV = {std::to_string(simreconVals.xyPixelSize),std::to_string(simreconVals.xyPixelSize),std::to_string((ui->simReconDZPSFLineEdit->text().toDouble())*qSin(qDegreesToRadians(simreconVals.skewAngle)))};
+    addArrayToArgs(args,pxl_dim_PSFV,false,prependedString,"[]",isMcc);
 
-    data.push_back(factory.createCharArray("nphases"));
-    data.push_back(factory.createScalar<double>(ui->simReconNPhasesLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"nphases",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconNPhasesLineEdit->text().toStdString(),prependedString);
 
     // Number of orders matches number of phases for now
-    data.push_back(factory.createCharArray("norders"));
-    data.push_back(factory.createScalar<double>(ui->simReconNPhasesLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"norders",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconNPhasesLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("norientations"));
-    data.push_back(factory.createScalar<double>(ui->simReconNOrientationsLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"norientations",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconNOrientationsLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("lattice_period"));
-    data.push_back(factory.createScalar<double>(ui->simReconLatticePeriodLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"lattice_period",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconLatticePeriodLineEdit->text().toStdString(),prependedString);
 
     // calculate phase step
-    data.push_back(factory.createCharArray("phase_step"));
-    data.push_back(factory.createScalar<double>(ui->simReconLatticePeriodLineEdit->text().toDouble()/ui->simReconNPhasesLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"phase_step",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(ui->simReconLatticePeriodLineEdit->text().toDouble()/ui->simReconNPhasesLineEdit->text().toDouble()),prependedString);
 
-    data.push_back(factory.createCharArray("EdgeErosion"));
-    data.push_back(factory.createScalar<uint64_t>(ui->edgeErosionLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"EdgeErosion",prependedString,isMcc);
+    addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("ErodeBefore"));
-    data.push_back(factory.createScalar<bool>(ui->simReconErodeBeforeCheckBox->isChecked()));
+    addCharArrayToArgs(args,"ErodeBefore",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconErodeBeforeCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("ErodeAfter"));
-    data.push_back(factory.createScalar<bool>(ui->simReconErodeAfterCheckBox->isChecked()));
+    addCharArrayToArgs(args,"ErodeAfter",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconErodeAfterCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("apodize"));
-    data.push_back(factory.createScalar<bool>(ui->simReconApodizeCheckBox->isChecked()));
+    addCharArrayToArgs(args,"apodize",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconApodizeCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("DS"));
-    data.push_back(factory.createScalar<bool>(ui->simReconDeskewedCheckBox->isChecked()));
+    addCharArrayToArgs(args,"DS",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconDeskewedCheckBox->isChecked(),prependedString);
 
     // Recon Advanced settings
-    data.push_back(factory.createCharArray("islattice"));
-    data.push_back(factory.createScalar<bool>(simreconVals.islattice));
+    addCharArrayToArgs(args,"islattice",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.islattice,prependedString);
 
-    data.push_back(factory.createCharArray("NA_det"));
-    data.push_back(factory.createScalar<double>(simreconVals.NA_det));
+    addCharArrayToArgs(args,"NA_det",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.NA_det),prependedString);
 
-    data.push_back(factory.createCharArray("NA_ext"));
-    data.push_back(factory.createScalar<double>(simreconVals.NA_ext));
+    addCharArrayToArgs(args,"NA_ext",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.NA_ext),prependedString);
 
-    data.push_back(factory.createCharArray("nimm"));
-    data.push_back(factory.createScalar<double>(simreconVals.nimm));
+    addCharArrayToArgs(args,"nimm",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.nimm),prependedString);
 
-    data.push_back(factory.createCharArray("wvl_em"));
-    data.push_back(factory.createScalar<double>(simreconVals.wvl_em));
+    addCharArrayToArgs(args,"wvl_em",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.wvl_em),prependedString);
 
-    data.push_back(factory.createCharArray("wvl_ext"));
-    data.push_back(factory.createScalar<double>(simreconVals.wvl_ext));
+    addCharArrayToArgs(args,"wvl_ext",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.wvl_ext),prependedString);
 
-    data.push_back(factory.createCharArray("w"));
-    data.push_back(factory.createScalar<double>(simreconVals.w));
+    addCharArrayToArgs(args,"w",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.w),prependedString);
 
-    data.push_back(factory.createCharArray("normalize_orientations"));
-    data.push_back(factory.createScalar<bool>(simreconVals.normalize_orientations));
+    addCharArrayToArgs(args,"normalize_orientations",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.normalize_orientations,prependedString);
 
-    data.push_back(factory.createCharArray("resultsDirName"));
-    data.push_back(factory.createCharArray(simreconVals.resultsDirName.toStdString()));
+    addCharArrayToArgs(args,"resultsDirName",prependedString,isMcc);
+    addCharArrayToArgs(args,simreconVals.resultsDirName.toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("perdecomp"));
-    data.push_back(factory.createScalar<bool>(simreconVals.perdecomp));
+    addCharArrayToArgs(args,"perdecomp",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.perdecomp,prependedString);
 
-    data.push_back(factory.createCharArray("edgeTaper"));
-    data.push_back(factory.createScalar<bool>(simreconVals.edgeTaper));
+    addCharArrayToArgs(args,"edgeTaper",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.edgeTaper,prependedString);
 
-    data.push_back(factory.createCharArray("edgeTaperVal"));
-    data.push_back(factory.createScalar<double>(simreconVals.edgeTaperVal));
+    addCharArrayToArgs(args,"edgeTaperVal",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.edgeTaperVal),prependedString);
 
-    data.push_back(factory.createCharArray("intThresh"));
-    data.push_back(factory.createScalar<double>(simreconVals.intThresh));
+    addCharArrayToArgs(args,"intThresh",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.intThresh),prependedString);
 
-    data.push_back(factory.createCharArray("occThresh"));
-    data.push_back(factory.createScalar<double>(simreconVals.occThresh));
+    addCharArrayToArgs(args,"occThresh",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.occThresh),prependedString);
 
-    data.push_back(factory.createCharArray("useGPU"));
-    data.push_back(factory.createScalar<bool>(simreconVals.useGPU));
+    addCharArrayToArgs(args,"useGPU",prependedString,isMcc);
+    addBoolToArgs(args,simreconVals.useGPU,prependedString);
 
-    data.push_back(factory.createCharArray("gpuPrecision"));
-    data.push_back(factory.createCharArray(simreconVals.gpuPrecision.toStdString()));
+    addCharArrayToArgs(args,"gpuPrecision",prependedString,isMcc);
+    addCharArrayToArgs(args,simreconVals.gpuPrecision.toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("Overlap"));
-    data.push_back(factory.createScalar<double>(simreconVals.Overlap));
+    addCharArrayToArgs(args,"Overlap",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.Overlap),prependedString);
 
-    data.push_back(factory.createCharArray("ChunkSize"));
-    data.push_back(factory.createArray<double>({1,3},{simreconVals.ChunkSize[0],simreconVals.ChunkSize[1],simreconVals.ChunkSize[2]}));
+    addCharArrayToArgs(args,"ChunkSize",prependedString,isMcc);
+    std::vector<std::string> ChunkSizeV = {std::to_string(simreconVals.ChunkSize[0]),std::to_string(simreconVals.ChunkSize[1]),std::to_string(simreconVals.ChunkSize[2])};
+    addArrayToArgs(args,ChunkSizeV,false,prependedString,"[]",isMcc);
 
-    data.push_back(factory.createCharArray("reconBatchNum"));
-    data.push_back(factory.createScalar<double>(simreconVals.reconBatchNum));
+    addCharArrayToArgs(args,"reconBatchNum",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.reconBatchNum),prependedString);
 
     // Job Settings
-    data.push_back(factory.createCharArray("parseCluster"));
-    data.push_back(factory.createScalar<bool>(ui->simReconParseClusterCheckBox->isChecked()));
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->simReconParseClusterCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("cpusPerTask"));
-    data.push_back(factory.createScalar<uint64_t>(ui->simReconCpusPerTaskLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->simReconCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     //data.push_back(factory.createCharArray("cpuOnlyNodes"));
     //data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
 
     // Advanced Job Settings
     if(!simreconVals.jobLogDir.isEmpty()){
-        data.push_back(factory.createCharArray("jobLogDir"));
-        data.push_back(factory.createCharArray(simreconVals.jobLogDir.toStdString()));
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,simreconVals.jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     if(!simreconVals.uuid.isEmpty()){
-        data.push_back(factory.createCharArray("uuid"));
-        data.push_back(factory.createCharArray(simreconVals.uuid.toStdString()));
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,simreconVals.uuid.toStdString(),prependedString,isMcc);
     }
 
-    data.push_back(factory.createCharArray("maxTrialNum"));
-    data.push_back(factory.createScalar<uint64_t>(simreconVals.maxTrialNum));
+    addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.maxTrialNum),prependedString);
 
-    data.push_back(factory.createCharArray("unitWaitTime"));
-    data.push_back(factory.createScalar<uint64_t>(simreconVals.unitWaitTime));
+    addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.unitWaitTime),prependedString);
 
-    data.push_back(factory.createCharArray("parPoolSize"));
-    data.push_back(factory.createScalar<uint64_t>(simreconVals.parPoolSize));
+    addCharArrayToArgs(args,"parPoolSize",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.parPoolSize),prependedString);
 
-    data.push_back(factory.createCharArray("maxModifyTime"));
-    data.push_back(factory.createScalar<uint64_t>(simreconVals.maxModifyTime));
+    addCharArrayToArgs(args,"maxModifyTime",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(simreconVals.maxModifyTime),prependedString);
+
     /*
     if(!guiVals.MatlabLaunchStr.isEmpty()){
         data.push_back(factory.createCharArray("MatlabLaunchStr"));
@@ -2751,9 +2552,9 @@ void MainWindow::on_simReconSubmitButton_clicked()
     }
     */
     QString funcType = "simRecon";
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
     // Send data to the MATLAB thread
-    emit jobStart(outA, data, funcType, mPJNPC, jobLogPaths);
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
@@ -2785,12 +2586,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Disable submit button
     ui->cropSubmitButton->setEnabled(false);
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -2798,100 +2594,72 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = cropDPaths[0].masterPath;
 
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
     // Data Path
-    data.push_back(factory.createCharArray(mainPath.toStdString()));
+    std::vector<std::string> datapathV = {mainPath.toStdString()};
+    addArrayToArgs(args,datapathV,true,prependedString,"{}",isMcc);
 
     // Result Path
-    data.push_back(factory.createCharArray(ui->cropResultPathLineEdit->text().toStdString()));
+    std::vector<std::string> resultpathV = {ui->cropResultPathLineEdit->text().toStdString()};
+    addArrayToArgs(args,resultpathV,true,prependedString,"{}",isMcc);
 
     // bbox
-    data.push_back(factory.createArray<double>({1,6},{static_cast<double>(ui->cropBoundBoxYMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxXMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxZMinSpinBox->value()),static_cast<double>(ui->cropBoundBoxYMaxSpinBox->value()), static_cast<double>(ui->cropBoundBoxXMaxSpinBox->value()), static_cast<double>(ui->cropBoundBoxZMaxSpinBox->value())}));
+    std::vector<std::string> bboxV = {ui->cropBoundBoxYMinSpinBox->text().toStdString(),ui->cropBoundBoxXMinSpinBox->text().toStdString(),ui->cropBoundBoxZMinSpinBox->text().toStdString(),ui->cropBoundBoxYMaxSpinBox->text().toStdString(),ui->cropBoundBoxXMaxSpinBox->text().toStdString(),ui->cropBoundBoxZMaxSpinBox->text().toStdString()};
+    addArrayToArgs(args,bboxV,false,prependedString,"[]",isMcc);
 
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->cropCustomPatternsCheckBox->isChecked()){
-        if(cropChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < cropChannelWidgets.size(); i++){
-                if(cropChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(cropChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
-    else{
-        QString patternLine = ui->cropCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,cropChannelWidgets,ui->cropCustomPatternsCheckBox->isChecked(),ui->cropCustomPatternsLineEdit->text(),prependedString,isMcc);
 
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
-    }
+    addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropSave16BitCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createScalar<bool>(ui->cropSave16BitCheckBox->isChecked()));
+    addCharArrayToArgs(args,"pad",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropPadCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("pad"));
-    data.push_back(factory.createScalar<bool>(ui->cropPadCheckBox->isChecked()));
+    addCharArrayToArgs(args,"cropType",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->cropCropTypeComboBox->currentText().toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("cropType"));
-    data.push_back(factory.createCharArray(ui->cropCropTypeComboBox->currentText().toStdString()));
-
-    data.push_back(factory.createCharArray("lastStart"));
-    data.push_back(factory.createArray<double>({1,3},{static_cast<double>(ui->cropLastStartYSpinBox->value()),static_cast<double>(ui->cropLastStartXSpinBox->value()),static_cast<double>(ui->cropLastStartZSpinBox->value())}));
+    addCharArrayToArgs(args,"lastStart",prependedString,isMcc);
+    std::vector<std::string> laststartV = {ui->cropLastStartYSpinBox->text().toStdString(),ui->cropLastStartXSpinBox->text().toStdString(),ui->cropLastStartZSpinBox->text().toStdString()};
+    addArrayToArgs(args,laststartV,false,prependedString,"[]",isMcc);
 
     // Job Settings
-    data.push_back(factory.createCharArray("parseCluster"));
-    data.push_back(factory.createScalar<bool>(ui->cropParseClusterCheckBox->isChecked()));
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropParseClusterCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("masterCompute"));
-    data.push_back(factory.createScalar<bool>(ui->cropMasterComputeCheckBox->isChecked()));
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropMasterComputeCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("cpusPerTask"));
-    data.push_back(factory.createScalar<uint64_t>(ui->cropCpusPerTaskLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->cropCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("cpuOnlyNodes"));
-    data.push_back(factory.createScalar<bool>(ui->cropCpuOnlyNodesCheckBox->isChecked()));
+    addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropCpuOnlyNodesCheckBox->isChecked(),prependedString);
 
     // Advanced Job Settings
     if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
-        data.push_back(factory.createCharArray("jobLogDir"));
-        data.push_back(factory.createCharArray(ui->cropJobLogDirLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->cropJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
     if(!ui->cropUuidLineEdit->text().isEmpty()){
-        data.push_back(factory.createCharArray("uuid"));
-        data.push_back(factory.createCharArray(ui->cropUuidLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->cropUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
     QString funcType = "crop";
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->cropParseClusterCheckBox->isChecked());
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
 void MainWindow::selectFolderPath(){
@@ -2998,11 +2766,12 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
     ui->parallelRsyncSubmitButton->setEnabled(false);
 
     // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
+    //matlab::data::ArrayFactory factory;
 
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    //size_t outA = 0;
+    //std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3010,22 +2779,30 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = ui->parallelRsyncSourceLineEdit->text();
 
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
     // Source
-    data.push_back(factory.createCharArray(ui->parallelRsyncSourceLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,ui->parallelRsyncSourceLineEdit->text().toStdString(), firstPrependedString, isMcc);
 
     // Destination
-    data.push_back(factory.createCharArray(ui->parallelRsyncDestLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,ui->parallelRsyncDestLineEdit->text().toStdString(), prependedString, isMcc);
 
-    data.push_back(factory.createCharArray("cpusPerTask"));
-    data.push_back(factory.createScalar<uint64_t>(ui->parallelRsyncCpusPerTaskLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"cpusPerTask", prependedString, isMcc);
+    addScalarToArgs(args,ui->parallelRsyncCpusPerTaskLineEdit->text().toStdString(), prependedString);
 
-    data.push_back(factory.createCharArray("numStream"));
-    data.push_back(factory.createScalar<uint64_t>(ui->parallelRsyncNumStreamLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"numStream", prependedString, isMcc);
+    addScalarToArgs(args,ui->parallelRsyncNumStreamLineEdit->text().toStdString(), prependedString);
 
     QString funcType = "parallelRsync";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Parallel Rsync"),true);
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
 
@@ -3059,12 +2836,7 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
 
     if(!fftAnalysisDPaths.size()) return;
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3072,65 +2844,40 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = fftAnalysisDPaths[0].masterPath;
 
-
-    // DATA PATH
-    // TODO: Make function for this
-    unsigned long long numPaths = 0;
-    for(const auto &path : fftAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path : fftAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
+    else{
+        prependedString = ",";
     }
-    data.push_back(dataPaths_exps);
 
-    data.push_back(factory.createCharArray("Overwrite"));
-    data.push_back(factory.createScalar<bool>(ui->fftAnalysisOverwriteCheckBox->isChecked()));
+    addDataPathsToArgs(args,firstPrependedString,fftAnalysisDPaths,isMcc);
 
-    data.push_back(factory.createCharArray("xyPixelSize"));
-    data.push_back(factory.createScalar<double>(ui->fftAnalysisXyPixelSizeSpinBox->value()));
+    // TODO: ADD SUPPORT FOR CUSTOM CHANNEL PATTERNS
 
-    data.push_back(factory.createCharArray("dz"));
-    data.push_back(factory.createScalar<double>(ui->fftAnalysisDzLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
+    addBoolToArgs(args,ui->fftAnalysisOverwriteCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("N"));
-    data.push_back(factory.createArray<double>({1,3},{ui->fftAnalysisNYSpinBox->value(),ui->fftAnalysisNXSpinBox->value(),ui->fftAnalysisNZSpinBox->value()}));
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,ui->fftAnalysisXyPixelSizeSpinBox->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("save3DStack"));
-    data.push_back(factory.createScalar<bool>(ui->fftAnalysisSave3DStackCheckBox->isChecked()));
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->fftAnalysisDzLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"N",prependedString,isMcc);
+    std::vector<std::string> nV = {ui->fftAnalysisNYSpinBox->text().toStdString(),ui->fftAnalysisNXSpinBox->text().toStdString(),ui->fftAnalysisNZSpinBox->text().toStdString()};
+    addArrayToArgs(args,nV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"save3DStack",prependedString,isMcc);
+    addBoolToArgs(args,ui->fftAnalysisSave3DStackCheckBox->isChecked(),prependedString);
 
     QString funcType = "fftAnalysis";
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FFT Analysis"),true);
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
 
@@ -3153,12 +2900,7 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
 
     if(!fscAnalysisDPaths.size()) return;
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3166,158 +2908,75 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = fscAnalysisDPaths[0].masterPath;
 
-    // Data Paths
-    unsigned long long numPaths = 0;
-    for(const auto &path : fscAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path : fscAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
-    }
-    data.push_back(dataPaths_exps);
-
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->fscAnalysisCustomPatternsCheckBox->isChecked()){
-        if(fscAnalysisChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < fscAnalysisChannelWidgets.size(); i++){
-                if(fscAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(fscAnalysisChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
     else{
-        QString patternLine = ui->fscAnalysisCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
-
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
+        prependedString = ",";
     }
 
-    data.push_back(factory.createCharArray("Channels"));
-    QString patternLine = ui->fscAnalysisChannelsLineEdit->text();
-    QString pattern;
-    std::vector<QString> patterns;
-    for(int i = 0; i < patternLine.size(); i++){
-        if(patternLine[i] == ','){
-            patterns.push_back(pattern);
-            pattern.clear();
-        }
-        else{
-            pattern.push_back(patternLine[i]);
-        }
-    }
-    if(pattern.size()) patterns.push_back(pattern);
+    addDataPathsToArgs(args,firstPrependedString,fscAnalysisDPaths,isMcc);
 
-    matlab::data::Array channelPatterns = factory.createArray<double>({1,patterns.size()});
-    for(size_t i = 0; i < patterns.size(); i++){
-        channelPatterns[i] = patterns[i].toDouble();
-    }
-    data.push_back(channelPatterns);
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,fscAnalysisChannelWidgets,ui->fscAnalysisCustomPatternsCheckBox->isChecked(),ui->fscAnalysisCustomPatternsLineEdit->text(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("xyPixelSize"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisXyPixelSizeSpinBox->value()));
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisXyPixelSizeSpinBox->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("dz"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisDzLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisDzLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("dr"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisDrLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"dr",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisDrLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("dtheta"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisDthetaLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"dtheta",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisDthetaLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("resThreshMethod"));
-    data.push_back(factory.createCharArray(ui->fscAnalysisResThreshMethodLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,"resThreshMethod",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->fscAnalysisResThreshMethodLineEdit->text().toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("resThresh"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisResTheshLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"resThresh",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisResTheshLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("resAxis"));
-    data.push_back(factory.createCharArray(ui->fscAnalysisResAxisLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,"resAxis",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->fscAnalysisResAxisLineEdit->text().toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("N"));
-    data.push_back(factory.createArray<double>({1,3},{ui->fscAnalysisNYSpinBox->value(),ui->fscAnalysisNXSpinBox->value(),ui->fscAnalysisNZSpinBox->value()}));
+    addCharArrayToArgs(args,"N",prependedString,isMcc);
+    std::vector<std::string> nV = {ui->fscAnalysisNYSpinBox->text().toStdString(),ui->fscAnalysisNXSpinBox->text().toStdString(),ui->fscAnalysisNZSpinBox->text().toStdString()};
+    addArrayToArgs(args,nV,false,prependedString,"[]",isMcc);
 
     if(ui->fscAnalysisBoundBoxCheckBox->isChecked()){
-        data.push_back(factory.createCharArray("bbox"));
-        data.push_back(factory.createArray<int>({1,6},{ui->fscAnalysisBoundBoxYMinSpinBox->value(),ui->fscAnalysisBoundBoxXMinSpinBox->value(),ui->fscAnalysisBoundBoxZMinSpinBox->value(),ui->fscAnalysisBoundBoxYMaxSpinBox->value(), ui->fscAnalysisBoundBoxXMaxSpinBox->value(), ui->fscAnalysisBoundBoxZMaxSpinBox->value()}));
+        addCharArrayToArgs(args,"bbox",prependedString,isMcc);
+        std::vector<std::string> bboxV = {ui->fscAnalysisBoundBoxYMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxXMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxZMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxYMaxSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxXMaxSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxZMaxSpinBox->text().toStdString()};
+        addArrayToArgs(args,bboxV,false,prependedString,"[]",isMcc);
     }
 
-    data.push_back(factory.createCharArray("suffix"));
-    data.push_back(factory.createCharArray(ui->fscAnalysisSuffixLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,"suffix",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->fscAnalysisSuffixLineEdit->text().toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("iterInterval"));
-    data.push_back(factory.createScalar<double>(ui->fscAnalysisIterIntervalLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"iterInterval",prependedString,isMcc);
+    addScalarToArgs(args,ui->fscAnalysisIterIntervalLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("masterCompute"));
-    data.push_back(factory.createScalar<bool>(ui->fscAnalysisMasterComputeCheckBox->isChecked()));
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->fscAnalysisMasterComputeCheckBox->isChecked(),prependedString);
+
+    // TODO: ADD PARSE CLUSTER
 
 
     QString funcType = "fscAnalysis";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
 
 void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
 {
+    messageBoxError("This feature is currently still being developed!");
+    return;
+    // TODO: FINISH IMPLEMENTING THIS
     // TODO: Write a function for this stuff
 
     // Write settings in case of crash
@@ -3328,12 +2987,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
 
     if(!psfDetectionAnalysisDPaths.size()) return;
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3341,89 +2995,21 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = psfDetectionAnalysisDPaths[0].masterPath;
 
-    // Data Paths
-    unsigned long long numPaths = 0;
-    for(const auto &path : psfDetectionAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path : psfDetectionAnalysisDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
-    }
-    data.push_back(dataPaths_exps);
-
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked()){
-        if(psfDetectionAnalysisChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < psfDetectionAnalysisChannelWidgets.size(); i++){
-                if(psfDetectionAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(psfDetectionAnalysisChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
     else{
-        QString patternLine = ui->psfDetectionAnalysisCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
-
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
+        prependedString = ",";
     }
 
+
+    addDataPathsToArgs(args,firstPrependedString,psfDetectionAnalysisDPaths,isMcc);
+
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked(),ui->psfDetectionAnalysisCustomPatternsLineEdit->text(),prependedString,isMcc);
+    /*
     data.push_back(factory.createCharArray("Channels"));
     QString patternLine = ui->psfDetectionAnalysisChannelsLineEdit->text();
     QString pattern;
@@ -3504,11 +3090,14 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
         data.push_back(factory.createCharArray("distThresh"));
         data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->value()}));
     }
+    */
 }
 
 
 void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
 {
+    messageBoxError("This feature is currently still being developed!");
+    return;
     // Write settings in case of crash
     writeSettings();
 
@@ -3518,11 +3107,11 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     if(!tiffZarrConverterDPaths.size()) return;
 
     // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
+    //matlab::data::ArrayFactory factory;
 
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
     size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    //std::vector<matlab::data::Array> data;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3531,6 +3120,7 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     QString mainPath = tiffZarrConverterDPaths[0].masterPath;
 
     // Data Paths
+    /*
     unsigned long long numPaths = 0;
     for(const auto &path : tiffZarrConverterDPaths){
         if(path.includeMaster){
@@ -3619,6 +3209,7 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     else{
 
     }
+    */
 }
 
 
@@ -3630,12 +3221,7 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     // Disable submit button
     ui->mipGeneratorSubmitButton->setEnabled(false);
 
-    // We need this to convert C++ vars to MATLAB vars
-    matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
-    std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3643,128 +3229,59 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = mipGeneratorDPaths[0].masterPath;
 
-    // Data Paths
-    unsigned long long numPaths = 0;
-    for(const auto &path :  mipGeneratorDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path :  mipGeneratorDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
-    }
-    data.push_back(dataPaths_exps);
-
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->mipGeneratorCustomPatternsCheckBox->isChecked()){
-        if( mipGeneratorChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i <  mipGeneratorChannelWidgets.size(); i++){
-                if( mipGeneratorChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(mipGeneratorChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
     else{
-        QString patternLine = ui->mipGeneratorCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
-
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
+        prependedString = ",";
     }
 
-    data.push_back(factory.createCharArray("axis"));
-    data.push_back(factory.createArray<double>({1,3},{static_cast<double>(ui->mipGeneratorAxisYSpinBox->value()),static_cast<double>(ui->mipGeneratorAxisXSpinBox->value()),static_cast<double>(ui->mipGeneratorAxisZSpinBox->value())}));
+    addDataPathsToArgs(args,firstPrependedString,mipGeneratorDPaths,isMcc);
 
-    data.push_back(factory.createCharArray("zarrFile"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorZarrFileCheckBox->isChecked()));
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,mipGeneratorChannelWidgets,ui->mipGeneratorCustomPatternsCheckBox->isChecked(),ui->mipGeneratorCustomPatternsLineEdit->text(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("largeZarr"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorLargeZarrCheckBox->isChecked()));
+    addCharArrayToArgs(args,"axis",prependedString,isMcc);
+    std::vector<std::string> axisV = {ui->mipGeneratorAxisYSpinBox->text().toStdString(),ui->mipGeneratorAxisXSpinBox->text().toStdString(),ui->mipGeneratorAxisZSpinBox->text().toStdString()};
+    addArrayToArgs(args,axisV,false,prependedString,"[]",isMcc);
 
-    data.push_back(factory.createCharArray("Save16bit"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorSave16BitCheckBox->isChecked()));
+    addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorZarrFileCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"largeZarr",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorLargeZarrCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorSave16BitCheckBox->isChecked(),prependedString);
 
     // Job Settings
-    data.push_back(factory.createCharArray("parseCluster"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorParseClusterCheckBox->isChecked()));
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorParseClusterCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("masterCompute"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorMasterComputeCheckBox->isChecked()));
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorMasterComputeCheckBox->isChecked(),prependedString);
 
-    data.push_back(factory.createCharArray("cpusPerTask"));
-    data.push_back(factory.createScalar<uint64_t>(ui->mipGeneratorCpusPerTaskLineEdit->text().toULongLong()));
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->mipGeneratorCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("cpuOnlyNodes"));
-    data.push_back(factory.createScalar<bool>(ui->mipGeneratorCpuOnlyNodesCheckBox->isChecked()));
+    addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
+    addBoolToArgs(args,ui->mipGeneratorCpuOnlyNodesCheckBox->isChecked(),prependedString);
 
     // Advanced Job Settings
     if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
-        data.push_back(factory.createCharArray("jobLogDir"));
-        data.push_back(factory.createCharArray(ui->mipGeneratorJobLogDirLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->mipGeneratorJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
     if(!ui->mipGeneratorUuidLineEdit->text().isEmpty()){
-        data.push_back(factory.createCharArray("uuid"));
-        data.push_back(factory.createCharArray(ui->mipGeneratorUuidLineEdit->text().toStdString()));
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->mipGeneratorUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
     QString funcType = "mipGenerator";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
-    emit jobStart(outA, data, funcType,cMPJNPC,jobLogPaths);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
-

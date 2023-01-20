@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDir>
 #include <QFileDevice>
+#include <iostream>
 
 template <typename T>
 void checkJobLogDir(T &submissionVals, QString &mainPath, const QString &timeJobName){

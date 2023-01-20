@@ -4,7 +4,7 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 0.4.0.0
+VERSION = 1.0.0.0
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 CONFIG += c++17
@@ -30,6 +30,7 @@ HEADERS += \
            jobtextmanager.h \
            mainadvanced.h \
            mainwindow.h \
+           matlabhelperfunctions.h \
            matlaboutputthread.h \
            matlaboutputwindow.h \
            matlaboutputwindowthread.h \
@@ -69,6 +70,7 @@ SOURCES += \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \
+           matlabhelperfunctions.cpp \
            matlaboutputthread.cpp \
            matlaboutputwindow.cpp \
            matlaboutputwindowthread.cpp \
@@ -97,28 +99,28 @@ QMAKE_CXXFLAGS += -static
 #QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 
 
-LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabEngine \
-        -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
+#LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabEngine \
+#        -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
 
-INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
+#INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
 }
 
 macx{
-LIBS += -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabEngine \
-        -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabDataArray
+#LIBS += -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabEngine \
+#        -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabDataArray
 
 
-INCLUDEPATH += "$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/include"
+#INCLUDEPATH += "$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/include"
 }
 
 win32 {
-LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibeng \
-       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibmx \
-       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabEngine \
-       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabDataArray
+#LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibeng \
+#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibmx \
+#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabEngine \
+#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabDataArray
 
 
-INCLUDEPATH += "$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/include"
+#INCLUDEPATH += "$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/include"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
