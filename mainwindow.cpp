@@ -1512,6 +1512,18 @@ void MainWindow::on_submitButton_clicked()
             addCharArrayToArgs(args,ui->primaryCHLineEdit->text().toStdString(),prependedString,isMcc);
         }
 
+        addCharArrayToArgs(args,"stitchMIP",prependedString,isMcc);
+        std::vector<std::string> stitchMIPV = {btosM(ui->stitchStitchMIPYSpinBox->value()),btosM(ui->stitchStitchMIPXSpinBox->value()),btosM(ui->stitchStitchMIPZSpinBox->value())};
+        addArrayToArgs(args,stitchMIPV,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"onlineStitch",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchOnlineStitchCheckBox->isChecked(),prependedString);
+
+        if(ui->stitchGenerateImageListComboBox->currentText().toStdString() != "none"){
+            addCharArrayToArgs(args,"generateImageList",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->stitchGenerateImageListComboBox->currentText().toStdString(),prependedString,isMcc);
+        }
+
         // Decon Settings
         addCharArrayToArgs(args,"cudaDecon",prependedString,isMcc);
         addBoolToArgs(args,ui->cudaDeconRadioButton->isChecked(),prependedString);
@@ -3110,7 +3122,7 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     //matlab::data::ArrayFactory factory;
 
     // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    size_t outA = 0;
+    //size_t outA = 0;
     //std::vector<matlab::data::Array> data;
 
     // NOTE: We have to push a lot of things into our data array one at a time

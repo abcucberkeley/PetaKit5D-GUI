@@ -123,7 +123,7 @@ void matlabThread::run(){
         }
         matlabCmd.append(" \""+pathToMatlab+"\" "+matlabFunc+" "+args);
     }
-    std::cout << matlabCmd << std::endl;
+    //std::cout << matlabCmd << std::endl;
     jobSuccess = !system(matlabCmd.c_str());
     /*
     }

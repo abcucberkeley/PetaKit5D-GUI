@@ -60,8 +60,8 @@ ip.addParameter('timepoints', [], @(x) isnumeric(x) || ischar(x)); % stitch for 
 ip.addParameter('boundboxCrop', [], @(x) isnumeric(x) && (isempty(x) || all(size(x) == [3, 2]) || numel(x) == 6));
 ip.addParameter('primaryCh', '', @ischar);
 % Integrate stitchMIP Later
-%ip.addParameter('stitchMIP', [], @(x) (islogical(x) && (numel(x) == 1 || numel(x) == 3)) || ischar(x)); % 1x3 vector or vector, byt default, stitch MIP-z
-ip.addParameter('onlineStitch', false, @(x) islogical(x)); % support for online stitch (with partial number of tiles). 
+ip.addParameter('stitchMIP', [], @(x) (islogical(x) && (numel(x) == 1 || numel(x) == 3)) || ischar(x)); % 1x3 vector or vector, byt default, stitch MIP-z
+ip.addParameter('onlineStitch', false, @(x) islogical(x) || ischar(x)); % support for online stitch (with partial number of tiles). 
 ip.addParameter('generateImageList', '', @(x) ischar(x)); % for real time processing, {'', 'from_encoder', 'from_sqlite'}
 % decon parameters
 ip.addParameter('cudaDecon', false, @(x) islogical(x) || ischar(x));
@@ -148,7 +148,7 @@ boundboxCrop = pr.boundboxCrop;
 onlyFirstTP = pr.onlyFirstTP;
 timepoints = pr.timepoints;
 primaryCh = pr.primaryCh;
-%stitchMIP = pr.stitchMIP;
+stitchMIP = pr.stitchMIP;
 onlineStitch = pr.onlineStitch;
 generateImageList = pr.generateImageList;
 % decon parameters
@@ -309,11 +309,11 @@ end
 if ischar(boundboxCrop)
     boundboxCrop = str2num(boundboxCrop);
 end
-%{
+
 if ischar(stitchMIP)
     stitchMIP = eval(stitchMIP);
 end
-%}
+
 if ischar(onlineStitch)
     onlineStitch = strcmp(onlineStitch,'true');
 end
@@ -412,7 +412,7 @@ XR_microscopeAutomaticProcessing(dataPaths,'Overwrite',Overwrite,'Streaming',Str
     'imageListFullpaths',imageListFullpaths,'axisOrder',axisOrder,'BlendMethod',BlendMethod,...
     'xcorrShift',xcorrShift,'xcorrMode',xcorrMode,'xyMaxOffset',xyMaxOffset,...
     'zMaxOffset',zMaxOffset,'timepoints',timepoints,'boundboxCrop',boundboxCrop,...
-    'primaryCh',primaryCh,...% Integrate stitchMIP later'stitchMIP',stitchMIP,
+    'primaryCh',primaryCh,'stitchMIP',stitchMIP,...
     'onlineStitch',onlineStitch,...
     'generateImageList',generateImageList,'cudaDecon',cudaDecon,'cppDecon',cppDecon,...
     'cppDeconPath',cppDeconPath,'loadModules',loadModules,'cudaDeconPath',cudaDeconPath,...
