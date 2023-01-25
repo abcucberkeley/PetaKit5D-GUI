@@ -80,19 +80,19 @@ MainWindow::MainWindow(QWidget *parent)
     settings.endGroup();
 
     //QCoreApplication::setApplicationVersion(VERSION_STRING);
-    //if(savedVersion == QCoreApplication::applicationVersion()){
+    if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
-    checkLoadPrevSettings();
-    if(loadSettings) readSettings();
-    /*
+        checkLoadPrevSettings();
+        if(loadSettings) readSettings();
     }
     else{
         // If saved version is not the current version then reset values to avoid corruption
         outputLock.lock();
         std::cout << "New Version has been detected. Resetting saved settings to avoid corruption." << std::endl;
         outputLock.unlock();
+        getMatlabPath(isMcc,pathToMatlab);
     }
-    */
+
 
     // Set current tab to the main tab
     ui->tabWidget->setCurrentWidget(ui->Main);
@@ -277,6 +277,12 @@ void MainWindow::writeSettings()
 
     settings.setValue("primaryCh", ui->primaryCHLineEdit->text());
 
+    settings.setValue("stitchMIPY", ui->stitchStitchMIPYSpinBox->value());
+    settings.setValue("stitchMIPX", ui->stitchStitchMIPXSpinBox->value());
+    settings.setValue("stitchMIPZ", ui->stitchStitchMIPZSpinBox->value());
+    settings.setValue("onlineStitch", ui->stitchOnlineStitchCheckBox->isChecked());
+    settings.setValue("generateImageList", ui->stitchGenerateImageListComboBox->currentText());
+
     // Save Decon Settings
     settings.setValue("matlabDecon", ui->matlabDeconRadioButton->isChecked());
     settings.setValue("cudaDecon", ui->cudaDeconRadioButton->isChecked());
@@ -319,6 +325,10 @@ void MainWindow::writeSettings()
 
     // Save Advanced Job Settings
     settings.setValue("largeFile",QVariant::fromValue(guiVals.largeFile));
+    settings.setValue("largeMethod",QVariant::fromValue(guiVals.largeMethod));
+    settings.setValue("zarrFile",QVariant::fromValue(guiVals.zarrFile));
+    settings.setValue("saveZarr",QVariant::fromValue(guiVals.saveZarr));
+    settings.setValue("save3DStack",QVariant::fromValue(guiVals.save3DStack));
     settings.setValue("jobLogDir",guiVals.jobLogDir);
     settings.setValue("uuid",guiVals.uuid);
     settings.setValue("maxTrialNum",QVariant::fromValue(guiVals.maxTrialNum));
@@ -722,6 +732,12 @@ void MainWindow::readSettings()
 
     ui->primaryCHLineEdit->setText(settings.value("primaryCh").toString());
 
+    ui->stitchStitchMIPYSpinBox->setValue(settings.value("stitchMIPY").toInt());
+    ui->stitchStitchMIPXSpinBox->setValue(settings.value("stitchMIPX").toInt());
+    ui->stitchStitchMIPZSpinBox->setValue(settings.value("stitchMIPZ").toInt());
+    ui->stitchOnlineStitchCheckBox->setChecked(settings.value("onlineStitch").toBool());
+    ui->stitchGenerateImageListComboBox->setCurrentText(settings.value("generateImageList").toString());
+
 
     // Read Decon Settings
 
@@ -766,6 +782,10 @@ void MainWindow::readSettings()
 
     // Read Advanced Job Settings
     guiVals.largeFile = settings.value("largeFile").toBool();
+    guiVals.largeMethod = settings.value("largeMethod").toString();
+    guiVals.zarrFile = settings.value("zarrFile").toBool();
+    guiVals.saveZarr = settings.value("saveZarr").toBool();
+    guiVals.save3DStack = settings.value("save3DStack").toBool();
     guiVals.jobLogDir = settings.value("jobLogDir").toString();
     guiVals.uuid = settings.value("uuid").toString();
     guiVals.maxTrialNum = settings.value("maxTrialNum").toULongLong();
@@ -1311,6 +1331,15 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
 
+        addCharArrayToArgs(args,"largeMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.largeMethod.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zarrFile,prependedString);
+
+        addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.saveZarr,prependedString);
+
         if(!guiVals.jobLogDir.isEmpty()){
             addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
             addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
@@ -1407,6 +1436,16 @@ void MainWindow::on_submitButton_clicked()
         // This needs to change FIX
         addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
+
+
+        addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zarrFile,prependedString);
+
+        addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.saveZarr,prependedString);
+
+        addCharArrayToArgs(args,"save3DStack",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.save3DStack,prependedString);
 
         // Pipeline Settings
         // TODO: Test this Logic more

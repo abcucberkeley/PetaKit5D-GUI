@@ -32,6 +32,9 @@ class GUIvals{
         QString resampleType;
         bool resampleEnabled;
         std::vector<double> resample;
+        bool zarrFile;
+        bool saveZarr;
+        bool save3DStack;
 
         // Decon Advanced Settings
         QString cppDeconPath;
@@ -43,6 +46,7 @@ class GUIvals{
         double errThresh;
         bool debug;
         bool gpuJob;
+        QString largeMethod;
 
         // Job Advanced Settings
         bool largeFile;
@@ -65,6 +69,9 @@ class GUIvals{
                     resampleType{"isotropic"},
                     resampleEnabled{false},
                     resample{1.0,1.0,1.0},
+                    zarrFile{false},
+                    saveZarr{false},
+                    save3DStack{true},
                     cppDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/RLDecon_CPU/20200718/build-cluster/cpuDeconv"},
                     loadModules{"module load gcc/4.8.5; module load fftw/3.3.6-gcc; module load boost/1.65.1-gcc; module load libtiff/4.1.0; "},
                     cudaDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/cudaDeconv"},
@@ -74,6 +81,7 @@ class GUIvals{
                     errThresh{.00000001},
                     debug{false},
                     gpuJob{false},
+                    largeMethod{"inmemory"},
                     largeFile{false},
                     jobLogDir{"../job_logs"},
                     uuid{""},

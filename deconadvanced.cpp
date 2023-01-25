@@ -40,6 +40,7 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
         ui->debugLabel->setEnabled(false);
         ui->debugCheckBox->setEnabled(false);
     }
+    ui->largeMethodComboBox->setCurrentText(guiVals.largeMethod);
 }
 
 deconAdvanced::~deconAdvanced()
@@ -67,6 +68,7 @@ void deconAdvanced::on_submitButton_clicked()
     gVals->errThresh = ui->errThreshLineEdit->text().toDouble();
     gVals->debug = ui->debugCheckBox->isChecked();
     gVals->gpuJob = ui->gpuJobCheckBox->isChecked();
+    gVals->largeMethod = ui->largeMethodComboBox->currentText();
     deconAdvanced::close();
 }
 

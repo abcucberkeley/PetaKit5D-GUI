@@ -1,9 +1,11 @@
 #include "matlabhelperfunctions.h"
+#include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
 #include <QLabel>
 #include <QCheckBox>
 #include <iostream>
+#include <fstream>
 
 void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString, const std::string &arrayChars, const bool isMcc){
     if(arrayChars.size() != 2){
@@ -133,4 +135,30 @@ void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,Q
 std::string btosM(const bool val){
     if(val) return "true";
     else return "false";
+}
+
+void getMatlabPath(bool &isMcc, std::string &pathToMatlab){
+    bool jobSuccess = true;
+    std::string matlabCmd;
+    std::string matlabPathTxt = QCoreApplication::applicationDirPath().toStdString()+"/matlabPath/matlabPath.txt";
+
+    #ifdef _WIN32
+    matlabCmd = "where matlab > "+matlabPathTxt;
+    jobSuccess = !system();
+    #else
+    matlabCmd = "which matlab > "+matlabPathTxt;
+    jobSuccess = !system(matlabCmd.c_str());
+    #endif
+
+    if(jobSuccess){
+        std::ifstream ifs(matlabPathTxt);
+        std::string matlabPath;
+        getline(ifs,matlabPath);
+        isMcc = false;
+        pathToMatlab = matlabPath;
+    }
+    else{
+        isMcc = true;
+        pathToMatlab = QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime/R2022b";
+    }
 }

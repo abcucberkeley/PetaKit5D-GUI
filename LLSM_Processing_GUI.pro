@@ -4,7 +4,7 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 1.0.0.0
+VERSION = 1.0.1
 DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 CONFIG += c++17
