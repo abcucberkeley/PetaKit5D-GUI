@@ -4,4 +4,4 @@ A Graphical User Interface for the [LLSM3DTools](https://github.com/abcucberkele
 ## Quick Start Guide
 
 ### Prerequisites
-1. Currently, an installation of MATLAB is required on the system you wish to run the GUI on.
+1. An installation of MATLAB on your system is preferred but the GUI is also able to run without it using the included compiled version of MATLAB.
