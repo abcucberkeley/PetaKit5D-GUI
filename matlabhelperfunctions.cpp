@@ -144,7 +144,7 @@ void getMatlabPath(bool &isMcc, std::string &pathToMatlab){
 
     #ifdef _WIN32
     matlabCmd = "where matlab > "+matlabPathTxt;
-    jobSuccess = !system();
+    jobSuccess = !system(matlabCmd.c_str());
     #else
     matlabCmd = "which matlab > "+matlabPathTxt;
     jobSuccess = !system(matlabCmd.c_str());
