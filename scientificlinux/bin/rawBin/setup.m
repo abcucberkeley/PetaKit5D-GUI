@@ -26,7 +26,7 @@ fprintf('Hostname: %s \n', strip(output))
 
 fprintf('Add matlab libraries to path...\n')
 
-addpath(genpath([codeRt, '/LLSM3DTools']));
+addpath(genpath([codeRt, '/LLSM5DTools']));
 
 % also add python libary
 if addPython
@@ -40,7 +40,7 @@ if addPython
         end
         
 
-        pymod_rel_path = [codeRt, '/LLSM3DTools/microscopeDataProcessing/python/'];
+        pymod_rel_path = [codeRt, '/LLSM5DTools/microscopeDataProcessing/python/'];
         dir_info = dir(pymod_rel_path);
         pymod_path = dir_info.folder;
         insert(py.sys.path, int64(0), pymod_path);

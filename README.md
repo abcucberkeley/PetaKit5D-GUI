@@ -1,5 +1,5 @@
 # LLSM_Processing_GUI
-A Graphical User Interface for the [LLSM3DTools](https://github.com/abcucberkeley/LLSM3DTools/tree/dev) image processing pipeline
+A Graphical User Interface for the [LLSM5DTools](https://github.com/abcucberkeley/LLSM5DTools/tree/dev) image processing pipeline
 
 ## Quick Start Guide
 

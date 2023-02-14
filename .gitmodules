@@ -1,4 +1,4 @@
-[submodule "LLSM3DTools"]
-	path = LLSM3DTools
-	url = https://github.com/abcucberkeley/LLSM3DTools
+[submodule "LLSM5DTools"]
+	path = LLSM5DTools
+	url = https://github.com/abcucberkeley/LLSM5DTools
 	branch = dev

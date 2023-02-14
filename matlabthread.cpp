@@ -34,11 +34,11 @@ void matlabThread::run(){
         //matlab -batch "cd('/clusterfs/nvme/matthewmueller/clusterBenchmarking');clusterBenchmarking;exit;"
         //matlabPtr = startMATLAB();
 
-        // Add the LLSM3DTools Repository to the path
-        std::string newDir = QCoreApplication::applicationDirPath().toStdString()+"/LLSM3DTools";
+        // Add the LLSM5DTools Repository to the path
+        std::string newDir = QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools";
         matlabCmd.append(" \"cd(\'"+newDir+"\');");
         matlabCmd.append("addpath(genpath(\'"+newDir+"\'));");
-        //matlab::data::CharArray newDir = factory.createCharArray(QCoreApplication::applicationDirPath().toStdString()+"/LLSM3DTools");
+        //matlab::data::CharArray newDir = factory.createCharArray(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools");
         //matlabPtr->feval(u"cd",newDir);
         //matlab::data::CharArray newGen = matlabPtr->feval(u"genpath",newDir);
         //matlabPtr->feval(u"addpath",newGen);
