@@ -67,7 +67,7 @@ NEWDIR=$RAWBIN/LLSM5DTools
 
 # Replace the current LLSM5DTools if it already exits
 if [ -d "$NEWDIR" ]; then
-  rm -r $NEWDIR
+  rm -rf $NEWDIR
 fi
 
 mv $INITIALDIR $NEWDIR
