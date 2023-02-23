@@ -7,7 +7,7 @@
 
 // Object that creates this thread is the parent
 matlabThreadManager::matlabThreadManager(QMutex &outputLock, QObject *parent) :
-    QThread(parent), outputLock(&outputLock), jobLogPaths(nullptr), outA(1)
+    QThread(parent), outputLock(&outputLock), jobLogPaths(nullptr), outA(1), killThread(0)
 {
 
 }
@@ -18,6 +18,8 @@ matlabThreadManager::~matlabThreadManager(){
     for(auto &thread : mThreads){
         if(!thread.second->isFinished()) thread.second->terminate();
     }
+    killThread = 1;
+    this->wait();
 }
 
 void matlabThreadManager::run(){
@@ -31,6 +33,7 @@ void matlabThreadManager::run(){
 
     // Once outA is set to 0, we can create a new matlab thread for the job
     while(outA){
+        if(killThread) return;
         sleep(1);
     }
 

@@ -14,6 +14,7 @@ class matlabOutputWindowThread : public QThread
     Q_OBJECT
 public:
     matlabOutputWindowThread(std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, QObject *parent = nullptr);
+    ~matlabOutputWindowThread();
     void run();
 public slots:
     void onAddOutputIDAndPath(const unsigned int mThreadID, const QString mainPath);
@@ -23,6 +24,8 @@ private:
     std::unordered_map<unsigned int, std::pair<QString,bool>> jobPaths;
     std::unordered_map<int,std::pair<QString,QDateTime>> *jobLogPaths;
     QMutex fileNamesLock;
+
+    bool killThread = 0;
 };
 
 #endif // MATLABOUTPUTWINDOWTHREAD_H

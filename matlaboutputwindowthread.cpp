@@ -3,15 +3,21 @@
 
 
 matlabOutputWindowThread::matlabOutputWindowThread(std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, QObject *parent) :
-    QThread(parent)
+    QThread(parent), killThread(0)
 {
     this->jobLogPaths = &jobLogPaths;
+}
+
+matlabOutputWindowThread::~matlabOutputWindowThread(){
+    killThread = 1;
+    this->wait();
 }
 
 void matlabOutputWindowThread::run(){
     fNameMapMap fNames;
     std::unordered_map<QString,QString> existingPaths;
     while(true){
+        if(killThread) return;
         sleep(3);
         for(auto &path : *jobLogPaths){
             fileNamesLock.lock();

@@ -36,6 +36,8 @@ private:
     bool isMcc;
     std::string pathToMatlab;
 
+    bool killThread;
+
 };
 
 #endif // MATLABTHREADMANAGER_H
