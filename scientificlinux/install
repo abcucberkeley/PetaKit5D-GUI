@@ -1,6 +1,5 @@
 #!/bin/bash
 BASEDIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-MATLABROOT=/usr/local/MATLAB/R2022b
 RAWBIN=$BASEDIR/bin/rawBin/
 DOWNLOAD=false
 REPOOWNER=abcucberkeley
@@ -9,8 +8,7 @@ USAGE="$(basename "$0") [options] -- program to install the LLSM_Processing_GUI
 
 Options:
  -d		Attempts to download and use the latest LLSM5DTools dev branch
- -h		Shows this help text
- -m <path>	Specifies the matlab root (default: /usr/local/MATLAB/R2022b)"
+ -h		Shows this help text"
 
 while getopts dhm: flag
 do
@@ -18,23 +16,10 @@ do
 		d)	DOWNLOAD=true;;
 		h)	echo "$USAGE"
 			exit 0;;
-        m)	MATLABROOT=${OPTARG};;
 		?)  echo "$USAGE"
             exit 0;;
     esac
 done
-OMATLABROOT=$MATLABROOT
-MATLABROOT=$MATLABROOT/extern/bin/glnxa64/
-FILEDA=$MATLABROOT/libMatlabDataArray.so
-FILEE=$MATLABROOT/libMatlabEngine.so
-if test -f "$FILEDA" && test -f "$FILEE"; then
-    echo "$FILEDA found!"
-	echo "$FILEE found!"
-else
-	echo "ERROR: Needed matlab libs were not found"
-	echo "Double check your matlab root: $OMATLABROOT"
-	exit 0
-fi
 
 FEXEC=$BASEDIR/bin/LLSM_Processing_GUI
 
@@ -42,7 +27,6 @@ FEXEC=$BASEDIR/bin/LLSM_Processing_GUI
 echo "#!/bin/bash
 BASEDIR=\$( cd -- \"\$( dirname -- \"\${BASH_SOURCE[0]}\" )\" &> /dev/null && pwd )
 export LD_LIBRARY_PATH=\$BASEDIR/../lib:\$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$MATLABROOT:\$LD_LIBRARY_PATH
 \$BASEDIR/rawBin/LLSM_Processing_GUI_raw" > $FEXEC
 
 chmod 777 $FEXEC
