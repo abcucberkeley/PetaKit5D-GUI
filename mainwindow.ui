@@ -537,6 +537,9 @@
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
@@ -649,6 +652,9 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QLabel" name="deskewLabel">
             <property name="minimumSize">
@@ -764,6 +770,9 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QLabel" name="rotateLabel">
             <property name="enabled">
@@ -873,6 +882,9 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QLabel" name="deskewAndRotateLabel">
             <property name="minimumSize">
@@ -928,7 +940,7 @@
              <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -950,7 +962,7 @@
              <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -972,7 +984,7 @@
              <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -991,7 +1003,7 @@
              <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -1023,7 +1035,10 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_45">
+         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QLabel" name="stitchLabel">
             <property name="minimumSize">
@@ -1048,7 +1063,7 @@
           <item>
            <widget class="QCheckBox" name="stitchCheckBox">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -1067,7 +1082,7 @@
              <bool>false</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -1139,6 +1154,12 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
           <item>
            <widget class="QLabel" name="deconOnlyLabel">
             <property name="minimumSize">
@@ -1163,7 +1184,7 @@
           <item>
            <widget class="QCheckBox" name="deconOnlyCheckBox">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -1182,12 +1203,12 @@
              <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
+             <enum>QSizePolicy::Minimum</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>0</width>
+              <height>0</height>
              </size>
             </property>
            </spacer>
@@ -5386,7 +5407,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -10348,8 +10369,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="deconTypeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>
