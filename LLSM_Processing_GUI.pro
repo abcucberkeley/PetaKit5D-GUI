@@ -4,19 +4,8 @@
 TEMPLATE = app
 TARGET = LLSM_Processing_GUI
 QT += widgets
-VERSION = 1.0.1
-DEFINES += VERSION_STRING=\\\"$${VERSION}\\\"
 
 CONFIG += c++17
-
-
-MATLAB_VER_WIN = R2022a
-MATLAB_VER_LINUX = R2022b
-MATLAB_VER_MAC = R2022b
-
-MATLAB_ROOT_WIN = C:/Program Files/MATLAB
-MATLAB_ROOT_LINUX = /usr/local/MATLAB
-MATLAB_ROOT_MAC = /Applications/MATLAB_
 
 # Input
 HEADERS += \
@@ -96,31 +85,23 @@ QMAKE_CXXFLAGS_RELEASE *= -O3
 unix:!macx {
 CONFIG += static
 QMAKE_CXXFLAGS += -static
+
+QMAKE_LFLAGS += -Wl,--rpath=\$$ORIGIN
+QMAKE_LFLAGS += -Wl,--rpath=\$$ORIGIN/../lib
+QMAKE_LFLAGS += -Wl,--rpath=\$$ORIGIN/../libs
+QMAKE_RPATH =
 #QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 
 
-#LIBS += -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabEngine \
-#        -L"$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/bin/glnxa64" -lMatlabDataArray
-
-#INCLUDEPATH += "$${MATLAB_ROOT_LINUX}/$${MATLAB_VER_LINUX}/extern/include"
 }
 
 macx{
-#LIBS += -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabEngine \
-#        -L"$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/bin/maci64" -lMatlabDataArray
 
 
-#INCLUDEPATH += "$${MATLAB_ROOT_MAC}$${MATLAB_VER_MAC}.app/extern/include"
 }
 
 win32 {
-#LIBS += -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibeng \
-#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibmx \
-#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabEngine \
-#       -L"$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/lib/win64/mingw64" -llibMatlabDataArray
 
-
-#INCLUDEPATH += "$${MATLAB_ROOT_WIN}/$${MATLAB_VER_WIN}/extern/include"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

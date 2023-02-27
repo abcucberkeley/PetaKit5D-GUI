@@ -74,24 +74,25 @@ MainWindow::MainWindow(QWidget *parent)
     mostRecentDir = QDir::homePath();
 
     // Check if version is up to date with what was last saved.
-    QSettings settings("ABC", "LLSM GUI");
-    settings.beginGroup("MainWindow");
-    QString savedVersion = settings.value("version").toString();
-    settings.endGroup();
+    //QSettings settings("ABC", "LLSM GUI");
+    //settings.beginGroup("MainWindow");
+    //QString savedVersion = settings.value("version").toString();
+    //settings.endGroup();
 
     //QCoreApplication::setApplicationVersion(VERSION_STRING);
-    if(savedVersion == QCoreApplication::applicationVersion()){
+    //if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
-        checkLoadPrevSettings();
-        if(loadSettings) readSettings();
-    }
+    checkLoadPrevSettings();
+    if(loadSettings) readSettings();
+    //}
+    /*
     else{
         // If saved version is not the current version then reset values to avoid corruption
         outputLock.lock();
         std::cout << "New Version has been detected. Resetting saved settings to avoid corruption." << std::endl;
         outputLock.unlock();
         getMatlabPath(isMcc,pathToMatlab);
-    }
+    }*/
 
 
     // Set current tab to the main tab
