@@ -27,13 +27,21 @@ void loadPreviousSettings::getMatlabPath(){
     bool jobSuccess = true;
     std::string matlabCmd;
     std::string matlabPathTxt = QCoreApplication::applicationDirPath().toStdString()+"/matlabPath/matlabPath.txt";
-
-    #ifdef _WIN32
-    matlabCmd = "where matlab > "+matlabPathTxt;
-    jobSuccess = !system(matlabCmd.c_str());
-    #else
+    #ifdef __linux__
     matlabCmd = "which matlab > "+matlabPathTxt;
     jobSuccess = !system(matlabCmd.c_str());
+    #elif _WIN32
+    matlabCmd = "where matlab > "+matlabPathTxt;
+    jobSuccess = !system(matlabCmd.c_str());
+    #else // MAC
+    jobSuccess = !system("ls /Applications | grep MATLAB");
+    if(jobSuccess){
+        matlabCmd = "printf %s \"/Applications/\" > "+matlabPathTxt+";";
+        matlabCmd.append("ls /Applications | grep MATLAB | tail -1  | xargs printf %s >> "+matlabPathTxt+";");
+        matlabCmd.append("echo \"/bin/matlab\" >> "+matlabPathTxt+";");
+        std::cout << matlabCmd << std::endl;
+        jobSuccess = !system(matlabCmd.c_str());
+    }
     #endif
 
     if(jobSuccess){
