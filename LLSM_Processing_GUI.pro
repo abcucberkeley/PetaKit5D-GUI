@@ -94,12 +94,12 @@ QMAKE_RPATH =
 }
 
 macx{
-
+ICON = icons/abcIcon.icns
 
 }
 
 win32 {
-
+RC_ICONS = icons/abcIcon.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
