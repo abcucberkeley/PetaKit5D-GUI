@@ -1,5 +1,6 @@
 #include "loadprevioussettings.h"
 #include "ui_loadprevioussettings.h"
+#include <QDir>
 #include <iostream>
 #include <fstream>
 
@@ -26,6 +27,10 @@ loadPreviousSettings::~loadPreviousSettings()
 void loadPreviousSettings::getMatlabPath(){
     bool jobSuccess = true;
     std::string matlabCmd;
+    // Make path if it does not exist
+    QDir dir(QCoreApplication::applicationDirPath()+"/matlabPath");
+    if (!dir.exists())
+        dir.mkpath(".");
     std::string matlabPathTxt = QCoreApplication::applicationDirPath().toStdString()+"/matlabPath/matlabPath.txt";
     #ifdef __linux__
     matlabCmd = "which matlab > "+matlabPathTxt;
