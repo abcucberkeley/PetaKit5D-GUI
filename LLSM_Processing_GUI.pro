@@ -72,6 +72,9 @@ SOURCES += \
            simreconreconadvanced.cpp \
            submissionchecks.cpp
 
+RESOURCES += \
+    resources.qrc
+
 TRANSLATIONS += LLSM_Processing_GUI_en_US.ts
 
 # Remove possible other optimization flags

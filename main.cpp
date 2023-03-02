@@ -48,6 +48,9 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(messageOutputHandler);
 
     QApplication a(argc, argv);
+    #ifdef __linux__
+    a.setWindowIcon(QIcon("./icons/abcIcon.ico"));
+    #endif
     MainWindow w;
     w.show();
     return a.exec();
