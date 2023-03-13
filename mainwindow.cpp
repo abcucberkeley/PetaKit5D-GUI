@@ -2635,6 +2635,10 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
+    if(ui->cropResultPathLineEdit->text().toStdString().empty()){
+        messageBoxError("Cropping requires a result path!");
+    }
+
     // Disable submit button
     ui->cropSubmitButton->setEnabled(false);
 
@@ -2657,7 +2661,7 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     // Data Path
     std::vector<std::string> datapathV = {mainPath.toStdString()};
-    addArrayToArgs(args,datapathV,true,prependedString,"{}",isMcc);
+    addArrayToArgs(args,datapathV,true,firstPrependedString,"{}",isMcc);
 
     // Result Path
     std::vector<std::string> resultpathV = {ui->cropResultPathLineEdit->text().toStdString()};
