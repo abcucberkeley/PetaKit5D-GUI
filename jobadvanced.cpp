@@ -20,8 +20,6 @@ jobAdvanced::jobAdvanced(GUIvals &guiVals, QWidget *parent) :
     ui->minModifyTimeSpinBox->setValue(guiVals.minModifyTime);
     ui->maxModifyTimeSpinBox->setValue(guiVals.maxModifyTime);
     ui->maxWaitLoopNumSpinBox->setValue(guiVals.maxWaitLoopNum);
-    ui->matlabLaunchStrLineEdit->setText(guiVals.MatlabLaunchStr);
-    ui->slurmParamLineEdit->setText(guiVals.SlurmParam);
 }
 
 jobAdvanced::~jobAdvanced()
@@ -46,8 +44,6 @@ void jobAdvanced::on_submitButton_clicked()
     gVals->minModifyTime = ui->minModifyTimeSpinBox->value();
     gVals->maxModifyTime = ui->maxModifyTimeSpinBox->value();
     gVals->maxWaitLoopNum = ui->maxWaitLoopNumSpinBox->value();
-    gVals->MatlabLaunchStr = ui->matlabLaunchStrLineEdit->text();
-    gVals->SlurmParam = ui->slurmParamLineEdit->text();
     jobAdvanced::close();
 }
 

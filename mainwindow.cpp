@@ -322,7 +322,6 @@ void MainWindow::writeSettings()
     // Save Job Settings
     settings.setValue("parseCluster", ui->parseClusterCheckBox->isChecked());
     settings.setValue("cpusPerTask", ui->cpusPerTaskLineEdit->text());
-    settings.setValue("cpuOnlyNodes", ui->cpuOnlyNodesCheckBox->isChecked());
 
     // Save Advanced Job Settings
     settings.setValue("largeFile",QVariant::fromValue(guiVals.largeFile));
@@ -337,8 +336,6 @@ void MainWindow::writeSettings()
     settings.setValue("minModifyTime",QVariant::fromValue(guiVals.minModifyTime));
     settings.setValue("maxModifyTime",QVariant::fromValue(guiVals.maxModifyTime));
     settings.setValue("maxWaitLoopNum",QVariant::fromValue(guiVals.maxWaitLoopNum));
-    settings.setValue("MatlabLaunchStr",guiVals.MatlabLaunchStr);
-    settings.setValue("SlurmParam",guiVals.SlurmParam);
 
     // ********* Save Sim Recon Settings *********
     settings.beginWriteArray("simReconDPaths");
@@ -464,7 +461,6 @@ void MainWindow::writeSettings()
     // Job Settings
     settings.setValue("simReconParseCluster",ui->simReconParseClusterCheckBox->isChecked());
     settings.setValue("simReconCpusPerTask",ui->simReconCpusPerTaskLineEdit->text());
-    settings.setValue("simReconCpuOnlyNodes",ui->simReconCpuOnlyNodesCheckBox->isChecked());
 
     // Job Advanced settings
     settings.setValue("simReconjobLogDir",simreconVals.jobLogDir);
@@ -549,7 +545,6 @@ void MainWindow::writeSettings()
     settings.setValue("cropParseCluster", ui->cropParseClusterCheckBox->isChecked());
     settings.setValue("cropCpusPerTask", ui->cropCpusPerTaskLineEdit->text());
     settings.setValue("cropMasterCompute",ui->cropMasterComputeCheckBox->isChecked());
-    settings.setValue("cropCpuOnlyNodes", ui->cropCpuOnlyNodesCheckBox->isChecked());
     settings.setValue("cropJobLogDir",ui->cropJobLogDirLineEdit->text());
     settings.setValue("cropUuid",ui->cropUuidLineEdit->text());
 
@@ -779,7 +774,6 @@ void MainWindow::readSettings()
     // Read Job Settings
     ui->parseClusterCheckBox->setChecked(settings.value("parseCluster").toBool());
     ui->cpusPerTaskLineEdit->setText(settings.value("cpusPerTask").toString());
-    ui->cpuOnlyNodesCheckBox->setChecked(settings.value("cpuOnlyNodes").toBool());
 
     // Read Advanced Job Settings
     guiVals.largeFile = settings.value("largeFile").toBool();
@@ -794,8 +788,6 @@ void MainWindow::readSettings()
     guiVals.minModifyTime = settings.value("minModifyTime").toULongLong();
     guiVals.maxModifyTime = settings.value("maxModifyTime").toULongLong();
     guiVals.maxWaitLoopNum = settings.value("maxWaitLoopNum").toULongLong();
-    guiVals.MatlabLaunchStr = settings.value("MatlabLaunchStr").toString();
-    guiVals.SlurmParam = settings.value("SlurmParam").toString();
 
     // ********* Read Sim Recon Settings *********
 
@@ -946,7 +938,6 @@ void MainWindow::readSettings()
     // Job Settings
     ui->simReconParseClusterCheckBox->setChecked(settings.value("simReconParseCluster").toBool());
     ui->simReconCpusPerTaskLineEdit->setText(settings.value("simReconCpusPerTask").toString());
-    ui->simReconCpuOnlyNodesCheckBox->setChecked(settings.value("simReconCpuOnlyNodes").toBool());
 
     // Job Advanced settings
     simreconVals.jobLogDir = settings.value("simReconjobLogDir").toString();
@@ -1052,7 +1043,6 @@ void MainWindow::readSettings()
     ui->cropParseClusterCheckBox->setChecked(settings.value("cropParseCluster").toBool());
     ui->cropCpusPerTaskLineEdit->setText(settings.value("cropCpusPerTask").toString());
     ui->cropMasterComputeCheckBox->setChecked(settings.value("cropMasterCompute").toBool());
-    ui->cropCpuOnlyNodesCheckBox->setChecked(settings.value("cropCpuOnlyNodes").toBool());
     ui->cropJobLogDirLineEdit->setText(settings.value("cropJobLogDir").toString());
     ui->cropUuidLineEdit->setText(settings.value("cropUuid").toString());
 
@@ -1325,9 +1315,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
         addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-        addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
-        addBoolToArgs(args,ui->cpuOnlyNodesCheckBox->isChecked(),prependedString);
-
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
@@ -1360,15 +1347,9 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
 
-        if(!guiVals.MatlabLaunchStr.isEmpty()){
-            addCharArrayToArgs(args,"MatlabLaunchStr",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.MatlabLaunchStr.toStdString(),prependedString,isMcc);
-        }
+        addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+        addBoolToArgs(args,isMcc,prependedString);
 
-        if(!guiVals.SlurmParam.isEmpty()){
-            addCharArrayToArgs(args,"SlurmParam",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.SlurmParam.toStdString(),prependedString,isMcc);
-        }
     }
     else{
         // Data Paths
@@ -1649,9 +1630,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
         addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-        addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
-        addBoolToArgs(args,ui->cpuOnlyNodesCheckBox->isChecked(),prependedString);
-
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
@@ -1681,15 +1659,9 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
 
-        if(!guiVals.MatlabLaunchStr.isEmpty()){
-            addCharArrayToArgs(args,"MatlabLaunchStr",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.MatlabLaunchStr.toStdString(),prependedString,isMcc);
-        }
+        addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+        addBoolToArgs(args,isMcc,prependedString);
 
-        if(!guiVals.SlurmParam.isEmpty()){
-            addCharArrayToArgs(args,"SlurmParam",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.SlurmParam.toStdString(),prependedString,isMcc);
-        }
     }
     QString funcType;
 
@@ -2566,9 +2538,6 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
     addScalarToArgs(args,ui->simReconCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-    //data.push_back(factory.createCharArray("cpuOnlyNodes"));
-    //data.push_back(factory.createScalar<bool>(ui->cpuOnlyNodesCheckBox->isChecked()));
-
     // Advanced Job Settings
     if(!simreconVals.jobLogDir.isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
@@ -2592,17 +2561,6 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addCharArrayToArgs(args,"maxModifyTime",prependedString,isMcc);
     addScalarToArgs(args,std::to_string(simreconVals.maxModifyTime),prependedString);
 
-    /*
-    if(!guiVals.MatlabLaunchStr.isEmpty()){
-        data.push_back(factory.createCharArray("MatlabLaunchStr"));
-        data.push_back(factory.createCharArray(guiVals.MatlabLaunchStr.toStdString()));
-    }
-
-    if(!guiVals.SlurmParam.isEmpty()){
-        data.push_back(factory.createCharArray("SlurmParam"));
-        data.push_back(factory.createCharArray(guiVals.SlurmParam.toStdString()));
-    }
-    */
     QString funcType = "simRecon";
     // Send data to the MATLAB thread
     auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
@@ -2696,9 +2654,6 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
     addScalarToArgs(args,ui->cropCpusPerTaskLineEdit->text().toStdString(),prependedString);
-
-    addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
-    addBoolToArgs(args,ui->cropCpuOnlyNodesCheckBox->isChecked(),prependedString);
 
     // Advanced Job Settings
     if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
@@ -3321,9 +3276,6 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
 
     addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
     addScalarToArgs(args,ui->mipGeneratorCpusPerTaskLineEdit->text().toStdString(),prependedString);
-
-    addCharArrayToArgs(args,"cpuOnlyNodes",prependedString,isMcc);
-    addBoolToArgs(args,ui->mipGeneratorCpuOnlyNodesCheckBox->isChecked(),prependedString);
 
     // Advanced Job Settings
     if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){

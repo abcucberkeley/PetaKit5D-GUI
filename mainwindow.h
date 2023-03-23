@@ -57,8 +57,6 @@ class GUIvals{
         uint64_t minModifyTime;
         uint64_t maxModifyTime;
         uint64_t maxWaitLoopNum;
-        QString MatlabLaunchStr;
-        QString SlurmParam;
 
         GUIvals() : skewAngle{32.45},
                     xyPixelSize{.108},
@@ -89,9 +87,7 @@ class GUIvals{
                     unitWaitTime{1},
                     minModifyTime{1},
                     maxModifyTime{10},
-                    maxWaitLoopNum{10},
-                    MatlabLaunchStr{"module load matlab/r2021a; matlab -nodisplay -nosplash -nodesktop -nojvm -r"},
-                    SlurmParam{"-p abc --qos abc_normal -n1 --mem-per-cpu=21418M"}
+                    maxWaitLoopNum{10}
         {}
 };
 

@@ -3469,75 +3469,6 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_43">
-          <item>
-           <spacer name="horizontalSpacer_45">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="cpuOnlyNodesLabel">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>CPU Only Nodes</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cpuOnlyNodesCheckBox">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_46">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_27">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_51">
           <item>
            <spacer name="horizontalSpacer_47">
@@ -5211,75 +5142,6 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_58">
-              <item>
-               <spacer name="horizontalSpacer_64">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="simReconCpuOnlyNodesLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>CPU Only Nodes</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="simReconCpuOnlyNodesCheckBox">
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_65">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_41">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>10</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_59">
               <item>
                <spacer name="horizontalSpacer_66">
@@ -5407,7 +5269,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>false</bool>
@@ -5741,33 +5603,6 @@
            </item>
            <item>
             <widget class="QCheckBox" name="cropMasterComputeCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="cropCpuOnlyNodesHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="cropCpuOnlyNodesLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>CPU Only Nodes</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="cropCpuOnlyNodesCheckBox">
              <property name="autoFillBackground">
               <bool>false</bool>
              </property>
@@ -8068,36 +7903,6 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="mipGeneratorCpuOnlyNodesHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorCpuOnlyNodesLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>CPU Only Nodes</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mipGeneratorCpuOnlyNodesCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="mipGeneratorJobLogDirHorizontalLayout">
            <item>
             <widget class="QLabel" name="mipGeneratorJobLogDirLabel">
@@ -9974,6 +9779,13 @@
          <item>
           <layout class="QHBoxLayout" name="tiffZarrConverterCpusPerTaskHorizontalLayout">
            <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="tiffZarrConverterCpusPerTaskLabel">
              <property name="font">
               <font>
@@ -10037,33 +9849,6 @@
            </item>
            <item>
             <widget class="QCheckBox" name="tiffZarrConverterMasterComputeCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="tiffZarrConverterCpuOnlyNodesHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="tiffZarrConverterCpuOnlyNodesLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>CPU Only Nodes</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="tiffZarrConverterCpuOnlyNodesCheckBox">
              <property name="autoFillBackground">
               <bool>false</bool>
              </property>
@@ -10369,8 +10154,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="deconTypeButtonGroup"/>
-  <buttongroup name="tiffZarrConverterButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
+  <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="deconTypeButtonGroup"/>
  </buttongroups>
 </ui>

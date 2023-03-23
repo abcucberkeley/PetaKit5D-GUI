@@ -90,7 +90,6 @@ CONFIG += static
 QMAKE_CXXFLAGS += -static
 
 QMAKE_LFLAGS += -Wl,-rpath=\'\$\$ORIGIN\'/../lib
-QMAKE_RPATH =
 #QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 
 
@@ -109,3 +108,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 }
+
+
