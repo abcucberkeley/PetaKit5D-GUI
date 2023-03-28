@@ -20,7 +20,7 @@ public:
     std::string defaultMCCPath;
 
 private:
-    void getMatlabPath();
+    int getMatlabPath();
 
 private slots:
     void on_noButton_clicked();

@@ -9,6 +9,8 @@ CONFIG += c++17
 
 # Input
 HEADERS += \
+           configfilecreator.h \
+           configfilesettings.h \
            datapath.h \
            datapaths.h \
            datapathsrecursive.h \
@@ -33,6 +35,8 @@ HEADERS += \
            submissionchecks.h
 
 FORMS += \
+         configfilecreator.ui \
+         configfilesettings.ui \
          datapaths.ui \
          datapathsrecursive.ui \
          deconadvanced.ui \
@@ -48,6 +52,8 @@ FORMS += \
          simreconreconadvanced.ui
 
 SOURCES += \
+           configfilecreator.cpp \
+           configfilesettings.cpp \
            datapath.cpp \
            datapaths.cpp \
            datapathsrecursive.cpp \

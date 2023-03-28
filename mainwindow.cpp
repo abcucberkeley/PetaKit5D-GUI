@@ -15,8 +15,6 @@
 #include <QObjectList>
 #include <QtMath>
 
-//using namespace matlab::engine;
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -82,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     //QCoreApplication::setApplicationVersion(VERSION_STRING);
     //if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
+    readConfigSettings();
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
     //}
@@ -130,6 +129,10 @@ void MainWindow::writeSettings()
     QSettings settings("ABC", "LLSM GUI");
     settings.beginGroup("MainWindow");
     settings.setValue("version", QCoreApplication::applicationVersion());
+
+    // Config settings
+    settings.setValue("configFile", cFileVals.configFile);
+    settings.setValue("gpuConfigFile", cFileVals.gpuConfigFile);
 
     settings.beginWriteArray("dPaths");
     for(unsigned int i = 0; i < dPaths.size(); i++)
@@ -548,6 +551,14 @@ void MainWindow::writeSettings()
     settings.setValue("cropJobLogDir",ui->cropJobLogDirLineEdit->text());
     settings.setValue("cropUuid",ui->cropUuidLineEdit->text());
 
+    settings.endGroup();
+}
+
+void MainWindow::readConfigSettings(){
+    QSettings settings("ABC", "LLSM GUI");
+    settings.beginGroup("MainWindow");
+    cFileVals.configFile = settings.value("configFile").toString();
+    cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
     settings.endGroup();
 }
 
@@ -1350,6 +1361,12 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
         addBoolToArgs(args,isMcc,prependedString);
 
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
+
     }
     else{
         // Data Paths
@@ -1662,6 +1679,12 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
         addBoolToArgs(args,isMcc,prependedString);
 
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
+
     }
     QString funcType;
 
@@ -1714,7 +1737,7 @@ void MainWindow::on_resultsDirLineEdit_textChanged(const QString &arg1)
 // Open Main Window Advanced Settings
 void MainWindow::on_mainAdvancedSettingsButton_clicked()
 {
-    mainAdvanced mAdvanced(guiVals);
+    mainAdvanced mAdvanced(guiVals, cFileVals);
     mAdvanced.setModal(true);
     mAdvanced.exec();
 }
@@ -2666,6 +2689,16 @@ void MainWindow::on_cropSubmitButton_clicked()
         addCharArrayToArgs(args,ui->cropUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
+
     QString funcType = "crop";
 
     // Send data to the MATLAB thread
@@ -2776,12 +2809,6 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
     // Disable submit button
     ui->parallelRsyncSubmitButton->setEnabled(false);
 
-    // We need this to convert C++ vars to MATLAB vars
-    //matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    //size_t outA = 0;
-    //std::vector<matlab::data::Array> data;
     std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
@@ -2973,6 +3000,13 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
     addBoolToArgs(args,ui->fscAnalysisMasterComputeCheckBox->isChecked(),prependedString);
 
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
     // TODO: ADD PARSE CLUSTER
 
 
@@ -2988,6 +3022,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     messageBoxError("This feature is currently still being developed!");
     return;
     // TODO: FINISH IMPLEMENTING THIS
+
     // TODO: Write a function for this stuff
 
     // Write settings in case of crash
@@ -3287,6 +3322,13 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->mipGeneratorUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
+
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType = "mipGenerator";
     // Send data to the MATLAB thread

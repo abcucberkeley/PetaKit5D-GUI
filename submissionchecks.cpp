@@ -6,3 +6,10 @@ void messageBoxError(QString errorText){
     messageBox.setFixedSize(500,200);
     return;
 }
+
+void messageBoxSuccess(QString successText){
+    QMessageBox messageBox;
+    messageBox.information(0,"Success",successText);
+    messageBox.setFixedSize(500,200);
+    return;
+}

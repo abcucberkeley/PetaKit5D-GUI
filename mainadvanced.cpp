@@ -1,12 +1,14 @@
 #include "mainadvanced.h"
 #include "ui_mainadvanced.h"
+#include "configfilesettings.h"
 
-mainAdvanced::mainAdvanced(GUIvals& guiVals, QWidget *parent) :
+mainAdvanced::mainAdvanced(GUIvals& guiVals, configFileVals& cFileVals, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::mainAdvanced)
 {
     // pointer to hold the passed in vals
     gVals = &guiVals;
+    this->cFileVals = &cFileVals;
 
     ui->setupUi(this);
 
@@ -63,5 +65,13 @@ void mainAdvanced::on_resampleEnabledCheckBox_stateChanged(int arg1)
    ui->resampleXSpinBox->setEnabled(arg1);
    ui->resampleZLabel->setEnabled(arg1);
    ui->resampleZSpinBox->setEnabled(arg1);
+}
+
+
+void mainAdvanced::on_configFileSettingsButton_clicked()
+{
+    configFileSettings cFileSettings(cFileVals);
+    cFileSettings.setModal(true);
+    cFileSettings.exec();
 }
 

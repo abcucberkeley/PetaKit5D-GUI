@@ -1,5 +1,6 @@
 #include "loadprevioussettings.h"
 #include "ui_loadprevioussettings.h"
+#include "submissionchecks.h"
 #include <QDir>
 #include <iostream>
 #include <fstream>
@@ -24,7 +25,7 @@ loadPreviousSettings::~loadPreviousSettings()
     delete ui;
 }
 
-void loadPreviousSettings::getMatlabPath(){
+int loadPreviousSettings::getMatlabPath(){
     bool jobSuccess = true;
     std::string matlabCmd;
     // Make path if it does not exist
@@ -32,6 +33,11 @@ void loadPreviousSettings::getMatlabPath(){
     if (!dir.exists())
         dir.mkpath(".");
     std::string matlabPathTxt = QCoreApplication::applicationDirPath().toStdString()+"/matlabPath/matlabPath.txt";
+
+    if(ui->lpsUseMCCCheckBox->isChecked()){
+        ui->lpsMatlabPathLineEdit->setText(QString(defaultMCCPath.c_str()));
+        return 0;
+    }
     #ifdef __linux__
     matlabCmd = "which matlab > "+matlabPathTxt;
     jobSuccess = !system(matlabCmd.c_str());
@@ -55,10 +61,12 @@ void loadPreviousSettings::getMatlabPath(){
         getline(ifs,matlabPath);
         ui->lpsUseMCCCheckBox->setChecked(false);
         ui->lpsMatlabPathLineEdit->setText(QString(matlabPath.c_str()));
+        return 0;
     }
     else{
         ui->lpsUseMCCCheckBox->setChecked(true);
         ui->lpsMatlabPathLineEdit->setText(QString(defaultMCCPath.c_str()));
+        return 1;
     }
 }
 
@@ -76,6 +84,9 @@ void loadPreviousSettings::on_yesButton_clicked()
 
 void loadPreviousSettings::on_lpsMatlabPathResetButton_clicked()
 {
-    getMatlabPath();
+    int err = getMatlabPath();
+    if(ui->lpsUseMCCCheckBox->isChecked() && err) messageBoxSuccess("Path reset to the default MCC path. We were unable to find your MATLAB installation. If you have one, it may be at a custom location. You can provide the full path to the executable here and uncheck the Use MCC checkbox if you wish to use it.");
+    else if(ui->lpsUseMCCCheckBox->isChecked()) messageBoxSuccess("Path reset to the default MCC path. If you would like the path to reset to your default MATLAB path. Uncheck the Use MCC checkbox and click the reset path button again.");
+    else messageBoxSuccess("Path reset to your default MATLAB path. If you would like the path to reset to the default MCC path. Check the Use MCC checkbox and click the reset path button again.");
 }
 

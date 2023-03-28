@@ -160,6 +160,45 @@ class simReconVals{
         {}
 };
 
+// Class to hold advanced options for Sim Recon
+class configFileVals{
+public:
+    // Config File Locations
+    QString configFile;
+    QString gpuConfigFile;
+
+    // Config File Settings
+    QString BashLaunchStr;
+    bool GNUparallel;
+    QString MCCMasterStr;
+    QString MCRParam;
+    double MemPerCPU;
+    QString SlurmParam;
+    uint64_t jobTimeLimit;
+    bool masterCompute;
+    uint64_t minCPUNum;
+    uint64_t maxCPUNum;
+    uint64_t maxJobNum;
+    bool wholeNodeJob;
+
+    configFileVals(): configFile{""},
+        gpuConfigFile{""},
+        BashLaunchStr(""),
+        GNUparallel(true),
+        MCCMasterStr(""),
+        MCRParam(""),
+        MemPerCPU(.01),
+        SlurmParam(""),
+        jobTimeLimit(12),
+        masterCompute(true),
+        minCPUNum(1),
+        maxCPUNum(1),
+        maxJobNum(5000),
+        wholeNodeJob(false)
+
+    {}
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -184,6 +223,7 @@ private:
     std::string pathToMatlab;
 
     void writeSettings();
+    void readConfigSettings();
     void readSettings();
     matlabThreadManager *mThreadManager;
     matlabOutputWindow *mOutputWindow;
@@ -192,6 +232,9 @@ private:
     GUIvals guiVals;
     std::vector<dataPath> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
+
+    // Config Vals
+    configFileVals cFileVals;
 
     // Sim Recon
     simReconVals simreconVals;

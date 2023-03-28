@@ -13,7 +13,7 @@ class mainAdvanced : public QDialog
     Q_OBJECT
 
 public:
-    explicit mainAdvanced(GUIvals& guiVals, QWidget *parent = nullptr);
+    explicit mainAdvanced(GUIvals& guiVals, configFileVals& cFileVals, QWidget *parent = nullptr);
     ~mainAdvanced();
 
 private slots:
@@ -23,9 +23,12 @@ private slots:
 
     void on_resampleEnabledCheckBox_stateChanged(int arg1);
 
+    void on_configFileSettingsButton_clicked();
+
 private:
     Ui::mainAdvanced *ui;
     GUIvals* gVals;
+    configFileVals* cFileVals;
 };
 
 #endif // MAINADVANCED_H

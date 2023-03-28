@@ -19,6 +19,4 @@ void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,Q
 
 std::string btosM(const bool val);
 
-void getMatlabPath(bool &isMcc, std::string &pathToMatlab);
-
 #endif // MATLABHELPERFUNCTIONS_H
