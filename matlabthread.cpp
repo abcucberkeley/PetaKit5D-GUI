@@ -67,8 +67,14 @@ void matlabThread::run(){
     }
     // If the user is using mcc
     else{
-        std::string mccDir = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/run_mccMaster.sh\"";
-        matlabCmd.append(mccDir);
+        #ifdef __linux__
+        std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh\"";
+        #elif _WIN32
+        std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster\"";
+        #else
+
+        #endif
+        matlabCmd.append(mccLoc);
         std::string matlabFunc;
         if (funcType == "crop"){
             matlabFunc = "XR_crop_dataset";
@@ -94,7 +100,10 @@ void matlabThread::run(){
         else{
             matlabFunc = "XR_microscopeAutomaticProcessing";
         }
-        matlabCmd.append(" \""+pathToMatlab+"\" "+matlabFunc+" "+args);
+        #ifndef _WIN32
+        matlabCmd.append(" \""+pathToMatlab+"\"");
+        #endif
+        matlabCmd.append(" "+matlabFunc+" "+args);
     }
     //std::cout << matlabCmd << std::endl;
     jobSuccess = !system(matlabCmd.c_str());

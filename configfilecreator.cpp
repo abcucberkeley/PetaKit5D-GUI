@@ -76,7 +76,7 @@ void configFileCreator::on_saveFileButton_clicked()
     file.write(jsonDoc.toJson());
     file.close();
 
-    messageBoxSuccess("File succesfully saved to: "+ui->jsonConfigFileNameLineEdit->text());
+    messageBoxSuccess(this, "File succesfully saved to: "+ui->jsonConfigFileNameLineEdit->text());
 }
 
 

@@ -16,13 +16,16 @@
 #include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+      kill(false),
+      isMcc(false),
+      loadSettings(false),
+      ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    mOutputWindow = nullptr;
 
-    // check if using compiled scripts or matlab
-    // isMcc = true;
+    readMatlabPathSettings();
 
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
@@ -115,12 +118,13 @@ MainWindow::~MainWindow()
 // Event triggered when main window is closed
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // Write current user settings
-    writeSettings();
-    event->accept();
+    // Write current user settings if we aren't just killing the app
+    if(!kill) writeSettings();
+    //event->accept();
 
     // Close output window if visible
     if(mOutputWindow) mOutputWindow->close();
+    QWidget::closeEvent(event);
 }
 
 // Write user settings
@@ -129,6 +133,10 @@ void MainWindow::writeSettings()
     QSettings settings("ABC", "LLSM GUI");
     settings.beginGroup("MainWindow");
     settings.setValue("version", QCoreApplication::applicationVersion());
+
+    // Path settings
+    settings.setValue("isMcc",isMcc);
+    settings.setValue("pathToMatlab",QString::fromStdString(pathToMatlab));
 
     // Config settings
     settings.setValue("configFile", cFileVals.configFile);
@@ -551,6 +559,14 @@ void MainWindow::writeSettings()
     settings.setValue("cropJobLogDir",ui->cropJobLogDirLineEdit->text());
     settings.setValue("cropUuid",ui->cropUuidLineEdit->text());
 
+    settings.endGroup();
+}
+
+void MainWindow::readMatlabPathSettings(){
+    QSettings settings("ABC", "LLSM GUI");
+    settings.beginGroup("MainWindow");
+    isMcc = settings.value("isMcc").toBool();
+    pathToMatlab = settings.value("pathToMatlab").toString().toStdString();
     settings.endGroup();
 }
 
@@ -2265,9 +2281,7 @@ void MainWindow::on_psfFullAddPathsButton_2_clicked()
 // Check if the user wants to load previous settings
 void MainWindow::checkLoadPrevSettings()
 {
-    loadSettings = false;
-
-    loadPreviousSettings lPSettings(loadSettings,isMcc,pathToMatlab);
+    loadPreviousSettings lPSettings(loadSettings,kill,isMcc,pathToMatlab);
     lPSettings.setModal(true);
     lPSettings.exec();
 }

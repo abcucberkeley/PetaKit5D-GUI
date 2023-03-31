@@ -34,6 +34,6 @@ void checkJobLogDir(T &submissionVals, QString &mainPath, const QString &timeJob
 
 void messageBoxError(QString errorText);
 
-void messageBoxSuccess(QString successText);
+void messageBoxSuccess(QWidget* parent, QString successText);
 
 #endif // SUBMISSIONCHECKS_H

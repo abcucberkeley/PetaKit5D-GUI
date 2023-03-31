@@ -7,8 +7,8 @@ void messageBoxError(QString errorText){
     return;
 }
 
-void messageBoxSuccess(QString successText){
-    QMessageBox messageBox;
+void messageBoxSuccess(QWidget* parent, QString successText){
+    QMessageBox messageBox(parent);
     messageBox.information(0,"Success",successText);
     messageBox.setFixedSize(500,200);
     return;

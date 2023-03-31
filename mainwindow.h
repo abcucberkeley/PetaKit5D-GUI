@@ -206,6 +206,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    bool kill;
 
 public slots:
     void onEnableSubmitButton();
@@ -223,6 +224,7 @@ private:
     std::string pathToMatlab;
 
     void writeSettings();
+    void readMatlabPathSettings();
     void readConfigSettings();
     void readSettings();
     matlabThreadManager *mThreadManager;
