@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>770</width>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,8 +22,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>728</width>
-      <height>556</height>
+      <width>761</width>
+      <height>571</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -5278,7 +5278,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="usefulToolsTab">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="tabBarAutoHide">
          <bool>false</bool>
@@ -6411,327 +6411,372 @@
          <attribute name="title">
           <string>FFT Analysis</string>
          </attribute>
-         <widget class="QLabel" name="fftAnalysisDataPathsLabel">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>90</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
+         <layout class="QGridLayout" name="gridLayout_12">
+          <property name="leftMargin">
+           <number>9</number>
           </property>
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-            <strikeout>false</strikeout>
-            <kerning>true</kerning>
-           </font>
+          <property name="topMargin">
+           <number>9</number>
           </property>
-          <property name="text">
-           <string>Data Paths</string>
+          <property name="rightMargin">
+           <number>9</number>
           </property>
-         </widget>
-         <widget class="QPushButton" name="fftAnalysisAddPathsButton">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>90</y>
-            <width>111</width>
-            <height>23</height>
-           </rect>
+          <property name="bottomMargin">
+           <number>9</number>
           </property>
-          <property name="text">
-           <string>Add/View Paths</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="fftAnalysisLabel">
-          <property name="geometry">
-           <rect>
-            <x>270</x>
-            <y>20</y>
-            <width>251</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>24</pointsize>
-            <strikeout>false</strikeout>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="text">
-           <string>FFT Analysis</string>
-          </property>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_22">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>120</y>
-            <width>112</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_68">
-           <item>
-            <widget class="QLabel" name="fftAnalysisOverwriteLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Overwrite</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="fftAnalysisOverwriteCheckBox">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_24">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>150</y>
-            <width>191</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_69">
-           <item>
-            <widget class="QLabel" name="fftAnalysisXyPixelSizeLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>Microns</string>
-             </property>
-             <property name="text">
-              <string>xy Pixel Size</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="fftAnalysisXyPixelSizeSpinBox">
-             <property name="toolTip">
-              <string>Microns</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="singleStep">
-              <double>0.001000000000000</double>
-             </property>
-             <property name="stepType">
-              <enum>QAbstractSpinBox::DefaultStepType</enum>
-             </property>
-             <property name="value">
-              <double>0.108000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_27">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>180</y>
-            <width>241</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_70">
-           <item>
-            <widget class="QLabel" name="fftAnalysisDzLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Actual Pixel size in Z</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="fftAnalysisDzLineEdit">
-             <property name="text">
-              <string>.1</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_29">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>210</y>
-            <width>365</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_71">
-           <item>
-            <widget class="QLabel" name="fftAnalysisNYLabel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Y:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="fftAnalysisNYSpinBox">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="maximum">
-              <double>100000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1001.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="fftAnalysisNXLabel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>X:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="fftAnalysisNXSpinBox">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="maximum">
-              <double>100000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1001.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="fftAnalysisNZLabel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Z:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="fftAnalysisNZSpinBox">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="maximum">
-              <double>100000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1001.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_33">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>240</y>
-            <width>152</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_72">
-           <item>
-            <widget class="QLabel" name="fftAnalysisSave3DStackLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Save 3D Stack</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QPushButton" name="fftAnalysisSubmitButton">
-          <property name="geometry">
-           <rect>
-            <x>310</x>
-            <y>290</y>
-            <width>111</width>
-            <height>61</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Submit</string>
-          </property>
-         </widget>
+          <item row="2" column="1" rowspan="2">
+           <layout class="QVBoxLayout" name="verticalLayout_27">
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_167" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisDataPathsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Data Paths</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fftAnalysisAddPathsButton">
+                <property name="text">
+                 <string>Add/View Paths</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_50">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisOverwriteLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Overwrite</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="fftAnalysisOverwriteCheckBox">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_51">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_69" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisXyPixelSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Microns</string>
+                </property>
+                <property name="text">
+                 <string>xy Pixel Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="fftAnalysisXyPixelSizeSpinBox">
+                <property name="toolTip">
+                 <string>Microns</string>
+                </property>
+                <property name="decimals">
+                 <number>3</number>
+                </property>
+                <property name="singleStep">
+                 <double>0.001000000000000</double>
+                </property>
+                <property name="stepType">
+                 <enum>QAbstractSpinBox::DefaultStepType</enum>
+                </property>
+                <property name="value">
+                 <double>0.108000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_52">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_70" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisDzLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Actual Pixel size in Z</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="fftAnalysisDzLineEdit">
+                <property name="text">
+                 <string>.1</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_53">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_71" stretch="1,1,1,1,1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisNYLabel">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Y:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="fftAnalysisNYSpinBox">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <double>100000.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1001.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="fftAnalysisNXLabel">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>X:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="fftAnalysisNXSpinBox">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <double>100000.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1001.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="fftAnalysisNZLabel">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Z:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="fftAnalysisNZSpinBox">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <double>100000.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1001.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_54">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_72" stretch="1,1">
+              <item>
+               <widget class="QLabel" name="fftAnalysisSave3DStackLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Save 3D Stack</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="fftAnalysisSave3DStackCheckBox">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <layout class="QVBoxLayout" name="verticalLayout_25">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_165">
+              <item>
+               <widget class="QLabel" name="fftAnalysisLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>24</pointsize>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>FFT Analysis</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="4" column="1">
+           <layout class="QVBoxLayout" name="verticalLayout_26">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_166">
+              <item>
+               <widget class="QPushButton" name="fftAnalysisSubmitButton">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Submit</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="fscAnalysis">
          <attribute name="title">
@@ -10379,7 +10424,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>770</width>
      <height>19</height>
     </rect>
    </property>
