@@ -5284,7 +5284,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="tabBarAutoHide">
          <bool>false</bool>
@@ -7727,595 +7727,695 @@
          <attribute name="title">
           <string>MIP Generator</string>
          </attribute>
-         <widget class="QWidget" name="layoutWidget_4">
-          <property name="geometry">
-           <rect>
-            <x>90</x>
-            <y>60</y>
-            <width>581</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorChannelPatternsHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorChannelPatternsLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Channel Patterns</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="mipGeneratorChannelPatternsHorizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Maximum</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>30</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="horizontalLayoutWidget_15">
-          <property name="geometry">
-           <rect>
-            <x>120</x>
-            <y>90</y>
-            <width>511</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorCustomPatternsHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorCustomPatternsLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Custom Patterns</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mipGeneratorCustomPatternsCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="mipGeneratorCustomPatternsLineEdit">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="placeholderText">
-              <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QPushButton" name="mipGeneratorSubmitButton">
-          <property name="geometry">
-           <rect>
-            <x>310</x>
-            <y>440</y>
-            <width>111</width>
-            <height>61</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Submit</string>
-          </property>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_51">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>130</y>
-            <width>232</width>
-            <height>29</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorZarrFileHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorZarrFileLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Zarr File</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mipGeneratorZarrFileCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="horizontalLayoutWidget_16">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>210</y>
-            <width>401</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorAxisHorizontalLayout">
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorAxisLabelLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorAxisLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Axis:</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorAxisYHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorAxisYLabel">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Y:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="mipGeneratorAxisYSpinBox">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>1</number>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorAxisXHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorAxisXLabel">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>X:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="mipGeneratorAxisXSpinBox">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>1</number>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorAxisZHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorAxisZLabel">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Z:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="mipGeneratorAxisZSpinBox">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>1</number>
-               </property>
-               <property name="value">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_52">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>250</y>
-            <width>151</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorSave16BitHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorSave16BitLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Save as 16 Bit</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mipGeneratorSave16BitCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_6">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>30</y>
-            <width>208</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorDataPathsHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorDataPathsLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-               <strikeout>false</strikeout>
-               <kerning>true</kerning>
-              </font>
-             </property>
-             <property name="text">
-              <string>Data Paths</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="mipGeneratorAddPathsButton">
-             <property name="text">
-              <string>Add/View Paths</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_53">
-          <property name="geometry">
-           <rect>
-            <x>430</x>
-            <y>130</y>
-            <width>331</width>
-            <height>281</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="mipGeneratorParseClusterVerticalLayout">
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorClusterHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorParseClusterLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Parse Cluster</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="mipGeneratorParseClusterCheckBox">
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorCpusPerTaskHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorCpusPerTaskLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>CPUs Per Task</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="mipGeneratorCpusPerTaskLineEdit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>20</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>3</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="mipGeneratorCpusPerTaskHorizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>200</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorComputeHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorMasterComputeLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Use Master Compute Node</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="mipGeneratorMasterComputeCheckBox">
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorJobLogDirHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorJobLogDirLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Job Log Dir</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="mipGeneratorJobLogDirLineEdit">
-               <property name="text">
-                <string>../job_logs</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="mipGeneratorJobLogDirBrowseButton">
-               <property name="text">
-                <string>Browse</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="mipGeneratorUuidHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="mipGeneratorUuidLabel">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>uuid</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="mipGeneratorUuidLineEdit">
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="mipGeneratorUuidHorizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>200</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget_54">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>170</y>
-            <width>232</width>
-            <height>29</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="mipGeneratorLargeZarrHorizontalLayout">
-           <item>
-            <widget class="QLabel" name="mipGeneratorLargeZarrLabel">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Large Zarr</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mipGeneratorLargeZarrCheckBox">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout_14" rowstretch="1,10,1">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_34">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_180">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <pointsize>24</pointsize>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>MIP Generator</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_32" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="mipGeneratorDataPathsHorizontalLayout">
+              <item>
+               <spacer name="horizontalSpacer_64">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="mipGeneratorDataPathsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Data Paths</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="mipGeneratorAddPathsButton">
+                <property name="text">
+                 <string>Add/View Paths</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_65">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_66">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="mipGeneratorChannelPatternsHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="mipGeneratorChannelPatternsLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Channel Patterns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="mipGeneratorChannelPatternsHorizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Maximum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>30</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_67">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="mipGeneratorCustomPatternsHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="mipGeneratorCustomPatternsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Custom Patterns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="mipGeneratorCustomPatternsCheckBox">
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="mipGeneratorCustomPatternsLineEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_68">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="mipGeneratorAxisHorizontalLayout">
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorAxisLabelLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorAxisLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Axis:</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorAxisYHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorAxisYLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="mipGeneratorAxisYSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorAxisXHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorAxisXLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="mipGeneratorAxisXSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorAxisZHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorAxisZLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="mipGeneratorAxisZSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_69">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_175">
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorZarrFileHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorZarrFileLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Zarr File</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="mipGeneratorZarrFileCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorLargeZarrHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorLargeZarrLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Large Zarr</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="mipGeneratorLargeZarrCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_70">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_176" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorClusterHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorParseClusterLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Parse Cluster</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="mipGeneratorParseClusterCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorCpusPerTaskHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorCpusPerTaskLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>CPUs Per Task</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="mipGeneratorCpusPerTaskLineEdit">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>20</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>3</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="mipGeneratorCpusPerTaskHorizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>200</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_71">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_177" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorComputeHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorMasterComputeLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Use Master Compute Node</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="mipGeneratorMasterComputeCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorJobLogDirHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorJobLogDirLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Job Log Dir</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="mipGeneratorJobLogDirLineEdit">
+                  <property name="text">
+                   <string>../job_logs</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="mipGeneratorJobLogDirBrowseButton">
+                  <property name="text">
+                   <string>Browse</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_72">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_178" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorUuidHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorUuidLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>uuid</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="mipGeneratorUuidLineEdit">
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="mipGeneratorUuidHorizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>200</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorSave16BitHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorSave16BitLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Save as 16 Bit</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="mipGeneratorSave16BitCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_33">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_179">
+              <item>
+               <widget class="QPushButton" name="mipGeneratorSubmitButton">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Submit</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="parallelRsync">
          <attribute name="title">
@@ -10426,22 +10526,6 @@
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QFrame" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>560</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
