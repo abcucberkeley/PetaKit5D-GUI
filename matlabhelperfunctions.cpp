@@ -43,7 +43,9 @@ void addBoolToArgs(std::string &args, const bool mBool, const std::string &prepe
     else args.append(prependedString+"false");
 }
 
-void addDataPathsToArgs(std::string &args, const std::string &prependedString, std::vector<dataPath> dataPaths, const bool isMcc){
+// returns 1 if no paths are added
+// returns 0 otherwise
+int addDataPathsToArgs(std::string &args, const std::string &prependedString, std::vector<dataPath> dataPaths, const bool isMcc){
     // Data Paths
     std::string surroundQuotes;
     if(isMcc) surroundQuotes = "\"";
@@ -77,6 +79,7 @@ void addDataPathsToArgs(std::string &args, const std::string &prependedString, s
         }
     }
     args.append("}"+surroundQuotes);
+    return endsWith(args,surroundQuotes+"{}"+surroundQuotes);
 }
 
 void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets, bool customPatterns, QString patternLine, const std::string &prependedString, const bool isMcc){
@@ -135,4 +138,9 @@ void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,Q
 std::string btosM(const bool val){
     if(val) return "true";
     else return "false";
+}
+
+bool endsWith(std::string_view str, std::string_view suffix)
+{
+    return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }

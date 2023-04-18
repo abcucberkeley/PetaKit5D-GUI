@@ -1202,10 +1202,40 @@ void MainWindow::on_submitButton_clicked()
     // Check for job log directory for main job
     checkJobLogDir(guiVals, mainPath, timeJobName);
 
+    // Data Paths
+    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc)){
+        ui->submitButton->setEnabled(true);
+        QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
+        if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
+                                                                                     " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
+                                                                                     " then Include Master should be checked.");
+        else messageBoxError(errString);
+        return;
+    }
+
+    // Channel Patterns
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
+
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
+    addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
+    addBoolToArgs(args,guiVals.Reverse,prependedString);
+
+    addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
+    addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
+    addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
 
     if(ui->deconOnlyCheckBox->isChecked()){
-        // Data Paths
-        addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc);
 
         // Main Settings
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
@@ -1218,35 +1248,13 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,OverwriteV,false,prependedString,"[]",isMcc);
         }
 
-        // Channel Patterns
-        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
-        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
-
         // Currently not used
         //data.push_back(factory.createCharArray("Channels"));
         //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
-        addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
-
-        addCharArrayToArgs(args,"dz",prependedString,isMcc);
-        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
-
         //**** For when dzFromEncoder is implemented into the decon wrapper ****
         //data.push_back(factory.createCharArray("dzFromEncoder"));
         //data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
-
-        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
-
-        addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.Reverse,prependedString);
-
-        addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
-        addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
 
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
@@ -1385,8 +1393,6 @@ void MainWindow::on_submitButton_clicked()
 
     }
     else{
-        // Data Paths
-        addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc);
 
         // Main Settings
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
@@ -1402,34 +1408,12 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"Streaming",prependedString,isMcc);
         addBoolToArgs(args,ui->streamingCheckBox->isChecked(),prependedString);
 
-        // Channel Patterns
-        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
-        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
-
         // Currently not used
         //data.push_back(factory.createCharArray("Channels"));
         //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
-        addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
-
-        addCharArrayToArgs(args,"dz",prependedString,isMcc);
-        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
-
         addCharArrayToArgs(args,"dzFromEncoder",prependedString,isMcc);
         addBoolToArgs(args,ui->dzFromEncoderCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
-
-        addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.Reverse,prependedString);
-
-        addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
-        addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
 
         addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.resampleType.toStdString(),prependedString,isMcc);
