@@ -9,7 +9,7 @@
 
 void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString, const std::string &arrayChars, const bool isMcc){
     if(arrayChars.size() != 2){
-        std::cout << "Error: addArrayToArgs input must be the 2 chars that open and close the array type" << std::endl;
+        std::cout << "Error: addArrayToArgs arrayChars input must be the 2 chars that open and close the array type" << std::endl;
         return;
     }
     std::string surroundQuotes;
@@ -82,11 +82,15 @@ int addDataPathsToArgs(std::string &args, const std::string &prependedString, st
     return endsWith(args,surroundQuotes+"{}"+surroundQuotes);
 }
 
-void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets, bool customPatterns, QString patternLine, const std::string &prependedString, const bool isMcc){
+void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets, bool customPatterns, QString patternLine, const std::string &prependedString, const bool isMcc, const std::string &arrayChars){
+    if(arrayChars.size() != 2){
+        std::cout << "Error: addChannelPatternsToArgs arrayChars input must be the 2 chars that open and close the array type" << std::endl;
+        return;
+    }
     // Channel Patterns
     std::string surroundQuotes;
     if(isMcc) surroundQuotes = "\"";
-    args.append(prependedString+surroundQuotes+"{");
+    args.append(prependedString+surroundQuotes+arrayChars[0]);
     bool firstCell = true;
     if(!customPatterns){
         if(channelWidgets.size()){
@@ -131,7 +135,7 @@ void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,Q
             else addCharArrayToArgs(args, pattern.toStdString(), ",", false, true);
         }
     }
-    args.append("}"+surroundQuotes);
+    args.append(arrayChars[1]+surroundQuotes);
 }
 
 // convert bool to a string for matlab

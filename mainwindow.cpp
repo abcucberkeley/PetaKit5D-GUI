@@ -1688,9 +1688,8 @@ void MainWindow::on_submitButton_clicked()
     }
     QString funcType;
 
-    if(ui->deconOnlyCheckBox->isChecked()){
-        funcType="DeconOnly";
-    }
+    if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
+    else funcType = "XR_microscopeAutomaticProcessing";
 
     // Send data to the MATLAB thread
     auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
@@ -2582,7 +2581,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addCharArrayToArgs(args,"maxModifyTime",prependedString,isMcc);
     addScalarToArgs(args,std::to_string(simreconVals.maxModifyTime),prependedString);
 
-    QString funcType = "simRecon";
+    QString funcType = "simReconAutomaticProcessing";
     // Send data to the MATLAB thread
     auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -2697,7 +2696,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
     addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
 
-    QString funcType = "crop";
+    QString funcType = "XR_crop_dataset";
 
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->cropParseClusterCheckBox->isChecked());
@@ -2835,7 +2834,7 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
     addCharArrayToArgs(args,"numStream", prependedString, isMcc);
     addScalarToArgs(args,ui->parallelRsyncNumStreamLineEdit->text().toStdString(), prependedString);
 
-    QString funcType = "parallelRsync";
+    QString funcType = "XR_parallel_rsync_wrapper";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Parallel Rsync"),true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -2909,7 +2908,7 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"save3DStack",prependedString,isMcc);
     addBoolToArgs(args,ui->fftAnalysisSave3DStackCheckBox->isChecked(),prependedString);
 
-    QString funcType = "fftAnalysis";
+    QString funcType = "XR_fftSpectrumComputingWrapper";
 
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FFT Analysis"),true);
@@ -3008,7 +3007,7 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // TODO: ADD PARSE CLUSTER
 
 
-    QString funcType = "fscAnalysis";
+    QString funcType = "XR_FSC_analysis_wrapper";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3053,88 +3052,76 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
 
     addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
     addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked(),ui->psfDetectionAnalysisCustomPatternsLineEdit->text(),prependedString,isMcc);
-    /*
-    data.push_back(factory.createCharArray("Channels"));
-    QString patternLine = ui->psfDetectionAnalysisChannelsLineEdit->text();
-    QString pattern;
-    std::vector<QString> patterns;
-    for(int i = 0; i < patternLine.size(); i++){
-        if(patternLine[i] == ','){
-            patterns.push_back(pattern);
-            pattern.clear();
-        }
-        else{
-            pattern.push_back(patternLine[i]);
-        }
-    }
-    if(pattern.size()) patterns.push_back(pattern);
 
-    matlab::data::Array channelPatterns = factory.createArray<double>({1,patterns.size()});
-    for(size_t i = 0; i < patterns.size(); i++){
-        channelPatterns[i] = patterns[i].toDouble();
-    }
-    data.push_back(channelPatterns);
+    addCharArrayToArgs(args,"Channels",prependedString,isMcc);
+    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisChannelsLineEdit->text(),prependedString,isMcc,"[]");
 
-    data.push_back(factory.createCharArray("RWFn"));
-    QString RWFnpatternLine = ui->psfDetectionAnalysisRWFnLineEdit->text();
-    QString RWFnpattern;
-    std::vector<QString> RWFnpatterns;
-    for(int i = 0; i < RWFnpatternLine.size(); i++){
-        if(RWFnpatternLine[i] == ','){
-            RWFnpatterns.push_back(pattern);
-            RWFnpattern.clear();
-        }
-        else{
-            RWFnpattern.push_back(patternLine[i]);
-        }
-    }
-    if(RWFnpattern.size()) RWFnpatterns.push_back(pattern);
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,ui->psfDetectionAnalysisXyPixelSizeSpinBox->text().toStdString(),prependedString);
 
-    matlab::data::CellArray RWFnPatternsF = factory.createCellArray({1,RWFnpatterns.size()});
-    for(size_t i = 0; i < RWFnpatterns.size(); i++){
-        RWFnPatternsF[i] = RWFnpatterns[i].toStdString();
-    }
-    data.push_back(RWFnPatternsF);
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->psfDetectionAnalysisDzLineEdit->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("xyPixelSize"));
-    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisXyPixelSizeSpinBox->value()));
+    addCharArrayToArgs(args,"angle",prependedString,isMcc);
+    addScalarToArgs(args,ui->psfDetectionAnalysisSkewAngleSpinBox->text().toStdString(),prependedString);
 
-    data.push_back(factory.createCharArray("dz"));
-    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisDzLineEdit->text().toDouble()));
+    addCharArrayToArgs(args,"sourceStr",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->psfDetectionAnalysisSourceStrLineEdit->text().toStdString(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("angle"));
-    data.push_back(factory.createScalar<double>(ui->psfDetectionAnalysisSkewAngleSpinBox->text().toDouble()));
+    addCharArrayToArgs(args,"RWFn",prependedString,isMcc);
+    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisRWFnLineEdit->text(),prependedString,isMcc);
 
-    data.push_back(factory.createCharArray("sourceStr"));
-    data.push_back(factory.createCharArray(ui->psfDetectionAnalysisSourceStrLineEdit->text().toStdString()));
+    addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
+    addBoolToArgs(args,ui->psfDetectionAnalysisFlipZStackCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->psfDetectionAnalysisMasterComputeCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    QString funcType;
 
     if(ui->psfDetectionAnalysisAnalysisOnlyRadioButton->isChecked()){
-        data.push_back(factory.createCharArray("Deskew"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisDeskewCheckBox->isChecked()));
+        funcType = "XR_psf_detection_and_analysis_wrapper";
+        addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+        addBoolToArgs(args,ui->psfDetectionAnalysisDeskewCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("flipZstack"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisFlipZStackCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
+        addBoolToArgs(args,ui->psfDetectionAnalysisObjectiveScanCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("ObjectiveScan"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisObjectiveScanCheckBox->isChecked()));
+        addCharArrayToArgs(args,"ZstageScan",prependedString,isMcc);
+        addBoolToArgs(args,ui->psfDetectionAnalysisZStageScanCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("ZstageScan"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisZStageScanCheckBox->isChecked()));
+        addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+        addBoolToArgs(args,ui->psfDetectionAnalysisSave16BitCheckBox->isChecked(),prependedString);
 
-        data.push_back(factory.createCharArray("Save16bit"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisSave16BitCheckBox->isChecked()));
-
-        data.push_back(factory.createCharArray("masterCompute"));
-        data.push_back(factory.createScalar<bool>(ui->psfDetectionAnalysisMasterComputeCheckBox->isChecked()));
+        addCharArrayToArgs(args,"bgFactor",prependedString,isMcc);
+        addScalarToArgs(args,ui->psfDetectionAnalysisBgFactorSpinBox->text().toStdString(),prependedString);
     }
     else{
-        data.push_back(factory.createCharArray("cropSize"));
-        data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisCropSizeYDoubleSpinBox->value(),ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->value(),ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->value()}));
+        funcType = "XR_psf_analysis_wrapper";
+        addCharArrayToArgs(args,"cropSize",prependedString,isMcc);
+        std::vector<std::string> cropSizeV = {ui->psfDetectionAnalysisCropSizeYDoubleSpinBox->text().toStdString(),
+                                       ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->text().toStdString(),
+                                       ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->text().toStdString()};
+        addArrayToArgs(args,cropSizeV,false,prependedString,"[]",isMcc);
 
-        data.push_back(factory.createCharArray("distThresh"));
-        data.push_back(factory.createArray<double>({1,3},{ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->value(),ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->value()}));
+        addCharArrayToArgs(args,"distThresh",prependedString,isMcc);
+        std::vector<std::string> distThreshV = {ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->text().toStdString(),
+                                       ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->text().toStdString(),
+                                       ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->text().toStdString()};
+        addArrayToArgs(args,distThreshV,false,prependedString,"[]",isMcc);
     }
-    */
+
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("PSF Analysis"),true);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
+
 }
 
 

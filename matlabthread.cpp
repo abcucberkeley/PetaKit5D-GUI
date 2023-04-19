@@ -39,30 +39,7 @@ void matlabThread::run(){
         // Add the setup cmd
         matlabCmd.append("setup([],true);");
 
-        if (funcType == "crop"){
-            matlabCmd.append("XR_crop_dataset("+args+");");
-        }
-        else if(funcType == "DeconOnly"){
-            matlabCmd.append("XR_decon_data_wrapper("+args+");");
-        }
-        else if(funcType == "simRecon"){
-            matlabCmd.append("simReconAutomaticProcessing("+args+");");
-        }
-        else if(funcType == "mipGenerator"){
-            matlabCmd.append("XR_MIP_wrapper("+args+");");
-        }
-        else if(funcType == "parallelRsync"){
-            matlabCmd.append("XR_parallel_rsync_wrapper("+args+");");
-        }
-        else if(funcType == "fftAnalysis"){
-            matlabCmd.append("XR_fftSpectrumComputingWrapper("+args+");");
-        }
-        else if(funcType == "fscAnalysis"){
-            matlabCmd.append("XR_FSC_analysis_wrapper("+args+");");
-        }
-        else{
-            matlabCmd.append("XR_microscopeAutomaticProcessing("+args+");");
-        }
+        matlabCmd.append(funcType.toStdString()+"("+args+");");
         matlabCmd.append("\"");
     }
     // If the user is using mcc
@@ -75,35 +52,11 @@ void matlabThread::run(){
 
         #endif
         matlabCmd.append(mccLoc);
-        std::string matlabFunc;
-        if (funcType == "crop"){
-            matlabFunc = "XR_crop_dataset";
-        }
-        else if(funcType == "DeconOnly"){
-            matlabFunc = "XR_decon_data_wrapper";
-        }
-        else if(funcType == "simRecon"){
-            matlabFunc = "simReconAutomaticProcessing";
-        }
-        else if(funcType == "mipGenerator"){
-            matlabFunc = "XR_MIP_wrapper";
-        }
-        else if(funcType == "parallelRsync"){
-            matlabFunc = "XR_parallel_rsync_wrapper";
-        }
-        else if(funcType == "fftAnalysis"){
-            matlabFunc = "XR_fftSpectrumComputingWrapper";
-        }
-        else if(funcType == "fscAnalysis"){
-            matlabFunc = "XR_FSC_analysis_wrapper";
-        }
-        else{
-            matlabFunc = "XR_microscopeAutomaticProcessing";
-        }
+
         #ifndef _WIN32
         matlabCmd.append(" \""+pathToMatlab+"\"");
         #endif
-        matlabCmd.append(" "+matlabFunc+" "+args);
+        matlabCmd.append(" "+funcType.toStdString()+" "+args);
     }
     //std::cout << matlabCmd << std::endl;
     jobSuccess = !system(matlabCmd.c_str());

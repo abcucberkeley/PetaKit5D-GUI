@@ -16,7 +16,7 @@ void addBoolToArgs(std::string &args, const bool mBool, const std::string &prepe
 
 int addDataPathsToArgs(std::string &args, const std::string &prependedString=std::string(","), std::vector<dataPath> dataPaths=std::vector<dataPath>(),const bool isMcc=false);
 
-void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets, bool customPatterns, QString patternLine, const std::string &prependedString,const bool isMcc=false);
+void addChannelPatternsToArgs(std::string &args, std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets, bool customPatterns, QString patternLine, const std::string &prependedString,const bool isMcc=false,const std::string &arrayChars=std::string("{}"));
 
 std::string btosM(const bool val);
 
