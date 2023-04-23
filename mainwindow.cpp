@@ -1086,6 +1086,7 @@ void MainWindow::onEnableSubmitButton()
     ui->simReconSubmitButton->setEnabled(true);
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
+    ui->psfDetectionAnalysisSubmitButton->setEnabled(true);
     ui->tiffZarrConverterSubmitButton->setEnabled(true);
 }
 
@@ -2285,12 +2286,7 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 // Enable or Disable custom pattern writing
 void MainWindow::on_customPatternsCheckBox_stateChanged(int arg1)
 {
-    if(arg1){
-        ui->customPatternsLineEdit->setEnabled(true);
-    }
-    else{
-        ui->customPatternsLineEdit->setEnabled(false);
-    }
+    ui->customPatternsLineEdit->setEnabled(arg1);
 }
 
 void MainWindow::on_simReconSubmitButton_clicked()
@@ -2866,10 +2862,13 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
+    if(!fftAnalysisDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
     // Disable submit button
     ui->fftAnalysisSubmitButton->setEnabled(false);
-
-    if(!fftAnalysisDPaths.size()) return;
 
     std::string args;
 
@@ -2930,10 +2929,15 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
+    if(!fscAnalysisDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
     // Disable submit button
     ui->fscAnalysisSubmitButton->setEnabled(false);
 
-    if(!fscAnalysisDPaths.size()) return;
+
 
     std::string args;
 
@@ -3016,19 +3020,16 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
 
 void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
 {
-    messageBoxError("This feature is currently still being developed!");
-    return;
-    // TODO: FINISH IMPLEMENTING THIS
-
-    // TODO: Write a function for this stuff
-
     // Write settings in case of crash
     writeSettings();
 
+    if(!psfDetectionAnalysisDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
     // Disable submit button
     ui->psfDetectionAnalysisSubmitButton->setEnabled(false);
-
-    if(!psfDetectionAnalysisDPaths.size()) return;
 
     std::string args;
 
@@ -3054,7 +3055,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked(),ui->psfDetectionAnalysisCustomPatternsLineEdit->text(),prependedString,isMcc);
 
     addCharArrayToArgs(args,"Channels",prependedString,isMcc);
-    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisChannelsLineEdit->text(),prependedString,isMcc,"[]");
+    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisChannelsLineEdit->text(),prependedString,isMcc,"[]",false);
 
     addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
     addScalarToArgs(args,ui->psfDetectionAnalysisXyPixelSizeSpinBox->text().toStdString(),prependedString);
@@ -3068,6 +3069,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"sourceStr",prependedString,isMcc);
     addCharArrayToArgs(args,ui->psfDetectionAnalysisSourceStrLineEdit->text().toStdString(),prependedString,isMcc);
 
+    // Using the Channel Patterns function to get the comma delimited strings
     addCharArrayToArgs(args,"RWFn",prependedString,isMcc);
     addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisRWFnLineEdit->text(),prependedString,isMcc);
 
@@ -3087,7 +3089,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     QString funcType;
 
     if(ui->psfDetectionAnalysisAnalysisOnlyRadioButton->isChecked()){
-        funcType = "XR_psf_detection_and_analysis_wrapper";
+        funcType = "XR_psf_analysis_wrapper";
         addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
         addBoolToArgs(args,ui->psfDetectionAnalysisDeskewCheckBox->isChecked(),prependedString);
 
@@ -3104,17 +3106,17 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
         addScalarToArgs(args,ui->psfDetectionAnalysisBgFactorSpinBox->text().toStdString(),prependedString);
     }
     else{
-        funcType = "XR_psf_analysis_wrapper";
+        funcType = "XR_psf_detection_and_analysis_wrapper";
         addCharArrayToArgs(args,"cropSize",prependedString,isMcc);
         std::vector<std::string> cropSizeV = {ui->psfDetectionAnalysisCropSizeYDoubleSpinBox->text().toStdString(),
-                                       ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->text().toStdString(),
-                                       ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->text().toStdString()};
+                                              ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->text().toStdString(),
+                                              ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->text().toStdString()};
         addArrayToArgs(args,cropSizeV,false,prependedString,"[]",isMcc);
 
         addCharArrayToArgs(args,"distThresh",prependedString,isMcc);
         std::vector<std::string> distThreshV = {ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->text().toStdString(),
-                                       ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->text().toStdString(),
-                                       ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->text().toStdString()};
+                                                ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->text().toStdString(),
+                                                ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->text().toStdString()};
         addArrayToArgs(args,distThreshV,false,prependedString,"[]",isMcc);
     }
 
@@ -3127,22 +3129,18 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
 
 void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
 {
-    messageBoxError("This feature is currently still being developed!");
-    return;
     // Write settings in case of crash
     writeSettings();
+
+    if(!tiffZarrConverterDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
 
     // Disable submit button
     ui->tiffZarrConverterSubmitButton->setEnabled(false);
 
-    if(!tiffZarrConverterDPaths.size()) return;
-
-    // We need this to convert C++ vars to MATLAB vars
-    //matlab::data::ArrayFactory factory;
-
-    // outA is the number of outputs (always zero) and data is the structure to hold the pipeline settings
-    //size_t outA = 0;
-    //std::vector<matlab::data::Array> data;
+    std::string args;
 
     // NOTE: We have to push a lot of things into our data array one at a time
     // Potentially in the future I can loop through the widgets and do this in fewer lines
@@ -3150,97 +3148,92 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     // Set main path. This is where all the output files made by the GUI will be stored.
     QString mainPath = tiffZarrConverterDPaths[0].masterPath;
 
-    // Data Paths
-    /*
-    unsigned long long numPaths = 0;
-    for(const auto &path : tiffZarrConverterDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()) numPaths++;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()) numPaths++;
-            }
-        }
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
     }
-    matlab::data::CellArray dataPaths_exps = factory.createCellArray({1,numPaths});
-    size_t currPath = 0;
-    for(const auto &path : tiffZarrConverterDPaths){
-        if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
-            if(it.hasNext()){
-                dataPaths_exps[currPath] = factory.createCharArray(path.masterPath.toStdString());
-                currPath++;
-            }
-            else std::cout << "WARNING: Data Path: " << path.masterPath.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-        }
-        for(const auto &subPath : path.subPaths){
-            if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
-                if(it.hasNext()){
-                    dataPaths_exps[currPath] = factory.createCharArray(subPath.second.second.toStdString());
-                    currPath++;
-                }
-                else std::cout << "WARNING: Data Path: " << subPath.second.second.toStdString() << " not included because it contains no files. Continuing." << std::endl;
-            }
-        }
-    }
-    data.push_back(dataPaths_exps);
-
-    // Channel Patterns
-    data.push_back(factory.createCharArray("ChannelPatterns"));
-    if(!ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked()){
-        if(psfDetectionAnalysisChannelWidgets.size()){
-            // Grab indexes of checked boxes
-            std::vector<int> indexes;
-            for(size_t i = 0; i < psfDetectionAnalysisChannelWidgets.size(); i++){
-                if(psfDetectionAnalysisChannelWidgets[i].second->isChecked()) indexes.push_back(i);
-            }
-            matlab::data::CellArray channelPatterns = factory.createCellArray({1,indexes.size()});
-            int cpi = 0;
-            // Go through checked indexes and the label text (channel pattern) in the cell array
-            for(int i : indexes){
-                // Convert from rich text to plain text
-                QTextDocument toPlain;
-                toPlain.setHtml(psfDetectionAnalysisChannelWidgets[i].first->text());
-                channelPatterns[cpi] = factory.createCharArray(toPlain.toPlainText().toStdString());
-                cpi++;
-            }
-            data.push_back(channelPatterns);
-        }
-    }
-    // Use custom patterns
     else{
-        QString patternLine = ui->psfDetectionAnalysisCustomPatternsLineEdit->text();
-        QString pattern;
-        std::vector<QString> patterns;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                patterns.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()) patterns.push_back(pattern);
-
-        matlab::data::CellArray channelPatterns = factory.createCellArray({1,patterns.size()});
-        for(size_t i = 0; i < patterns.size(); i++){
-            channelPatterns[i] = factory.createCharArray(patterns[i].toStdString());
-        }
-        data.push_back(channelPatterns);
+        prependedString = ",";
     }
+    QString funcType;
 
+    // Tiff to Zarr only
     if(ui->tiffZarrConverterTiffToZarrRadioButton->isChecked()){
+        funcType = "XR_tiffToZarr_wrapper";
+        std::vector<std::string> dataPaths = getDataPaths(tiffZarrConverterDPaths);
+        std::vector<std::string> channelPatterns = getChannelPatterns(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text());
+        std::vector<std::string> finalDataPaths;
+        for (std::string &dataPath: dataPaths){
+            QDir directory(QString::fromStdString(dataPath));
+            QStringList images = directory.entryList(QStringList() << "*.tif" << "*.tiff",QDir::Files);
+            for(QString &fileName : images) {
+                for(std::string &pattern : channelPatterns){
+                    if(fileName.contains(QString::fromStdString(pattern))){
+                        finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
+                        break;
+                    }
+                }
+            }
+        }
+        addArrayToArgs(args,finalDataPaths,true,firstPrependedString,"{}",isMcc);
 
+        addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+        std::vector<std::string> blockSizeV = {ui->tiffZarrConverterBlockSizeYDoubleSpinBox->text().toStdString(),
+                                               ui->tiffZarrConverterBlockSizeXDoubleSpinBox->text().toStdString(),
+                                               ui->tiffZarrConverterBlockSizeZDoubleSpinBox->text().toStdString()};
+        addArrayToArgs(args,blockSizeV,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"partialFile",prependedString,isMcc);
+        addBoolToArgs(args,ui->tiffZarrConverterPartialFileCheckBox->isChecked(),prependedString);
     }
+    // Zarr to Tiff only
     else{
+        funcType = "XR_zarrToTiff_wrapper";
 
+        addDataPathsToArgs(args,firstPrependedString,tiffZarrConverterDPaths,isMcc);
     }
-    */
+
+
+
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->tiffZarrConverterParseClusterCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->tiffZarrConverterCpusPerTaskLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->tiffZarrConverterMasterComputeCheckBox->isChecked(),prependedString);
+
+    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->tiffZarrConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    if(!simreconVals.uuid.isEmpty()){
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->tiffZarrConverterUuidLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
+    addScalarToArgs(args,ui->tiffZarrConverterMaxTrialNumLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
+    addScalarToArgs(args,ui->tiffZarrConverterUnitWaitTimeLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),true);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
+
 }
 
 
@@ -3320,3 +3313,33 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
+
+void MainWindow::on_cropCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->cropCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_fscAnalysisCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->fscAnalysisCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_mipGeneratorCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->mipGeneratorCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_psfDetectionAnalysisCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->psfDetectionAnalysisCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_tiffZarrConverterCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->tiffZarrConverterCustomPatternsLineEdit->setEnabled(arg1);
+}
+

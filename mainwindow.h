@@ -383,6 +383,16 @@ private slots:
 
     void on_mipGeneratorSubmitButton_clicked();
 
+    void on_cropCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_fscAnalysisCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_mipGeneratorCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_psfDetectionAnalysisCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_tiffZarrConverterCustomPatternsCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
 };
