@@ -263,6 +263,9 @@ private:
     std::vector<dataPath> psfDetectionAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> psfDetectionAnalysisChannelWidgets;
 
+    // resample
+    std::vector<dataPath> resampleDPaths;
+
     // tiffZarrConverter
     std::vector<dataPath> tiffZarrConverterDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> tiffZarrConverterChannelWidgets;
@@ -392,6 +395,10 @@ private slots:
     void on_psfDetectionAnalysisCustomPatternsCheckBox_stateChanged(int arg1);
 
     void on_tiffZarrConverterCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_resampleSubmitButton_clicked();
+
+    void on_resampleAddPathsButton_clicked();
 
 private:
     Ui::MainWindow *ui;

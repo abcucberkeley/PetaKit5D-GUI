@@ -1087,6 +1087,7 @@ void MainWindow::onEnableSubmitButton()
     ui->cropSubmitButton->setEnabled(true);
     ui->submitButton->setEnabled(true);
     ui->psfDetectionAnalysisSubmitButton->setEnabled(true);
+    ui->resampleSubmitButton->setEnabled(true);
     ui->tiffZarrConverterSubmitButton->setEnabled(true);
 }
 
@@ -2609,6 +2610,11 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
+    if(!cropDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
     if(ui->cropResultPathLineEdit->text().toStdString().empty()){
         messageBoxError("Cropping requires a result path!");
     }
@@ -2798,6 +2804,16 @@ void MainWindow::on_parallelRsyncSubmitButton_clicked()
 {
     // Write settings in case of crash
     writeSettings();
+
+    if(ui->parallelRsyncSourceLineEdit->text().isEmpty()){
+        messageBoxError("No source set");
+        return;
+    }
+
+    if(ui->parallelRsyncDestLineEdit->text().isEmpty()){
+        messageBoxError("No destination set");
+        return;
+    }
 
     // Disable submit button
     ui->parallelRsyncSubmitButton->setEnabled(false);
@@ -3242,6 +3258,11 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
+    if(!mipGeneratorDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
     // Disable submit button
     ui->mipGeneratorSubmitButton->setEnabled(false);
 
@@ -3308,7 +3329,7 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
-    QString funcType = "mipGenerator";
+    QString funcType = "XR_MIP_wrapper";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3341,5 +3362,98 @@ void MainWindow::on_psfDetectionAnalysisCustomPatternsCheckBox_stateChanged(int 
 void MainWindow::on_tiffZarrConverterCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->tiffZarrConverterCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_resampleSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    if(!resampleDPaths.size()){
+        messageBoxError("No data paths set");
+        return;
+    }
+
+    // Disable submit button
+    ui->resampleSubmitButton->setEnabled(false);
+
+    std::string args;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = resampleDPaths[0].masterPath;
+
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
+    // Temporary until support is added for multiple datapaths
+    addCharArrayToArgs(args,resampleDPaths[0].masterPath.toStdString(),firstPrependedString,isMcc);
+    //addDataPathsToArgs(args,firstPrependedString,resampleDPaths,isMcc);
+
+    addCharArrayToArgs(args,ui->resampleResultPathsLabelLineEdit->text().toStdString(),prependedString,isMcc);
+
+    addScalarToArgs(args,ui->resampleRSFactorSpinBox->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"Interp",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->resampleInterpComboBox->currentText().toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleSave16BitCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleZarrFileCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleSaveZarrCheckBox->isChecked(),prependedString);
+
+    // Job Settings
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleParseClusterCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleMasterComputeCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->resampleCpusPerTaskSpinBox->text().toStdString(),prependedString);
+
+    // Advanced Job Settings
+    if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->resampleJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    if(!ui->mipGeneratorUuidLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->resampleUuidLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    QString funcType = "XR_resample_dataset";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
+}
+
+
+void MainWindow::on_resampleAddPathsButton_clicked()
+{
+    dataPaths daPaths(resampleDPaths, true, mostRecentDir);
+    daPaths.setModal(true);
+    daPaths.exec();
 }
 
