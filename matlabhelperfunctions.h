@@ -14,7 +14,7 @@ void addScalarToArgs(std::string &args, const std::string &scalar, const std::st
 
 void addBoolToArgs(std::string &args, const bool mBool, const std::string &prependedString=std::string(","));
 
-int addDataPathsToArgs(std::string &args, const std::string &prependedString=std::string(","), const std::vector<dataPath> &dataPaths=std::vector<dataPath>(), const bool isMcc=false);
+int addDataPathsToArgs(std::string &args, const std::string &prependedString=std::string(","), const std::vector<dataPath> &dataPaths=std::vector<dataPath>(), const bool isMcc=false, const bool isRealTimeProcessing=false);
 
 std::vector<std::string> getDataPaths(const std::vector<dataPath> &dataPaths);
 

@@ -1205,7 +1205,7 @@ void MainWindow::on_submitButton_clicked()
     checkJobLogDir(guiVals, mainPath, timeJobName);
 
     // Data Paths
-    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc)){
+    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
         ui->submitButton->setEnabled(true);
         QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
         if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
@@ -2384,7 +2384,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
         prependedString = ",";
     }
 
-    addDataPathsToArgs(args,firstPrependedString,simReconDPaths,isMcc);
+    addDataPathsToArgs(args,firstPrependedString,simReconDPaths,isMcc,ui->simReconStreamingCheckBox->isChecked());
 
     // Main Settings
     // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)

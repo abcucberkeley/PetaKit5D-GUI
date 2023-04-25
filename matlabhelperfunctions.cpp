@@ -44,7 +44,7 @@ void addBoolToArgs(std::string &args, const bool mBool, const std::string &prepe
 
 // returns 1 if no paths are added
 // returns 0 otherwise
-int addDataPathsToArgs(std::string &args, const std::string &prependedString, const std::vector<dataPath> &dataPaths, const bool isMcc){
+int addDataPathsToArgs(std::string &args, const std::string &prependedString, const std::vector<dataPath> &dataPaths, const bool isMcc, const bool isRealTimeProcessing){
     // Data Paths
     std::string surroundQuotes;
     if(isMcc) surroundQuotes = "\"";
@@ -54,7 +54,7 @@ int addDataPathsToArgs(std::string &args, const std::string &prependedString, co
     for(const auto &path :  dataPaths){
         if(path.includeMaster){
             QDirIterator it(path.masterPath,QDir::Files | QDir::Dirs);
-            if(it.hasNext()){
+            if(it.hasNext() || isRealTimeProcessing){
                 if(firstCell){
                     addCharArrayToArgs(args, path.masterPath.toStdString(), "", false);
                     firstCell = false;
@@ -66,7 +66,7 @@ int addDataPathsToArgs(std::string &args, const std::string &prependedString, co
         for(const auto &subPath : path.subPaths){
             if(subPath.second.first){
                 QDirIterator it(subPath.second.second,QDir::Files | QDir::Dirs);
-                if(it.hasNext()){
+                if(it.hasNext() || isRealTimeProcessing){
                     if(firstCell){
                         addCharArrayToArgs(args, subPath.second.second.toStdString(), "", false);
                         firstCell = false;
