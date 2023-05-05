@@ -73,6 +73,37 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_206" stretch="4,1">
+          <item>
+           <spacer name="horizontalSpacer_79">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="largeScaleProcessingButton">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+              <strikeout>false</strikeout>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="text">
+             <string>Large Scale Processing Settings</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_108">
           <item>
            <widget class="QLabel" name="mainSettingsLabel">
@@ -184,26 +215,56 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="streamingLabel">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Real-time Processing</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_118">
+            <item>
+             <widget class="QLabel" name="streamingLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Real-time Processing</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="streamingCheckBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="streamingCheckBox">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_207">
+            <item>
+             <widget class="QLabel" name="largeScaleProcessingLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Large Scale Processing</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="largeScaleProcessingCheckBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="horizontalSpacer_7">
@@ -1627,10 +1688,7 @@
       <item row="0" column="0">
        <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_118"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_117">
+         <layout class="QHBoxLayout" name="horizontalLayout_117" stretch="0">
           <item>
            <widget class="QLabel" name="stitchSettingsLabel">
             <property name="font">
@@ -1651,9 +1709,12 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_9">
+       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>1</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_111" stretch="1,1">
@@ -11027,8 +11088,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="deconTypeButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
+  <buttongroup name="deconTypeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
  </buttongroups>
 </ui>

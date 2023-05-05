@@ -19,6 +19,7 @@ HEADERS += \
            jobadvanced.h \
            jobtext.h \
            jobtextmanager.h \
+           largescaleprocessingsettings.h \
            mainadvanced.h \
            mainwindow.h \
            matlabhelperfunctions.h \
@@ -43,6 +44,7 @@ FORMS += \
          dsradvanced.ui \
          jobadvanced.ui \
          jobtext.ui \
+         largescaleprocessingsettings.ui \
          mainadvanced.ui \
          mainwindow.ui \
          matlaboutputwindow.ui \
@@ -62,6 +64,7 @@ SOURCES += \
            jobadvanced.cpp \
            jobtext.cpp \
            jobtextmanager.cpp \
+           largescaleprocessingsettings.cpp \
            main.cpp \
            mainadvanced.cpp \
            mainwindow.cpp \

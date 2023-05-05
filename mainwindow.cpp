@@ -7,6 +7,7 @@
 #include "simreconmainadvanced.h"
 #include "simreconreconadvanced.h"
 #include "simreconjobadvanced.h"
+#include "largescaleprocessingsettings.h"
 #include "datapaths.h"
 #include "loadprevioussettings.h"
 #include "submissionchecks.h"
@@ -1204,29 +1205,65 @@ void MainWindow::on_submitButton_clicked()
     // Check for job log directory for main job
     checkJobLogDir(guiVals, mainPath, timeJobName);
 
-    // Data Paths
-    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
-        ui->submitButton->setEnabled(true);
-        QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
-        if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
-                                                                                     " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
-                                                                                     " then Include Master should be checked.");
-        else messageBoxError(errString);
-        return;
+    bool lspDSR = false;
+    bool lspStitch = false;
+    if(ui->deskewAndRotateCheckBox->isChecked() && ui->largeScaleProcessingCheckBox->isChecked()){
+        lspDSR = true;
+    }
+    else if(ui->stitchCheckBox->isChecked() && ui->largeScaleProcessingCheckBox->isChecked()){
+        lspStitch = true;
     }
 
-    // Channel Patterns
-    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
-    addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
+    // Data Paths
+    if(!lspDSR){
+        if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
+            ui->submitButton->setEnabled(true);
+            QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
+            if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
+                                                                                         " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
+                                                                                         " then Include Master should be checked.");
+            else messageBoxError(errString);
+            return;
+        }
+    }
+    // Large Scale Stitcing DSR Paths are individual files for now
+    else{
+        std::vector<std::string> dataPaths = getDataPaths(dPaths);
+        std::vector<std::string> channelPatterns = getChannelPatterns(channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text());
+        std::vector<std::string> finalDataPaths;
+        for (std::string &dataPath: dataPaths){
+            QDir directory(QString::fromStdString(dataPath));
+            QStringList images = directory.entryList(QStringList() << "*.zarr",QDir::Files);
+            for(QString &fileName : images) {
+                for(std::string &pattern : channelPatterns){
+                    if(fileName.contains(QString::fromStdString(pattern))){
+                        finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
+                        break;
+                    }
+                }
+            }
+        }
+        addArrayToArgs(args,finalDataPaths,true,firstPrependedString,"{}",isMcc);
+    }
 
+    // Large Scale DSR xyPicelSize and dz are required parameters
+    if(lspDSR){
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+    }
+    // Large Scale Stitching Image List is a required parameter
+    else if(lspStitch){
+        addCharArrayToArgs(args,ui->imageListFullPathsLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    // Channel Patterns (lspDSR does not use Channel Patterns for now)
+    if(!lspDSR){
+        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
+    }
     addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
     addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
-
-    addCharArrayToArgs(args,"dz",prependedString,isMcc);
-    addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
-
-    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-    addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
 
     addCharArrayToArgs(args,"Reverse",prependedString,isMcc);
     addBoolToArgs(args,guiVals.Reverse,prependedString);
@@ -1234,12 +1271,218 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
     addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
-    addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
-    addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
+    if(lspDSR){
+        addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
 
-    if(ui->deconOnlyCheckBox->isChecked()){
+        addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
+        addBoolToArgs(args,ui->flipZStackCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewAndRotateSave16BitCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"SaveMIP",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.SaveMIP,prependedString);
+
+        addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.saveZarr,prependedString);
+
+        addCharArrayToArgs(args,"BatchSize",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.BatchSize,false,prependedString,"[]",isMcc);
+
+
+        if(guiVals.blockSizeCheckBox){
+            addCharArrayToArgs(args,"BlockSize",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.zarrSubSizeCheckBox){
+            addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.zarrSubSize,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.InputBboxCheckBox){
+            addCharArrayToArgs(args,"InputBbox",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.InputBbox,false,prependedString,"[]",isMcc);
+        }
+
+        addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.masterCompute,prependedString);
+
+    }
+    else if(lspStitch){
+        addCharArrayToArgs(args,"Streaming",prependedString,isMcc);
+        addBoolToArgs(args,ui->streamingCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"multiLoc",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.multiLoc,prependedString);
+
+        addCharArrayToArgs(args,"ProcessedDirStr",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.ProcessedDirStr.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.stitchInfoFullpath.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"DS",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+        addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
+
+        if(!ui->axisOrderLineEdit->text().isEmpty()){
+            addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->axisOrderLineEdit->text().toStdString(),prependedString,isMcc);
+        }
+
+        addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.IOScan,prependedString);
+
+        if(guiVals.blockSizeCheckBox){
+            addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.zarrSubSizeCheckBox){
+            addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.zarrSubSize,false,prependedString,"[]",isMcc);
+        }
+
+        addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.resampleType.toStdString(),prependedString,isMcc);
+
+        if(guiVals.resampleEnabled){
+            addCharArrayToArgs(args,"resample",prependedString,isMcc);
+            std::vector<std::string> resampleV = {std::to_string(guiVals.resample[0]),std::to_string(guiVals.resample[1]),std::to_string(guiVals.resample[2])};
+            addArrayToArgs(args,resampleV,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.InputBboxCheckBox){
+            addCharArrayToArgs(args,"InputBbox",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.InputBbox,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.tileOutBboxCheckBox){
+            addCharArrayToArgs(args,"tileOutBbox",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.tileOutBbox,false,prependedString,"[]",isMcc);
+        }
+
+        addCharArrayToArgs(args,"TileOffset",prependedString,isMcc);
+        addScalarToArgs(args,guiVals.TileOffset.toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"Resolution",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.Resolution,false,prependedString,"[]",isMcc);
+
+        if(!ui->resultsDirLineEdit->text().isEmpty()){
+            addCharArrayToArgs(args,"resultDir",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->resultsDirLineEdit->text().toStdString(),prependedString,isMcc);
+        }
+
+        addCharArrayToArgs(args,"BlendMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->blendMethodComboBox->currentText().toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"overlapType",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.overlapType.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"xcorrShift",prependedString,isMcc);
+        addBoolToArgs(args,ui->xCorrShiftCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"xyMaxOffset",prependedString,isMcc);
+        addScalarToArgs(args,guiVals.xyMaxOffset.toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"zMaxOffset",prependedString,isMcc);
+        addScalarToArgs(args,guiVals.zMaxOffset.toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"xcorrDownsample",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.xcorrDownsample,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"xcorrThresh",prependedString,isMcc);
+        addScalarToArgs(args,guiVals.xcorrThresh.toStdString(),prependedString);
+
+        //addCharArrayToArgs(args,"padSize",prependedString,isMcc);
+
+        if(ui->boundBoxCheckBox->isChecked()){
+            addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);
+            std::vector<std::string> boundboxCropV = {ui->boundBoxYMinSpinBox->text().toStdString(),
+                                                      ui->boundBoxXMinSpinBox->text().toStdString(),
+                                                      ui->boundBoxZMinSpinBox->text().toStdString(),
+                                                      ui->boundBoxYMaxSpinBox->text().toStdString(),
+                                                      ui->boundBoxXMaxSpinBox->text().toStdString(),
+                                                      ui->boundBoxZMaxSpinBox->text().toStdString()};
+            addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
+        }
+
+        addCharArrayToArgs(args,"zNormalize",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zNormalize,prependedString);
+
+        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"timepoints",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.timepoints,false,prependedString,"[]",isMcc);
+
+        //addCharArrayToArgs(args,"subtimepoints",prependedString,isMcc);
+
+        addCharArrayToArgs(args,"xcorrMode",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->xCorrModeComboBox->currentText().toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"shiftMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.shiftMethod.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"axisWeight",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.axisWeight,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"groupFile",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.groupFile.toStdString(),prependedString,isMcc);
+
+        if(!ui->primaryCHLineEdit->text().isEmpty()){
+            addCharArrayToArgs(args,"primaryCh",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->primaryCHLineEdit->text().toStdString(),prependedString,isMcc);
+        }
+
+        addCharArrayToArgs(args,"usePrimaryCoords",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.usePrimaryCoords,prependedString);
+
+        addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchSave16BitCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"EdgeArtifacts",prependedString,isMcc);
+        addScalarToArgs(args,guiVals.EdgeArtifacts.toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"stitchMIP",prependedString,isMcc);
+        std::vector<std::string> stitchMIPV = {btosM(ui->stitchStitchMIPYSpinBox->value()),btosM(ui->stitchStitchMIPXSpinBox->value()),btosM(ui->stitchStitchMIPZSpinBox->value())};
+        addArrayToArgs(args,stitchMIPV,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"onlineStitch",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchOnlineStitchCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"bigStitchData",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.bigStitchData,prependedString);
+
+        addCharArrayToArgs(args,"stitchPipeline",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"processFunPath",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.processFunPath.toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.masterCompute,prependedString);
+
+    }
+    else if(ui->deconOnlyCheckBox->isChecked()){
 
         // Main Settings
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
+        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
+
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
         // TODO: FIX LOGIC FOR DECON ONLY
         addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
@@ -1345,13 +1588,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"rotatePSF",prependedString,isMcc);
         addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
 
-        // Job Settings
-        addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
-        addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
-        addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
-
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
@@ -1365,30 +1601,8 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
         addBoolToArgs(args,guiVals.saveZarr,prependedString);
 
-        if(!guiVals.jobLogDir.isEmpty()){
-            addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
-        }
-
-        if(!guiVals.uuid.isEmpty()){
-            addCharArrayToArgs(args,"uuid",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
-        }
-
-        addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.maxTrialNum),prependedString);
-
-        addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
-
         addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
-
-        addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
-        addBoolToArgs(args,isMcc,prependedString);
-
-        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
         addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
         addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
@@ -1397,6 +1611,15 @@ void MainWindow::on_submitButton_clicked()
     else{
 
         // Main Settings
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
+        addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
+
         // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
         // TODO: FIX LOGIC FOR DECON ONLY
         addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
@@ -1420,8 +1643,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.resampleType.toStdString(),prependedString,isMcc);
 
-
-
         if(guiVals.resampleEnabled){
             addCharArrayToArgs(args,"resample",prependedString,isMcc);
             std::vector<std::string> resampleV = {std::to_string(guiVals.resample[0]),std::to_string(guiVals.resample[1]),std::to_string(guiVals.resample[2])};
@@ -1437,7 +1658,6 @@ void MainWindow::on_submitButton_clicked()
         // This needs to change FIX
         addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
-
 
         addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.zarrFile,prependedString);
@@ -1520,8 +1740,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"stitchPipeline",prependedString,isMcc);
         addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
 
-        addCharArrayToArgs(args,"stitchResultDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->resultsDirLineEdit->text().toStdString(),prependedString,isMcc);
+        if(!ui->resultsDirLineEdit->text().isEmpty()){
+            addCharArrayToArgs(args,"stitchResultDir",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->resultsDirLineEdit->text().toStdString(),prependedString,isMcc);
+        }
 
         addCharArrayToArgs(args,"imageListFullpaths",prependedString,isMcc);
         std::vector<std::string> imageListFullpathsV = {ui->imageListFullPathsLineEdit->text().toStdString()};
@@ -1640,34 +1862,9 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"rotatedPSF",prependedString,isMcc);
         addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
 
-
-
-        // Job Settings
-        addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
-        addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
-        addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
-
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
-
-        if(!guiVals.jobLogDir.isEmpty()){
-            addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
-        }
-
-        if(!guiVals.uuid.isEmpty()){
-            addCharArrayToArgs(args,"uuid",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
-        }
-
-        addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.maxTrialNum),prependedString);
-
-        addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
 
         addCharArrayToArgs(args,"minModifyTime",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.minModifyTime),prependedString);
@@ -1678,19 +1875,45 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
 
-        addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
-        addBoolToArgs(args,isMcc,prependedString);
-
-        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
-
         addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
         addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
 
     }
-    QString funcType;
 
-    if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
+    // Job Settings for all functions
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
+
+    if(!guiVals.jobLogDir.isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
+    }
+
+    if(!guiVals.uuid.isEmpty()){
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
+    }
+
+    if(!lspDSR){
+        addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.maxTrialNum),prependedString);
+
+        addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
+    }
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    QString funcType;
+    if(lspDSR) funcType = "XR_deskewRotateZarr";
+    else if(lspStitch) funcType = "XR_matlab_stitching_wrapper";
+    else if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
     else funcType = "XR_microscopeAutomaticProcessing";
 
     // Send data to the MATLAB thread
@@ -3455,5 +3678,13 @@ void MainWindow::on_resampleAddPathsButton_clicked()
     dataPaths daPaths(resampleDPaths, true, mostRecentDir);
     daPaths.setModal(true);
     daPaths.exec();
+}
+
+
+void MainWindow::on_largeScaleProcessingButton_clicked()
+{
+    largeScaleProcessingSettings lspSettings(guiVals);
+    lspSettings.setModal(true);
+    lspSettings.exec();
 }
 

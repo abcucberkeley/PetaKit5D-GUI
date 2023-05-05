@@ -58,6 +58,42 @@ class GUIvals{
         uint64_t maxModifyTime;
         uint64_t maxWaitLoopNum;
 
+        // DSR Large Scale Processing Settings
+        bool SaveMIP;
+        std::vector<std::string> BatchSize;
+
+        // Stitch Large Scale Processing Settings
+        bool multiLoc;
+        QString ProcessedDirStr;
+        QString stitchInfoFullpath;
+        bool parseSettingFile;
+        bool IOScan;
+        bool blockSizeCheckBox;
+        std::vector<std::string> blockSize;
+        bool zarrSubSizeCheckBox;
+        std::vector<std::string> zarrSubSize;
+        bool InputBboxCheckBox;
+        std::vector<std::string> InputBbox;
+        bool tileOutBboxCheckBox;
+        std::vector<std::string> tileOutBbox;
+        QString TileOffset;
+        std::vector<std::string> Resolution;
+        QString overlapType;
+        QString xyMaxOffset;
+        QString zMaxOffset;
+        std::vector<std::string> xcorrDownsample;
+        QString xcorrThresh;
+        bool zNormalize;
+        std::vector<std::string> timepoints;
+        QString shiftMethod;
+        std::vector<std::string> axisWeight;
+        QString groupFile;
+        bool usePrimaryCoords;
+        QString EdgeArtifacts;
+        bool bigStitchData;
+        QString processFunPath;
+        bool masterCompute;
+
         GUIvals() : skewAngle{32.45},
                     xyPixelSize{.108},
                     Reverse{true},
@@ -87,7 +123,39 @@ class GUIvals{
                     unitWaitTime{1},
                     minModifyTime{1},
                     maxModifyTime{10},
-                    maxWaitLoopNum{10}
+                    maxWaitLoopNum{10},
+                    SaveMIP{true},
+                    BatchSize{"1024","1024","1024"},
+                    multiLoc{false},
+                    ProcessedDirStr{""},
+                    stitchInfoFullpath{""},
+                    parseSettingFile{false},
+                    IOScan{false},
+                    blockSizeCheckBox{false},
+                    blockSize{"500","500","500"},
+                    zarrSubSizeCheckBox{false},
+                    zarrSubSize{},
+                    InputBboxCheckBox{false},
+                    InputBbox{},
+                    tileOutBboxCheckBox{false},
+                    tileOutBbox{},
+                    TileOffset{"0"},
+                    Resolution{".108",".5"},
+                    overlapType{""},
+                    xyMaxOffset{"300"},
+                    zMaxOffset{"50"},
+                    xcorrDownsample{"2","2","1"},
+                    xcorrThresh{".25"},
+                    zNormalize{false},
+                    timepoints{},
+                    shiftMethod{"grid"},
+                    axisWeight{"1",".1","10"},
+                    groupFile{""},
+                    usePrimaryCoords{false},
+                    EdgeArtifacts{"2"},
+                    bigStitchData{false},
+                    processFunPath{""},
+                    masterCompute{true}
         {}
 };
 
@@ -399,6 +467,8 @@ private slots:
     void on_resampleSubmitButton_clicked();
 
     void on_resampleAddPathsButton_clicked();
+
+    void on_largeScaleProcessingButton_clicked();
 
 private:
     Ui::MainWindow *ui;
