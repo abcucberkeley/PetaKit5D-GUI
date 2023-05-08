@@ -87,7 +87,7 @@ std::vector<std::string> getDataPaths(const std::vector<dataPath> &dataPaths){
 
     for(const auto &path : dataPaths){
         if(path.includeMaster){
-            QDirIterator it(path.masterPath,QDir::Files);
+            QDirIterator it(path.masterPath,QDir::Files | QDir::Dirs);
             if(it.hasNext()){
                 dVec.push_back(path.masterPath.toStdString());
             }
@@ -95,7 +95,7 @@ std::vector<std::string> getDataPaths(const std::vector<dataPath> &dataPaths){
         }
         for(const auto &subPath : path.subPaths){
             if(subPath.second.first){
-                QDirIterator it(subPath.second.second,QDir::Files);
+                QDirIterator it(subPath.second.second,QDir::Files | QDir::Dirs);
                 if(it.hasNext()){
                     dVec.push_back(subPath.second.second.toStdString());
                 }

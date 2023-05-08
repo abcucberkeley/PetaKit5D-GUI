@@ -1233,7 +1233,7 @@ void MainWindow::on_submitButton_clicked()
         std::vector<std::string> finalDataPaths;
         for (std::string &dataPath: dataPaths){
             QDir directory(QString::fromStdString(dataPath));
-            QStringList images = directory.entryList(QStringList() << "*.zarr",QDir::Files);
+            QStringList images = directory.entryList(QStringList() << "*.zarr",QDir::Dirs);
             for(QString &fileName : images) {
                 for(std::string &pattern : channelPatterns){
                     if(fileName.contains(QString::fromStdString(pattern))){
