@@ -1290,11 +1290,8 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"BatchSize",prependedString,isMcc);
         addArrayToArgs(args,guiVals.BatchSize,false,prependedString,"[]",isMcc);
 
-
-        if(guiVals.blockSizeCheckBox){
-            addCharArrayToArgs(args,"BlockSize",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
-        }
+        addCharArrayToArgs(args,"BlockSize",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
 
         if(guiVals.zarrSubSizeCheckBox){
             addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);
@@ -1340,10 +1337,8 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
         addBoolToArgs(args,guiVals.IOScan,prependedString);
 
-        if(guiVals.blockSizeCheckBox){
-            addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
-        }
+        addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
 
         if(guiVals.zarrSubSizeCheckBox){
             addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);

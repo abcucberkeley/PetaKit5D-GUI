@@ -21,28 +21,33 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->stitchInfoFullpathLineEdit->setText(guiVals.stitchInfoFullpath);
     ui->parseSettingFileCheckBox->setChecked(guiVals.parseSettingFile);
     ui->ioScanCheckBox->setChecked(guiVals.IOScan);
-    ui->blockSizeCheckBox->setChecked(guiVals.blockSizeCheckBox);
     ui->blockSizeYSpinBox->setValue(std::stoi(guiVals.blockSize[0]));
     ui->blockSizeXSpinBox->setValue(std::stoi(guiVals.blockSize[1]));
     ui->blockSizeZSpinBox->setValue(std::stoi(guiVals.blockSize[2]));
     ui->zarrSubSizeCheckBox->setChecked(guiVals.zarrSubSizeCheckBox);
-    ui->zarrSubSizeYSpinBox->setValue(std::stoi(guiVals.zarrSubSize[0]));
-    ui->zarrSubSizeXSpinBox->setValue(std::stoi(guiVals.zarrSubSize[1]));
-    ui->zarrSubSizeZSpinBox->setValue(std::stoi(guiVals.zarrSubSize[2]));
+    if(ui->zarrSubSizeCheckBox->isChecked()){
+        ui->zarrSubSizeYSpinBox->setValue(std::stoi(guiVals.zarrSubSize[0]));
+        ui->zarrSubSizeXSpinBox->setValue(std::stoi(guiVals.zarrSubSize[1]));
+        ui->zarrSubSizeZSpinBox->setValue(std::stoi(guiVals.zarrSubSize[2]));
+    }
     ui->inputBboxCheckBox->setChecked(guiVals.InputBboxCheckBox);
-    ui->inputBboxYMinSpinBox->setValue(std::stoi(guiVals.InputBbox[0]));
-    ui->inputBboxXMinSpinBox->setValue(std::stoi(guiVals.InputBbox[1]));
-    ui->inputBboxZMinSpinBox->setValue(std::stoi(guiVals.InputBbox[2]));
-    ui->inputBboxYMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[3]));
-    ui->inputBboxXMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[4]));
-    ui->inputBboxZMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[5]));
+    if(ui->inputBboxCheckBox->isChecked()){
+        ui->inputBboxYMinSpinBox->setValue(std::stoi(guiVals.InputBbox[0]));
+        ui->inputBboxXMinSpinBox->setValue(std::stoi(guiVals.InputBbox[1]));
+        ui->inputBboxZMinSpinBox->setValue(std::stoi(guiVals.InputBbox[2]));
+        ui->inputBboxYMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[3]));
+        ui->inputBboxXMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[4]));
+        ui->inputBboxZMaxSpinBox->setValue(std::stoi(guiVals.InputBbox[5]));
+    }
     ui->tileOutBboxCheckBox->setChecked(guiVals.tileOutBboxCheckBox);
-    ui->tileOutBboxYMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[0]));
-    ui->tileOutBboxXMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[1]));
-    ui->tileOutBboxZMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[2]));
-    ui->tileOutBboxYMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[3]));
-    ui->tileOutBboxXMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[4]));
-    ui->tileOutBboxZMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[5]));
+    if(ui->tileOutBboxCheckBox->isChecked()){
+        ui->tileOutBboxYMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[0]));
+        ui->tileOutBboxXMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[1]));
+        ui->tileOutBboxZMinSpinBox->setValue(std::stoi(guiVals.tileOutBbox[2]));
+        ui->tileOutBboxYMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[3]));
+        ui->tileOutBboxXMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[4]));
+        ui->tileOutBboxZMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[5]));
+    }
     ui->tileOffsetSpinBox->setValue(guiVals.TileOffset.toInt());
     ui->resolutionXYPixelSizeSpinBox->setValue(std::stod(guiVals.Resolution[0]));
     ui->resolutionDZSpinBox->setValue(std::stod(guiVals.Resolution[1]));
@@ -99,28 +104,33 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->stitchInfoFullpath = ui->stitchInfoFullpathLineEdit->text();
     gVals->parseSettingFile = ui->parseSettingFileCheckBox->isChecked();
     gVals->IOScan = ui->ioScanCheckBox->isChecked();
-    gVals->blockSizeCheckBox = ui->blockSizeCheckBox->isChecked();
     gVals->blockSize[0] = ui->blockSizeYSpinBox->text().toStdString();
     gVals->blockSize[1] = ui->blockSizeXSpinBox->text().toStdString();
     gVals->blockSize[2] = ui->blockSizeZSpinBox->text().toStdString();
     gVals->zarrSubSizeCheckBox = ui->zarrSubSizeCheckBox->isChecked();
-    gVals->zarrSubSize[0] = ui->zarrSubSizeYSpinBox->text().toStdString();
-    gVals->zarrSubSize[1] = ui->zarrSubSizeXSpinBox->text().toStdString();
-    gVals->zarrSubSize[2] = ui->zarrSubSizeZSpinBox->text().toStdString();
+    if(ui->zarrSubSizeCheckBox->isChecked()){
+        gVals->zarrSubSize = {ui->zarrSubSizeYSpinBox->text().toStdString(),
+                              ui->zarrSubSizeXSpinBox->text().toStdString(),
+                              ui->zarrSubSizeZSpinBox->text().toStdString()};
+    }
     gVals->InputBboxCheckBox = ui->inputBboxCheckBox->isChecked();
-    gVals->InputBbox[0] = ui->inputBboxYMinSpinBox->text().toStdString();
-    gVals->InputBbox[1] = ui->inputBboxXMinSpinBox->text().toStdString();
-    gVals->InputBbox[2] = ui->inputBboxZMinSpinBox->text().toStdString();
-    gVals->InputBbox[3] = ui->inputBboxYMaxSpinBox->text().toStdString();
-    gVals->InputBbox[4] = ui->inputBboxXMaxSpinBox->text().toStdString();
-    gVals->InputBbox[5] = ui->inputBboxZMaxSpinBox->text().toStdString();
+    if(ui->inputBboxCheckBox->isChecked()){
+        gVals->InputBbox = {ui->inputBboxYMinSpinBox->text().toStdString(),
+                            ui->inputBboxXMinSpinBox->text().toStdString(),
+                            ui->inputBboxZMinSpinBox->text().toStdString(),
+                            ui->inputBboxYMaxSpinBox->text().toStdString(),
+                            ui->inputBboxXMaxSpinBox->text().toStdString(),
+                            ui->inputBboxZMaxSpinBox->text().toStdString()};
+    }
     gVals->tileOutBboxCheckBox = ui->tileOutBboxCheckBox->isChecked();
-    gVals->tileOutBbox[0] = ui->tileOutBboxYMinSpinBox->text().toStdString();
-    gVals->tileOutBbox[1] = ui->tileOutBboxXMinSpinBox->text().toStdString();
-    gVals->tileOutBbox[2] = ui->tileOutBboxZMinSpinBox->text().toStdString();
-    gVals->tileOutBbox[3] = ui->tileOutBboxYMaxSpinBox->text().toStdString();
-    gVals->tileOutBbox[4] = ui->tileOutBboxXMaxSpinBox->text().toStdString();
-    gVals->tileOutBbox[5] = ui->tileOutBboxZMaxSpinBox->text().toStdString();
+    if(ui->tileOutBboxCheckBox->isChecked()){
+        gVals->tileOutBbox = {ui->tileOutBboxYMinSpinBox->text().toStdString(),
+                              ui->tileOutBboxXMinSpinBox->text().toStdString(),
+                              ui->tileOutBboxZMinSpinBox->text().toStdString(),
+                              ui->tileOutBboxYMaxSpinBox->text().toStdString(),
+                              ui->tileOutBboxXMaxSpinBox->text().toStdString(),
+                              ui->tileOutBboxZMaxSpinBox->text().toStdString()};
+    }
     gVals->TileOffset = ui->tileOffsetSpinBox->text();
     gVals->Resolution[0] = ui->resolutionXYPixelSizeSpinBox->text().toStdString();
     gVals->Resolution[1] = ui->resolutionDZSpinBox->text().toStdString();

@@ -213,13 +213,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QCheckBox" name="blockSizeCheckBox">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
@@ -227,7 +220,7 @@
            <item>
             <widget class="QLabel" name="blockSizeYLabel">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="font">
               <font>
@@ -243,7 +236,7 @@
            <item>
             <widget class="QSpinBox" name="blockSizeYSpinBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -252,7 +245,7 @@
               <number>2000000000</number>
              </property>
              <property name="value">
-              <number>1</number>
+              <number>256</number>
              </property>
             </widget>
            </item>
@@ -263,7 +256,7 @@
            <item>
             <widget class="QLabel" name="blockSizeXLabel">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="font">
               <font>
@@ -279,7 +272,7 @@
            <item>
             <widget class="QSpinBox" name="blockSizeXSpinBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -288,7 +281,7 @@
               <number>2000000000</number>
              </property>
              <property name="value">
-              <number>1</number>
+              <number>256</number>
              </property>
             </widget>
            </item>
@@ -299,7 +292,7 @@
            <item>
             <widget class="QLabel" name="blockSizeZLabel">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="font">
               <font>
@@ -315,7 +308,7 @@
            <item>
             <widget class="QSpinBox" name="blockSizeZSpinBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="minimum">
               <number>1</number>
@@ -324,7 +317,7 @@
               <number>2000000000</number>
              </property>
              <property name="value">
-              <number>1</number>
+              <number>256</number>
              </property>
             </widget>
            </item>

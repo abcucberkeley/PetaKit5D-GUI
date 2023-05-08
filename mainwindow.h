@@ -68,7 +68,6 @@ class GUIvals{
         QString stitchInfoFullpath;
         bool parseSettingFile;
         bool IOScan;
-        bool blockSizeCheckBox;
         std::vector<std::string> blockSize;
         bool zarrSubSizeCheckBox;
         std::vector<std::string> zarrSubSize;
@@ -131,8 +130,7 @@ class GUIvals{
                     stitchInfoFullpath{""},
                     parseSettingFile{false},
                     IOScan{false},
-                    blockSizeCheckBox{false},
-                    blockSize{"500","500","500"},
+                    blockSize{"256","256","256"},
                     zarrSubSizeCheckBox{false},
                     zarrSubSize{},
                     InputBboxCheckBox{false},
