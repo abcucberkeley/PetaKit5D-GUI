@@ -1456,7 +1456,7 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"bigStitchData",prependedString,isMcc);
         addBoolToArgs(args,guiVals.bigStitchData,prependedString);
 
-        addCharArrayToArgs(args,"stitchPipeline",prependedString,isMcc);
+        addCharArrayToArgs(args,"pipeline",prependedString,isMcc);
         addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
 
         addCharArrayToArgs(args,"processFunPath",prependedString,isMcc);
