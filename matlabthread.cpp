@@ -37,7 +37,7 @@ void matlabThread::run(){
         matlabCmd.append("addpath(genpath(\'"+newDir+"\'));");
 
         // Add the setup cmd
-        matlabCmd.append("setup([],true);");
+        matlabCmd.append("setup;");
 
         matlabCmd.append(funcType.toStdString()+"("+args+");");
         matlabCmd.append("\"");
