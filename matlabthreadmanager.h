@@ -16,6 +16,7 @@ class matlabThreadManager : public QThread
 public:
     matlabThreadManager(QMutex &outputLock, QObject *parent = 0);
     ~matlabThreadManager();
+    void killMatlabThreadManager();
     void run();
 public slots:
     void onJobStart(std::string &args, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, bool isMcc, const std::string &pathToMatlab);

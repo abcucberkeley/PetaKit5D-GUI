@@ -112,7 +112,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
     // If the thread is not done, kill it (This may have to change later because it can be dangerous)
-    if(!mThreadManager->isFinished()) mThreadManager->terminate();
+    if(!mThreadManager->isFinished()){
+        mThreadManager->killMatlabThreadManager();
+        mThreadManager->wait();
+    }//mThreadManager->terminate();
 
 }
 

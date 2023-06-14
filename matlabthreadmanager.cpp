@@ -16,10 +16,18 @@ matlabThreadManager::~matlabThreadManager(){
 
     // Terminate all unfinished threads
     for(auto &thread : mThreads){
-        if(!thread.second->isFinished()) thread.second->terminate();
+        if(!thread.second->isFinished()) {
+            //thread.second->terminate();
+            thread.second->killMatlabThread();
+            thread.second->wait();
+        }
     }
     killThread = 1;
     this->wait();
+}
+
+void matlabThreadManager::killMatlabThreadManager(){
+    killThread = 1;
 }
 
 void matlabThreadManager::run(){
