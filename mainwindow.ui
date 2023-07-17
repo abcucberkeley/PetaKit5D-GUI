@@ -1745,16 +1745,16 @@
                <bool>false</bool>
               </property>
               <property name="currentText">
-               <string>matlab</string>
+               <string>zarr</string>
               </property>
               <item>
                <property name="text">
-                <string>matlab</string>
+                <string>zarr</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>zarr</string>
+                <string>matlab</string>
                </property>
               </item>
              </widget>
@@ -11088,8 +11088,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="deconTypeButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
  </buttongroups>
 </ui>
