@@ -116,7 +116,7 @@ void loadPreviousSettings::curlMCC(){
     mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");
     mccInstallProgress->repaint();
     std::string downloadCmd = "curl -o "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip ";
-    #ifdef _Win32
+    #ifdef _WIN32
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/5/deployment_files/installer/complete/win64/MATLAB_Runtime_R2022b_Update_5_win64.zip");
     #elif __linux__
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/5/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_5_glnxa64.zip");
