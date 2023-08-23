@@ -57,17 +57,28 @@ void loadPreviousSettings::runInstallScriptMCC(){
     #else
     installName = "install";
     #endif
-    std::string installCmd = tmpDir+"/"+installName+" -agreeToLicense yes -destinationFolder "+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime";
+
+    //std::string installCmd = "\"\""+tmpDir+"/"+installName+"\"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"";
+    std::string installCmd = "\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"";
+    //std::cout << installCmd << std::endl;
+    /*
+    QString filename = "C:/Users/matt/Desktop/LLSM_Processing_GUI_releases/LLSM_Processing_GUI - Copy/out.txt";
+    QFile file(filename);
+    if (file.open(QIODevice::ReadWrite)) {
+        QTextStream stream(&file);
+        stream << QString(installCmd.c_str());
+    }
+    */
     system(installCmd.c_str());
 
     // Remove tmpDir
-    mccInstallProgress->setValue(99);
-    QDir dir(QString::fromStdString(tmpDir));
-    dir.removeRecursively();
+    //mccInstallProgress->setValue(99);
+    //QDir dir(QString::fromStdString(tmpDir));
+    //dir.removeRecursively();
 
+    messageBoxSuccess(this->parentWidget(), "First-time setup complete.\nThe MCC Runtime will continute to install in the background.\nPlease press ok and restart the GUI now.\n");
     mccInstallProgress->setValue(100);
-    messageBoxSuccess(this->parentWidget(), "First-time setup complete.\nThe MCC Runtime was successfully installed!");
-    QDialog::reject();
+    //QDialog::reject();
 }
 
 void loadPreviousSettings::unzipMCC(){
@@ -81,13 +92,13 @@ void loadPreviousSettings::unzipMCC(){
         dir.mkpath(".");
 
     #ifdef _WIN32
-    unzipCmd = "tar -xf "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -C "+tmpDir;
+    unzipCmd = "tar -xf \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -C \""+tmpDir+"\"";
     #elif __linux__
     // Linux and Mac can use unzip (Check if installed for Linux)
     if(!system("which unzip")) unzipCmd = "unzip -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
-    else unzipCmd = QCoreApplication::applicationDirPath().toStdString()+"/7zzs x "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -o"+tmpDir;
+    else unzipCmd = "\""+QCoreApplication::applicationDirPath().toStdString()+"/7zzs\" x \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -o \""+tmpDir+"\"";
     #else
-    unzipCmd = "unzip -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
+    unzipCmd = "unzip -q \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -d \""+tmpDir+"\"";
     #endif
     system(unzipCmd.c_str());
     runInstallScriptMCC();
@@ -115,7 +126,7 @@ int loadPreviousSettings::installMCC(){
 void loadPreviousSettings::curlMCC(){
     mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");
     mccInstallProgress->repaint();
-    std::string downloadCmd = "curl -o "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip ";
+    std::string downloadCmd = "curl -o \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" ";
     #ifdef _WIN32
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2022b_Update_6_win64.zip");
     #elif __linux__
