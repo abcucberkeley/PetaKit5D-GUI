@@ -2093,23 +2093,10 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
 void MainWindow::on_mainNextButton_clicked()
 {
     // Error if no data paths set
-    if(!dPaths.size()){
-        messageBoxError("No data paths are set. Please set at least one data path before continuing.");
-        return;
-    }
+    if(!dataPathsAreSet(dPaths)) return;
 
     // Error if no channel patterns set
-    if(!channelWidgets.size() && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-        messageBoxError("No channel patterns set. Please set at least one pattern before continuing.");
-        return;
-    }
-    for(size_t i = 0; i < channelWidgets.size(); i++){
-        if(channelWidgets[i].second->isChecked()) break;
-        if(i == channelWidgets.size()-1 && (!ui->customPatternsCheckBox->isChecked() || ui->customPatternsLineEdit->text().isEmpty())){
-            messageBoxError("No channel patterns set. Please set at least one pattern before continuing.");
-            return;
-        }
-    }
+    if(!channelPatternsAreSet(channelWidgets,ui->customPatternsCheckBox,ui->customPatternsLineEdit)) return;
 
     // Set the checkmark and disable the tab
     ui->tabWidget->setTabText(ui->tabWidget->indexOf(ui->Main),QString::fromStdString("Main ✔"));
@@ -2517,11 +2504,8 @@ void MainWindow::on_simReconSubmitButton_clicked()
 
     // TODO: Seperate functions for error checking
 
-    // Error if no data paths are set
-    if(!simReconDPaths.size()){
-        messageBoxError("There are no data paths set.");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(simReconDPaths)) return;
 
     // Error if data path does not exist when submit is pressed
     for(size_t i = 0; i < simReconDPaths.size(); i++){
@@ -2835,9 +2819,15 @@ void MainWindow::on_cropSubmitButton_clicked()
         messageBoxError("No data paths set");
         return;
     }
+    // Error if no data paths set
+    if(!dataPathsAreSet(cropDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(cropChannelWidgets,ui->cropCustomPatternsCheckBox,ui->cropCustomPatternsLineEdit)) return;
 
     if(ui->cropResultPathLineEdit->text().toStdString().empty()){
         messageBoxError("Cropping requires a result path!");
+        return;
     }
 
     // Disable submit button
@@ -3099,10 +3089,8 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!fftAnalysisDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(fftAnalysisDPaths)) return;
 
     // Disable submit button
     ui->fftAnalysisSubmitButton->setEnabled(false);
@@ -3166,15 +3154,14 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!fscAnalysisDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(fscAnalysisDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(fscAnalysisChannelWidgets,ui->fscAnalysisCustomPatternsCheckBox,ui->fscAnalysisCustomPatternsLineEdit)) return;
 
     // Disable submit button
     ui->fscAnalysisSubmitButton->setEnabled(false);
-
-
 
     std::string args;
 
@@ -3247,7 +3234,6 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
 
     // TODO: ADD PARSE CLUSTER
 
-
     QString funcType = "XR_FSC_analysis_wrapper";
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
@@ -3260,10 +3246,11 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!psfDetectionAnalysisDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(psfDetectionAnalysisDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(psfDetectionAnalysisChannelWidgets,ui->psfDetectionAnalysisCustomPatternsCheckBox,ui->psfDetectionAnalysisCustomPatternsLineEdit)) return;
 
     // Disable submit button
     ui->psfDetectionAnalysisSubmitButton->setEnabled(false);
@@ -3369,10 +3356,11 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!tiffZarrConverterDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(tiffZarrConverterDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox,ui->tiffZarrConverterCustomPatternsLineEdit)) return;
 
     // Disable submit button
     ui->tiffZarrConverterSubmitButton->setEnabled(false);
@@ -3479,10 +3467,11 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!mipGeneratorDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(mipGeneratorDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(mipGeneratorChannelWidgets,ui->mipGeneratorCustomPatternsCheckBox,ui->mipGeneratorCustomPatternsLineEdit)) return;
 
     // Disable submit button
     ui->mipGeneratorSubmitButton->setEnabled(false);
@@ -3591,10 +3580,8 @@ void MainWindow::on_resampleSubmitButton_clicked()
     // Write settings in case of crash
     writeSettings();
 
-    if(!resampleDPaths.size()){
-        messageBoxError("No data paths set");
-        return;
-    }
+    // Error if no data paths set
+    if(!dataPathsAreSet(resampleDPaths)) return;
 
     // Disable submit button
     ui->resampleSubmitButton->setEnabled(false);

@@ -4,7 +4,10 @@
 #include <QString>
 #include <QDir>
 #include <QFileDevice>
+#include <QCheckBox>
+#include <QLineEdit>
 #include <iostream>
+
 
 template <typename T>
 void checkJobLogDir(T &submissionVals, QString &mainPath, const QString &timeJobName){
@@ -32,8 +35,12 @@ void checkJobLogDir(T &submissionVals, QString &mainPath, const QString &timeJob
     }
 }
 
-void messageBoxError(QString errorText);
+void messageBoxError(const QString &errorText);
 
-void messageBoxSuccess(QWidget* parent, QString successText);
+void messageBoxSuccess(QWidget* parent, const QString &successText);
+
+bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
+
+bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);
 
 #endif // SUBMISSIONCHECKS_H
