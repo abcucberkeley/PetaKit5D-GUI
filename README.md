@@ -5,4 +5,4 @@ A Graphical User Interface for the [LLSM5DTools](https://github.com/abcucberkele
 For instructions on installation and use of the LLSM_Processing_GUI, vist the [LLSM_Processing_GUI Wiki](https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki)
 
 ### Prerequisites
-1. An installation of MATLAB on your system is preferred but the GUI is also able to run without it using the included compiled version of MATLAB.
+1. An installation of MATLAB on your system can be used but the GUI is also able to run without it using the included compiled version of MATLAB.
