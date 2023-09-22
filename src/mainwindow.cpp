@@ -84,6 +84,27 @@ MainWindow::MainWindow(QWidget *parent)
     //QCoreApplication::setApplicationVersion(VERSION_STRING);
     //if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
+
+    int fixedWidth = 300;
+    
+    matlabJobLogsOutputWindow = new mainwindowConsoleOutputWindow(QString("Job Logs"), outputLock, this);
+    matlabJobLogsOutputWindow->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea); // Allows default position of attached window to right of mainwindow
+    matlabJobLogsOutputWindow->setFixedWidth(fixedWidth); // Default width to 300
+    matlabJobLogsOutputWindow->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable); // removes the x button in left corner.
+    matlabJobLogsOutputWindow->setProperty("setting readable", false);
+
+    terminalConsoleOutput = new mainwindowConsoleOutputWindow(QString("Console Output"), outputLock, this);
+    terminalConsoleOutput->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+    terminalConsoleOutput->setFixedWidth(fixedWidth);
+    terminalConsoleOutput->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+    terminalConsoleOutput->setProperty("Matlab Thread Output Setting readable", false);
+
+    addDockWidget(Qt::RightDockWidgetArea, matlabJobLogsOutputWindow);
+    addDockWidget(Qt::LeftDockWidgetArea, terminalConsoleOutput);
+
+    connect(mThreadManager, &matlabThreadManager::availableQProcessOutput, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdout); // connect output to this QDockWidget to redirect the flow of output
+    connect(mThreadManager, &matlabThreadManager::data, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdoutStdString); // This is what prints out stdout/stderr throughout this project to here.
+    
     readConfigSettings();
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
@@ -102,10 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setCurrentWidget(ui->Main);
 
     // Job Output
-    if(!mOutputWindow->isVisible()){
-        mOutputWindow->setModal(false);
-        mOutputWindow->show();
-    }
+    matlabJobLogsOutputWindow->uploadJobLogs(mOutputWindow);
 }
 
 MainWindow::~MainWindow()
@@ -3672,4 +3690,3 @@ void MainWindow::on_largeScaleProcessingButton_clicked()
     lspSettings.setModal(true);
     lspSettings.exec();
 }
-
