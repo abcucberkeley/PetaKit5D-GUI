@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <QtCore>
 #include <QThread>
-
+#include "mainwindowConsoleOutputWindow.h"
 //using namespace matlab::engine;
 
 class matlabThreadManager : public QThread
@@ -22,7 +22,8 @@ public slots:
     void onJobStart(std::string &args, QString &funcType, std::tuple<QString, QString, bool> &mPathJNameParseCluster, std::unordered_map<int,std::pair<QString,QDateTime>> &jobLogPaths, bool isMcc, const std::string &pathToMatlab);
 signals:
     void enableSubmitButton();
-    void addOutputIDAndPath(const unsigned int mThreadID, const QString mainPath);
+    void data(std::string output);
+    void availableQProcessOutput(QString str);
 private:
     std::string args;
     std::unordered_map<unsigned int, matlabThread*> mThreads;
@@ -38,7 +39,13 @@ private:
     std::string pathToMatlab;
 
     bool killThread;
+    std::ostringstream jobsOutput;
+    std::streambuf* _stdout;
+    std::streambuf* _stderr;
 
+
+    // Some variables to test
+    unsigned int mThreadID;
 };
 
 #endif // MATLABTHREADMANAGER_H
