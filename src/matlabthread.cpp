@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <regex>
 #include "matlabthread.h"
+#include "mainwindowConsoleOutputWindow.h"
+#include <sstream>
 
 matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_t &outA, const std::string &args, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID, bool isMcc, const std::string &pathToMatlab) :
     QThread(parent), funcType(funcType), outA(outA), args(args), mPathJNameParseCluster(mPathJNameParseCluster), mThreadID(mThreadID), isMcc(isMcc), pathToMatlab(pathToMatlab)
 {
-    job = NULL;
+    job = nullptr;
     killThread = 0;
 }
 
@@ -31,9 +33,7 @@ void matlabThread::killMatlabThread(){
 
 void matlabThread::run(){
     // Start matlab and add needed paths
-    bool jobSuccess = true;
-
-    std::string matlabCmd;
+    jobSuccess = true;
 
     // If the user has a matlab installation
     if(!isMcc){
@@ -59,7 +59,7 @@ void matlabThread::run(){
         #elif _WIN32
         std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster\"";
         #else
-
+        std::string mccLoc = "";
         #endif
         matlabCmd.append(mccLoc);
 
@@ -72,24 +72,29 @@ void matlabThread::run(){
         matlabCmd = std::regex_replace(matlabCmd, std::regex(" \"\""), " \"\"\"\"\"\"");
     }
 
-    //std::cout << matlabCmd << std::endl;
-    //jobSuccess = !system(matlabCmd.c_str());
     job = new QProcess(this);
-    job->setProcessChannelMode(QProcess::ForwardedChannels);
-    job->startCommand(QString::fromStdString(matlabCmd));
-    bool jobFinished = false;
-    while(!jobFinished){
-        if(killThread) return;
-        jobFinished = job->waitForFinished(1000);
+    job->setProcessChannelMode(QProcess::MergedChannels);
+    job->startCommand(QString::fromUtf8(matlabCmd));
+    
+    std::stringstream ss;
+    while(job->state() != QProcess::NotRunning){
+        QCoreApplication::processEvents(); // This is used when we have pending jobs running, will give us the current output from the process running. (not after)
+        QString output = QString(job->readAll());
+        emit availableQProcessOutput(output);
+        sleep(2);
     }
+
     jobSuccess = !(job->exitCode());
 
-
-    if(jobSuccess) std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" Finished" << std::endl;
-    else{
-        //if(std::get<2>(mPathJNameParseCluster))
-        std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION." << std::endl;
-        //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+    if(job->atEnd()){ // When the job has finished then we let the user know when this specific job has finished.
+        ss.str(std::string());
+        if(jobSuccess) ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
+        else{
+            //if(std::get<2>(mPathJNameParseCluster))
+            ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
+            //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
+        }
     }
+    
+    emit availableQProcessOutput(QString::fromUtf8(ss.str()));
 }
-
