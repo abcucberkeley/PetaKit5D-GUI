@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect FSC Analysis signals
     connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
+    // Connect Imaris Converter signals
+    connect(ui->imarisConverterAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Connect mipGenerator signals
     connect(ui->mipGeneratorAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
@@ -1083,6 +1086,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton()
 {
+    ui->imarisConverterSubmitButton->setEnabled(true);
     ui->mipGeneratorSubmitButton->setEnabled(true);
     ui->parallelRsyncSubmitButton->setEnabled(true);
     ui->fftAnalysisSubmitButton->setEnabled(true);
@@ -2273,6 +2277,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsChannelWidgets = &fscAnalysisChannelWidgets;
         addPathsCurrWidget = ui->fscAnalysis;
         addPathsCurrLayout = ui->fscAnalysisChannelPatternsHorizontalLayout;
+    }
+    else if(((QPushButton *)sender())->objectName().contains("imarisConverter")){
+        addPathsDataPaths = &imarisConverterDPaths;
+        addPathsChannelWidgets = &imarisConverterChannelWidgets;
+        addPathsCurrWidget = ui->imarisConverter;
+        addPathsCurrLayout = ui->imarisConverterChannelPatternsHorizontalLayout;
     }
     else if(((QPushButton *)sender())->objectName().contains("mipGenerator")){
         addPathsDataPaths = &mipGeneratorDPaths;
@@ -3634,12 +3644,12 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addScalarToArgs(args,ui->resampleCpusPerTaskSpinBox->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
+    if(!ui->resampleJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
         addCharArrayToArgs(args,ui->resampleJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
-    if(!ui->mipGeneratorUuidLineEdit->text().isEmpty()){
+    if(!ui->resampleUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->resampleUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
@@ -3671,5 +3681,99 @@ void MainWindow::on_largeScaleProcessingButton_clicked()
     largeScaleProcessingSettings lspSettings(guiVals);
     lspSettings.setModal(true);
     lspSettings.exec();
+}
+
+
+void MainWindow::on_imarisConverterSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Error if no data paths set
+    if(!dataPathsAreSet(imarisConverterDPaths)) return;
+
+    // Error if no channel patterns set
+    if(!channelPatternsAreSet(imarisConverterChannelWidgets,ui->imarisConverterCustomPatternsCheckBox,ui->imarisConverterCustomPatternsLineEdit)) return;
+
+    // Disable submit button
+    ui->imarisConverterSubmitButton->setEnabled(false);
+
+    std::string args;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = imarisConverterDPaths[0].masterPath;
+
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
+    addDataPathsToArgs(args,firstPrependedString,imarisConverterDPaths,isMcc);
+
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,imarisConverterChannelWidgets,ui->imarisConverterCustomPatternsCheckBox->isChecked(),ui->imarisConverterCustomPatternsLineEdit->text(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"pixelSizes",prependedString,isMcc);
+    std::vector<std::string> pixelSizesV = {ui->imarisConverterPixelSizesYDoubleSpinBox->text().toStdString(),
+                                            ui->imarisConverterPixelSizesXDoubleSpinBox->text().toStdString(),
+                                            ui->imarisConverterPixelSizesZDoubleSpinBox->text().toStdString()};
+    addArrayToArgs(args,pixelSizesV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->imarisConverterZarrFileCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+    std::vector<std::string> blockSizeV = {ui->imarisConverterBlockSizeYSpinBox->text().toStdString(),ui->imarisConverterBlockSizeXSpinBox->text().toStdString(),ui->imarisConverterBlockSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,pixelSizesV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"bbox",prependedString,isMcc);
+    std::vector<std::string> bboxV = {ui->imarisConverterBBoxYMinSpinBox->text().toStdString(),
+                                      ui->imarisConverterBBoxXMinSpinBox->text().toStdString(),
+                                      ui->imarisConverterBBoxZMinSpinBox->text().toStdString(),
+                                      ui->imarisConverterBBoxYMaxSpinBox->text().toStdString(),
+                                      ui->imarisConverterBBoxXMaxSpinBox->text().toStdString(),
+                                      ui->imarisConverterBBoxZMaxSpinBox->text().toStdString()};
+    addArrayToArgs(args,bboxV,false,prependedString,"[]",isMcc);
+
+    // Path to ImsConverter
+    addCharArrayToArgs(args,"ImsConverter",prependedString,isMcc);
+    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/writeImarisParallel",prependedString,isMcc);
+
+    // Job Settings
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->imarisConverterParseClusterCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->imarisConverterCpusPerTaskLineEdit->text().toStdString(),prependedString);
+
+    // Advanced Job Settings
+    if(!ui->imarisConverterJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->imarisConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    if(!ui->imarisConverterUuidLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->imarisConverterUuidLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    // Config File Settings
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    QString funcType = "XR_imaris_conversion_data_wrapper";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Imaris Converter Job"),ui->imarisConverterParseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 

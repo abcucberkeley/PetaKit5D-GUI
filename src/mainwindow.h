@@ -321,6 +321,10 @@ private:
     std::vector<dataPath> fscAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
+    // Imaris Converter
+    std::vector<dataPath> imarisConverterDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> imarisConverterChannelWidgets;
+
     // mipGenerator
     std::vector<dataPath> mipGeneratorDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> mipGeneratorChannelWidgets;
@@ -467,6 +471,8 @@ private slots:
     void on_resampleAddPathsButton_clicked();
 
     void on_largeScaleProcessingButton_clicked();
+
+    void on_imarisConverterSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;
