@@ -37,10 +37,6 @@ class GUIvals{
         bool save3DStack;
 
         // Decon Advanced Settings
-        QString cppDeconPath;
-        QString loadModules;
-        QString cudaDeconPath;
-        QString OTFGENPath;
         QString RLMethod;
         bool fixIter;
         double errThresh;
@@ -69,8 +65,9 @@ class GUIvals{
         bool parseSettingFile;
         bool IOScan;
         std::vector<std::string> blockSize;
-        bool zarrSubSizeCheckBox;
-        std::vector<std::string> zarrSubSize;
+        std::vector<std::string> shardSize;
+        bool distBboxesCheckBox;
+        std::vector<std::string> distBboxes;
         bool InputBboxCheckBox;
         std::vector<std::string> InputBbox;
         bool tileOutBboxCheckBox;
@@ -82,7 +79,6 @@ class GUIvals{
         QString zMaxOffset;
         std::vector<std::string> xcorrDownsample;
         QString xcorrThresh;
-        bool zNormalize;
         std::vector<std::string> timepoints;
         QString shiftMethod;
         std::vector<std::string> axisWeight;
@@ -105,10 +101,6 @@ class GUIvals{
                     zarrFile{false},
                     saveZarr{false},
                     save3DStack{true},
-                    cppDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/RLDecon_CPU/20200718/build-cluster/cpuDeconv"},
-                    loadModules{"module load gcc/4.8.5; module load fftw/3.3.6-gcc; module load boost/1.65.1-gcc; module load libtiff/4.1.0; "},
-                    cudaDeconPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/cudaDeconv"},
-                    OTFGENPath{"/global/home/groups/software/sl-7.x86_64/modules/cudaDecon/bin/radialft"},
                     RLMethod{"simplified"},
                     fixIter{false},
                     errThresh{.00000001},
@@ -131,8 +123,9 @@ class GUIvals{
                     parseSettingFile{false},
                     IOScan{false},
                     blockSize{"256","256","256"},
-                    zarrSubSizeCheckBox{false},
-                    zarrSubSize{},
+                    shardSize{"0","0","0"},
+                    distBboxesCheckBox{false},
+                    distBboxes{"0","0","0","0","0","0"},
                     InputBboxCheckBox{false},
                     InputBbox{},
                     tileOutBboxCheckBox{false},
@@ -144,7 +137,6 @@ class GUIvals{
                     zMaxOffset{"50"},
                     xcorrDownsample{"2","2","1"},
                     xcorrThresh{".25"},
-                    zNormalize{false},
                     timepoints{},
                     shiftMethod{"grid"},
                     axisWeight{"1",".1","10"},
@@ -321,6 +313,10 @@ private:
     std::vector<dataPath> fscAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
+    // Imaris Converter
+    std::vector<dataPath> imarisConverterDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> imarisConverterChannelWidgets;
+
     // mipGenerator
     std::vector<dataPath> mipGeneratorDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> mipGeneratorChannelWidgets;
@@ -467,6 +463,8 @@ private slots:
     void on_resampleAddPathsButton_clicked();
 
     void on_largeScaleProcessingButton_clicked();
+
+    void on_imarisConverterSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;
