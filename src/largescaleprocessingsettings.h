@@ -23,8 +23,6 @@ private slots:
 
     void on_blockSizeCheckBox_stateChanged(int arg1);
 
-    void on_zarrSubSizeCheckBox_stateChanged(int arg1);
-
     void on_inputBboxCheckBox_stateChanged(int arg1);
 
     void on_tileOutBboxCheckBox_stateChanged(int arg1);

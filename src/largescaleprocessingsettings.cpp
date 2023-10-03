@@ -10,6 +10,16 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
 
     ui->setupUi(this);
 
+    // Connect signals
+    connect(ui->InputCancelButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_cancelButton_clicked);
+    connect(ui->InputSubmitButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_submitButton_clicked);
+    connect(ui->OutputCancelButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_cancelButton_clicked);
+    connect(ui->OutputSubmitButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_submitButton_clicked);
+    connect(ui->XcorrCancelButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_cancelButton_clicked);
+    connect(ui->XcorrSubmitButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_submitButton_clicked);
+    connect(ui->BlendCancelButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_cancelButton_clicked);
+    connect(ui->BlendSubmitButton, &QPushButton::clicked, this, &largeScaleProcessingSettings::on_submitButton_clicked);
+
     // Set the vals in the window to the ones passed in
     ui->saveMIPCheckBox->setChecked(guiVals.SaveMIP);
     ui->batchSizeYSpinBox->setValue(std::stoi(guiVals.BatchSize[0]));
@@ -24,11 +34,17 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->blockSizeYSpinBox->setValue(std::stoi(guiVals.blockSize[0]));
     ui->blockSizeXSpinBox->setValue(std::stoi(guiVals.blockSize[1]));
     ui->blockSizeZSpinBox->setValue(std::stoi(guiVals.blockSize[2]));
-    ui->zarrSubSizeCheckBox->setChecked(guiVals.zarrSubSizeCheckBox);
-    if(ui->zarrSubSizeCheckBox->isChecked()){
-        ui->zarrSubSizeYSpinBox->setValue(std::stoi(guiVals.zarrSubSize[0]));
-        ui->zarrSubSizeXSpinBox->setValue(std::stoi(guiVals.zarrSubSize[1]));
-        ui->zarrSubSizeZSpinBox->setValue(std::stoi(guiVals.zarrSubSize[2]));
+    ui->shardSizeYSpinBox->setValue(std::stoi(guiVals.shardSize[0]));
+    ui->shardSizeXSpinBox->setValue(std::stoi(guiVals.shardSize[1]));
+    ui->shardSizeZSpinBox->setValue(std::stoi(guiVals.shardSize[2]));
+    ui->distBboxesCheckBox->setChecked(guiVals.distBboxesCheckBox);
+    if(ui->distBboxesCheckBox->isChecked()){
+        ui->distBboxesYMinSpinBox->setValue(std::stoi(guiVals.distBboxes[0]));
+        ui->distBboxesXMinSpinBox->setValue(std::stoi(guiVals.distBboxes[1]));
+        ui->distBboxesZMinSpinBox->setValue(std::stoi(guiVals.distBboxes[2]));
+        ui->distBboxesYMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[3]));
+        ui->distBboxesXMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[4]));
+        ui->distBboxesZMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[5]));
     }
     ui->inputBboxCheckBox->setChecked(guiVals.InputBboxCheckBox);
     if(ui->inputBboxCheckBox->isChecked()){
@@ -58,7 +74,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->xcorrDownsampleXSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[1]));
     ui->xcorrDownsampleZSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[2]));
     ui->xcorrThreshSpinBox->setValue(guiVals.xcorrThresh.toDouble());
-    ui->zNormalizeCheckBox->setChecked(guiVals.zNormalize);
     std::string tString;
     for(std::string &i : guiVals.timepoints){
         tString.append(i);
@@ -91,7 +106,6 @@ void largeScaleProcessingSettings::on_cancelButton_clicked()
     largeScaleProcessingSettings::close();
 }
 
-
 void largeScaleProcessingSettings::on_submitButton_clicked()
 {
     gVals->SaveMIP = ui->saveMIPCheckBox->isChecked();
@@ -107,11 +121,17 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->blockSize[0] = ui->blockSizeYSpinBox->text().toStdString();
     gVals->blockSize[1] = ui->blockSizeXSpinBox->text().toStdString();
     gVals->blockSize[2] = ui->blockSizeZSpinBox->text().toStdString();
-    gVals->zarrSubSizeCheckBox = ui->zarrSubSizeCheckBox->isChecked();
-    if(ui->zarrSubSizeCheckBox->isChecked()){
-        gVals->zarrSubSize = {ui->zarrSubSizeYSpinBox->text().toStdString(),
-                              ui->zarrSubSizeXSpinBox->text().toStdString(),
-                              ui->zarrSubSizeZSpinBox->text().toStdString()};
+    gVals->shardSize[0] = ui->shardSizeYSpinBox->text().toStdString();
+    gVals->shardSize[1] = ui->shardSizeXSpinBox->text().toStdString();
+    gVals->shardSize[2] = ui->shardSizeZSpinBox->text().toStdString();
+    gVals->distBboxesCheckBox = ui->distBboxesCheckBox->isChecked();
+    if(ui->distBboxesCheckBox->isChecked()){
+        gVals->distBboxes = {ui->distBboxesYMinSpinBox->text().toStdString(),
+                            ui->distBboxesXMinSpinBox->text().toStdString(),
+                            ui->distBboxesZMinSpinBox->text().toStdString(),
+                            ui->distBboxesYMaxSpinBox->text().toStdString(),
+                            ui->distBboxesXMaxSpinBox->text().toStdString(),
+                            ui->distBboxesZMaxSpinBox->text().toStdString()};
     }
     gVals->InputBboxCheckBox = ui->inputBboxCheckBox->isChecked();
     if(ui->inputBboxCheckBox->isChecked()){
@@ -141,7 +161,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->xcorrDownsample[1] = ui->xcorrDownsampleXSpinBox->text().toStdString();
     gVals->xcorrDownsample[2] = ui->xcorrDownsampleZSpinBox->text().toStdString();
     gVals->xcorrThresh = ui->xcorrThreshSpinBox->text();
-    gVals->zNormalize = ui->zNormalizeCheckBox->isChecked();
     gVals->timepoints.clear();
     std::stringstream s_stream(ui->timepointsLineEdit->text().toStdString());
     while(s_stream.good()) {
@@ -162,22 +181,12 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     largeScaleProcessingSettings::close();
 }
 
-
 void largeScaleProcessingSettings::on_blockSizeCheckBox_stateChanged(int arg1)
 {
     ui->blockSizeYSpinBox->setEnabled(arg1);
     ui->blockSizeXSpinBox->setEnabled(arg1);
     ui->blockSizeZSpinBox->setEnabled(arg1);
 }
-
-
-void largeScaleProcessingSettings::on_zarrSubSizeCheckBox_stateChanged(int arg1)
-{
-    ui->zarrSubSizeYSpinBox->setEnabled(arg1);
-    ui->zarrSubSizeXSpinBox->setEnabled(arg1);
-    ui->zarrSubSizeZSpinBox->setEnabled(arg1);
-}
-
 
 void largeScaleProcessingSettings::on_inputBboxCheckBox_stateChanged(int arg1)
 {
@@ -188,7 +197,6 @@ void largeScaleProcessingSettings::on_inputBboxCheckBox_stateChanged(int arg1)
     ui->inputBboxXMaxSpinBox->setEnabled(arg1);
     ui->inputBboxZMaxSpinBox->setEnabled(arg1);
 }
-
 
 void largeScaleProcessingSettings::on_tileOutBboxCheckBox_stateChanged(int arg1)
 {

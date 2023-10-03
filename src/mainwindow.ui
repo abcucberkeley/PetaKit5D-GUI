@@ -1717,50 +1717,7 @@
          <number>0</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_111" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_22">
-            <item>
-             <widget class="QLabel" name="stitchPipelineLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Stitch Pipeline</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="stitchPipelineComboBox">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="editable">
-               <bool>false</bool>
-              </property>
-              <property name="currentText">
-               <string>zarr</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>zarr</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>matlab</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_111" stretch="1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_27">
             <item>
@@ -2789,56 +2746,7 @@
          <number>1</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_122" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_29" stretch="1,1,1">
-            <item>
-             <widget class="QLabel" name="cudaDeconLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>CUDA Decon</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="cudaDeconRadioButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">deconTypeButtonGroup</string>
-              </attribute>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_38">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_122" stretch="1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_35">
             <item>
@@ -2882,56 +2790,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_123" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_30" stretch="1,1,1">
-            <item>
-             <widget class="QLabel" name="cppDeconLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>CPP Decon</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="cppDeconRadioButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">deconTypeButtonGroup</string>
-              </attribute>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_39">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_123" stretch="1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_36">
             <item>
@@ -2981,59 +2840,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_124" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_31" stretch="1,1,1">
-            <item>
-             <widget class="QLabel" name="matlabDeconLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>MATLAB Decon</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="matlabDeconRadioButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">deconTypeButtonGroup</string>
-              </attribute>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_40">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_124" stretch="1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_37">
             <item>
@@ -12140,6 +11947,5 @@
  <buttongroups>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
-  <buttongroup name="deconTypeButtonGroup"/>
  </buttongroups>
 </ui>

@@ -22,18 +22,6 @@ private slots:
 
     void on_submitButton_clicked();
 
-    void on_cppDeconPathBrowseButton_clicked();
-
-    void on_cppDeconPathLineEdit_textChanged(const QString &arg1);
-
-    void on_cudaDeconPathBrowseButton_clicked();
-
-    void on_cudaDeconPathLineEdit_textChanged(const QString &arg1);
-
-    void on_otfgenPathBrowseButton_clicked();
-
-    void on_otfgenPathLineEdit_textChanged(const QString &arg1);
-
     void on_rlMethodSimplifiedRadioButton_toggled(bool checked);
 
 private:

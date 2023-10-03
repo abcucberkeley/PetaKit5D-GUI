@@ -278,7 +278,6 @@ void MainWindow::writeSettings()
     settings.setValue("resampleZ",QVariant::fromValue(guiVals.resample[2]));
 
     // Save Stitch Settings
-    settings.setValue("stitchPipeline", ui->stitchPipelineComboBox->currentText());
     settings.setValue("stitchResultsDir", ui->resultsDirLineEdit->text());
     settings.setValue("imageListFullPaths", ui->imageListFullPathsLineEdit->text());
     settings.setValue("axisOrder", ui->axisOrderLineEdit->text());
@@ -303,9 +302,6 @@ void MainWindow::writeSettings()
     settings.setValue("generateImageList", ui->stitchGenerateImageListComboBox->currentText());
 
     // Save Decon Settings
-    settings.setValue("matlabDecon", ui->matlabDeconRadioButton->isChecked());
-    settings.setValue("cudaDecon", ui->cudaDeconRadioButton->isChecked());
-    settings.setValue("cppDecon", ui->cppDeconRadioButton->isChecked());
     settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
     settings.setValue("DSR", ui->deskewAndRotateDeconCheckBox->isChecked());
     settings.setValue("Background", ui->backgroundIntensityLineEdit->text());
@@ -316,10 +312,6 @@ void MainWindow::writeSettings()
 
 
     // Save Decon Advaced Settings
-    settings.setValue("cppDeconPath",guiVals.cppDeconPath);
-    settings.setValue("loadModules",guiVals.loadModules);
-    settings.setValue("cudaDeconPath",guiVals.cudaDeconPath);
-    settings.setValue("OTFGENPath",guiVals.OTFGENPath);
     settings.setValue("RLMethod",guiVals.RLMethod);
     settings.setValue("fixIter", guiVals.fixIter);
     settings.setValue("errThresh", guiVals.errThresh);
@@ -695,7 +687,6 @@ void MainWindow::readSettings()
     ui->stitchOnlyFirstTPCheckBox->setChecked(settings.value("stitchOnlyFirstTP").toBool());
 
     // Read Pipeline Settings
-
     ui->deskewCheckBox->setChecked(settings.value("Deskew").toBool());
     ui->rotateCheckBox->setChecked(settings.value("Rotate").toBool());
     ui->stitchCheckBox->setChecked(settings.value("Stitch").toBool());
@@ -712,7 +703,6 @@ void MainWindow::readSettings()
     ui->stitchDeconCheckBox->setChecked(settings.value("stitchDecon").toBool());
 
     // Read DSR Settings
-
     ui->parseSettingsFileCheckBox->setChecked(settings.value("parseSettingFile").toBool());
     ui->flipZStackCheckBox->setChecked(settings.value("flipZstack").toBool());
 
@@ -734,7 +724,6 @@ void MainWindow::readSettings()
     settings.endArray();
 
     // Read DSR Advanced Settings
-
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
     guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
     guiVals.resampleType = settings.value("resampleType").toString();
@@ -744,7 +733,6 @@ void MainWindow::readSettings()
     guiVals.resample[2] = settings.value("resampleZ").toDouble();
 
     // Read Stitch Settings
-    ui->stitchPipelineComboBox->setCurrentText(settings.value("stitchPipeline").toString());
     ui->resultsDirLineEdit->setText(settings.value("stitchResultsDir").toString());
     ui->imageListFullPathsLineEdit->setText(settings.value("imageListFullPaths").toString());
     ui->axisOrderLineEdit->setText(settings.value("axisOrder").toString());
@@ -771,9 +759,6 @@ void MainWindow::readSettings()
 
     // Read Decon Settings
 
-    ui->matlabDeconRadioButton->setChecked(settings.value("matlabDecon").toBool());
-    ui->cudaDeconRadioButton->setChecked(settings.value("cudaDecon").toBool());
-    ui->cppDeconRadioButton->setChecked(settings.value("cppDecon").toBool());
     ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
     ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("DSR").toBool());
     ui->backgroundIntensityLineEdit->setText(settings.value("Background").toString());
@@ -783,11 +768,6 @@ void MainWindow::readSettings()
     ui->deconRotateCheckBox->setChecked(settings.value("deconRotate").toBool());
 
     // Read Decon Advaced Settings
-
-    guiVals.cppDeconPath = settings.value("cppDeconPath").toString();
-    guiVals.loadModules = settings.value("loadModules").toString();
-    guiVals.cudaDeconPath = settings.value("cudaDeconPath").toString();
-    guiVals.OTFGENPath = settings.value("OTFGENPath").toString();
     guiVals.RLMethod = settings.value("RLMethod").toString();
     guiVals.fixIter = settings.value("fixIter").toBool();
     guiVals.errThresh = settings.value("errThresh").toDouble();
@@ -1300,11 +1280,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"BlockSize",prependedString,isMcc);
         addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
 
-        if(guiVals.zarrSubSizeCheckBox){
-            addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.zarrSubSize,false,prependedString,"[]",isMcc);
-        }
-
         if(guiVals.InputBboxCheckBox){
             addCharArrayToArgs(args,"InputBbox",prependedString,isMcc);
             addArrayToArgs(args,guiVals.InputBbox,false,prependedString,"[]",isMcc);
@@ -1347,9 +1322,14 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
         addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
 
-        if(guiVals.zarrSubSizeCheckBox){
-            addCharArrayToArgs(args,"zarrSubSize",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.zarrSubSize,false,prependedString,"[]",isMcc);
+        if(std::stoi(guiVals.shardSize[0]) || std::stoi(guiVals.shardSize[1]) || std::stoi(guiVals.shardSize[2])){
+            addCharArrayToArgs(args,"shardSize",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.shardSize,false,prependedString,"[]",isMcc);
+        }
+
+        if(guiVals.distBboxesCheckBox){
+            addCharArrayToArgs(args,"distBboxes",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.distBboxes,false,prependedString,"[]",isMcc);
         }
 
         addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
@@ -1416,9 +1396,6 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
         }
 
-        addCharArrayToArgs(args,"zNormalize",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.zNormalize,prependedString);
-
         addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
         addBoolToArgs(args,ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
 
@@ -1462,9 +1439,6 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"bigStitchData",prependedString,isMcc);
         addBoolToArgs(args,guiVals.bigStitchData,prependedString);
-
-        addCharArrayToArgs(args,"pipeline",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
 
         addCharArrayToArgs(args,"processFunPath",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.processFunPath.toStdString(),prependedString,isMcc);
@@ -1522,12 +1496,6 @@ void MainWindow::on_submitButton_clicked()
         //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
         // Decon Settings
-        addCharArrayToArgs(args,"cudaDecon",prependedString,isMcc);
-        addBoolToArgs(args,ui->cudaDeconRadioButton->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"cppDecon",prependedString,isMcc);
-        addBoolToArgs(args,ui->cppDeconRadioButton->isChecked(),prependedString);
-
         addCharArrayToArgs(args,"Background",prependedString,isMcc);
         addScalarToArgs(args,ui->backgroundIntensityLineEdit->text().toStdString(),prependedString);
 
@@ -1544,23 +1512,6 @@ void MainWindow::on_submitButton_clicked()
         addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
 
         // Decon Advanced settings
-        if(!guiVals.cppDeconPath.isEmpty()){
-            addCharArrayToArgs(args,"cppDeconPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.cppDeconPath.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.loadModules.isEmpty()){
-            addCharArrayToArgs(args,"loadModules",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.loadModules.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.cudaDeconPath.isEmpty()){
-            addCharArrayToArgs(args,"cudaDeconPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.cudaDeconPath.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.OTFGENPath.isEmpty()){
-            addCharArrayToArgs(args,"OTFGENPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.OTFGENPath.toStdString(),prependedString,isMcc);
-        }
-
         if(psfFullPaths.size()){
             addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
             std::vector<std::string> psfMPaths;
@@ -1739,9 +1690,6 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,std::to_string(guiVals.LowerLimit),prependedString);
 
         // Stitch Settings
-        addCharArrayToArgs(args,"stitchPipeline",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->stitchPipelineComboBox->currentText().toStdString(),prependedString,isMcc);
-
         if(!ui->resultsDirLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"stitchResultDir",prependedString,isMcc);
             addCharArrayToArgs(args,ui->resultsDirLineEdit->text().toStdString(),prependedString,isMcc);
@@ -1789,12 +1737,6 @@ void MainWindow::on_submitButton_clicked()
         }
 
         // Decon Settings
-        addCharArrayToArgs(args,"cudaDecon",prependedString,isMcc);
-        addBoolToArgs(args,ui->cudaDeconRadioButton->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"cppDecon",prependedString,isMcc);
-        addBoolToArgs(args,ui->cppDeconRadioButton->isChecked(),prependedString);
-
         addCharArrayToArgs(args,"DS",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
 
@@ -1817,23 +1759,6 @@ void MainWindow::on_submitButton_clicked()
         addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
 
         // Decon Advanced settings
-        if(!guiVals.cppDeconPath.isEmpty()){
-            addCharArrayToArgs(args,"cppDeconPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.cppDeconPath.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.loadModules.isEmpty()){
-            addCharArrayToArgs(args,"loadModules",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.loadModules.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.cudaDeconPath.isEmpty()){
-            addCharArrayToArgs(args,"cudaDeconPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.cudaDeconPath.toStdString(),prependedString,isMcc);
-        }
-        if(!guiVals.OTFGENPath.isEmpty()){
-            addCharArrayToArgs(args,"OTFGENPath",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.OTFGENPath.toStdString(),prependedString,isMcc);
-        }
-
         if(psfFullPaths.size()){
             addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
             std::vector<std::string> psfMPaths;
