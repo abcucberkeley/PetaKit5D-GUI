@@ -29,16 +29,6 @@ void mainwindowConsoleOutputWindow::printLogStdString(std::string msg){
     outputLock->lock();
     consoleEdit->append(QString::fromUtf8(msg));
     outputLock->unlock();
-
-    QFile file("test.out");
-
-    QTextStream stream(&file);
-    if(file.open(QIODeviceBase::WriteOnly)){
-        // stream >> str;
-        stream >> "This is taking output into this file";
-    }
-
-    file.close();
 }
 
 // This is where we add the jobs to the QDockWidget
@@ -55,8 +45,6 @@ void mainwindowConsoleOutputWindow::printStdout(QString str){
     outputLock->lock();
     consoleEdit->insertPlainText(str);
     outputLock->unlock();
-
-    QFile file("temp.out");
 }
 
 
