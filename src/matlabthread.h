@@ -3,7 +3,7 @@
 
 #include <QtCore>
 #include <QThread>
-
+#include <QPlainTextEdit>
 
 class matlabThread : public QThread
 {
@@ -13,10 +13,11 @@ public:
     ~matlabThread();
     void killMatlabThread();
     void run();
+signals:
+    void availableQProcessOutput(QString str);
+    
 public slots:
 
-signals:
-    void jobFinish(bool jobFinished);
 private:
     //matlabOutputThread* mOutThread;
     //std::unique_ptr<MATLABEngine> matlabPtr;
@@ -31,6 +32,8 @@ private:
     std::string pathToMatlab;
     QProcess *job;
     bool killThread;
+    bool jobSuccess;
+    std::string matlabCmd;
 };
 
 #endif // MATLABTHREAD_H
