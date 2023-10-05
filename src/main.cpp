@@ -37,14 +37,6 @@ void messageOutputHandler(QtMsgType type, const QMessageLogContext &context, con
 
 int main(int argc, char *argv[])
 {
-    //Console Output for Windows
-    #ifdef _WIN32
-        if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-    #endif
-
     qInstallMessageHandler(messageOutputHandler);
 
     QApplication a(argc, argv);
