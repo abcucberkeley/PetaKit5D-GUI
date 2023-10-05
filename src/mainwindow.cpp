@@ -92,13 +92,13 @@ MainWindow::MainWindow(QWidget *parent)
     
     matlabJobLogsOutputWindow = new mainwindowConsoleOutputWindow(QString("Job Logs"), outputLock, this);
     matlabJobLogsOutputWindow->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea); // Allows default position of attached window to right of mainwindow
-    matlabJobLogsOutputWindow->setFixedWidth(fixedWidth); // Default width to 300
+    matlabJobLogsOutputWindow->setMinimumWidth(fixedWidth); // Default width to 300
     matlabJobLogsOutputWindow->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable); // removes the x button in left corner.
     matlabJobLogsOutputWindow->setProperty("setting readable", false);
 
     terminalConsoleOutput = new mainwindowConsoleOutputWindow(QString("Console Output"), outputLock, this);
     terminalConsoleOutput->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
-    terminalConsoleOutput->setFixedWidth(fixedWidth);
+    terminalConsoleOutput->setMinimumWidth(fixedWidth);
     terminalConsoleOutput->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     terminalConsoleOutput->setProperty("Matlab Thread Output Setting readable", false);
 
