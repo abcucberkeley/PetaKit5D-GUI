@@ -43,4 +43,6 @@ bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
 
 bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);
 
+bool pathsFound(dataPath& path);
+
 #endif // SUBMISSIONCHECKS_H

@@ -36,3 +36,22 @@ bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &cha
     }
     return true;
 }
+
+bool pathsFound(dataPath& path){
+    if(path.includeMaster){
+        if(!QFileInfo::exists(path.masterPath)){
+            messageBoxError("Data path \"" + path.masterPath + "\" does not exist!");
+            return false;
+        }
+    }
+    for (const auto &subPath : path.subPaths){
+        if(subPath.second.first){
+            if(!QFileInfo::exists(subPath.second.second)){
+                messageBoxError("Data path \"" + subPath.second.second + "\" does not exist!");
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
