@@ -85,8 +85,6 @@ void matlabThread::run(){
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append)){
         ss << QString("Could not open filepath: " + filename).toStdString();
         ss << QString("ERROR: " + file.errorString()).toStdString();
-        // emit availableQProcessOutput("Could not open filepath: " + filename);
-        // emit availableQProcessOutput("ERROR: " + file.errorString());
         emit availableQProcessOutput(QString::fromUtf8(ss.str()));
         ss.str(std::string()); // resets stringstream
     }
