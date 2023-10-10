@@ -87,6 +87,7 @@ void matlabThread::run(){
         ss << QString("ERROR: " + file.errorString()).toStdString();
         emit availableQProcessOutput(QString::fromUtf8(ss.str()));
         ss.str(std::string()); // resets stringstream
+        stream.setStatus(QTextStream::WriteFailed);
     }
 
     while(job->state() != QProcess::NotRunning){
@@ -95,26 +96,30 @@ void matlabThread::run(){
 
         // We only want to emit output if there are any data coming through QProcess
         if(!output.isEmpty()){
-            stream << output;
             emit availableQProcessOutput(output);
-            stream.flush(); // pushes data to disc
+
+            // checking if any failure occurs when writing from QTextStream
+            if(stream.status() != QTextStream::WriteFailed){
+                stream << output;
+                stream.flush(); // pushes data to disc
+            }
         }
 
         sleep(2);
     }
+    file.close();
 
     jobSuccess = !(job->exitCode());
 
     if(job->atEnd()){ // When the job has finished then we let the user know when this specific job has finished.
         ss.str(std::string());
+        
         if(jobSuccess){
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
-            file.close();
         }
         else{
             //if(std::get<2>(mPathJNameParseCluster))
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
-            file.close();
             //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
         }
     }
