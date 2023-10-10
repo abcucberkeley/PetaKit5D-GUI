@@ -88,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     //if(savedVersion == QCoreApplication::applicationVersion()){
     // Restore previous settings if user says yes
 
-    int fixedWidth = 300;
+    int fixedWidth = 200;
     
     matlabJobLogsOutputWindow = new mainwindowConsoleOutputWindow(QString("Job Logs"), outputLock, this);
     matlabJobLogsOutputWindow->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea); // Allows default position of attached window to right of mainwindow
