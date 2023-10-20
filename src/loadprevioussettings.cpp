@@ -19,7 +19,7 @@
 loadPreviousSettings::loadPreviousSettings(bool &lPS, bool &kill, bool &isMcc, std::string &pathToMatlab, QWidget *parent) :
     QDialog(parent),
     tmpDir(QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntimeTmp"),
-    mccInstallProgressString("First-time setup.\nThis may take a few minutes depending on your hardware."),
+    mccInstallProgressString("First-time setup\nThis may take a while depending on your hardware.\nYou may be prompted for Admin privileges if necessary.\nThe GUI may close as the install finishes in the background."),
     mccInstallProgress(nullptr),
     installing(false),
     ui(new Ui::loadPreviousSettings)
@@ -28,8 +28,11 @@ loadPreviousSettings::loadPreviousSettings(bool &lPS, bool &kill, bool &isMcc, s
     this->kill = &kill;
     this->isMcc = &isMcc;
     this->pathToMatlab = &pathToMatlab;
+    #ifndef __APPLE__
     this->defaultMCCPath = QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime/R2022b";
-
+    #else
+    this->defaultMCCPath = "/Applications/MATLAB/MATLAB_Runtime/R2022b";
+    #endif
     ui->setupUi(this);
 
 
@@ -51,24 +54,27 @@ void loadPreviousSettings::runInstallScriptMCC(){
     mccInstallProgress->setLabelText(mccInstallProgressString+"\nInstalling the MCC Runtime.");
 
     std::string installName;
+    std::string installCmd;
+
     // The installer is called setup on Windows and install on Linux/Mac
     #ifdef _WIN32
     installName = "setup";
-    #else
+    #elif __linux__
     installName = "install";
+    #else
+    std::string matlabDmg = "MATLAB_Runtime_R2022b_Update_6_maci64.dmg";
+    std::string matlabApp = "InstallForMacOSX.app";
+    installCmd.append("unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/mac/LLSM5DToolsMCC.zip\" -d /Applications/LLSM5DToolsMCC/;");
+    installCmd.append("hdiutil attach \"\""+tmpDir+"/"+matlabDmg+"\"\";");
+    installCmd.append("cp -r -f /Volumes/"+matlabDmg.substr(0,matlabDmg.size()-4)+"/"+matlabApp+" \"\""+tmpDir+"\"\""+";");
+    installCmd.append("hdiutil detach /Volumes/"+matlabDmg.substr(0,matlabDmg.size()-4)+";");
+    installCmd.append("open -W -n \"\""+tmpDir+"/"+matlabApp+"\"\"");
     #endif
 
+    #ifndef __APPLE__
     //std::string installCmd = "\"\""+tmpDir+"/"+installName+"\"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"";
-    std::string installCmd = "\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"";
-    //std::cout << installCmd << std::endl;
-    /*
-    QString filename = "C:/Users/matt/Desktop/LLSM_Processing_GUI_releases/LLSM_Processing_GUI - Copy/out.txt";
-    QFile file(filename);
-    if (file.open(QIODevice::ReadWrite)) {
-        QTextStream stream(&file);
-        stream << QString(installCmd.c_str());
-    }
-    */
+    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"");
+    #endif
     system(installCmd.c_str());
 
     // Remove tmpDir
@@ -76,13 +82,21 @@ void loadPreviousSettings::runInstallScriptMCC(){
     //QDir dir(QString::fromStdString(tmpDir));
     //dir.removeRecursively();
 
-    messageBoxSuccess(this->parentWidget(), "First-time setup complete.\nThe MCC Runtime will continute to install in the background.\nPlease press ok and restart the GUI now.\n");
+    //messageBoxSuccess(this->parentWidget(), "First-time setup complete.\nThe MCC Runtime will continute to install in the background.\nPlease press ok and restart the GUI now.\n");
+    #ifndef __APPLE__
     mccInstallProgress->setValue(100);
+    #else
+    //QCoreApplication::quit();
+    //qApp->quit();
+    exit(0);
+    #endif
+
     //QDialog::reject();
 }
 
 void loadPreviousSettings::unzipMCC(){
-    mccInstallProgress->setLabelText(mccInstallProgressString+"\nUnzipping the MCC Runtime.");
+    auto lambda = [this](){mccInstallProgress->setLabelText(mccInstallProgressString+"\nUnzipping the MCC Runtime.");};
+    QFuture<void> f = QtConcurrent::run(lambda);
 
     std::string unzipCmd;
 
@@ -98,7 +112,7 @@ void loadPreviousSettings::unzipMCC(){
     if(!system("which unzip")) unzipCmd = "unzip -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
     else unzipCmd = "\""+QCoreApplication::applicationDirPath().toStdString()+"/7zzs\" x \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -o \""+tmpDir+"\"";
     #else
-    unzipCmd = "unzip -q \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -d \""+tmpDir+"\"";
+    unzipCmd = "unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -d \""+tmpDir+"\"";
     #endif
     system(unzipCmd.c_str());
     runInstallScriptMCC();
@@ -132,7 +146,7 @@ void loadPreviousSettings::curlMCC(){
     #elif __linux__
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/6/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_6_glnxa64.zip");
     #else
-    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/6/deployment_files/installer/complete/maci64/MATLAB_Runtime_R2022b_Update_6_maci64.zip");
+    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/6/deployment_files/installer/complete/maci64/MATLAB_Runtime_R2022b_Update_6_maci64.dmg.zip");
     #endif
     system(downloadCmd.c_str());
     mccInstallProgress->setValue(50);
@@ -173,10 +187,12 @@ void loadPreviousSettings::checkPath(){
                 if(userText == mccSL[0]){
                     ui->lpsMatlabPathLineEdit->setText(QString::fromStdString(defaultMCCPath));
                     checkPath();
+                    return;
                 }
                 else if(userText == mccSL[1]){
                     ui->lpsUseMCCCheckBox->setChecked(false);
                     checkPath();
+                    return;
                 }
                 else if(userText == mccSL[2]) return;
                 else if(userText == mccSL[3]){
