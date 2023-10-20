@@ -1,5 +1,7 @@
 #include "largescaleprocessingsettings.h"
 #include "ui_largescaleprocessingsettings.h"
+#include <sstream>
+
 
 largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWidget *parent) :
     QDialog(parent),

@@ -59,7 +59,7 @@ void matlabThread::run(){
         #elif _WIN32
         std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster\"";
         #else
-        std::string mccLoc = "";
+        std::string mccLoc = "/Applications/LLSM5DToolsMCC/run_mccMaster.sh";
         #endif
         matlabCmd.append(mccLoc);
 
