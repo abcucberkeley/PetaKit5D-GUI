@@ -75,20 +75,48 @@ void matlabThread::run(){
     job = new QProcess(this);
     job->setProcessChannelMode(QProcess::MergedChannels);
     job->startCommand(QString::fromUtf8(matlabCmd));
-    
     std::stringstream ss;
+
+    QString filename = std::get<0>(mPathJNameParseCluster) + "/master.out";
+    QFile file(filename);
+    QTextStream stream(&file);
+
+    // Error checking
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Append)){
+        ss << QString("Could not open filepath: " + filename).toStdString();
+        ss << QString("ERROR: " + file.errorString()).toStdString();
+        emit availableQProcessOutput(QString::fromUtf8(ss.str()));
+        ss.str(std::string()); // resets stringstream
+        stream.setStatus(QTextStream::WriteFailed);
+    }
+
     while(job->state() != QProcess::NotRunning){
         QCoreApplication::processEvents(); // This is used when we have pending jobs running, will give us the current output from the process running. (not after)
         QString output = QString(job->readAll());
-        emit availableQProcessOutput(output);
+
+        // We only want to emit output if there are any data coming through QProcess
+        if(!output.isEmpty()){
+            emit availableQProcessOutput(output);
+
+            // checking if any failure occurs when writing from QTextStream
+            if(stream.status() != QTextStream::WriteFailed){
+                stream << output;
+                stream.flush(); // pushes data to disc
+            }
+        }
+
         sleep(2);
     }
+    file.close();
 
     jobSuccess = !(job->exitCode());
 
     if(job->atEnd()){ // When the job has finished then we let the user know when this specific job has finished.
         ss.str(std::string());
-        if(jobSuccess) ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
+        
+        if(jobSuccess){
+            ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
+        }
         else{
             //if(std::get<2>(mPathJNameParseCluster))
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
