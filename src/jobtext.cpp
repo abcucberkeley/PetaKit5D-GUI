@@ -43,7 +43,6 @@ void jobText::closeEvent(QCloseEvent *event)
 {
     // When the window is closed also end the text window manager
     emit closeManager();
-    jTextManager->terminate();
     event->accept();
 }
 

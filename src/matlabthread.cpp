@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <regex>
 #include "matlabthread.h"
-#include "mainwindowConsoleOutputWindow.h"
 #include <sstream>
 
 matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_t &outA, const std::string &args, std::tuple<QString, QString, bool> &mPathJNameParseCluster, const unsigned int &mThreadID, bool isMcc, const std::string &pathToMatlab) :

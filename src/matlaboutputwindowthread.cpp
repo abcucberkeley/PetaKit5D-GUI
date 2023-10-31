@@ -18,7 +18,7 @@ void matlabOutputWindowThread::run(){
     std::unordered_map<QString,QString> existingPaths;
     while(true){
         if(killThread) return;
-        sleep(3);
+        sleep(2);
         for(auto &path : *jobLogPaths){
             fileNamesLock.lock();
             fNames.emplace(path.first,std::map<QString,QString>());
@@ -27,22 +27,27 @@ void matlabOutputWindowThread::run(){
                 QString nFile = it.next();
                 if(existingPaths.find(nFile) != existingPaths.end()) continue;
 
+                // offset time by a minutes in case the time is the same
+                QDateTime timeOffset = path.second.second;
+                timeOffset = timeOffset.addSecs(-60);
+
                 if(QFileInfo(nFile).birthTime().isValid()){
-                    if(path.second.second < QFileInfo(nFile).birthTime()){
+                    if(timeOffset <= QFileInfo(nFile).birthTime()){
                         fNames[path.first].emplace(nFile,nFile);
                         existingPaths.emplace(nFile,nFile);
+                        emit updateOutputForm(&fNames,&fileNamesLock);
                     }
                 }
                 else{
-                    if(path.second.second < QFileInfo(nFile).lastModified()){
+                    if(timeOffset <= QFileInfo(nFile).lastModified()){
                         fNames[path.first].emplace(nFile,nFile);
                         existingPaths.emplace(nFile,nFile);
+                        emit updateOutputForm(&fNames,&fileNamesLock);
                     }
                 }
             }
             fileNamesLock.unlock();
         }
-        emit updateOutputForm(&fNames,&fileNamesLock);
     }
 }
 
