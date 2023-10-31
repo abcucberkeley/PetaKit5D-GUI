@@ -9,6 +9,7 @@ class jobTextManager : public QThread
     Q_OBJECT
 public:
     jobTextManager(QObject *parent = 0);
+    ~jobTextManager();
     void run();
 
 public slots:
@@ -18,7 +19,6 @@ signals:
     void updateTextWindow();
 
 private:
-    QObject *parent;
     bool textWindowOpen;
 };
 
