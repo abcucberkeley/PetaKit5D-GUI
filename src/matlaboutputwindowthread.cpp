@@ -51,7 +51,8 @@ void matlabOutputWindowThread::run(){
     }
 }
 
+/*
 void matlabOutputWindowThread::onAddOutputIDAndPath(const unsigned int mThreadID, const QString mainPath){
-    //jobPaths.emplace(mThreadID,std::make_pair(mainPath,false));
+    jobPaths.emplace(mThreadID,std::make_pair(mainPath,false));
 }
-
+*/

@@ -17,7 +17,7 @@ public:
     ~matlabOutputWindowThread();
     void run();
 public slots:
-    void onAddOutputIDAndPath(const unsigned int mThreadID, const QString mainPath);
+    //void onAddOutputIDAndPath(const unsigned int mThreadID, const QString mainPath);
 signals:
     void updateOutputForm(std::map<int,std::map<QString,QString>> *fNames, QMutex *fileNamesLock);
 private:
