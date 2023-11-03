@@ -23,7 +23,6 @@ HEADERS += \
         src/mainadvanced.h \
         src/mainwindow.h \
         src/matlabhelperfunctions.h \
-        src/matlaboutputthread.h \
         src/matlaboutputwindow.h \
         src/matlaboutputwindowthread.h \
         src/matlabthread.h \
@@ -70,7 +69,6 @@ SOURCES += \
         src/mainadvanced.cpp \
         src/mainwindow.cpp \
         src/matlabhelperfunctions.cpp \
-        src/matlaboutputthread.cpp \
         src/matlaboutputwindow.cpp \
         src/matlaboutputwindowthread.cpp \
         src/matlabthread.cpp \
