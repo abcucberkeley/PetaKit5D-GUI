@@ -72,7 +72,7 @@ void loadPreviousSettings::runInstallScriptMCC(){
     #endif
 
     #ifndef __APPLE__
-    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"");
+    installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
     #endif
     system(installCmd.c_str());
 
@@ -102,7 +102,7 @@ void loadPreviousSettings::unzipMCC(){
     unzipCmd = "tar -xf \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -C \""+tmpDir+"\"";
     #elif __linux__
     // Linux and Mac can use unzip (Check if installed for Linux)
-    if(!system("which unzip")) unzipCmd = "unzip -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
+    if(!system("which unzip")) unzipCmd = "unzip -o -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
     else unzipCmd = "\""+QCoreApplication::applicationDirPath().toStdString()+"/7zzs\" x \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -o \""+tmpDir+"\"";
     #else
     unzipCmd = "unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -d \""+tmpDir+"\"";
