@@ -131,8 +131,9 @@ int loadPreviousSettings::installMCC(){
 }
 
 void loadPreviousSettings::curlMCC(){
-    mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");
-    mccInstallProgress->repaint();
+    auto lambda = [this](){mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");};
+    QFuture<void> f = QtConcurrent::run(lambda);
+
     std::string downloadCmd = "curl -o \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" ";
     #ifdef _WIN32
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/5/deployment_files/installer/complete/win64/MATLAB_Runtime_R2023a_Update_5_win64.zip");
