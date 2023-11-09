@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     #ifdef __linux__
-    a.setWindowIcon(QIcon("./icons/abcIcon.ico"));
+    a.setWindowIcon(QIcon(QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/icons/abcIcon.ico")));
     #endif
     MainWindow w;
     w.show();
