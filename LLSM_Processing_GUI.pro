@@ -110,6 +110,10 @@ ICON = icons/abcIcon.icns
 }
 
 win32 {
+CONFIG += static
+QMAKE_CXXFLAGS += -static
+QMAKE_LFLAGS += -Wl,-rpath=\'\$\$ORIGIN\'/../lib
+
 RC_ICONS = icons/abcIcon.ico
 
 # Default rules for deployment.

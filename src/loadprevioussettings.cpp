@@ -50,8 +50,10 @@ loadPreviousSettings::~loadPreviousSettings()
 }
 
 void loadPreviousSettings::runInstallScriptMCC(){
-    mccInstallProgress->setValue(75);
-    mccInstallProgress->setLabelText(mccInstallProgressString+"\nInstalling the MCC Runtime.");
+    auto lambda = [this](){mccInstallProgress->setValue(75);};
+    QFuture<void> f = QtConcurrent::run(lambda);
+    auto lambda2 = [this](){mccInstallProgress->setLabelText(mccInstallProgressString+"\nInstalling the MCC Runtime.");};
+    QFuture<void> f2 = QtConcurrent::run(lambda2);
 
     std::string installName;
     std::string installCmd;
@@ -59,8 +61,10 @@ void loadPreviousSettings::runInstallScriptMCC(){
     // The installer is called setup on Windows and install on Linux/Mac
     #ifdef _WIN32
     installName = "setup";
+    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"");
     #elif __linux__
     installName = "install";
+    installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
     #else
     std::string matlabDmg = "MATLAB_Runtime_R2023a_Update_5_maci64.dmg";
     std::string matlabApp = "InstallForMacOSX.app";
@@ -71,9 +75,6 @@ void loadPreviousSettings::runInstallScriptMCC(){
     installCmd.append("open -W -n \"\""+tmpDir+"/"+matlabApp+"\"\"");
     #endif
 
-    #ifndef __APPLE__
-    installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
-    #endif
     system(installCmd.c_str());
 
     #ifndef __APPLE__
