@@ -28,15 +28,22 @@ loadPreviousSettings::loadPreviousSettings(bool &lPS, bool &kill, bool &isMcc, s
     this->kill = &kill;
     this->isMcc = &isMcc;
     this->pathToMatlab = &pathToMatlab;
-    #ifndef __APPLE__
+    #ifdef __linux__
     this->defaultMCCPath = QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime/R2023a";
+    #elif _WIN32
+    this->defaultMCCPath = "C:/Program Files/MATLAB/MATLAB Runtime/R2023a";
     #else
     this->defaultMCCPath = "/Applications/MATLAB/MATLAB_Runtime/R2023a";
     #endif
     ui->setupUi(this);
 
 
-    if(this->pathToMatlab->empty()) getMatlabPath();
+    if(this->pathToMatlab->empty()){
+        //getMatlabPath();
+        // Prefer the mcc version always
+        ui->lpsUseMCCCheckBox->setChecked(true);
+        ui->lpsMatlabPathLineEdit->setText(QString::fromStdString(defaultMCCPath));
+    }
     else{
         ui->lpsUseMCCCheckBox->setChecked(*(this->isMcc));
         ui->lpsMatlabPathLineEdit->setText(QString(this->pathToMatlab->c_str()));
@@ -61,7 +68,7 @@ void loadPreviousSettings::runInstallScriptMCC(){
     // The installer is called setup on Windows and install on Linux/Mac
     #ifdef _WIN32
     installName = "setup";
-    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"");
+    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \"C:/Program Files/MATLAB/MATLAB Runtime\"\"");
     #elif __linux__
     installName = "install";
     installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
