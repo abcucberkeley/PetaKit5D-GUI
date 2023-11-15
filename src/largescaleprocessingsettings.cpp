@@ -1,5 +1,6 @@
 #include "largescaleprocessingsettings.h"
 #include "ui_largescaleprocessingsettings.h"
+#include "maskfilenames.h"
 #include <sstream>
 
 
@@ -208,5 +209,13 @@ void largeScaleProcessingSettings::on_tileOutBboxCheckBox_stateChanged(int arg1)
     ui->tileOutBboxYMaxSpinBox->setEnabled(arg1);
     ui->tileOutBboxXMaxSpinBox->setEnabled(arg1);
     ui->tileOutBboxZMaxSpinBox->setEnabled(arg1);
+}
+
+
+void largeScaleProcessingSettings::on_maskFilenamesButton_clicked()
+{
+    maskFilenames mFilenames(gVals->maskFns);
+    mFilenames.setModal(true);
+    mFilenames.exec();
 }
 

@@ -22,6 +22,7 @@ HEADERS += \
         src/largescaleprocessingsettings.h \
         src/mainadvanced.h \
         src/mainwindow.h \
+        src/maskfilenames.h \
         src/matlabhelperfunctions.h \
         src/matlaboutputwindow.h \
         src/matlaboutputwindowthread.h \
@@ -47,6 +48,7 @@ FORMS += \
         src/largescaleprocessingsettings.ui \
         src/mainadvanced.ui \
         src/mainwindow.ui \
+        src/maskfilenames.ui \
         src/matlaboutputwindow.ui \
         src/loadprevioussettings.ui \
         src/simreconjobadvanced.ui \
@@ -68,6 +70,7 @@ SOURCES += \
         src/main.cpp \
         src/mainadvanced.cpp \
         src/mainwindow.cpp \
+        src/maskfilenames.cpp \
         src/matlabhelperfunctions.cpp \
         src/matlaboutputwindow.cpp \
         src/matlaboutputwindowthread.cpp \
@@ -110,6 +113,10 @@ ICON = icons/abcIcon.icns
 }
 
 win32 {
+CONFIG += static
+QMAKE_CXXFLAGS += -static
+QMAKE_LFLAGS += -Wl,-rpath=\'\$\$ORIGIN\'/../lib
+
 RC_ICONS = icons/abcIcon.ico
 
 # Default rules for deployment.

@@ -28,15 +28,22 @@ loadPreviousSettings::loadPreviousSettings(bool &lPS, bool &kill, bool &isMcc, s
     this->kill = &kill;
     this->isMcc = &isMcc;
     this->pathToMatlab = &pathToMatlab;
-    #ifndef __APPLE__
+    #ifdef __linux__
     this->defaultMCCPath = QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime/R2023a";
+    #elif _WIN32
+    this->defaultMCCPath = "C:/Program Files/MATLAB/MATLAB Runtime/R2023a";
     #else
     this->defaultMCCPath = "/Applications/MATLAB/MATLAB_Runtime/R2023a";
     #endif
     ui->setupUi(this);
 
 
-    if(this->pathToMatlab->empty()) getMatlabPath();
+    if(this->pathToMatlab->empty()){
+        //getMatlabPath();
+        // Prefer the mcc version always
+        ui->lpsUseMCCCheckBox->setChecked(true);
+        ui->lpsMatlabPathLineEdit->setText(QString::fromStdString(defaultMCCPath));
+    }
     else{
         ui->lpsUseMCCCheckBox->setChecked(*(this->isMcc));
         ui->lpsMatlabPathLineEdit->setText(QString(this->pathToMatlab->c_str()));
@@ -50,8 +57,10 @@ loadPreviousSettings::~loadPreviousSettings()
 }
 
 void loadPreviousSettings::runInstallScriptMCC(){
-    mccInstallProgress->setValue(75);
-    mccInstallProgress->setLabelText(mccInstallProgressString+"\nInstalling the MCC Runtime.");
+    auto lambda = [this](){mccInstallProgress->setValue(75);};
+    QFuture<void> f = QtConcurrent::run(lambda);
+    auto lambda2 = [this](){mccInstallProgress->setLabelText(mccInstallProgressString+"\nInstalling the MCC Runtime.");};
+    QFuture<void> f2 = QtConcurrent::run(lambda2);
 
     std::string installName;
     std::string installCmd;
@@ -59,8 +68,10 @@ void loadPreviousSettings::runInstallScriptMCC(){
     // The installer is called setup on Windows and install on Linux/Mac
     #ifdef _WIN32
     installName = "setup";
+    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \"C:/Program Files/MATLAB/MATLAB Runtime\"\"");
     #elif __linux__
     installName = "install";
+    installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
     #else
     std::string matlabDmg = "MATLAB_Runtime_R2023a_Update_5_maci64.dmg";
     std::string matlabApp = "InstallForMacOSX.app";
@@ -71,9 +82,6 @@ void loadPreviousSettings::runInstallScriptMCC(){
     installCmd.append("open -W -n \"\""+tmpDir+"/"+matlabApp+"\"\"");
     #endif
 
-    #ifndef __APPLE__
-    installCmd.append("\"\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"\"");
-    #endif
     system(installCmd.c_str());
 
     #ifndef __APPLE__
@@ -102,7 +110,7 @@ void loadPreviousSettings::unzipMCC(){
     unzipCmd = "tar -xf \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -C \""+tmpDir+"\"";
     #elif __linux__
     // Linux and Mac can use unzip (Check if installed for Linux)
-    if(!system("which unzip")) unzipCmd = "unzip -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
+    if(!system("which unzip")) unzipCmd = "unzip -o -q "+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip -d "+tmpDir;
     else unzipCmd = "\""+QCoreApplication::applicationDirPath().toStdString()+"/7zzs\" x \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -o \""+tmpDir+"\"";
     #else
     unzipCmd = "unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" -d \""+tmpDir+"\"";
@@ -131,8 +139,9 @@ int loadPreviousSettings::installMCC(){
 }
 
 void loadPreviousSettings::curlMCC(){
-    mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");
-    mccInstallProgress->repaint();
+    auto lambda = [this](){mccInstallProgress->setLabelText(mccInstallProgressString+"\nDownloading the MCC Runtime.");};
+    QFuture<void> f = QtConcurrent::run(lambda);
+
     std::string downloadCmd = "curl -o \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" ";
     #ifdef _WIN32
     downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/5/deployment_files/installer/complete/win64/MATLAB_Runtime_R2023a_Update_5_win64.zip");

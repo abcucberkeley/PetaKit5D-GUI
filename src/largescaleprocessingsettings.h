@@ -27,6 +27,8 @@ private slots:
 
     void on_tileOutBboxCheckBox_stateChanged(int arg1);
 
+    void on_maskFilenamesButton_clicked();
+
 private:
     Ui::largeScaleProcessingSettings *ui;
     GUIvals *gVals;
