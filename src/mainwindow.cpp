@@ -790,6 +790,16 @@ void MainWindow::readSettings()
 
     // Read Decon Advaced Settings
     guiVals.RLMethod = settings.value("RLMethod").toString();
+    if(guiVals.RLMethod == "OMW"){
+        ui->deconRLMethodOMWRadioButton->setChecked(true);
+    }
+    else if(guiVals.RLMethod == "simplified"){
+        ui->deconRLMethodSimplifiedRadioButton->setChecked(true);
+    }
+    else if(guiVals.RLMethod == "original"){
+        ui->deconRLMethodOriginalRadioButton->setChecked(true);
+    }
+    on_rlMethodButton_clicked();
     guiVals.fixIter = settings.value("fixIter").toBool();
     guiVals.errThresh = settings.value("errThresh").toDouble();
     guiVals.debug = settings.value("debug").toBool();
@@ -1528,7 +1538,7 @@ void MainWindow::on_submitButton_clicked()
         // OMW Only Settings
         if(ui->deconRLMethodOMWRadioButton->isChecked()){
             addCharArrayToArgs(args,"wienerAlpha",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
+            addCharArrayToArgs(args,ui->wienerAlphaLineEdit->text().toStdString(),prependedString,isMcc);
 
             std::stringstream s_stream(ui->otfCumThreshLineEdit->text().toStdString());
             std::vector<std::string> otfCumThreshV;
@@ -3771,6 +3781,9 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
 
 void MainWindow::on_rlMethodButton_clicked(){
     bool isOMW = ui->deconRLMethodOMWRadioButton->isChecked();
+    if(isOMW) guiVals.RLMethod = "OMW";
+    else if(ui->deconRLMethodSimplifiedRadioButton->isChecked()) guiVals.RLMethod = "simplified";
+    else if(ui->deconRLMethodOriginalRadioButton->isChecked()) guiVals.RLMethod = "original";
     ui->wienerAlphaLabel->setEnabled(isOMW);
     ui->wienerAlphaLineEdit->setEnabled(isOMW);
     ui->otfCumThreshLabel->setEnabled(isOMW);
@@ -3782,4 +3795,12 @@ void MainWindow::on_rlMethodButton_clicked(){
     ui->skewedManualLabel->setEnabled(isOMW);
     ui->skewedLabel->setEnabled(isOMW);
     ui->skewedCheckBox->setEnabled(isOMW);
+    if(!ui->skewedManualCheckBox->isChecked()) on_skewedManualCheckBox_stateChanged(0);
 }
+
+void MainWindow::on_skewedManualCheckBox_stateChanged(int arg1)
+{
+    ui->skewedLabel->setEnabled(arg1);
+    ui->skewedCheckBox->setEnabled(arg1);
+}
+
