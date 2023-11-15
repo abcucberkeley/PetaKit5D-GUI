@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::enableSubmitButton, this, &MainWindow::onEnableSubmitButton);
     mThreadManager->start(QThread::HighestPriority);
 
+    // Connect Decon signals
+    connect(ui->deconRLMethodButtonGroup, &QButtonGroup::buttonClicked, this, &MainWindow::on_rlMethodButton_clicked);
+
     // Connect Sim Recon signals
     connect(ui->simReconAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
@@ -326,7 +329,7 @@ void MainWindow::writeSettings()
     settings.setValue("dzPSF", ui->dzPSFLineEdit->text());
     settings.setValue("edgeErosion", ui->edgeErosionLineEdit->text());
     settings.setValue("ErodeByFTP", ui->erodeByFTPCheckBox->isChecked());
-    settings.setValue("deconRotate", ui->deconRotateCheckBox->isChecked());
+    settings.setValue("deconRotate", guiVals.deconRotate);
 
 
     // Save Decon Advaced Settings
@@ -345,7 +348,7 @@ void MainWindow::writeSettings()
     settings.endArray();
 
     settings.setValue("DeconIter", ui->deconIterationsLineEdit->text());
-    settings.setValue("rotatedPSF", ui->rotatePSFCheckBox->isChecked());
+    settings.setValue("rotatedPSF", guiVals.rotatePSF);
 
     // Save Job Settings
     settings.setValue("parseCluster", ui->parseClusterCheckBox->isChecked());
@@ -783,7 +786,7 @@ void MainWindow::readSettings()
     ui->dzPSFLineEdit->setText(settings.value("dzPSF").toString());
     ui->edgeErosionLineEdit->setText(settings.value("edgeErosion").toString());
     ui->erodeByFTPCheckBox->setChecked(settings.value("ErodeByFTP").toBool());
-    ui->deconRotateCheckBox->setChecked(settings.value("deconRotate").toBool());
+    guiVals.deconRotate = settings.value("deconRotate").toBool();
 
     // Read Decon Advaced Settings
     guiVals.RLMethod = settings.value("RLMethod").toString();
@@ -801,7 +804,7 @@ void MainWindow::readSettings()
     settings.endArray();
 
     ui->deconIterationsLineEdit->setText(settings.value("DeconIter").toString());
-    ui->rotatePSFCheckBox->setChecked(settings.value("rotatedPSF").toBool());
+    guiVals.rotatePSF = settings.value("rotatedPSF").toBool();
 
     // Read Job Settings
     ui->parseClusterCheckBox->setChecked(settings.value("parseCluster").toBool());
@@ -1303,6 +1306,11 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,guiVals.InputBbox,false,prependedString,"[]",isMcc);
         }
 
+        if(!guiVals.maskFns.at(0).empty() && !guiVals.maskFns.at(1).empty() && !guiVals.maskFns.at(2).empty()){
+            addCharArrayToArgs(args,"maskFns",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.deconMaskFns,false,prependedString,"[]",isMcc);
+        }
+
         addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
         addBoolToArgs(args,guiVals.masterCompute,prependedString);
 
@@ -1514,6 +1522,34 @@ void MainWindow::on_submitButton_clicked()
         //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
         // Decon Settings
+        addCharArrayToArgs(args,"RLMethod",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
+
+        // OMW Only Settings
+        if(ui->deconRLMethodOMWRadioButton->isChecked()){
+            addCharArrayToArgs(args,"wienerAlpha",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
+
+            std::stringstream s_stream(ui->otfCumThreshLineEdit->text().toStdString());
+            std::vector<std::string> otfCumThreshV;
+            while(s_stream.good()) {
+                std::string substr;
+                getline(s_stream, substr, ','); //get first string delimited by comma
+                otfCumThreshV.push_back(substr);
+            }
+            addCharArrayToArgs(args,"OTFCumThresh",prependedString,isMcc);
+            addArrayToArgs(args,otfCumThreshV,false,prependedString,"[]",isMcc);
+
+            addCharArrayToArgs(args,"hanWinBounds",prependedString,isMcc);
+            std::vector<std::string> hanWinBoundsV = {ui->hanWinBoundsLowerLineEdit->text().toStdString(),ui->hanWinBoundsUpperLineEdit->text().toStdString()};
+            addArrayToArgs(args,hanWinBoundsV,false,prependedString,"[]",isMcc);
+
+            if(ui->skewedManualCheckBox->isChecked()){
+                addCharArrayToArgs(args,"skewed",prependedString,isMcc);
+                addBoolToArgs(args,ui->skewedCheckBox->isChecked(),prependedString);
+            }
+        }
+
         addCharArrayToArgs(args,"Background",prependedString,isMcc);
         addScalarToArgs(args,ui->backgroundIntensityLineEdit->text().toStdString(),prependedString);
 
@@ -1526,9 +1562,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
         addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
 
-        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
-        addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
-
         // Decon Advanced settings
         if(psfFullPaths.size()){
             addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
@@ -1538,8 +1571,6 @@ void MainWindow::on_submitButton_clicked()
             }
             addArrayToArgs(args,psfMPaths,true,prependedString,"{}",isMcc);
         }
-        addCharArrayToArgs(args,"RLMethod",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
 
         addCharArrayToArgs(args,"fixIter",prependedString,isMcc);
         addBoolToArgs(args,guiVals.fixIter,prependedString);
@@ -1556,8 +1587,27 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"DeconIter",prependedString,isMcc);
         addScalarToArgs(args,ui->deconIterationsLineEdit->text().toStdString(),prependedString);
 
+        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.deconRotate,prependedString);
+
         addCharArrayToArgs(args,"rotatePSF",prependedString,isMcc);
-        addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.rotatePSF,prependedString);
+
+        addCharArrayToArgs(args,"damper",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.damper),prependedString);
+
+        if(!guiVals.scaleFactor.empty()){
+            addCharArrayToArgs(args,"scaleFactor",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.scaleFactor,false,prependedString,"[]",isMcc);
+        }
+
+        addCharArrayToArgs(args,"deconOffset",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.deconOffset),prependedString);
+
+        if(!guiVals.deconMaskFns.at(0).empty() && !guiVals.deconMaskFns.at(1).empty() && !guiVals.deconMaskFns.at(2).empty()){
+            addCharArrayToArgs(args,"deconMaskFns",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.deconMaskFns,false,prependedString,"[]",isMcc);
+        }
 
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
@@ -1773,9 +1823,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
         addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
 
-        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
-        addBoolToArgs(args,ui->deconRotateCheckBox->isChecked(),prependedString);
-
         // Decon Advanced settings
         if(psfFullPaths.size()){
             addCharArrayToArgs(args,"psfFullpaths",prependedString,isMcc);
@@ -1804,8 +1851,11 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"DeconIter",prependedString,isMcc);
         addScalarToArgs(args,ui->deconIterationsLineEdit->text().toStdString(),prependedString);
 
+        addCharArrayToArgs(args,"deconRotate",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.deconRotate,prependedString);
+
         addCharArrayToArgs(args,"rotatedPSF",prependedString,isMcc);
-        addBoolToArgs(args,ui->rotatePSFCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.rotatePSF,prependedString);
 
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
@@ -3717,4 +3767,19 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Imaris Converter Job"),ui->imarisConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
+}
+
+void MainWindow::on_rlMethodButton_clicked(){
+    bool isOMW = ui->deconRLMethodOMWRadioButton->isChecked();
+    ui->wienerAlphaLabel->setEnabled(isOMW);
+    ui->wienerAlphaLineEdit->setEnabled(isOMW);
+    ui->otfCumThreshLabel->setEnabled(isOMW);
+    ui->otfCumThreshLineEdit->setEnabled(isOMW);
+    ui->hanWinBoundsLabel->setEnabled(isOMW);
+    ui->hanWinBoundsLowerLineEdit->setEnabled(isOMW);
+    ui->hanWinBoundsUpperLineEdit->setEnabled(isOMW);
+    ui->skewedManualCheckBox->setEnabled(isOMW);
+    ui->skewedManualLabel->setEnabled(isOMW);
+    ui->skewedLabel->setEnabled(isOMW);
+    ui->skewedCheckBox->setEnabled(isOMW);
 }

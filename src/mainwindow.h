@@ -43,6 +43,12 @@ class GUIvals{
         bool debug;
         bool gpuJob;
         QString largeMethod;
+        bool rotatePSF;
+        double damper;
+        std::vector<std::string> scaleFactor;
+        uint64_t deconOffset;
+        std::vector<std::string> deconMaskFns;
+        bool deconRotate;
 
         // Job Advanced Settings
         bool largeFile;
@@ -88,6 +94,7 @@ class GUIvals{
         bool bigStitchData;
         QString processFunPath;
         bool masterCompute;
+        std::vector<std::string> maskFns;
 
         GUIvals() : skewAngle{32.45},
                     xyPixelSize{.108},
@@ -101,12 +108,18 @@ class GUIvals{
                     zarrFile{false},
                     saveZarr{false},
                     save3DStack{true},
-                    RLMethod{"simplified"},
+                    RLMethod{"OMW"},
                     fixIter{false},
                     errThresh{.00000001},
                     debug{false},
                     gpuJob{false},
                     largeMethod{"inmemory"},
+                    rotatePSF{false},
+                    damper{1.0},
+                    scaleFactor{},
+                    deconOffset{0},
+                    deconMaskFns{"","",""},
+                    deconRotate{false},
                     largeFile{false},
                     jobLogDir{"../job_logs"},
                     uuid{""},
@@ -145,7 +158,8 @@ class GUIvals{
                     EdgeArtifacts{"2"},
                     bigStitchData{false},
                     processFunPath{""},
-                    masterCompute{true}
+                    masterCompute{true},
+                    maskFns{"","",""}
         {}
 };
 
@@ -465,6 +479,8 @@ private slots:
     void on_largeScaleProcessingButton_clicked();
 
     void on_imarisConverterSubmitButton_clicked();
+
+    void on_rlMethodButton_clicked();
 
 private:
     Ui::MainWindow *ui;
