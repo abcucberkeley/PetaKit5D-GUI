@@ -1097,6 +1097,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton()
 {
+    ui->otfMaskingSubmitButton->setEnabled(true);
     ui->imarisConverterSubmitButton->setEnabled(true);
     ui->mipGeneratorSubmitButton->setEnabled(true);
     ui->parallelRsyncSubmitButton->setEnabled(true);
@@ -3469,7 +3470,7 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),true);
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),ui->tiffZarrConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
 }
@@ -3666,7 +3667,7 @@ void MainWindow::on_resampleSubmitButton_clicked()
 
     QString funcType = "XR_resample_dataset";
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3802,5 +3803,66 @@ void MainWindow::on_skewedManualCheckBox_stateChanged(int arg1)
 {
     ui->skewedLabel->setEnabled(arg1);
     ui->skewedCheckBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_otfMaskingPSFFilenameBrowseButton_clicked()
+{
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the PSF File",mostRecentDir));
+    if(!file_path.absoluteFilePath().isEmpty()){
+        ui->otfMaskingPSFFilenameLineEdit->setText(file_path.absoluteFilePath());
+        mostRecentDir = file_path.absolutePath();
+    }
+}
+
+
+void MainWindow::on_otfMaskingSkewedManualCheckBox_stateChanged(int arg1)
+{
+    ui->otfMaskingSkewedLabel->setEnabled(arg1);
+    ui->otfMaskingSkewedCheckBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_otfMaskingSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->otfMaskingSubmitButton->setEnabled(false);
+
+    std::string args;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QFileInfo file_path(ui->otfMaskingPSFFilenameLineEdit->text());
+    QString mainPath = file_path.absolutePath();
+
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
+    addCharArrayToArgs(args,ui->otfMaskingPSFFilenameLineEdit->text().toStdString(),firstPrependedString,isMcc);
+
+    addScalarToArgs(args,ui->otfMaskingOTFCumThreshLineEdit->text().toStdString(),prependedString);
+
+    if(ui->otfMaskingSkewedManualCheckBox->isChecked()){
+        addBoolToArgs(args,ui->otfMaskingSkewedCheckBox->isChecked(),prependedString);
+    }
+    else{
+        addArrayToArgs(args,{},false,prependedString,"[]",isMcc);
+    }
+
+    QString funcType = "XR_visualize_OTF_mask_segmentation";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
