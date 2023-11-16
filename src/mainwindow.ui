@@ -1276,6 +1276,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlyOverwriteDataCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -1286,6 +1289,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlySave16BitCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -1296,6 +1302,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlyOnlyFirstTPCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -3321,7 +3330,7 @@
             <item>
              <widget class="QLineEdit" name="deconIterationsLineEdit">
               <property name="text">
-               <string>15</string>
+               <string>2</string>
               </property>
              </widget>
             </item>
