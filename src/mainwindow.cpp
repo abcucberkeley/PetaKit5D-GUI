@@ -1281,6 +1281,9 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"SaveMIP",prependedString,isMcc);
         addBoolToArgs(args,guiVals.SaveMIP,prependedString);
 
+        addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zarrFile,prependedString);
+
         addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
         addBoolToArgs(args,guiVals.saveZarr,prependedString);
 
