@@ -1234,53 +1234,25 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Data Paths
-    if(!lspDSR){
-        if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
-            ui->submitButton->setEnabled(true);
-            QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
-            if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
-                                                                                         " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
-                                                                                         " then Include Master should be checked.");
-            else messageBoxError(errString);
-            return;
-        }
-    }
-    // Large Scale Stitcing DSR Paths are individual files for now
-    else{
-        std::vector<std::string> dataPaths = getDataPaths(dPaths);
-        std::vector<std::string> channelPatterns = getChannelPatterns(channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text());
-        std::vector<std::string> finalDataPaths;
-        for (std::string &dataPath: dataPaths){
-            QDir directory(QString::fromStdString(dataPath));
-            QStringList images = directory.entryList(QStringList() << "*.zarr",QDir::Dirs);
-            for(QString &fileName : images) {
-                for(std::string &pattern : channelPatterns){
-                    if(fileName.contains(QString::fromStdString(pattern))){
-                        finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
-                        break;
-                    }
-                }
-            }
-        }
-        addArrayToArgs(args,finalDataPaths,true,firstPrependedString,"{}",isMcc);
+    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
+        ui->submitButton->setEnabled(true);
+        QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
+        if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
+                                                                                     " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
+                                                                                     " then Include Master should be checked.");
+        else messageBoxError(errString);
+        return;
     }
 
-    // Large Scale DSR xyPicelSize and dz are required parameters
-    if(lspDSR){
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
-
-        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
-    }
     // Large Scale Stitching Image List is a required parameter
-    else if(lspStitch){
+    if(lspStitch){
         addCharArrayToArgs(args,ui->imageListFullPathsLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
-    // Channel Patterns (lspDSR does not use Channel Patterns for now)
-    if(!lspDSR){
-        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
-        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
-    }
+    // Channel Patterns
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
+
     addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
     addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
 
@@ -1291,6 +1263,12 @@ void MainWindow::on_submitButton_clicked()
     addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
     if(lspDSR){
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
         addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
 
@@ -1910,6 +1888,7 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
     }
+
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
 
@@ -1917,13 +1896,13 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType;
-    if(lspDSR) funcType = "XR_deskewRotateZarr";
+    if(lspDSR) funcType = "XR_deskew_rotate_data_wrapper";
     else if(lspStitch) funcType = "XR_matlab_stitching_wrapper";
     else if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
     else funcType = "XR_microscopeAutomaticProcessing";
 
     // Send data to the MATLAB thread
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName, ui->parseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     // Still deciding which name I want to show to the user
