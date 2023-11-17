@@ -482,6 +482,14 @@ private slots:
 
     void on_rlMethodButton_clicked();
 
+    void on_skewedManualCheckBox_stateChanged(int arg1);
+
+    void on_otfMaskingPSFFilenameBrowseButton_clicked();
+
+    void on_otfMaskingSkewedManualCheckBox_stateChanged(int arg1);
+
+    void on_otfMaskingSubmitButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     mainwindowConsoleOutputWindow* matlabJobLogsOutputWindow;

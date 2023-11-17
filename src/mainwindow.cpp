@@ -790,6 +790,16 @@ void MainWindow::readSettings()
 
     // Read Decon Advaced Settings
     guiVals.RLMethod = settings.value("RLMethod").toString();
+    if(guiVals.RLMethod == "OMW"){
+        ui->deconRLMethodOMWRadioButton->setChecked(true);
+    }
+    else if(guiVals.RLMethod == "simplified"){
+        ui->deconRLMethodSimplifiedRadioButton->setChecked(true);
+    }
+    else if(guiVals.RLMethod == "original"){
+        ui->deconRLMethodOriginalRadioButton->setChecked(true);
+    }
+    on_rlMethodButton_clicked();
     guiVals.fixIter = settings.value("fixIter").toBool();
     guiVals.errThresh = settings.value("errThresh").toDouble();
     guiVals.debug = settings.value("debug").toBool();
@@ -1087,6 +1097,7 @@ void MainWindow::readSettings()
 // Reenable submit button for new jobs
 void MainWindow::onEnableSubmitButton()
 {
+    ui->otfMaskingSubmitButton->setEnabled(true);
     ui->imarisConverterSubmitButton->setEnabled(true);
     ui->mipGeneratorSubmitButton->setEnabled(true);
     ui->parallelRsyncSubmitButton->setEnabled(true);
@@ -1223,53 +1234,25 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Data Paths
-    if(!lspDSR){
-        if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
-            ui->submitButton->setEnabled(true);
-            QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
-            if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
-                                                                                         " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
-                                                                                         " then Include Master should be checked.");
-            else messageBoxError(errString);
-            return;
-        }
-    }
-    // Large Scale Stitcing DSR Paths are individual files for now
-    else{
-        std::vector<std::string> dataPaths = getDataPaths(dPaths);
-        std::vector<std::string> channelPatterns = getChannelPatterns(channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text());
-        std::vector<std::string> finalDataPaths;
-        for (std::string &dataPath: dataPaths){
-            QDir directory(QString::fromStdString(dataPath));
-            QStringList images = directory.entryList(QStringList() << "*.zarr",QDir::Dirs);
-            for(QString &fileName : images) {
-                for(std::string &pattern : channelPatterns){
-                    if(fileName.contains(QString::fromStdString(pattern))){
-                        finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
-                        break;
-                    }
-                }
-            }
-        }
-        addArrayToArgs(args,finalDataPaths,true,firstPrependedString,"{}",isMcc);
+    if(addDataPathsToArgs(args,firstPrependedString,dPaths,isMcc,ui->streamingCheckBox->isChecked())){
+        ui->submitButton->setEnabled(true);
+        QString errString = "No Data Paths were found. Please double check that your Data Paths are set correctly.";
+        if(dPaths.size() == 1 && !dPaths[0].includeMaster) messageBoxError(errString+" It seems you only have one Data Path and Include Master was unchecked."
+                                                                                     " If this master folder \""+dPaths[0].masterPath+"\" contains data you wish to process,"
+                                                                                     " then Include Master should be checked.");
+        else messageBoxError(errString);
+        return;
     }
 
-    // Large Scale DSR xyPicelSize and dz are required parameters
-    if(lspDSR){
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
-
-        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
-    }
     // Large Scale Stitching Image List is a required parameter
-    else if(lspStitch){
+    if(lspStitch){
         addCharArrayToArgs(args,ui->imageListFullPathsLineEdit->text().toStdString(),prependedString,isMcc);
     }
 
-    // Channel Patterns (lspDSR does not use Channel Patterns for now)
-    if(!lspDSR){
-        addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
-        addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
-    }
+    // Channel Patterns
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,channelWidgets,ui->customPatternsCheckBox->isChecked(),ui->customPatternsLineEdit->text(),prependedString,isMcc);
+
     addCharArrayToArgs(args,"SkewAngle",prependedString,isMcc);
     addScalarToArgs(args,std::to_string(guiVals.skewAngle),prependedString);
 
@@ -1280,6 +1263,12 @@ void MainWindow::on_submitButton_clicked()
     addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
     if(lspDSR){
+        addCharArrayToArgs(args,"dz",prependedString,isMcc);
+        addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+
         addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
 
@@ -1291,6 +1280,9 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"SaveMIP",prependedString,isMcc);
         addBoolToArgs(args,guiVals.SaveMIP,prependedString);
+
+        addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zarrFile,prependedString);
 
         addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
         addBoolToArgs(args,guiVals.saveZarr,prependedString);
@@ -1528,7 +1520,7 @@ void MainWindow::on_submitButton_clicked()
         // OMW Only Settings
         if(ui->deconRLMethodOMWRadioButton->isChecked()){
             addCharArrayToArgs(args,"wienerAlpha",prependedString,isMcc);
-            addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
+            addCharArrayToArgs(args,ui->wienerAlphaLineEdit->text().toStdString(),prependedString,isMcc);
 
             std::stringstream s_stream(ui->otfCumThreshLineEdit->text().toStdString());
             std::vector<std::string> otfCumThreshV;
@@ -1899,6 +1891,7 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.unitWaitTime),prependedString);
     }
+
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
 
@@ -1906,13 +1899,13 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType;
-    if(lspDSR) funcType = "XR_deskewRotateZarr";
+    if(lspDSR) funcType = "XR_deskew_rotate_data_wrapper";
     else if(lspStitch) funcType = "XR_matlab_stitching_wrapper";
     else if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
     else funcType = "XR_microscopeAutomaticProcessing";
 
     // Send data to the MATLAB thread
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->parseClusterCheckBox->isChecked());
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName, ui->parseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     // Still deciding which name I want to show to the user
@@ -1971,6 +1964,9 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
         ui->deskewSave16BitCheckBox->setEnabled(true);
         ui->deskewOnlyFirstTPCheckBox->setEnabled(true);
 
+        // Check Save 16 Bit by default
+        ui->deskewSave16BitCheckBox->setChecked(true);
+
         // Enable the Next Button
         ui->mainNextButton->setEnabled(true);
     }
@@ -2001,6 +1997,9 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
         ui->rotateOverwriteDataCheckBox->setEnabled(true);
         ui->rotateSave16BitCheckBox->setEnabled(true);
         ui->rotateOnlyFirstTPCheckBox->setEnabled(true);
+
+        // Check Save 16 Bit by default
+        ui->rotateSave16BitCheckBox->setChecked(true);
 
         // Enable the Next Button
         ui->mainNextButton->setEnabled(true);
@@ -2034,6 +2033,9 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(true);
         ui->deskewAndRotateOnlyFirstTPCheckBox->setEnabled(true);
 
+        // Check Save 16 Bit by default
+        ui->deskewAndRotateSave16BitCheckBox->setChecked(true);
+
         // Enable the Next Button
         ui->mainNextButton->setEnabled(true);
     }
@@ -2064,6 +2066,9 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
         ui->stitchOverwriteDataCheckBox->setEnabled(true);
         ui->stitchSave16BitCheckBox->setEnabled(true);
         ui->stitchOnlyFirstTPCheckBox->setEnabled(true);
+
+        // Check Save 16 Bit by default
+        ui->stitchSave16BitCheckBox->setChecked(true);
 
         // Enable the Next Button
         ui->mainNextButton->setEnabled(true);
@@ -2486,9 +2491,25 @@ void MainWindow::checkLoadPrevSettings()
 void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 {
     if(arg1){
+        ui->deconOnlyOverwriteDataCheckBox->setEnabled(true);
+        ui->deconOnlySave16BitCheckBox->setEnabled(true);
+        ui->deconOnlyOnlyFirstTPCheckBox->setEnabled(true);
+
+        // Check Save 16 Bit by default
+        ui->deconOnlySave16BitCheckBox->setChecked(true);
+
+        // Enable the Next Button
         ui->mainNextButton->setEnabled(true);
     }
     else{
+        ui->deconOnlyOverwriteDataCheckBox->setEnabled(false);
+        ui->deconOnlySave16BitCheckBox->setEnabled(false);
+        ui->deconOnlyOnlyFirstTPCheckBox->setEnabled(false);
+
+        ui->deconOnlyOverwriteDataCheckBox->setChecked(false);
+        ui->deconOnlySave16BitCheckBox->setChecked(false);
+        ui->deconOnlyOnlyFirstTPCheckBox->setChecked(false);
+
         if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->rotateCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
         }
@@ -3459,7 +3480,7 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),true);
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),ui->tiffZarrConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
 }
@@ -3656,7 +3677,7 @@ void MainWindow::on_resampleSubmitButton_clicked()
 
     QString funcType = "XR_resample_dataset";
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3771,6 +3792,9 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
 
 void MainWindow::on_rlMethodButton_clicked(){
     bool isOMW = ui->deconRLMethodOMWRadioButton->isChecked();
+    if(isOMW) guiVals.RLMethod = "OMW";
+    else if(ui->deconRLMethodSimplifiedRadioButton->isChecked()) guiVals.RLMethod = "simplified";
+    else if(ui->deconRLMethodOriginalRadioButton->isChecked()) guiVals.RLMethod = "original";
     ui->wienerAlphaLabel->setEnabled(isOMW);
     ui->wienerAlphaLineEdit->setEnabled(isOMW);
     ui->otfCumThreshLabel->setEnabled(isOMW);
@@ -3782,4 +3806,73 @@ void MainWindow::on_rlMethodButton_clicked(){
     ui->skewedManualLabel->setEnabled(isOMW);
     ui->skewedLabel->setEnabled(isOMW);
     ui->skewedCheckBox->setEnabled(isOMW);
+    if(!ui->skewedManualCheckBox->isChecked()) on_skewedManualCheckBox_stateChanged(0);
 }
+
+void MainWindow::on_skewedManualCheckBox_stateChanged(int arg1)
+{
+    ui->skewedLabel->setEnabled(arg1);
+    ui->skewedCheckBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_otfMaskingPSFFilenameBrowseButton_clicked()
+{
+    QFileInfo file_path(QFileDialog::getOpenFileName(this,"Select the PSF File",mostRecentDir));
+    if(!file_path.absoluteFilePath().isEmpty()){
+        ui->otfMaskingPSFFilenameLineEdit->setText(file_path.absoluteFilePath());
+        mostRecentDir = file_path.absolutePath();
+    }
+}
+
+
+void MainWindow::on_otfMaskingSkewedManualCheckBox_stateChanged(int arg1)
+{
+    ui->otfMaskingSkewedLabel->setEnabled(arg1);
+    ui->otfMaskingSkewedCheckBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_otfMaskingSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Disable submit button
+    ui->otfMaskingSubmitButton->setEnabled(false);
+
+    std::string args;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QFileInfo file_path(ui->otfMaskingPSFFilenameLineEdit->text());
+    QString mainPath = file_path.absolutePath();
+
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
+    addCharArrayToArgs(args,ui->otfMaskingPSFFilenameLineEdit->text().toStdString(),firstPrependedString,isMcc);
+
+    addScalarToArgs(args,ui->otfMaskingOTFCumThreshLineEdit->text().toStdString(),prependedString);
+
+    if(ui->otfMaskingSkewedManualCheckBox->isChecked()){
+        addBoolToArgs(args,ui->otfMaskingSkewedCheckBox->isChecked(),prependedString);
+    }
+    else{
+        addArrayToArgs(args,{},false,prependedString,"[]",isMcc);
+    }
+
+    QString funcType = "XR_visualize_OTF_mask_segmentation";
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
+}
+

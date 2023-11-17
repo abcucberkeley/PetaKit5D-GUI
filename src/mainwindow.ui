@@ -1276,6 +1276,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlyOverwriteDataCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -1286,6 +1289,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlySave16BitCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -1296,6 +1302,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlyOnlyFirstTPCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -3074,6 +3083,9 @@
             </item>
             <item>
              <widget class="QLabel" name="skewedLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <pointsize>12</pointsize>
@@ -3087,6 +3099,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="skewedCheckBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -3315,7 +3330,7 @@
             <item>
              <widget class="QLineEdit" name="deconIterationsLineEdit">
               <property name="text">
-               <string>15</string>
+               <string>2</string>
               </property>
              </widget>
             </item>
@@ -9630,6 +9645,191 @@
              <layout class="QHBoxLayout" name="horizontalLayout_179">
               <item>
                <widget class="QPushButton" name="mipGeneratorSubmitButton">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Submit</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="otfMasking">
+         <attribute name="title">
+          <string>OTF Masking</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_20" rowstretch="1,10,1">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_48">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_223">
+              <item>
+               <widget class="QLabel" name="otfMaskingLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>24</pointsize>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>OTF Masking</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_49" stretch="1,1,1">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_124">
+              <item>
+               <widget class="QLabel" name="otfMaskingPSFFilenameLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>PSF Filename</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="otfMaskingPSFFilenameLineEdit">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="otfMaskingPSFFilenameBrowseButton">
+                <property name="text">
+                 <string>Browse</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_112">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_37" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_127" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="otfMaskingOTFCumThreshLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>OTF Cumulative Threshold</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="otfMaskingOTFCumThreshLineEdit">
+                  <property name="text">
+                   <string>.85</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_224" stretch="1,1,1,1">
+                <item>
+                 <widget class="QLabel" name="otfMaskingSkewedManualLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Manual</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="otfMaskingSkewedManualCheckBox">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="otfMaskingSkewedLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Skewed</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="otfMaskingSkewedCheckBox">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_50">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_226">
+              <item>
+               <widget class="QPushButton" name="otfMaskingSubmitButton">
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
