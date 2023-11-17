@@ -62,7 +62,10 @@ void matlabThreadManager::run(){
     mThreadID++;
     outA = 1;
     
+    outputLock->lock();
     emit data(jobsOutput.str());
+    outputLock->unlock();
+
     jobsOutput.str(std::string()); // This is to reset the buffer. So we just keep track of the current job being read.
     emit enableSubmitButton();
     }
