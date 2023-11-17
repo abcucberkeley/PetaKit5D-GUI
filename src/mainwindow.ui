@@ -12402,8 +12402,8 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
   <buttongroup name="deconRLMethodButtonGroup"/>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>

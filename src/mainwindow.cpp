@@ -210,6 +210,7 @@ void MainWindow::writeSettings()
     settings.setValue("stitchOverwrite",ui->stitchOverwriteDataCheckBox->isChecked());
 
     settings.setValue("Streaming",ui->streamingCheckBox->isChecked());
+    settings.setValue("largeScaleProcessing",ui->largeScaleProcessingCheckBox->isChecked());
 
     // SAVE FOR CHANNEL PATTERNS
     settings.beginWriteArray("channelLabels");
@@ -648,6 +649,7 @@ void MainWindow::readSettings()
     ui->stitchOverwriteDataCheckBox->setChecked(settings.value("stitchOverwrite").toBool());
 
     ui->streamingCheckBox->setChecked(settings.value("Streaming").toBool());
+    ui->largeScaleProcessingCheckBox->setChecked(settings.value("largeScaleProcessing").toBool());
 
     // READ FOR CHANNEL PATTERNS
 
