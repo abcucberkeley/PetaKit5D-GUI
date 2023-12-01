@@ -54,7 +54,14 @@ void matlabThread::run(){
     // If the user is using mcc
     else{
         #ifdef __linux__
-        std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh\"";
+        // For the Linux version, we mainly do not use the jvm because of the overhead unless it is required by the function
+        std::string mccLoc;
+        if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation"){
+            mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh\"";
+        }
+        else{
+            mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh\"";
+        }
         #elif _WIN32
         std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster\"";
         #else
