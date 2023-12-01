@@ -3158,6 +3158,12 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"save3DStack",prependedString,isMcc);
     addBoolToArgs(args,ui->fftAnalysisSave3DStackCheckBox->isChecked(),prependedString);
 
+    addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
+    addBoolToArgs(args,isMcc,prependedString);
+
+    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
     QString funcType = "XR_fftSpectrumComputingWrapper";
 
     // Send data to the MATLAB thread
