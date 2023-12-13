@@ -56,7 +56,7 @@ void matlabThread::run(){
         #ifdef __linux__
         // For the Linux version, we mainly do not use the jvm because of the overhead unless it is required by the function
         std::string mccLoc;
-        if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation"){
+        if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation" && funcType.toStdString() != "XR_FSC_analysis_wrapper" && funcType.toStdString() != "XR_psf_analysis_wrapper" && funcType.toStdString() != "XR_psf_detection_and_analysis_wrapper"){
             mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh\"";
         }
         else{
