@@ -92,7 +92,7 @@ void matlabThread::run(){
         ss << QString("Could not open filepath: " + filename).toStdString();
         ss << QString("ERROR: " + file.errorString()).toStdString();
         emit availableQProcessOutput(QString::fromUtf8(ss.str()));
-        ss.str(std::string()); // resets stringstream
+        ss.str(""); // resets stringstream
         stream.setStatus(QTextStream::WriteFailed);
     }
 
@@ -118,8 +118,6 @@ void matlabThread::run(){
     jobSuccess = !(job->exitCode());
 
     if(job->atEnd()){ // When the job has finished then we let the user know when this specific job has finished.
-        ss.str(std::string());
-        
         if(jobSuccess){
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
         }
@@ -128,7 +126,7 @@ void matlabThread::run(){
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
             //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
         }
+		emit availableQProcessOutput(QString::fromUtf8(ss.str()));
+		ss.str("");
     }
-    
-    emit availableQProcessOutput(QString::fromUtf8(ss.str()));
 }
