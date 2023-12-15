@@ -2932,9 +2932,6 @@ void MainWindow::on_cropSubmitButton_clicked()
     addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
-    addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
-
     QString funcType = "XR_crop_dataset";
 
     // Send data to the MATLAB thread
