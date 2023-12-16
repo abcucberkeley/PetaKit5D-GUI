@@ -80,7 +80,7 @@ void matlabThread::run(){
 
     job = new QProcess(this);
     job->setProcessChannelMode(QProcess::MergedChannels);
-    job->startCommand(QString::fromUtf8(matlabCmd));
+    job->startCommand(QString::fromStdString(matlabCmd));
     std::stringstream ss;
 
     QString filename = std::get<0>(mPathJNameParseCluster) + "/master.out";
@@ -91,7 +91,7 @@ void matlabThread::run(){
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append)){
         ss << QString("Could not open filepath: " + filename).toStdString();
         ss << QString("ERROR: " + file.errorString()).toStdString();
-        emit availableQProcessOutput(QString::fromUtf8(ss.str()));
+        emit availableQProcessOutput(QString::fromStdString(ss.str()));
         ss.str(""); // resets stringstream
         stream.setStatus(QTextStream::WriteFailed);
     }
@@ -126,7 +126,7 @@ void matlabThread::run(){
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
             //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
         }
-		emit availableQProcessOutput(QString::fromUtf8(ss.str()));
+        emit availableQProcessOutput(QString::fromStdString(ss.str()));
 		ss.str("");
     }
 }

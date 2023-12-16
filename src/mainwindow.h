@@ -11,7 +11,7 @@
 #include <QFileInfo>
 #include <QThread>
 #include <QMessageBox>
-#include "mainwindowConsoleOutputWindow.h"
+#include "mainwindowconsoleoutputwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

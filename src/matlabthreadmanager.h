@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <QtCore>
 #include <QThread>
-#include "mainwindowConsoleOutputWindow.h"
+#include "mainwindowconsoleoutputwindow.h"
 //using namespace matlab::engine;
 
 class matlabThreadManager : public QThread

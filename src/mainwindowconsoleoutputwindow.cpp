@@ -1,4 +1,4 @@
-#include "mainwindowConsoleOutputWindow.h"
+#include "mainwindowconsoleoutputwindow.h"
 #include <QTextStream>
 #include <fstream>
 #include <array>
@@ -27,7 +27,7 @@ void mainwindowConsoleOutputWindow::printLog(QString msg){
 
 void mainwindowConsoleOutputWindow::printLogStdString(std::string msg){
     outputLock->lock();
-    consoleEdit->append(QString::fromUtf8(msg));
+    consoleEdit->append(QString::fromStdString(msg));
     outputLock->unlock();
 }
 
@@ -50,6 +50,6 @@ void mainwindowConsoleOutputWindow::printStdout(QString str){
 
 void mainwindowConsoleOutputWindow::printStdoutStdString(std::string output){
     outputLock->lock();
-    consoleEdit->append(QString::fromUtf8(output));
+    consoleEdit->append(QString::fromStdString(output));
     outputLock->unlock();
 }

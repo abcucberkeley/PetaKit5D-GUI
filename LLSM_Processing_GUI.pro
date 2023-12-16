@@ -22,6 +22,7 @@ HEADERS += \
         src/largescaleprocessingsettings.h \
         src/mainadvanced.h \
         src/mainwindow.h \
+        src/mainwindowconsoleoutputwindow.h \
         src/maskfilenames.h \
         src/matlabhelperfunctions.h \
         src/matlaboutputwindow.h \
@@ -33,8 +34,7 @@ HEADERS += \
         src/simreconjobadvanced.h \
         src/simreconmainadvanced.h \
         src/simreconreconadvanced.h \
-        src/submissionchecks.h      \
-        src/mainwindowConsoleOutputWindow.h
+        src/submissionchecks.h
 
 FORMS += \
         src/configfilecreator.ui \
@@ -70,6 +70,7 @@ SOURCES += \
         src/main.cpp \
         src/mainadvanced.cpp \
         src/mainwindow.cpp \
+        src/mainwindowconsoleoutputwindow.cpp \
         src/maskfilenames.cpp \
         src/matlabhelperfunctions.cpp \
         src/matlaboutputwindow.cpp \
@@ -81,8 +82,7 @@ SOURCES += \
         src/simreconjobadvanced.cpp \
         src/simreconmainadvanced.cpp \
         src/simreconreconadvanced.cpp \
-        src/submissionchecks.cpp      \
-        src/mainwindowConsoleOutputWindow.cpp
+        src/submissionchecks.cpp
 
 RESOURCES += \
     resources.qrc
