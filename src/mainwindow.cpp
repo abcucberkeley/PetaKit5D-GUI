@@ -263,11 +263,6 @@ void MainWindow::writeSettings()
     settings.setValue("deconOnlyOverwriteData",ui->deconOnlyOverwriteDataCheckBox->isChecked());
     settings.setValue("deconOnlySave16Bit",ui->deconOnlySave16BitCheckBox->isChecked());
 
-    settings.setValue("deskewDecon",ui->deskewDeconCheckBox->isChecked());
-    settings.setValue("rotateDecon",ui->rotateDeconCheckBox->isChecked());
-    settings.setValue("deskewAndRotateDecon",ui->deskewAndRotateDeconCheckBox->isChecked());
-    settings.setValue("stitchDecon",ui->stitchDeconCheckBox->isChecked());
-
     // Save DSR Settings
     settings.setValue("parseSettingFile",ui->parseSettingsFileCheckBox->isChecked());
     settings.setValue("flipZstack",ui->flipZStackCheckBox->isChecked());
@@ -324,8 +319,8 @@ void MainWindow::writeSettings()
     settings.setValue("generateImageList", ui->stitchGenerateImageListComboBox->currentText());
 
     // Save Decon Settings
-    settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
-    settings.setValue("DSR", ui->deskewAndRotateDeconCheckBox->isChecked());
+    //settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
+    //settings.setValue("DSR", ui->deskewAndRotateDeconCheckBox->isChecked());
     settings.setValue("Background", ui->backgroundIntensityLineEdit->text());
     settings.setValue("dzPSF", ui->dzPSFLineEdit->text());
     settings.setValue("edgeErosion", ui->edgeErosionLineEdit->text());
@@ -720,11 +715,6 @@ void MainWindow::readSettings()
     ui->deconOnlyOverwriteDataCheckBox->setChecked(settings.value("deconOnlyOverwriteData").toBool());
     ui->deconOnlySave16BitCheckBox->setChecked(settings.value("deconOnlySave16Bit").toBool());
 
-    ui->deskewDeconCheckBox->setChecked(settings.value("deskewDecon").toBool());
-    ui->rotateDeconCheckBox->setChecked(settings.value("rotateDecon").toBool());
-    ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("deskewAndRotateDecon").toBool());
-    ui->stitchDeconCheckBox->setChecked(settings.value("stitchDecon").toBool());
-
     // Read DSR Settings
     ui->parseSettingsFileCheckBox->setChecked(settings.value("parseSettingFile").toBool());
     ui->flipZStackCheckBox->setChecked(settings.value("flipZstack").toBool());
@@ -782,8 +772,8 @@ void MainWindow::readSettings()
 
     // Read Decon Settings
 
-    ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
-    ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("DSR").toBool());
+    //ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
+    //ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("DSR").toBool());
     ui->backgroundIntensityLineEdit->setText(settings.value("Background").toString());
     ui->dzPSFLineEdit->setText(settings.value("dzPSF").toString());
     ui->edgeErosionLineEdit->setText(settings.value("edgeErosion").toString());
@@ -1177,11 +1167,11 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Error if decon is set but no psf paths are set
-    if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked()) && !psfFullPaths.size()){
+    if(ui->deconOnlyCheckBox->isChecked() && !psfFullPaths.size()){
         messageBoxError("Decon is set but there are no psf paths set");
         return;
     }
-    else if((ui->deconOnlyCheckBox->isChecked() || ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked())){
+    else if(ui->deconOnlyCheckBox->isChecked()){
         for(const QString &path : psfFullPaths){
             if(path.isEmpty()){
                 messageBoxError("One of the PSF paths is empty!");
@@ -1322,11 +1312,11 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.stitchInfoFullpath.toStdString(),prependedString,isMcc);
 
-        addCharArrayToArgs(args,"DS",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
+        //addCharArrayToArgs(args,"DS",prependedString,isMcc);
+        //addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
 
-        addCharArrayToArgs(args,"DSR",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
+        //addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+        //addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
@@ -1509,7 +1499,7 @@ void MainWindow::on_submitButton_clicked()
 
         // Pipeline Setting
         addCharArrayToArgs(args,"Decon",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,ui->deconOnlyCheckBox->isChecked(),prependedString);
 
         // Change later
         //data.push_back(factory.createCharArray("RotateAfterDecon"));
@@ -1710,7 +1700,7 @@ void MainWindow::on_submitButton_clicked()
         addBoolToArgs(args,ui->stitchCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"Decon",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,ui->deconOnlyCheckBox->isChecked(),prependedString);
 
         // Change later
         //data.push_back(factory.createCharArray("RotateAfterDecon"));
@@ -1799,11 +1789,11 @@ void MainWindow::on_submitButton_clicked()
         }
 
         // Decon Settings
-        addCharArrayToArgs(args,"DS",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
+        //addCharArrayToArgs(args,"DS",prependedString,isMcc);
+        //addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
 
-        addCharArrayToArgs(args,"DSR",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
+        //addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+        //addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"Background",prependedString,isMcc);
         addScalarToArgs(args,ui->backgroundIntensityLineEdit->text().toStdString(),prependedString);
@@ -1960,8 +1950,16 @@ void MainWindow::on_mainAdvancedSettingsButton_clicked()
 // If Deskew is unchecked, disable first row and Rotate checkbox and remove all their current checks
 void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
 {
+    // disable or enable decon as it can only be run by itself for now
+    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyCheckBox->setEnabled(true);
+    }
+
+
     if(arg1){
-        ui->deskewDeconCheckBox->setEnabled(true);
+        ui->deconOnlyCheckBox->setEnabled(false);
+        ui->deconOnlyCheckBox->setChecked(false);
+
         ui->deskewOverwriteDataCheckBox->setEnabled(true);
         ui->deskewSave16BitCheckBox->setEnabled(true);
         ui->deskewOnlyFirstTPCheckBox->setEnabled(true);
@@ -1973,12 +1971,10 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->deskewDeconCheckBox->setEnabled(false);
         ui->deskewOverwriteDataCheckBox->setEnabled(false);
         ui->deskewSave16BitCheckBox->setEnabled(false);
         ui->deskewOnlyFirstTPCheckBox->setEnabled(false);
 
-        ui->deskewDeconCheckBox->setChecked(false);
         ui->deskewOverwriteDataCheckBox->setChecked(false);
         ui->deskewSave16BitCheckBox->setChecked(false);
         ui->deskewOnlyFirstTPCheckBox->setChecked(false);
@@ -1994,8 +1990,15 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
 // If Rotate is unchecked, disable second row and remove all their current checks
 void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
 {
+    // disable or enable decon as it can only be run by itself for now
+    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyCheckBox->setEnabled(true);
+    }
+
     if(arg1){
-        ui->rotateDeconCheckBox->setEnabled(true);
+        ui->deconOnlyCheckBox->setEnabled(false);
+        ui->deconOnlyCheckBox->setChecked(false);
+
         ui->rotateOverwriteDataCheckBox->setEnabled(true);
         ui->rotateSave16BitCheckBox->setEnabled(true);
         ui->rotateOnlyFirstTPCheckBox->setEnabled(true);
@@ -2007,12 +2010,10 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->rotateDeconCheckBox->setEnabled(false);
         ui->rotateOverwriteDataCheckBox->setEnabled(false);
         ui->rotateSave16BitCheckBox->setEnabled(false);
         ui->rotateOnlyFirstTPCheckBox->setEnabled(false);
 
-        ui->rotateDeconCheckBox->setChecked(false);
         ui->rotateOverwriteDataCheckBox->setChecked(false);
         ui->rotateSave16BitCheckBox->setChecked(false);
         ui->rotateOnlyFirstTPCheckBox->setChecked(false);
@@ -2029,8 +2030,15 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
 // If Deskew and Rotate is unchecked, disable third row and remove all their current checks
 void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
 {
+    // disable or enable decon as it can only be run by itself for now
+    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyCheckBox->setEnabled(true);
+    }
+
     if(arg1){
-        ui->deskewAndRotateDeconCheckBox->setEnabled(true);
+        ui->deconOnlyCheckBox->setEnabled(false);
+        ui->deconOnlyCheckBox->setChecked(false);
+
         ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(true);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(true);
         ui->deskewAndRotateOnlyFirstTPCheckBox->setEnabled(true);
@@ -2042,12 +2050,10 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->deskewAndRotateDeconCheckBox->setEnabled(false);
         ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(false);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(false);
         ui->deskewAndRotateOnlyFirstTPCheckBox->setEnabled(false);
 
-        ui->deskewAndRotateDeconCheckBox->setChecked(false);
         ui->deskewAndRotateOverwriteDataCheckBox->setChecked(false);
         ui->deskewAndRotateSave16BitCheckBox->setChecked(false);
         ui->deskewAndRotateOnlyFirstTPCheckBox->setChecked(false);
@@ -2063,8 +2069,15 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
 // If Stitch is unchecked, disable fourth row and remove all their current checks
 void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
 {
+    // disable or enable decon as it can only be run by itself for now
+    if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyCheckBox->setEnabled(true);
+    }
+
     if(arg1){
-        ui->stitchDeconCheckBox->setEnabled(true);
+        ui->deconOnlyCheckBox->setEnabled(false);
+        ui->deconOnlyCheckBox->setChecked(false);
+
         ui->stitchOverwriteDataCheckBox->setEnabled(true);
         ui->stitchSave16BitCheckBox->setEnabled(true);
         ui->stitchOnlyFirstTPCheckBox->setEnabled(true);
@@ -2076,12 +2089,10 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->stitchDeconCheckBox->setEnabled(false);
         ui->stitchOverwriteDataCheckBox->setEnabled(false);
         ui->stitchSave16BitCheckBox->setEnabled(false);
         ui->stitchOnlyFirstTPCheckBox->setEnabled(false);
 
-        ui->stitchDeconCheckBox->setChecked(false);
         ui->stitchOverwriteDataCheckBox->setChecked(false);
         ui->stitchSave16BitCheckBox->setChecked(false);
         ui->stitchOnlyFirstTPCheckBox->setChecked(false);
@@ -2137,7 +2148,7 @@ void MainWindow::on_dsrNextButton_clicked()
     if(ui->stitchCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Stitch);
     }
-    else if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
+    else if(ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else{
@@ -2195,7 +2206,7 @@ void MainWindow::on_stitchNextButton_clicked()
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Stitch),false);
 
     // Logic of which tab is next
-    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
+    if(ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else{
@@ -2236,7 +2247,7 @@ void MainWindow::on_deconNextButton_clicked()
 void MainWindow::on_jobPreviousButton_clicked()
 {
     // Logic for which tab to go to
-    if(ui->deskewDeconCheckBox->isChecked() || ui->rotateDeconCheckBox->isChecked() || ui->deskewAndRotateDeconCheckBox->isChecked() || ui->stitchDeconCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked()){
+    if(ui->deconOnlyCheckBox->isChecked()){
         ui->tabWidget->setCurrentWidget(ui->Decon);
     }
     else if (ui->stitchCheckBox->isChecked()){
@@ -2492,7 +2503,18 @@ void MainWindow::checkLoadPrevSettings()
 // Enable next button if deconOnly is checked
 void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 {
+    // disable or enable all other options as decon can only be run by itself for now
+    ui->deskewCheckBox->setEnabled(!arg1);
+    ui->rotateCheckBox->setEnabled(!arg1);
+    ui->deskewAndRotateCheckBox->setEnabled(!arg1);
+    ui->stitchCheckBox->setEnabled(!arg1);
+
     if(arg1){
+        ui->deskewCheckBox->setChecked(false);
+        ui->rotateCheckBox->setChecked(false);
+        ui->deskewAndRotateCheckBox->setChecked(false);
+        ui->stitchCheckBox->setChecked(false);
+
         ui->deconOnlyOverwriteDataCheckBox->setEnabled(true);
         ui->deconOnlySave16BitCheckBox->setEnabled(true);
         ui->deconOnlyOnlyFirstTPCheckBox->setEnabled(true);

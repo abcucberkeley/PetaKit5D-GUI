@@ -597,7 +597,7 @@
          <number>1</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -632,21 +632,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="deconLabel">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Decon</string>
-            </property>
-           </widget>
           </item>
           <item>
            <widget class="QLabel" name="overwriteDataLabel">
@@ -712,7 +697,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -741,22 +726,6 @@
            <widget class="QCheckBox" name="deskewCheckBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deskewDeconCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -830,7 +799,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -862,19 +831,6 @@
            <widget class="QCheckBox" name="rotateCheckBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="rotateDeconCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -942,7 +898,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -977,28 +933,6 @@
            <widget class="QCheckBox" name="deskewAndRotateCheckBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deskewAndRotateDeconCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1096,7 +1030,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1123,25 +1057,6 @@
           </item>
           <item>
            <widget class="QCheckBox" name="stitchCheckBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="stitchDeconCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1214,7 +1129,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1257,22 +1172,6 @@
              <string/>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_27">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlyOverwriteDataCheckBox">
@@ -12403,7 +12302,7 @@
  <connections/>
  <buttongroups>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
-  <buttongroup name="tiffZarrConverterButtonGroup"/>
   <buttongroup name="deconRLMethodButtonGroup"/>
+  <buttongroup name="tiffZarrConverterButtonGroup"/>
  </buttongroups>
 </ui>
