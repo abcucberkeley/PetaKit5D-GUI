@@ -46,7 +46,7 @@ void configFileCreator::on_saveFileButton_clicked()
         messageBoxError("The config filename must end in .json");
         return;
     }
-    if(!ui->jsonConfigFileNameLineEdit->text().isEmpty()){
+    if(ui->jsonConfigFileNameLineEdit->text().isEmpty()){
         messageBoxError("Please set a config filename");
         return;
     }
