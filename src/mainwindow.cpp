@@ -608,9 +608,9 @@ void MainWindow::readConfigSettings(){
         #ifdef __linux__
         cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh");
         #elif _WIN32
-        cFileVals.MCCMasterStr = QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster";
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster");
         #else
-        cFileVals.MCCMasterStr = "/Applications/LLSM5DToolsMCC/run_mccMaster.sh";
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/LLSM5DToolsMCC/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
 
