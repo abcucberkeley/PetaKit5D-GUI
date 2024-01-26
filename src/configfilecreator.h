@@ -15,6 +15,7 @@ class configFileCreator : public QDialog
 public:
     explicit configFileCreator(configFileVals* cFileVals, QWidget *parent = nullptr);
     ~configFileCreator();
+    static int createJsonConfigFile(const QString &fileName, const QJsonObject &jsonObj);
 
 private slots:
     void on_saveFileButton_clicked();

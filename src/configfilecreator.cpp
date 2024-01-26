@@ -40,6 +40,31 @@ configFileCreator::~configFileCreator()
     delete ui;
 }
 
+int configFileCreator::createJsonConfigFile(const QString &fileName, const QJsonObject &jsonObj){
+
+    QJsonDocument jsonDoc(jsonObj);
+
+    QFileInfo fileInfo(fileName);
+
+    // Recursively make dir if it does not exist
+    QDir dir(fileInfo.absolutePath());
+    if (!dir.exists()){
+        QDir mDir(fileInfo.absolutePath());
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+    }
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::WriteOnly)) {
+        return 1;
+    }
+    file.write(jsonDoc.toJson());
+    file.close();
+
+    return 0;
+}
+
 void configFileCreator::on_saveFileButton_clicked()
 {
     if(!ui->jsonConfigFileNameLineEdit->text().endsWith(".json")){
@@ -66,15 +91,9 @@ void configFileCreator::on_saveFileButton_clicked()
     jsonObj["minCPUNum"] = ui->minCPUNumSpinBox->value();
     jsonObj["wholeNodeJob"] = ui->wholeNodeJobCheckBox->isChecked();
 
-    QJsonDocument jsonDoc(jsonObj);
+    int err = createJsonConfigFile(ui->jsonConfigFileNameLineEdit->text(), jsonObj);
 
-    QFile file(ui->jsonConfigFileNameLineEdit->text());
-    if (!file.open(QIODevice::WriteOnly)) {
-        messageBoxError("Unable to open "+ui->jsonConfigFileNameLineEdit->text()+" for writing. Check your path and permissions.");
-        return;
-    }
-    file.write(jsonDoc.toJson());
-    file.close();
+    if(err) messageBoxError("Unable to open "+ui->jsonConfigFileNameLineEdit->text()+" for writing. Check your path and permissions.");
 
     messageBoxSuccess(this, "File succesfully saved to: "+ui->jsonConfigFileNameLineEdit->text());
 }

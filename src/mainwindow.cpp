@@ -12,6 +12,7 @@
 #include "loadprevioussettings.h"
 #include "submissionchecks.h"
 #include "matlabhelperfunctions.h"
+#include "configfilecreator.h"
 #include <QTextDocument>
 #include <QObjectList>
 #include <QtMath>
@@ -169,6 +170,7 @@ void MainWindow::writeSettings()
     // Config settings
     settings.setValue("configFile", cFileVals.configFile);
     settings.setValue("gpuConfigFile", cFileVals.gpuConfigFile);
+    settings.setValue("jvmConfigFile", cFileVals.jvmConfigFile);
 
     settings.beginWriteArray("dPaths");
     for(unsigned int i = 0; i < dPaths.size(); i++)
@@ -591,7 +593,60 @@ void MainWindow::readConfigSettings(){
     settings.beginGroup("MainWindow");
     cFileVals.configFile = settings.value("configFile").toString();
     cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
+    cFileVals.jvmConfigFile = settings.value("jvmConfigFile").toString();
     settings.endGroup();
+
+    bool setFiles = false;
+    if(cFileVals.configFile.isEmpty() || cFileVals.gpuConfigFile.isEmpty()) setFiles = true;
+    #ifdef __linux__
+    if(cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
+    #endif
+
+
+    // If any of the config files are not set, create and set default ones.
+    if(setFiles){
+        #ifdef __linux__
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh");
+        #elif _WIN32
+        cFileVals.MCCMasterStr = QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster";
+        #else
+        cFileVals.MCCMasterStr = "/Applications/LLSM5DToolsMCC/run_mccMaster.sh";
+        #endif
+        cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
+
+
+        QJsonObject jsonObj;
+        jsonObj["BashLaunchStr"] = cFileVals.BashLaunchStr;
+        jsonObj["GNUparallel"] = cFileVals.GNUparallel;
+        jsonObj["MCCMasterStr"] = cFileVals.MCCMasterStr;
+        jsonObj["MCRParam"] = cFileVals.MCRParam;
+        jsonObj["MemPerCPU"] = cFileVals.MemPerCPU;
+        jsonObj["SlurmParam"] = cFileVals.SlurmParam;
+        jsonObj["jobTimeLimit"] = cFileVals.jobTimeLimit;
+        jsonObj["masterCompute"] = cFileVals.masterCompute;
+        jsonObj["maxCPUNum"] = cFileVals.maxCPUNum;
+        jsonObj["maxJobNum"] = cFileVals.maxJobNum;
+        jsonObj["minCPUNum"] = cFileVals.minCPUNum;
+        jsonObj["wholeNodeJob"] = cFileVals.wholeNodeJob;
+        if(cFileVals.configFile.isEmpty()){
+            cFileVals.configFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/cpu_default_config.json");
+            configFileCreator::createJsonConfigFile(cFileVals.configFile, jsonObj);
+        }
+        if(cFileVals.gpuConfigFile.isEmpty()){
+            cFileVals.gpuConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/gpu_default_config.json");
+            configFileCreator::createJsonConfigFile(cFileVals.gpuConfigFile, jsonObj);
+        }
+        // Also create a default jvm config file on Linux
+        #ifdef __linux__
+        if(cFileVals.jvmConfigFile.isEmpty()){
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh");
+            cFileVals.jvmConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/jvm_cpu_default_config.json");
+            configFileCreator::createJsonConfigFile(cFileVals.jvmConfigFile, jsonObj);
+        }
+        #endif
+
+    }
+
 }
 
 // Restore previous user settings
@@ -3280,9 +3335,18 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
-
+    bool isLinux = false;
+    #ifdef __linux__
+    isLinux = true;
+    #endif
+    if(isLinux){
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    }
+    else{
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
     // TODO: ADD PARSE CLUSTER
 
     QString funcType = "XR_FSC_analysis_wrapper";
@@ -3358,8 +3422,18 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    bool isLinux = false;
+    #ifdef __linux__
+    isLinux = true;
+    #endif
+    if(isLinux){
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    }
+    else{
+        addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType;
 

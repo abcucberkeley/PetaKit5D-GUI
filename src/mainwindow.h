@@ -232,12 +232,13 @@ class simReconVals{
         {}
 };
 
-// Class to hold advanced options for Sim Recon
+// Class to hold settings for config files
 class configFileVals{
 public:
     // Config File Locations
     QString configFile;
     QString gpuConfigFile;
+    QString jvmConfigFile;
 
     // Config File Settings
     QString BashLaunchStr;
@@ -246,15 +247,16 @@ public:
     QString MCRParam;
     double MemPerCPU;
     QString SlurmParam;
-    uint64_t jobTimeLimit;
+    qint64 jobTimeLimit;
     bool masterCompute;
-    uint64_t minCPUNum;
-    uint64_t maxCPUNum;
-    uint64_t maxJobNum;
+    qint64 minCPUNum;
+    qint64 maxCPUNum;
+    qint64 maxJobNum;
     bool wholeNodeJob;
 
     configFileVals(): configFile{""},
         gpuConfigFile{""},
+        jvmConfigFile{""},
         BashLaunchStr(""),
         GNUparallel(true),
         MCCMasterStr(""),
