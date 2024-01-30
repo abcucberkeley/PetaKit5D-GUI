@@ -136,11 +136,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    // If the thread is not done, kill it (This may have to change later because it can be dangerous)
+    // If the thread is not done then kill it
     if(!mThreadManager->isFinished()){
         mThreadManager->killMatlabThreadManager();
         mThreadManager->wait();
-    }//mThreadManager->terminate();
+    }
 
 }
 
@@ -1448,8 +1448,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"xcorrThresh",prependedString,isMcc);
         addScalarToArgs(args,guiVals.xcorrThresh.toStdString(),prependedString);
 
-        //addCharArrayToArgs(args,"padSize",prependedString,isMcc);
-
         if(ui->boundBoxCheckBox->isChecked()){
             addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);
             std::vector<std::string> boundboxCropV = {ui->boundBoxYMinSpinBox->text().toStdString(),
@@ -1466,8 +1464,6 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"timepoints",prependedString,isMcc);
         addArrayToArgs(args,guiVals.timepoints,false,prependedString,"[]",isMcc);
-
-        //addCharArrayToArgs(args,"subtimepoints",prependedString,isMcc);
 
         addCharArrayToArgs(args,"xcorrMode",prependedString,isMcc);
         addCharArrayToArgs(args,ui->xCorrModeComboBox->currentText().toStdString(),prependedString,isMcc);
@@ -2443,34 +2439,21 @@ void MainWindow::on_imageListFullPathsLineEdit_textChanged(const QString &arg1)
 // Enable bound box options or disable them
 void MainWindow::on_boundBoxCheckBox_stateChanged(int arg1)
 {
-    if(arg1){
-        ui->boundBoxYMinLabel->setEnabled(true);
-        ui->boundBoxYMinSpinBox->setEnabled(true);
-        ui->boundBoxXMinLabel->setEnabled(true);
-        ui->boundBoxXMinSpinBox->setEnabled(true);
-        ui->boundBoxZMinLabel->setEnabled(true);
-        ui->boundBoxZMinSpinBox->setEnabled(true);
-        ui->boundBoxYMaxLabel->setEnabled(true);
-        ui->boundBoxYMaxSpinBox->setEnabled(true);
-        ui->boundBoxXMaxLabel->setEnabled(true);
-        ui->boundBoxXMaxSpinBox->setEnabled(true);
-        ui->boundBoxZMaxLabel->setEnabled(true);
-        ui->boundBoxZMaxSpinBox->setEnabled(true);
-    }
-    else{
-        ui->boundBoxYMinLabel->setEnabled(false);
-        ui->boundBoxYMinSpinBox->setEnabled(false);
-        ui->boundBoxXMinLabel->setEnabled(false);
-        ui->boundBoxXMinSpinBox->setEnabled(false);
-        ui->boundBoxZMinLabel->setEnabled(false);
-        ui->boundBoxZMinSpinBox->setEnabled(false);
-        ui->boundBoxYMaxLabel->setEnabled(false);
-        ui->boundBoxYMaxSpinBox->setEnabled(false);
-        ui->boundBoxXMaxLabel->setEnabled(false);
-        ui->boundBoxXMaxSpinBox->setEnabled(false);
-        ui->boundBoxZMaxLabel->setEnabled(false);
-        ui->boundBoxZMaxSpinBox->setEnabled(false);
 
+    ui->boundBoxYMinLabel->setEnabled(arg1);
+    ui->boundBoxYMinSpinBox->setEnabled(arg1);
+    ui->boundBoxXMinLabel->setEnabled(arg1);
+    ui->boundBoxXMinSpinBox->setEnabled(arg1);
+    ui->boundBoxZMinLabel->setEnabled(arg1);
+    ui->boundBoxZMinSpinBox->setEnabled(arg1);
+    ui->boundBoxYMaxLabel->setEnabled(arg1);
+    ui->boundBoxYMaxSpinBox->setEnabled(arg1);
+    ui->boundBoxXMaxLabel->setEnabled(arg1);
+    ui->boundBoxXMaxSpinBox->setEnabled(arg1);
+    ui->boundBoxZMaxLabel->setEnabled(arg1);
+    ui->boundBoxZMaxSpinBox->setEnabled(arg1);
+
+    if(!arg1){
         ui->boundBoxYMinSpinBox->setValue(0);
         ui->boundBoxXMinSpinBox->setValue(0);
         ui->boundBoxZMinSpinBox->setValue(0);
@@ -3976,4 +3959,3 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
-

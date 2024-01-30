@@ -12302,7 +12302,7 @@
  <connections/>
  <buttongroups>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
-  <buttongroup name="deconRLMethodButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="deconRLMethodButtonGroup"/>
  </buttongroups>
 </ui>
