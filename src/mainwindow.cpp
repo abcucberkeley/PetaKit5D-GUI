@@ -171,6 +171,8 @@ void MainWindow::writeSettings()
     settings.setValue("configFile", cFileVals.configFile);
     settings.setValue("gpuConfigFile", cFileVals.gpuConfigFile);
     settings.setValue("jvmConfigFile", cFileVals.jvmConfigFile);
+    settings.setValue("MCCMasterStr", cFileVals.MCCMasterStr);
+    settings.setValue("MCRParam", cFileVals.MCRParam);
 
     settings.beginWriteArray("dPaths");
     for(unsigned int i = 0; i < dPaths.size(); i++)
@@ -594,6 +596,8 @@ void MainWindow::readConfigSettings(){
     cFileVals.configFile = settings.value("configFile").toString();
     cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
     cFileVals.jvmConfigFile = settings.value("jvmConfigFile").toString();
+    cFileVals.MCCMasterStr = settings.value("MCCMasterStr").toString();
+    cFileVals.MCRParam = settings.value("MCRParam").toString();
     settings.endGroup();
 
     bool setFiles = false;
