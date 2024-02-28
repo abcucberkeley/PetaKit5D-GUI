@@ -3611,7 +3611,7 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addChannelPatternsToArgs(args,mipGeneratorChannelWidgets,ui->mipGeneratorCustomPatternsCheckBox->isChecked(),ui->mipGeneratorCustomPatternsLineEdit->text(),prependedString,isMcc);
 
     addCharArrayToArgs(args,"axis",prependedString,isMcc);
-    std::vector<std::string> axisV = {ui->mipGeneratorAxisYSpinBox->text().toStdString(),ui->mipGeneratorAxisXSpinBox->text().toStdString(),ui->mipGeneratorAxisZSpinBox->text().toStdString()};
+    std::vector<std::string> axisV = {std::to_string(ui->mipGeneratorAxisYCheckBox->isChecked()),std::to_string(ui->mipGeneratorAxisXCheckBox->isChecked()),std::to_string(ui->mipGeneratorAxisZCheckBox->isChecked())};
     addArrayToArgs(args,axisV,false,prependedString,"[]",isMcc);
 
     addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);

@@ -9110,18 +9110,9 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="mipGeneratorAxisYSpinBox">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>0</number>
-                  </property>
-                  <property name="maximum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>0</number>
+                 <widget class="QCheckBox" name="mipGeneratorAxisYCheckBox">
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -9146,18 +9137,9 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="mipGeneratorAxisXSpinBox">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>0</number>
-                  </property>
-                  <property name="maximum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>0</number>
+                 <widget class="QCheckBox" name="mipGeneratorAxisXCheckBox">
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -9182,18 +9164,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="mipGeneratorAxisZSpinBox">
-                  <property name="enabled">
+                 <widget class="QCheckBox" name="mipGeneratorAxisZCheckBox">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
                    <bool>true</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>0</number>
-                  </property>
-                  <property name="maximum">
-                   <number>1</number>
-                  </property>
-                  <property name="value">
-                   <number>1</number>
                   </property>
                  </widget>
                 </item>
