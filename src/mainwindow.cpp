@@ -606,6 +606,11 @@ void MainWindow::readConfigSettings(){
     if(cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
     #endif
 
+    QString defaultConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/cpu_default_config.json");
+    QString defaultGpuConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/gpu_default_config.json");
+    #ifdef __linux__
+    QString defaultJvmConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/jvm_cpu_default_config.json");
+    #endif
 
     // If any of the config files are not set, create and set default ones.
     if(setFiles){
@@ -617,7 +622,6 @@ void MainWindow::readConfigSettings(){
         cFileVals.MCCMasterStr = QString::fromStdString("/Applications/LLSM5DToolsMCC/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
-
 
         QJsonObject jsonObj;
         jsonObj["BashLaunchStr"] = cFileVals.BashLaunchStr;
@@ -633,22 +637,66 @@ void MainWindow::readConfigSettings(){
         jsonObj["minCPUNum"] = cFileVals.minCPUNum;
         jsonObj["wholeNodeJob"] = cFileVals.wholeNodeJob;
         if(cFileVals.configFile.isEmpty()){
-            cFileVals.configFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/cpu_default_config.json");
+            cFileVals.configFile = defaultConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.configFile, jsonObj);
         }
         if(cFileVals.gpuConfigFile.isEmpty()){
-            cFileVals.gpuConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/gpu_default_config.json");
+            cFileVals.gpuConfigFile = defaultGpuConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.gpuConfigFile, jsonObj);
         }
         // Also create a default jvm config file on Linux
         #ifdef __linux__
         if(cFileVals.jvmConfigFile.isEmpty()){
             jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh");
-            cFileVals.jvmConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/jvm_cpu_default_config.json");
+            cFileVals.jvmConfigFile = defaultJvmConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.jvmConfigFile, jsonObj);
         }
         #endif
 
+    }
+
+    bool createFiles = false;
+    // If any of the default files don't exist then create them but don't set them as the current config file
+    if(!QFileInfo::exists(defaultConfigFile) || !QFileInfo::exists(defaultGpuConfigFile)) createFiles = true;
+    #ifdef __linux__
+    if(!QFileInfo::exists(defaultJvmConfigFile)) createFiles = true;
+    #endif
+    if(createFiles){
+        #ifdef __linux__
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh");
+        #elif _WIN32
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster");
+        #else
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/LLSM5DToolsMCC/run_mccMaster.sh");
+        #endif
+        cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
+
+        QJsonObject jsonObj;
+        jsonObj["BashLaunchStr"] = cFileVals.BashLaunchStr;
+        jsonObj["GNUparallel"] = cFileVals.GNUparallel;
+        jsonObj["MCCMasterStr"] = cFileVals.MCCMasterStr;
+        jsonObj["MCRParam"] = cFileVals.MCRParam;
+        jsonObj["MemPerCPU"] = cFileVals.MemPerCPU;
+        jsonObj["SlurmParam"] = cFileVals.SlurmParam;
+        jsonObj["jobTimeLimit"] = cFileVals.jobTimeLimit;
+        jsonObj["masterCompute"] = cFileVals.masterCompute;
+        jsonObj["maxCPUNum"] = cFileVals.maxCPUNum;
+        jsonObj["maxJobNum"] = cFileVals.maxJobNum;
+        jsonObj["minCPUNum"] = cFileVals.minCPUNum;
+        jsonObj["wholeNodeJob"] = cFileVals.wholeNodeJob;
+        if(!QFileInfo::exists(defaultConfigFile)){
+            configFileCreator::createJsonConfigFile(defaultConfigFile, jsonObj);
+        }
+        if(!QFileInfo::exists(defaultGpuConfigFile)){
+            configFileCreator::createJsonConfigFile(defaultGpuConfigFile, jsonObj);
+        }
+        // Also create a default jvm config file on Linux
+        #ifdef __linux__
+        if(!QFileInfo::exists(defaultJvmConfigFile)){
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh");
+            configFileCreator::createJsonConfigFile(defaultJvmConfigFile, jsonObj);
+        }
+        #endif
     }
 
 }
