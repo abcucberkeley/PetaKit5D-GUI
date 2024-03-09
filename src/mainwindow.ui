@@ -12277,8 +12277,8 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="deconRLMethodButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
-  <buttongroup name="deconRLMethodButtonGroup"/>
  </buttongroups>
 </ui>
