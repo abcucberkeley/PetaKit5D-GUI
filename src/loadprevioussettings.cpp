@@ -341,6 +341,7 @@ void loadPreviousSettings::reject(){
 int loadPreviousSettings::getMatlabPath(){
     bool jobSuccess = true;
     std::string matlabCmd;
+    std::string chmodCmd = "chmod 777 -R "+QCoreApplication::applicationDirPath().toStdString()+"/matlabPath";
 
     // Make path if it does not exist
     QDir dir(QCoreApplication::applicationDirPath()+"/matlabPath");
@@ -355,6 +356,7 @@ int loadPreviousSettings::getMatlabPath(){
     #ifdef __linux__
     matlabCmd = "which matlab > "+matlabPathTxt;
     jobSuccess = !system(matlabCmd.c_str());
+    system(chmodCmd.c_str());
     #elif _WIN32
     matlabCmd = "where matlab > "+matlabPathTxt;
     jobSuccess = !system(matlabCmd.c_str());
@@ -367,6 +369,7 @@ int loadPreviousSettings::getMatlabPath(){
         std::cout << matlabCmd << std::endl;
         jobSuccess = !system(matlabCmd.c_str());
     }
+    system(chmodCmd.c_str());
     #endif
 
     if(jobSuccess){
