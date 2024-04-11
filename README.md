@@ -2,7 +2,20 @@
 A Graphical User Interface for the [LLSM5DTools](https://github.com/abcucberkeley/LLSM5DTools) image processing pipeline
 
 ## Quick Start Guide
-For instructions on installation and use of the LLSM_Processing_GUI, vist the [LLSM_Processing_GUI Wiki](https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki)
+Currently Linux (Ubuntu 22.04 and Scientific Linux), Windows (10), and MacOS (12.1 or newer) are supported
+
+### Installation
+   1. Download the latest release for your operating system from the [releases](https://github.com/abcucberkeley/LLSM_Processing_GUI/releases) page
+
+   2. Unpack the LLSM_Processing_GUI folder and place it anywhere on your system.
+
+   3. Once the software is in the desired location on your system, it should not be moved.
+
+   4. You can now run the LLSM_Processing_GUI executable. For Mac, you may double-click the application.
+
+   5. For first-time users, visit the [First-Time Setup](https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki/1.-Installation-and-First‐Time-Setup) page of the wiki to finish the required initial setup
+
+For further instructions on installation and use of the LLSM_Processing_GUI, vist the [LLSM_Processing_GUI Wiki](https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki)
 
 ## Reference
 
