@@ -2,7 +2,7 @@
 A Graphical User Interface for the [LLSM5DTools](https://github.com/abcucberkeley/LLSM5DTools) image processing pipeline
 
 ## Quick Start Guide
-Currently Linux (Ubuntu 22.04 and Scientific Linux), Windows (10), and MacOS (12.1 or newer) are supported
+Currently Linux (Ubuntu 22.04 and Scientific Linux), Windows (10 and 11), and MacOS (12.1 or newer) are supported
 
 ### Installation
    1. Download the latest release for your operating system from the [releases](https://github.com/abcucberkeley/LLSM_Processing_GUI/releases) page
