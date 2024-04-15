@@ -5328,6 +5328,9 @@
         <property name="currentIndex">
          <number>0</number>
         </property>
+        <property name="usesScrollButtons">
+         <bool>true</bool>
+        </property>
         <property name="tabBarAutoHide">
          <bool>false</bool>
         </property>
@@ -11137,9 +11140,9 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_196" stretch="0,0,0">
+             <layout class="QHBoxLayout" name="horizontalLayout_196" stretch="2">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_198">
+               <layout class="QHBoxLayout" name="horizontalLayout_198" stretch="2,1,1,1">
                 <item>
                  <widget class="QLabel" name="resampleRSFactorLabel">
                   <property name="font">
@@ -11154,19 +11157,107 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="resampleRSFactorSpinBox">
-                  <property name="maximum">
-                   <double>100000000000.990005493164063</double>
-                  </property>
-                  <property name="value">
-                   <double>2.000000000000000</double>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_225">
+                  <item>
+                   <widget class="QLabel" name="resampleRSFactorYLabel">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Y:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="resampleRSFactorYSpinBox">
+                    <property name="maximum">
+                     <double>100000000000.990005493164063</double>
+                    </property>
+                    <property name="value">
+                     <double>2.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_227">
+                  <item>
+                   <widget class="QLabel" name="resampleRSFactorXLabel">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>X:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="resampleRSFactorXSpinBox">
+                    <property name="maximum">
+                     <double>100000000000.990005493164063</double>
+                    </property>
+                    <property name="value">
+                     <double>2.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_228">
+                  <item>
+                   <widget class="QLabel" name="resampleRSFactorZLabel">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Z:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="resampleRSFactorZSpinBox">
+                    <property name="maximum">
+                     <double>100000000000.990005493164063</double>
+                    </property>
+                    <property name="value">
+                     <double>2.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_96">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_229" stretch="1,1">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_199">
+               <layout class="QHBoxLayout" name="horizontalLayout_234">
                 <item>
                  <widget class="QLabel" name="resampleInterpLabel">
                   <property name="font">
@@ -11198,7 +11289,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_200">
+               <layout class="QHBoxLayout" name="horizontalLayout_235">
                 <item>
                  <widget class="QLabel" name="resampleSave16BitLabel">
                   <property name="font">
@@ -11224,7 +11315,7 @@
              </layout>
             </item>
             <item>
-             <spacer name="verticalSpacer_96">
+             <spacer name="verticalSpacer_22">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>

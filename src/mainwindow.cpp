@@ -3769,7 +3769,10 @@ void MainWindow::on_resampleSubmitButton_clicked()
 
     addCharArrayToArgs(args,ui->resampleResultPathsLabelLineEdit->text().toStdString(),prependedString,isMcc);
 
-    addScalarToArgs(args,ui->resampleRSFactorSpinBox->text().toStdString(),prependedString);
+    std::vector<std::string> resampleRSFactor = {ui->resampleRSFactorYSpinBox->text().toStdString(),
+                                                 ui->resampleRSFactorXSpinBox->text().toStdString(),
+                                                 ui->resampleRSFactorZSpinBox->text().toStdString()};
+    addArrayToArgs(args,resampleRSFactor,false,prependedString,"[]",isMcc);
 
     addCharArrayToArgs(args,"Interp",prependedString,isMcc);
     addCharArrayToArgs(args,ui->resampleInterpComboBox->currentText().toStdString(),prependedString,isMcc);
