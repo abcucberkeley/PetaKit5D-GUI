@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <pkg-ref id="abc.berkeley.llsm-processing-gui" version="1.0" auth="root">LLSM_Processing_GUI.pkg</pkg-ref>
+    <options customize="never" require-scripts="false"/>
+    <choices-outline>
+        <line choice="abc.berkeley.llsm-processing-gui"/>
+    </choices-outline>
+    <choice id="abc.berkeley.llsm-processing-gui" title="LLSM_Processing_GUI" description="Your App Description">
+        <pkg-ref id="abc.berkeley.llsm-processing-gui"/>
+    </choice>
+    <scripts>
+	<postinstall file="./scripts/postinstall"/>
+    </scripts>
+</installer-gui-script>
+

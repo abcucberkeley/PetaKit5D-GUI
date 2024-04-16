@@ -1,0 +1,40 @@
+#!/bin/bash
+
+unzip -o -q /Applications/LLSM_Processing_GUI.app/Contents/MacOS/LLSM5DTools/mcc/mac/LLSM5DToolsMCC.zip -d /Applications/LLSM5DToolsMCC/
+
+# Display a message indicating that the download is starting
+echo "Downloading files..."
+
+# Download the file
+curl -o /tmp/matlabRuntime.zip https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/6/deployment_files/installer/complete/maci64/MATLAB_Runtime_R2023a_Update_6_maci64.dmg.zip
+
+# Display a message indicating that the download is complete
+echo "Download complete."
+
+# Display a message indicating that the unzip process is starting
+echo "Unzipping files..."
+
+# Unzip the file
+unzip /tmp/matlabRuntime.zip -d /tmp/matlabRuntimeDmgTmp
+
+# Display a message indicating that the unzip process is complete
+echo "Unzip complete."
+
+hdiutil attach /tmp/matlabRuntimeDmgTmp/MATLAB_Runtime_R2023a_Update_6_maci64.dmg
+
+mkdir /tmp/matlabRuntimeTmp
+
+cp -r -f /Volumes/MATLAB_Runtime_R2023a_Update_6_maci64/InstallForMacOSX.app /tmp/matlabRuntimeTmp
+
+hdiutil detach /Volumes/MATLAB_Runtime_R2023a_Update_6_maci64
+
+sudo rm /tmp/matlabRuntime.zip
+
+sudo rm -rf /tmp/matlabRuntimeDmgTmp
+
+sudo open -W -n /tmp/matlabRuntimeTmp/InstallForMacOSX.app
+
+sudo rm -rf /tmp/matlabRuntimeTmp
+
+exit 0
+
