@@ -1328,7 +1328,9 @@ void MainWindow::on_submitButton_clicked()
     if(ui->deskewAndRotateCheckBox->isChecked() && ui->largeScaleProcessingCheckBox->isChecked()){
         lspDSR = true;
     }
-    else if(ui->stitchCheckBox->isChecked() && ui->largeScaleProcessingCheckBox->isChecked()){
+    else if(ui->stitchCheckBox->isChecked() && !(ui->deskewCheckBox->isChecked()
+                                                    || ui->rotateCheckBox->isChecked()
+                                                    || ui->deskewAndRotateCheckBox->isChecked())){
         lspStitch = true;
     }
 
