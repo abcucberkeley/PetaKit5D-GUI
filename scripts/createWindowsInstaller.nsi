@@ -1,5 +1,6 @@
 Unicode True
 
+!include LogicLib.nsh
 !define APP_NAME "LLSM_Processing_GUI"
 !define APP_EXE "LLSM_Processing_GUI.exe"
 !define RUNTIME_ZIP_URL "https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2023a_Update_6_win64.zip"
@@ -16,6 +17,18 @@ InitPluginsDir
 SetOutPath $PLUGINSDIR
 
 File /r "C:\Users\matt\Desktop\LLSM_Processing_GUI_releases\jenkins\LLSM_Processing_GUI"
+
+; Run the PowerShell command and capture the exit code
+nsExec::Exec 'powershell "exit [int]([Environment]::GetEnvironmentVariable(\"PATH\", \"Machine\").Split(\";\")[0] -eq \"C:\Program Files\MATLAB\MATLAB Runtime\R2023a\runtime\win64\")"' $0 SW_HIDE
+Pop $0 ; Get the exit code
+
+; Check the exit code
+${If} $0 == 1
+    DetailPrint "Matlab Runtime found on the path"
+${Else}
+    DetailPrint "Matlab Runtime not found as the first path. Adding it"
+    nsExec::Exec 'powershell "setx -m PATH \"C:\Program Files\MATLAB\MATLAB Runtime\R2023a\runtime\win64;$env:path\""'
+${EndIf}
 
 IfFileExists "C:\Program Files\MATLAB\MATLAB Runtime\R2023a\VersionInfo.xml" skip_runtime install_runtime 
 install_runtime:
