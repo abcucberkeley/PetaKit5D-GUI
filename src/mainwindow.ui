@@ -11284,6 +11284,16 @@
                     <string>linear</string>
                    </property>
                   </item>
+                  <item>
+                   <property name="text">
+                    <string>nearest</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>cubic</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                </layout>
