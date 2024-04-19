@@ -7851,6 +7851,9 @@
           </item>
           <item row="1" column="0">
            <layout class="QVBoxLayout" name="verticalLayout_46" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1">
+            <property name="spacing">
+             <number>6</number>
+            </property>
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -8303,7 +8306,7 @@
             <item>
              <layout class="QHBoxLayout" name="imarisConverterBBoxHorizontalLayout">
               <item>
-               <layout class="QHBoxLayout" name="imarisConverterBBoxLabelLayout">
+               <layout class="QHBoxLayout" name="imarisConverterBBoxLabelLayout" stretch="1,4">
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxLabel">
                   <property name="font">
@@ -11060,6 +11063,9 @@
           </item>
           <item row="1" column="0">
            <layout class="QVBoxLayout" name="verticalLayout_43">
+            <property name="spacing">
+             <number>6</number>
+            </property>
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -11104,25 +11110,95 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_197">
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
+             <layout class="QHBoxLayout" name="resampleChannelPatternsHorizontalLayout">
               <item>
-               <widget class="QLabel" name="resampleResultPathsLabel">
+               <widget class="QLabel" name="resampleChannelPatternsLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
                   <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
                  </font>
                 </property>
                 <property name="text">
-                 <string>Result Path</string>
+                 <string>Channel Patterns</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="resampleResultPathsLabelLineEdit"/>
+               <spacer name="resampleHorizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Maximum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>30</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_24">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_199">
+              <item>
+               <widget class="QLabel" name="resampleCustomPatternsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Custom Patterns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="resampleCustomPatternsCheckBox">
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="resampleCustomPatternsLineEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -11140,9 +11216,12 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_196" stretch="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_196" stretch="1">
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_198" stretch="2,1,1,1">
+               <layout class="QHBoxLayout" name="horizontalLayout_198" stretch="1,2,2,2">
                 <item>
                  <widget class="QLabel" name="resampleRSFactorLabel">
                   <property name="font">
@@ -11174,7 +11253,7 @@
                   <item>
                    <widget class="QDoubleSpinBox" name="resampleRSFactorYSpinBox">
                     <property name="maximum">
-                     <double>100000000000.990005493164063</double>
+                     <double>1000000.989999999990687</double>
                     </property>
                     <property name="value">
                      <double>2.000000000000000</double>
@@ -11201,7 +11280,7 @@
                   <item>
                    <widget class="QDoubleSpinBox" name="resampleRSFactorXSpinBox">
                     <property name="maximum">
-                     <double>100000000000.990005493164063</double>
+                     <double>1000000.989999999990687</double>
                     </property>
                     <property name="value">
                      <double>2.000000000000000</double>
@@ -11228,7 +11307,7 @@
                   <item>
                    <widget class="QDoubleSpinBox" name="resampleRSFactorZSpinBox">
                     <property name="maximum">
-                     <double>100000000000.990005493164063</double>
+                     <double>1000000.989999999990687</double>
                     </property>
                     <property name="value">
                      <double>2.000000000000000</double>
@@ -11255,7 +11334,34 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_229" stretch="1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_229" stretch="0,1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_197" stretch="1,4">
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="resampleOutDirStrLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Output Dir</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="resampleOutDirStrLineEdit">
+                  <property name="text">
+                   <string>resampled</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_234">
                 <item>
@@ -11364,6 +11470,30 @@
                </layout>
               </item>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_230">
+                <item>
+                 <widget class="QLabel" name="resampleLargeZarrLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Large Zarr</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="resampleLargeZarrCheckBox">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <layout class="QHBoxLayout" name="horizontalLayout_204">
                 <item>
                  <widget class="QLabel" name="resampleSaveZarrLabel">
@@ -11390,7 +11520,724 @@
              </layout>
             </item>
             <item>
+             <spacer name="verticalSpacer_114">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBBoxHorizontalLayout">
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxLabelLayout" stretch="1,4">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>BBox:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="resampleBBoxCheckBox">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_113">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBBoxMinHorizontalLayout">
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxYMinHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxYMinLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y Min</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxYMinSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxXMinHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxXMinLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X Min</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxXMinSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxZMinHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxZMinLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z Min</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxZMinSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_115">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBBoxMaxHorizontalLayout">
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxYMaxHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxYMaxLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y Max</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxYMaxSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxXMaxHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxXMaxLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X Max</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxXMaxSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBBoxZMaxHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBBoxZMaxLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z Max</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="resampleBBoxZMaxSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_116">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBlockSizeHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="resampleBlockSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Block Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBlockSizeYHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBlockSizeYLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBlockSizeYSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>256.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBlockSizeXHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBlockSizeXLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBlockSizeXSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>256.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBlockSizeZHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBlockSizeZLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBlockSizeZSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>256.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_117">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBatchSizeHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="resampleBatchSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Batch Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBatchSizeYHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBatchSizeYLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBatchSizeYSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>512.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBatchSizeXHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBatchSizeXLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBatchSizeXSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>512.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBatchSizeZHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBatchSizeZLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBatchSizeZSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>512.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
              <spacer name="verticalSpacer_97">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="resampleBorderSizeHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="resampleBorderSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Border Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBorderSizeYHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBorderSizeYLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBorderSizeYSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>5.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBorderSizeXHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBorderSizeXLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBorderSizeXSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>5.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="resampleBorderSizeZHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="resampleBorderSizeZLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="resampleBorderSizeZSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>5.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_118">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>

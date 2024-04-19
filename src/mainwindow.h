@@ -343,6 +343,7 @@ private:
 
     // resample
     std::vector<dataPath> resampleDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> resampleChannelWidgets;
 
     // tiffZarrConverter
     std::vector<dataPath> tiffZarrConverterDPaths;
@@ -476,8 +477,6 @@ private slots:
     void on_tiffZarrConverterCustomPatternsCheckBox_stateChanged(int arg1);
 
     void on_resampleSubmitButton_clicked();
-
-    void on_resampleAddPathsButton_clicked();
 
     void on_largeScaleProcessingButton_clicked();
 

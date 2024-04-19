@@ -62,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect psfDetectionAnalysis signals
     connect(ui->psfDetectionAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
+    // Connect resample signals
+    connect(ui->resampleAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Connect tiffZarrConverter signals
     connect(ui->tiffZarrConverterAddPathsButton,&QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
@@ -2428,6 +2431,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsCurrWidget = ui->psfDetectionAnalysis;
         addPathsCurrLayout = ui->psfDetectionAnalysisChannelPatternsHorizontalLayout;
     }
+    else if(((QPushButton *)sender())->objectName().contains("resample")){
+        addPathsDataPaths = &resampleDPaths;
+        addPathsChannelWidgets = &resampleChannelWidgets;
+        addPathsCurrWidget = ui->resample;
+        addPathsCurrLayout = ui->resampleChannelPatternsHorizontalLayout;
+    }
     else if(((QPushButton *)sender())->objectName().contains("tiffZarrConverter")){
         addPathsDataPaths = &tiffZarrConverterDPaths;
         addPathsChannelWidgets = &tiffZarrConverterChannelWidgets;
@@ -3790,16 +3799,29 @@ void MainWindow::on_resampleSubmitButton_clicked()
         prependedString = ",";
     }
 
-    // Temporary until support is added for multiple datapaths
-    addCharArrayToArgs(args,resampleDPaths[0].masterPath.toStdString(),firstPrependedString,isMcc);
-    //addDataPathsToArgs(args,firstPrependedString,resampleDPaths,isMcc);
-
-    addCharArrayToArgs(args,ui->resampleResultPathsLabelLineEdit->text().toStdString(),prependedString,isMcc);
+    addDataPathsToArgs(args,firstPrependedString,resampleDPaths,isMcc);
 
     std::vector<std::string> resampleRSFactor = {ui->resampleRSFactorYSpinBox->text().toStdString(),
                                                  ui->resampleRSFactorXSpinBox->text().toStdString(),
                                                  ui->resampleRSFactorZSpinBox->text().toStdString()};
     addArrayToArgs(args,resampleRSFactor,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"outDirStr",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->resampleOutDirStrLineEdit->text().toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,resampleChannelWidgets,ui->resampleCustomPatternsCheckBox->isChecked(),ui->resampleCustomPatternsLineEdit->text(),prependedString,isMcc);
+
+    if(ui->resampleBBoxCheckBox->isChecked()){
+        addCharArrayToArgs(args,"bbox",prependedString,isMcc);
+        std::vector<std::string> bboxV = {ui->resampleBBoxYMinSpinBox->text().toStdString(),
+                                          ui->resampleBBoxXMinSpinBox->text().toStdString(),
+                                          ui->resampleBBoxZMinSpinBox->text().toStdString(),
+                                          ui->resampleBBoxYMaxSpinBox->text().toStdString(),
+                                          ui->resampleBBoxXMaxSpinBox->text().toStdString(),
+                                          ui->resampleBBoxZMaxSpinBox->text().toStdString()};
+        addArrayToArgs(args,bboxV,false,prependedString,"[]",isMcc);
+    }
 
     addCharArrayToArgs(args,"Interp",prependedString,isMcc);
     addCharArrayToArgs(args,ui->resampleInterpComboBox->currentText().toStdString(),prependedString,isMcc);
@@ -3810,8 +3832,29 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
     addBoolToArgs(args,ui->resampleZarrFileCheckBox->isChecked(),prependedString);
 
+    addCharArrayToArgs(args,"largeZarr",prependedString,isMcc);
+    addBoolToArgs(args,ui->resampleLargeZarrCheckBox->isChecked(),prependedString);
+
     addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
     addBoolToArgs(args,ui->resampleSaveZarrCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+    std::vector<std::string> blockSizeV = {ui->resampleBlockSizeYSpinBox->text().toStdString(),
+                                           ui->resampleBlockSizeXSpinBox->text().toStdString(),
+                                           ui->resampleBlockSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,blockSizeV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"batchSize",prependedString,isMcc);
+    std::vector<std::string> batchSizeV = {ui->resampleBatchSizeYSpinBox->text().toStdString(),
+                                           ui->resampleBatchSizeXSpinBox->text().toStdString(),
+                                           ui->resampleBatchSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,batchSizeV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"BorderSize",prependedString,isMcc);
+    std::vector<std::string> borderSizeV = {ui->resampleBorderSizeYSpinBox->text().toStdString(),
+                                           ui->resampleBorderSizeXSpinBox->text().toStdString(),
+                                           ui->resampleBorderSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,borderSizeV,false,prependedString,"[]",isMcc);
 
     // Job Settings
     addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
@@ -3846,15 +3889,6 @@ void MainWindow::on_resampleSubmitButton_clicked()
     auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
-
-
-void MainWindow::on_resampleAddPathsButton_clicked()
-{
-    dataPaths daPaths(resampleDPaths, true, mostRecentDir);
-    daPaths.setModal(true);
-    daPaths.exec();
-}
-
 
 void MainWindow::on_largeScaleProcessingButton_clicked()
 {
@@ -3911,8 +3945,10 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     addBoolToArgs(args,ui->imarisConverterZarrFileCheckBox->isChecked(),prependedString);
 
     addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
-    std::vector<std::string> blockSizeV = {ui->imarisConverterBlockSizeYSpinBox->text().toStdString(),ui->imarisConverterBlockSizeXSpinBox->text().toStdString(),ui->imarisConverterBlockSizeZSpinBox->text().toStdString()};
-    addArrayToArgs(args,pixelSizesV,false,prependedString,"[]",isMcc);
+    std::vector<std::string> blockSizeV = {ui->imarisConverterBlockSizeYSpinBox->text().toStdString(),
+                                           ui->imarisConverterBlockSizeXSpinBox->text().toStdString(),
+                                           ui->imarisConverterBlockSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,blockSizeV,false,prependedString,"[]",isMcc);
 
     addCharArrayToArgs(args,"bbox",prependedString,isMcc);
     std::vector<std::string> bboxV = {ui->imarisConverterBBoxYMinSpinBox->text().toStdString(),
