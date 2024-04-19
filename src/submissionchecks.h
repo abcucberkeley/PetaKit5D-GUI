@@ -39,6 +39,8 @@ void messageBoxError(const QString &errorText);
 
 void messageBoxSuccess(QWidget* parent, const QString &successText);
 
+bool messageBoxParseClusterWarning(QWidget* parent, const bool parseCluster, bool &enabled, const configFileVals &cFileVals);
+
 bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
 
 bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);

@@ -358,6 +358,7 @@ private:
     bool loadSettings;
     void checkLoadPrevSettings();
     QString mostRecentDir;
+    bool parseClusterWarning;
 
 private slots:
     void on_dsrAdvancedSettingsButton_clicked();

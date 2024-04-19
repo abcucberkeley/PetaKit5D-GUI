@@ -112,6 +112,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::availableQProcessOutput, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdout); // connect output to this QDockWidget to redirect the flow of output
     connect(mThreadManager, &matlabThreadManager::data, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdoutStdString); // This is what prints out stdout/stderr throughout this project to here.
     
+    // Set warnings
+    parseClusterWarning = true;
+    QSettings settings("ABC", "LLSM GUI");
+    settings.beginGroup("MainWindow");
+    if(settings.contains("parseClusterWarning")){
+        parseClusterWarning = settings.value("parseClusterWarning").toBool();
+    }
+    settings.endGroup();
+
     readConfigSettings();
     checkLoadPrevSettings();
     if(loadSettings) readSettings();
@@ -166,6 +175,9 @@ void MainWindow::writeSettings()
     // Path settings
     settings.setValue("isMcc",isMcc);
     settings.setValue("pathToMatlab",QString::fromStdString(pathToMatlab));
+
+    // Warning settings
+    settings.setValue("parseClusterWarning",parseClusterWarning);
 
     // Config settings
     settings.setValue("configFile", cFileVals.configFile);
@@ -1291,6 +1303,8 @@ void MainWindow::on_submitButton_clicked()
         }
     }
 
+    if(!messageBoxParseClusterWarning(this, ui->parseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
+
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
@@ -1965,6 +1979,8 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Job Settings for all functions
+
+
     addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
     addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
 
@@ -2683,6 +2699,8 @@ void MainWindow::on_simReconSubmitButton_clicked()
         }
     }
 
+    if(!messageBoxParseClusterWarning(this, ui->simReconParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
+
     // Make it so the user can't submit another job while we are submitting this one
     ui->submitButton->setEnabled(false);
 
@@ -2969,6 +2987,8 @@ void MainWindow::on_cropSubmitButton_clicked()
         messageBoxError("Cropping requires a result path!");
         return;
     }
+
+    if(!messageBoxParseClusterWarning(this, ui->cropParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
 
     // Disable submit button
     ui->cropSubmitButton->setEnabled(false);
@@ -3524,6 +3544,9 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     // Error if no channel patterns set
     if(!channelPatternsAreSet(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox,ui->tiffZarrConverterCustomPatternsLineEdit)) return;
 
+
+    if(!messageBoxParseClusterWarning(this, ui->tiffZarrConverterParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
+
     // Disable submit button
     ui->tiffZarrConverterSubmitButton->setEnabled(false);
 
@@ -3581,8 +3604,6 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
         addDataPathsToArgs(args,firstPrependedString,tiffZarrConverterDPaths,isMcc);
     }
 
-
-
     addCharArrayToArgs(args,"ChannelPatterns",prependedString,isMcc);
     addChannelPatternsToArgs(args,tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text(),prependedString,isMcc);
 
@@ -3634,6 +3655,8 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
 
     // Error if no channel patterns set
     if(!channelPatternsAreSet(mipGeneratorChannelWidgets,ui->mipGeneratorCustomPatternsCheckBox,ui->mipGeneratorCustomPatternsLineEdit)) return;
+
+    if(!messageBoxParseClusterWarning(this, ui->mipGeneratorParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
 
     // Disable submit button
     ui->mipGeneratorSubmitButton->setEnabled(false);
@@ -3745,6 +3768,8 @@ void MainWindow::on_resampleSubmitButton_clicked()
     // Error if no data paths set
     if(!dataPathsAreSet(resampleDPaths)) return;
 
+    if(!messageBoxParseClusterWarning(this, ui->resampleParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
+
     // Disable submit button
     ui->resampleSubmitButton->setEnabled(false);
 
@@ -3848,6 +3873,8 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
 
     // Error if no channel patterns set
     if(!channelPatternsAreSet(imarisConverterChannelWidgets,ui->imarisConverterCustomPatternsCheckBox,ui->imarisConverterCustomPatternsLineEdit)) return;
+
+    if(!messageBoxParseClusterWarning(this, ui->imarisConverterParseClusterCheckBox->isChecked(), parseClusterWarning, cFileVals)) return;
 
     // Disable submit button
     ui->imarisConverterSubmitButton->setEnabled(false);
