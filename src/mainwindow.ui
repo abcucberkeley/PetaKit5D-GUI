@@ -597,7 +597,7 @@
          <number>1</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -663,21 +663,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="onlyFirstTPLabel">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Only First TP</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -697,7 +682,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -767,19 +752,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="deskewOnlyFirstTPCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -799,7 +771,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -866,19 +838,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="rotateOnlyFirstTPCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -898,7 +857,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -992,25 +951,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="deskewAndRotateOnlyFirstTPCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -1030,7 +970,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1097,19 +1037,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="stitchOnlyFirstTPCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -1129,7 +1056,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1188,19 +1115,6 @@
           </item>
           <item>
            <widget class="QCheckBox" name="deconOnlySave16BitCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deconOnlyOnlyFirstTPCheckBox">
             <property name="enabled">
              <bool>false</bool>
             </property>

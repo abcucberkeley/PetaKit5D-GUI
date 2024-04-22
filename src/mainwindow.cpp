@@ -265,11 +265,6 @@ void MainWindow::writeSettings()
     settings.setValue("deskewAndRotateSave16Bit",ui->deskewAndRotateSave16BitCheckBox->isChecked());
     settings.setValue("stitchSave16Bit",ui->stitchSave16BitCheckBox->isChecked());
 
-    settings.setValue("deskewOnlyFirstTP",ui->deskewOnlyFirstTPCheckBox->isChecked());
-    settings.setValue("rotateOnlyFirstTP",ui->rotateOnlyFirstTPCheckBox->isChecked());
-    settings.setValue("deskewAndRotateOnlyFirstTP",ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked());
-    settings.setValue("stitchOnlyFirstTP",ui->stitchOnlyFirstTPCheckBox->isChecked());
-
     // Save Pipeline Settings
     settings.setValue("Deskew",ui->deskewCheckBox->isChecked());
     settings.setValue("Rotate",ui->rotateCheckBox->isChecked());
@@ -278,7 +273,6 @@ void MainWindow::writeSettings()
 
     // Decon Only Settings
     settings.setValue("deconOnly",ui->deconOnlyCheckBox->isChecked());
-    settings.setValue("deconOnlyOnlyFirstTP",ui->deconOnlyOnlyFirstTPCheckBox->isChecked());
     settings.setValue("deconOnlyOverwriteData",ui->deconOnlyOverwriteDataCheckBox->isChecked());
     settings.setValue("deconOnlySave16Bit",ui->deconOnlySave16BitCheckBox->isChecked());
 
@@ -821,11 +815,6 @@ void MainWindow::readSettings()
     ui->deskewAndRotateSave16BitCheckBox->setChecked(settings.value("deskewAndRotateSave16Bit").toBool());
     ui->stitchSave16BitCheckBox->setChecked(settings.value("stitchSave16Bit").toBool());
 
-    ui->deskewOnlyFirstTPCheckBox->setChecked(settings.value("deskewOnlyFirstTP").toBool());
-    ui->rotateOnlyFirstTPCheckBox->setChecked(settings.value("rotateOnlyFirstTP").toBool());
-    ui->deskewAndRotateOnlyFirstTPCheckBox->setChecked(settings.value("deskewAndRotateOnlyFirstTP").toBool());
-    ui->stitchOnlyFirstTPCheckBox->setChecked(settings.value("stitchOnlyFirstTP").toBool());
-
     // Read Pipeline Settings
     ui->deskewCheckBox->setChecked(settings.value("Deskew").toBool());
     ui->rotateCheckBox->setChecked(settings.value("Rotate").toBool());
@@ -833,7 +822,6 @@ void MainWindow::readSettings()
     ui->deskewAndRotateCheckBox->setChecked(settings.value("deskewAndRotate").toBool());
 
     ui->deconOnlyCheckBox->setChecked(settings.value("deconOnly").toBool());
-    ui->deconOnlyOnlyFirstTPCheckBox->setChecked(settings.value("deconOnlyOnlyFirstTP").toBool());
     ui->deconOnlyOverwriteDataCheckBox->setChecked(settings.value("deconOnlyOverwriteData").toBool());
     ui->deconOnlySave16BitCheckBox->setChecked(settings.value("deconOnlySave16Bit").toBool());
 
@@ -1530,9 +1518,6 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
         }
 
-        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
-        addBoolToArgs(args,ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
-
         addCharArrayToArgs(args,"timepoints",prependedString,isMcc);
         addArrayToArgs(args,guiVals.timepoints,false,prependedString,"[]",isMcc);
 
@@ -1614,10 +1599,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
         if (ui->deconOnlySave16BitCheckBox->isChecked()) addBoolToArgs(args,true,prependedString);
         else addBoolToArgs(args,false,prependedString);
-
-        // This needs to change FIX
-        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
 
         // Pipeline Setting
         addCharArrayToArgs(args,"Decon",prependedString,isMcc);
@@ -1781,10 +1762,6 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
         std::vector<std::string> Save16bitV = {btosM(ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked()),btosM(ui->stitchSave16BitCheckBox->isChecked()),btosM(false),btosM(false)};
         addArrayToArgs(args,Save16bitV,false,prependedString,"[]",isMcc);
-
-        // This needs to change FIX
-        addCharArrayToArgs(args,"onlyFirstTP",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewOnlyFirstTPCheckBox->isChecked() || ui->rotateOnlyFirstTPCheckBox->isChecked() || ui->deskewAndRotateOnlyFirstTPCheckBox->isChecked() || ui->stitchOnlyFirstTPCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.zarrFile,prependedString);
@@ -2086,7 +2063,6 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
 
         ui->deskewOverwriteDataCheckBox->setEnabled(true);
         ui->deskewSave16BitCheckBox->setEnabled(true);
-        ui->deskewOnlyFirstTPCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
         ui->deskewSave16BitCheckBox->setChecked(true);
@@ -2097,11 +2073,9 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
     else{
         ui->deskewOverwriteDataCheckBox->setEnabled(false);
         ui->deskewSave16BitCheckBox->setEnabled(false);
-        ui->deskewOnlyFirstTPCheckBox->setEnabled(false);
 
         ui->deskewOverwriteDataCheckBox->setChecked(false);
         ui->deskewSave16BitCheckBox->setChecked(false);
-        ui->deskewOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
         if(!(ui->stitchCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
@@ -2125,7 +2099,6 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
 
         ui->rotateOverwriteDataCheckBox->setEnabled(true);
         ui->rotateSave16BitCheckBox->setEnabled(true);
-        ui->rotateOnlyFirstTPCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
         ui->rotateSave16BitCheckBox->setChecked(true);
@@ -2136,11 +2109,9 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
     else{
         ui->rotateOverwriteDataCheckBox->setEnabled(false);
         ui->rotateSave16BitCheckBox->setEnabled(false);
-        ui->rotateOnlyFirstTPCheckBox->setEnabled(false);
 
         ui->rotateOverwriteDataCheckBox->setChecked(false);
         ui->rotateSave16BitCheckBox->setChecked(false);
-        ui->rotateOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
         if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
@@ -2165,7 +2136,6 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
 
         ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(true);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(true);
-        ui->deskewAndRotateOnlyFirstTPCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
         ui->deskewAndRotateSave16BitCheckBox->setChecked(true);
@@ -2176,11 +2146,9 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
     else{
         ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(false);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(false);
-        ui->deskewAndRotateOnlyFirstTPCheckBox->setEnabled(false);
 
         ui->deskewAndRotateOverwriteDataCheckBox->setChecked(false);
         ui->deskewAndRotateSave16BitCheckBox->setChecked(false);
-        ui->deskewAndRotateOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
         if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
@@ -2204,7 +2172,6 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
 
         ui->stitchOverwriteDataCheckBox->setEnabled(true);
         ui->stitchSave16BitCheckBox->setEnabled(true);
-        ui->stitchOnlyFirstTPCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
         ui->stitchSave16BitCheckBox->setChecked(true);
@@ -2215,11 +2182,9 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
     else{
         ui->stitchOverwriteDataCheckBox->setEnabled(false);
         ui->stitchSave16BitCheckBox->setEnabled(false);
-        ui->stitchOnlyFirstTPCheckBox->setEnabled(false);
 
         ui->stitchOverwriteDataCheckBox->setChecked(false);
         ui->stitchSave16BitCheckBox->setChecked(false);
-        ui->stitchOnlyFirstTPCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
         if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->deconOnlyCheckBox->isChecked())){
@@ -2634,7 +2599,6 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 
         ui->deconOnlyOverwriteDataCheckBox->setEnabled(true);
         ui->deconOnlySave16BitCheckBox->setEnabled(true);
-        ui->deconOnlyOnlyFirstTPCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
         ui->deconOnlySave16BitCheckBox->setChecked(true);
@@ -2645,11 +2609,9 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
     else{
         ui->deconOnlyOverwriteDataCheckBox->setEnabled(false);
         ui->deconOnlySave16BitCheckBox->setEnabled(false);
-        ui->deconOnlyOnlyFirstTPCheckBox->setEnabled(false);
 
         ui->deconOnlyOverwriteDataCheckBox->setChecked(false);
         ui->deconOnlySave16BitCheckBox->setChecked(false);
-        ui->deconOnlyOnlyFirstTPCheckBox->setChecked(false);
 
         if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->rotateCheckBox->isChecked())){
             ui->mainNextButton->setEnabled(false);
