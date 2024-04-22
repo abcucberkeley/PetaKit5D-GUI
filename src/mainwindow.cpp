@@ -254,8 +254,8 @@ void MainWindow::writeSettings()
 
     settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
-    settings.setValue("dzFromEncoder",ui->dzFromEncoderCheckBox->isChecked());
-    settings.setValue("xyPixelSize",guiVals.xyPixelSize);
+    settings.setValue("dzFromEncoder",guiVals.dzFromEncoder);
+    settings.setValue("xyPixelSize",ui->xyPixelSizeSpinBox->value());
     settings.setValue("Reverse",guiVals.Reverse);
     settings.setValue("objectiveScan",ui->objectiveScanCheckBox->isChecked());
     settings.setValue("sCMOSCameraFlip",guiVals.sCMOSCameraFlip);
@@ -804,8 +804,8 @@ void MainWindow::readSettings()
 
     guiVals.skewAngle = settings.value("skewAngle").toDouble();
     ui->dzLineEdit->setText(settings.value("dz").toString());
-    ui->dzFromEncoderCheckBox->setChecked(settings.value("dzFromEncoder").toBool());
-    guiVals.xyPixelSize = settings.value("xyPixelSize").toDouble();
+    guiVals.dzFromEncoder = settings.value("dzFromEncoder").toBool();
+    ui->xyPixelSizeSpinBox->setValue(settings.value("xyPixelSize").toDouble());
     guiVals.Reverse = settings.value("Reverse").toBool();
     ui->objectiveScanCheckBox->setChecked(settings.value("objectiveScan").toBool());
     guiVals.sCMOSCameraFlip = settings.value("sCMOSCameraFlip").toBool();
@@ -1373,7 +1373,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+        addScalarToArgs(args,std::to_string(ui->xyPixelSizeSpinBox->value()),prependedString);
 
         addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
@@ -1571,7 +1571,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+        addScalarToArgs(args,std::to_string(ui->xyPixelSizeSpinBox->value()),prependedString);
 
         addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
         addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
@@ -1723,7 +1723,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
-        addScalarToArgs(args,std::to_string(guiVals.xyPixelSize),prependedString);
+        addScalarToArgs(args,std::to_string(ui->xyPixelSizeSpinBox->value()),prependedString);
 
         addCharArrayToArgs(args,"sCMOSCameraFlip",prependedString,isMcc);
         addBoolToArgs(args,guiVals.sCMOSCameraFlip,prependedString);
@@ -1746,7 +1746,7 @@ void MainWindow::on_submitButton_clicked()
         //data.push_back(factory.createArray<uint64_t>({1,3},{488,560,642}));
 
         addCharArrayToArgs(args,"dzFromEncoder",prependedString,isMcc);
-        addBoolToArgs(args,ui->dzFromEncoderCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.dzFromEncoder,prependedString);
 
         addCharArrayToArgs(args,"resampleType",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.resampleType.toStdString(),prependedString,isMcc);

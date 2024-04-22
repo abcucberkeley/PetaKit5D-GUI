@@ -118,7 +118,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
-        <widget class="QLabel" name="xyPixelSizeLabel">
+        <widget class="QLabel" name="dzFomrEncoderLabel">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -129,29 +129,14 @@
           <string>Microns</string>
          </property>
          <property name="text">
-          <string>xy Pixel Size</string>
+          <string>Get Step Size from Encoder</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="xyPixelSizeSpinBox">
-         <property name="toolTip">
-          <string>Microns</string>
-         </property>
-         <property name="decimals">
-          <number>5</number>
-         </property>
-         <property name="maximum">
-          <double>1000000000.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.001000000000000</double>
-         </property>
-         <property name="stepType">
-          <enum>QAbstractSpinBox::DefaultStepType</enum>
-         </property>
-         <property name="value">
-          <double>0.108000000000000</double>
+        <widget class="QCheckBox" name="dzFromEncoderCheckBox">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>

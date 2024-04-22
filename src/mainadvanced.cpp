@@ -14,7 +14,7 @@ mainAdvanced::mainAdvanced(GUIvals& guiVals, configFileVals& cFileVals, QWidget 
 
     // set the vals in the window to the ones passed in
     ui->skewAngleSpinBox->setValue(guiVals.skewAngle);
-    ui->xyPixelSizeSpinBox->setValue(guiVals.xyPixelSize);
+    ui->dzFromEncoderCheckBox->setChecked(guiVals.dzFromEncoder);
     ui->reverseCheckBox->setChecked(guiVals.Reverse);
     ui->sCMOSCameraFlipCheckBox->setChecked(guiVals.sCMOSCameraFlip);
     ui->resampleTypeComboBox->setCurrentText(guiVals.resampleType);
@@ -43,7 +43,7 @@ void mainAdvanced::on_cancelButton_clicked()
 void mainAdvanced::on_submitButton_clicked()
 {
     gVals->skewAngle = ui->skewAngleSpinBox->value();
-    gVals->xyPixelSize = ui->xyPixelSizeSpinBox->value();
+    gVals->dzFromEncoder = ui->dzFromEncoderCheckBox->isChecked();
     gVals->Reverse = ui->reverseCheckBox->isChecked();
     gVals->sCMOSCameraFlip = ui->sCMOSCameraFlipCheckBox->isChecked();
     gVals->resampleType = ui->resampleTypeComboBox->currentText();

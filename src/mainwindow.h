@@ -22,7 +22,7 @@ class GUIvals{
     public:
         // Main Advanced Settings
         double skewAngle;
-        double xyPixelSize;
+        bool dzFromEncoder;
         bool Reverse;
         bool sCMOSCameraFlip;
 
@@ -97,7 +97,7 @@ class GUIvals{
         std::vector<std::string> maskFns;
 
         GUIvals() : skewAngle{32.45},
-                    xyPixelSize{.108},
+                    dzFromEncoder{false},
                     Reverse{true},
                     sCMOSCameraFlip{false},
                     BKRemoval{false},
