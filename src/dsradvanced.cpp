@@ -11,6 +11,7 @@ DSRadvanced::DSRadvanced(GUIvals &guiVals, QWidget *parent) :
     gVals = &guiVals;
 
     // set the vals in the window to the ones passed in
+    ui->flipZStackCheckBox->setChecked(guiVals.flipZStack);
     ui->bkRemovalCheckBox->setChecked(guiVals.BKRemoval);
     ui->lowerLimitSpinBox->setValue(guiVals.LowerLimit);
 }
@@ -29,6 +30,7 @@ void DSRadvanced::on_cancelButton_clicked()
 // Close the window and save the current vals
 void DSRadvanced::on_submitButton_clicked()
 {
+    gVals->flipZStack = ui->flipZStackCheckBox->isChecked();
     gVals->BKRemoval = ui->bkRemovalCheckBox->isChecked();
     gVals->LowerLimit = ui->lowerLimitSpinBox->value();
     DSRadvanced::close();

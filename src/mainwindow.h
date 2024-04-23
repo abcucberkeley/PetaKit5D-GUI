@@ -25,8 +25,10 @@ class GUIvals{
         bool dzFromEncoder;
         bool Reverse;
         bool sCMOSCameraFlip;
+        bool parseSettingFile;
 
         // DSR Advanced Settings
+        bool flipZStack;
         bool BKRemoval;
         double LowerLimit;
         QString resampleType;
@@ -68,7 +70,6 @@ class GUIvals{
         bool multiLoc;
         QString ProcessedDirStr;
         QString stitchInfoFullpath;
-        bool parseSettingFile;
         bool IOScan;
         std::vector<std::string> blockSize;
         std::vector<std::string> shardSize;
@@ -100,6 +101,8 @@ class GUIvals{
                     dzFromEncoder{false},
                     Reverse{true},
                     sCMOSCameraFlip{false},
+                    parseSettingFile{false},
+                    flipZStack{false},
                     BKRemoval{false},
                     LowerLimit{.4},
                     resampleType{"isotropic"},
@@ -133,7 +136,6 @@ class GUIvals{
                     multiLoc{false},
                     ProcessedDirStr{""},
                     stitchInfoFullpath{""},
-                    parseSettingFile{false},
                     IOScan{false},
                     blockSize{"256","256","256"},
                     shardSize{"0","0","0"},

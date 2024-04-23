@@ -22,6 +22,7 @@ mainAdvanced::mainAdvanced(GUIvals& guiVals, configFileVals& cFileVals, QWidget 
     ui->resampleYSpinBox->setValue(guiVals.resample[0]);
     ui->resampleXSpinBox->setValue(guiVals.resample[1]);
     ui->resampleZSpinBox->setValue(guiVals.resample[2]);
+    ui->parseSettingFileCheckBox->setChecked(guiVals.parseSettingFile);
     ui->zarrFileCheckBox->setChecked(guiVals.zarrFile);
     ui->saveZarrCheckBox->setChecked(guiVals.saveZarr);
     ui->save3DStackCheckBox->setChecked(guiVals.save3DStack);
@@ -51,6 +52,7 @@ void mainAdvanced::on_submitButton_clicked()
     gVals->resample[0] = ui->resampleYSpinBox->value();
     gVals->resample[1] = ui->resampleXSpinBox->value();
     gVals->resample[2] = ui->resampleZSpinBox->value();
+    gVals->parseSettingFile = ui->parseSettingFileCheckBox->isChecked();
     gVals->zarrFile = ui->zarrFileCheckBox->isChecked();
     gVals->saveZarr = ui->saveZarrCheckBox->isChecked();
     gVals->save3DStack = ui->save3DStackCheckBox->isChecked();

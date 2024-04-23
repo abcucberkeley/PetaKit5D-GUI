@@ -32,7 +32,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->multiLocCheckBox->setChecked(guiVals.multiLoc);
     ui->processedDirStringLineEdit->setText(guiVals.ProcessedDirStr);
     ui->stitchInfoFullpathLineEdit->setText(guiVals.stitchInfoFullpath);
-    ui->parseSettingFileCheckBox->setChecked(guiVals.parseSettingFile);
     ui->ioScanCheckBox->setChecked(guiVals.IOScan);
     ui->blockSizeYSpinBox->setValue(std::stoi(guiVals.blockSize[0]));
     ui->blockSizeXSpinBox->setValue(std::stoi(guiVals.blockSize[1]));
@@ -119,7 +118,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->multiLoc = ui->multiLocCheckBox->isChecked();
     gVals->ProcessedDirStr = ui->processedDirStringLineEdit->text();
     gVals->stitchInfoFullpath = ui->stitchInfoFullpathLineEdit->text();
-    gVals->parseSettingFile = ui->parseSettingFileCheckBox->isChecked();
     gVals->IOScan = ui->ioScanCheckBox->isChecked();
     gVals->blockSize[0] = ui->blockSizeYSpinBox->text().toStdString();
     gVals->blockSize[1] = ui->blockSizeXSpinBox->text().toStdString();

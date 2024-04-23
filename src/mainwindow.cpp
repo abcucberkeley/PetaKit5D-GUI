@@ -277,8 +277,8 @@ void MainWindow::writeSettings()
     settings.setValue("deconOnlySave16Bit",ui->deconOnlySave16BitCheckBox->isChecked());
 
     // Save DSR Settings
-    settings.setValue("parseSettingFile",ui->parseSettingsFileCheckBox->isChecked());
-    settings.setValue("flipZstack",ui->flipZStackCheckBox->isChecked());
+    settings.setValue("parseSettingFile",guiVals.parseSettingFile);
+    settings.setValue("flipZstack",guiVals.flipZStack);
 
     settings.setValue("LLFFCorrection",ui->llffCorrectionCheckBox->isChecked());
 
@@ -809,6 +809,7 @@ void MainWindow::readSettings()
     guiVals.Reverse = settings.value("Reverse").toBool();
     ui->objectiveScanCheckBox->setChecked(settings.value("objectiveScan").toBool());
     guiVals.sCMOSCameraFlip = settings.value("sCMOSCameraFlip").toBool();
+    guiVals.parseSettingFile = settings.value("parseSettingFile").toBool();
 
     ui->deskewSave16BitCheckBox->setChecked(settings.value("deskewSave16Bit").toBool());
     ui->rotateSave16BitCheckBox->setChecked(settings.value("rotateSave16Bit").toBool());
@@ -826,9 +827,6 @@ void MainWindow::readSettings()
     ui->deconOnlySave16BitCheckBox->setChecked(settings.value("deconOnlySave16Bit").toBool());
 
     // Read DSR Settings
-    ui->parseSettingsFileCheckBox->setChecked(settings.value("parseSettingFile").toBool());
-    ui->flipZStackCheckBox->setChecked(settings.value("flipZstack").toBool());
-
     ui->llffCorrectionCheckBox->setChecked(settings.value("LLFFCorrection").toBool());
 
     size = settings.beginReadArray("LSImagePaths");
@@ -847,6 +845,7 @@ void MainWindow::readSettings()
     settings.endArray();
 
     // Read DSR Advanced Settings
+    guiVals.flipZStack = settings.value("flipZstack").toBool();
     guiVals.BKRemoval = settings.value("BKRemoval").toBool();
     guiVals.LowerLimit = settings.value("LowerLimit").toDouble();
     guiVals.resampleType = settings.value("resampleType").toString();
@@ -1368,6 +1367,9 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,"ObjectiveScan",prependedString,isMcc);
     addBoolToArgs(args,ui->objectiveScanCheckBox->isChecked(),prependedString);
 
+    addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
+    addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
+
     if(lspDSR){
         addCharArrayToArgs(args,"dz",prependedString,isMcc);
         addScalarToArgs(args,ui->dzLineEdit->text().toStdString(),prependedString);
@@ -1379,7 +1381,7 @@ void MainWindow::on_submitButton_clicked()
         addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
-        addBoolToArgs(args,ui->flipZStackCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.flipZStack,prependedString);
 
         addCharArrayToArgs(args,"Save16bit",prependedString,isMcc);
         addBoolToArgs(args,ui->deskewAndRotateSave16BitCheckBox->isChecked(),prependedString);
@@ -1431,9 +1433,6 @@ void MainWindow::on_submitButton_clicked()
 
         //addCharArrayToArgs(args,"DSR",prependedString,isMcc);
         //addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
 
         if(!ui->axisOrderLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
@@ -1806,11 +1805,9 @@ void MainWindow::on_submitButton_clicked()
         //data.push_back(factory.createScalar<bool>(ui->rotateAfterDeconCheckBox->isChecked()));
 
         // DSR Settings
-        addCharArrayToArgs(args,"parseSettingFile",prependedString,isMcc);
-        addBoolToArgs(args,ui->parseSettingsFileCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
-        addBoolToArgs(args,ui->flipZStackCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.flipZStack,prependedString);
 
         addCharArrayToArgs(args,"LLFFCorrection",prependedString,isMcc);
         addBoolToArgs(args,ui->llffCorrectionCheckBox->isChecked(),prependedString);
