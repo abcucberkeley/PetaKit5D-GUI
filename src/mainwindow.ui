@@ -2494,7 +2494,7 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -2913,56 +2913,6 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_123" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_36">
-            <item>
-             <widget class="QLabel" name="erodeByFTPLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Erode By FTP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="erodeByFTPCheckBox">
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_21">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_125" stretch="1,1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_33">
@@ -2982,7 +2932,7 @@
             <item>
              <widget class="QLineEdit" name="backgroundIntensityLineEdit">
               <property name="text">
-               <string>99</string>
+               <string>100</string>
               </property>
              </widget>
             </item>

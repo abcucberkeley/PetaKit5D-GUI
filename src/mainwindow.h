@@ -50,6 +50,7 @@ class GUIvals{
         std::vector<std::string> scaleFactor;
         uint64_t deconOffset;
         std::vector<std::string> deconMaskFns;
+        bool erodeByFTP;
         bool deconRotate;
 
         // Job Advanced Settings
@@ -122,6 +123,7 @@ class GUIvals{
                     scaleFactor{},
                     deconOffset{0},
                     deconMaskFns{"","",""},
+                    erodeByFTP{true},
                     deconRotate{false},
                     largeFile{false},
                     jobLogDir{"../job_logs"},

@@ -27,6 +27,7 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
         ui->debugCheckBox->setEnabled(false);
     }
     ui->largeMethodComboBox->setCurrentText(guiVals.largeMethod);
+    ui->erodeByFTPCheckBox->setChecked(guiVals.erodeByFTP);
     ui->deconRotateCheckBox->setChecked(guiVals.deconRotate);
     ui->rotatePSFCheckBox->setChecked(guiVals.rotatePSF);
     ui->damperSpinBox->setValue(guiVals.damper);
@@ -58,6 +59,7 @@ void deconAdvanced::on_submitButton_clicked()
     gVals->debug = ui->debugCheckBox->isChecked();
     gVals->gpuJob = ui->gpuJobCheckBox->isChecked();
     gVals->largeMethod = ui->largeMethodComboBox->currentText();
+    gVals->erodeByFTP = ui->erodeByFTPCheckBox->isChecked();
     gVals->deconRotate = ui->deconRotateCheckBox->isChecked();
     gVals->rotatePSF = ui->rotatePSFCheckBox->isChecked();
     gVals->damper = ui->damperSpinBox->value();

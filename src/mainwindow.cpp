@@ -334,15 +334,14 @@ void MainWindow::writeSettings()
     // Save Decon Settings
     //settings.setValue("DS", ui->deskewDeconCheckBox->isChecked());
     //settings.setValue("DSR", ui->deskewAndRotateDeconCheckBox->isChecked());
+    settings.setValue("RLMethod",guiVals.RLMethod);
     settings.setValue("Background", ui->backgroundIntensityLineEdit->text());
     settings.setValue("dzPSF", ui->dzPSFLineEdit->text());
     settings.setValue("edgeErosion", ui->edgeErosionLineEdit->text());
-    settings.setValue("ErodeByFTP", ui->erodeByFTPCheckBox->isChecked());
-    settings.setValue("deconRotate", guiVals.deconRotate);
-
 
     // Save Decon Advaced Settings
-    settings.setValue("RLMethod",guiVals.RLMethod);
+    settings.setValue("ErodeByFTP", guiVals.erodeByFTP);
+    settings.setValue("deconRotate", guiVals.deconRotate);
     settings.setValue("fixIter", guiVals.fixIter);
     settings.setValue("errThresh", guiVals.errThresh);
     settings.setValue("debug", guiVals.debug);
@@ -886,7 +885,7 @@ void MainWindow::readSettings()
     ui->backgroundIntensityLineEdit->setText(settings.value("Background").toString());
     ui->dzPSFLineEdit->setText(settings.value("dzPSF").toString());
     ui->edgeErosionLineEdit->setText(settings.value("edgeErosion").toString());
-    ui->erodeByFTPCheckBox->setChecked(settings.value("ErodeByFTP").toBool());
+    guiVals.erodeByFTP = settings.value("ErodeByFTP").toBool();
     guiVals.deconRotate = settings.value("deconRotate").toBool();
 
     // Read Decon Advaced Settings
@@ -1646,7 +1645,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
-        addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.erodeByFTP,prependedString);
 
         // Decon Advanced settings
         if(psfFullPaths.size()){
@@ -1901,7 +1900,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
-        addBoolToArgs(args,ui->erodeByFTPCheckBox->isChecked(),prependedString);
+        addBoolToArgs(args,guiVals.erodeByFTP,prependedString);
 
         // Decon Advanced settings
         if(psfFullPaths.size()){

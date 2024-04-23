@@ -21,7 +21,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout" rowstretch="0,10,0">
    <item row="1" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
      <property name="spacing">
       <number>1</number>
      </property>
@@ -243,6 +243,43 @@
            <string>inplace</string>
           </property>
          </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_12">
+       <item>
+        <widget class="QLabel" name="erodeByFTPLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Erode by FTP</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="erodeByFTPCheckBox">
+         <property name="text">
+          <string/>
+         </property>
         </widget>
        </item>
       </layout>
