@@ -1526,21 +1526,14 @@
                </font>
               </property>
               <property name="text">
-               <string>Results Dir</string>
+               <string>Result Directory Name</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLineEdit" name="resultsDirLineEdit">
               <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="resultsDirBrowseButton">
-              <property name="text">
-               <string>Browse</string>
+               <string>matlab_stitch</string>
               </property>
              </widget>
             </item>

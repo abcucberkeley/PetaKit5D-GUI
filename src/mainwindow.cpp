@@ -2019,16 +2019,6 @@ void MainWindow::on_submitButton_clicked()
     guiVals.jobLogDir = jobLogCopy;
 }
 
-// Browse for Result Dir Folder
-void MainWindow::on_resultsDirBrowseButton_clicked()
-{
-    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select or Create and Select the Results Folder",mostRecentDir));
-    if(!folder_path.baseName().isEmpty()){
-        ui->resultsDirLineEdit->setText(folder_path.baseName());
-        mostRecentDir = folder_path.absoluteFilePath();
-    }
-}
-
 // Set tool tip for Stitch Result Dir line
 void MainWindow::on_resultsDirLineEdit_textChanged(const QString &arg1)
 {
