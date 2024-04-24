@@ -371,7 +371,12 @@ private:
     bool loadSettings;
     void checkLoadPrevSettings();
     QString mostRecentDir;
+
+    // Warnings
     bool parseClusterWarning;
+
+    std::pair<std::string,std::string> prevFuncTypeArgs;
+    bool sameJobSubmittedWarning;
 
 private slots:
     void on_dsrAdvancedSettingsButton_clicked();

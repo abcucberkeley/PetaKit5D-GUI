@@ -30,6 +30,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     readMatlabPathSettings();
 
+    // Set warnings
+    parseClusterWarning = true;
+    sameJobSubmittedWarning = true;
+    QSettings settings("ABC", "LLSM GUI");
+    settings.beginGroup("MainWindow");
+    if(settings.contains("parseClusterWarning")){
+        parseClusterWarning = settings.value("parseClusterWarning").toBool();
+    }
+    if(settings.contains("sameJobSubmittedWarning")){
+        sameJobSubmittedWarning = settings.value("sameJobSubmittedWarning").toBool();
+    }
+    settings.endGroup();
+
     // Set the tabs widget as the main Widget
     this->setCentralWidget(ui->tabWidget);
 
@@ -115,15 +128,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(mThreadManager, &matlabThreadManager::availableQProcessOutput, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdout); // connect output to this QDockWidget to redirect the flow of output
     connect(mThreadManager, &matlabThreadManager::data, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdoutStdString); // This is what prints out stdout/stderr throughout this project to here.
-    
-    // Set warnings
-    parseClusterWarning = true;
-    QSettings settings("ABC", "LLSM GUI");
-    settings.beginGroup("MainWindow");
-    if(settings.contains("parseClusterWarning")){
-        parseClusterWarning = settings.value("parseClusterWarning").toBool();
-    }
-    settings.endGroup();
 
     readConfigSettings();
     checkLoadPrevSettings();
@@ -177,11 +181,12 @@ void MainWindow::writeSettings()
     settings.setValue("version", QCoreApplication::applicationVersion());
 
     // Path settings
-    settings.setValue("isMcc",isMcc);
-    settings.setValue("pathToMatlab",QString::fromStdString(pathToMatlab));
+    settings.setValue("isMcc", isMcc);
+    settings.setValue("pathToMatlab", QString::fromStdString(pathToMatlab));
 
     // Warning settings
-    settings.setValue("parseClusterWarning",parseClusterWarning);
+    settings.setValue("parseClusterWarning", parseClusterWarning);
+    settings.setValue("sameJobSubmittedWarning", sameJobSubmittedWarning);
 
     // Config settings
     settings.setValue("configFile", cFileVals.configFile);
@@ -1979,11 +1984,6 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
     addScalarToArgs(args,ui->cpusPerTaskLineEdit->text().toStdString(),prependedString);
 
-    if(!guiVals.jobLogDir.isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
-    }
-
     if(!guiVals.uuid.isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.uuid.toStdString(),prependedString,isMcc);
@@ -2008,6 +2008,13 @@ void MainWindow::on_submitButton_clicked()
     else if(lspStitch) funcType = "XR_matlab_stitching_wrapper";
     else if(ui->deconOnlyCheckBox->isChecked()) funcType = "XR_decon_data_wrapper";
     else funcType = "XR_microscopeAutomaticProcessing";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!guiVals.jobLogDir.isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
+    }
 
     // Send data to the MATLAB thread
     auto mPJNPC = std::make_tuple(mainPath, timeJobName, ui->parseClusterCheckBox->isChecked());
@@ -2865,10 +2872,6 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addScalarToArgs(args,ui->simReconCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!simreconVals.jobLogDir.isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,simreconVals.jobLogDir.toStdString(),prependedString,isMcc);
-    }
 
     if(!simreconVals.uuid.isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
@@ -2888,6 +2891,14 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addScalarToArgs(args,std::to_string(simreconVals.maxModifyTime),prependedString);
 
     QString funcType = "simReconAutomaticProcessing";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!simreconVals.jobLogDir.isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,simreconVals.jobLogDir.toStdString(),prependedString,isMcc);
+    }
+
     // Send data to the MATLAB thread
     auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -2995,11 +3006,6 @@ void MainWindow::on_cropSubmitButton_clicked()
     addScalarToArgs(args,ui->cropCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->cropJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
-    }
-
     if(!ui->cropUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->cropUuidLineEdit->text().toStdString(),prependedString,isMcc);
@@ -3013,6 +3019,13 @@ void MainWindow::on_cropSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType = "XR_crop_dataset";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->cropJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
 
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->cropParseClusterCheckBox->isChecked());
@@ -3243,6 +3256,8 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
 
     QString funcType = "XR_fftSpectrumComputingWrapper";
 
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FFT Analysis"),true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3353,6 +3368,9 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // TODO: ADD PARSE CLUSTER
 
     QString funcType = "XR_FSC_analysis_wrapper";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3472,6 +3490,8 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
         addArrayToArgs(args,distThreshV,false,prependedString,"[]",isMcc);
     }
 
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("PSF Analysis"),true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3562,11 +3582,6 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
     addBoolToArgs(args,ui->tiffZarrConverterMasterComputeCheckBox->isChecked(),prependedString);
 
-    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->tiffZarrConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
-    }
-
     if(!simreconVals.uuid.isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->tiffZarrConverterUuidLineEdit->text().toStdString(),prependedString,isMcc);
@@ -3583,6 +3598,13 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
 
     addCharArrayToArgs(args,"ConfigFile",prependedString,isMcc);
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->tiffZarrConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
 
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),ui->tiffZarrConverterParseClusterCheckBox->isChecked());
@@ -3653,11 +3675,6 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addScalarToArgs(args,ui->mipGeneratorCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->mipGeneratorJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
-    }
-
     if(!ui->mipGeneratorUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->mipGeneratorUuidLineEdit->text().toStdString(),prependedString,isMcc);
@@ -3671,6 +3688,14 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType = "XR_MIP_wrapper";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->mipGeneratorJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3804,11 +3829,6 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addScalarToArgs(args,ui->resampleCpusPerTaskSpinBox->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!ui->resampleJobLogDirLineEdit->text().isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->resampleJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
-    }
-
     if(!ui->resampleUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->resampleUuidLineEdit->text().toStdString(),prependedString,isMcc);
@@ -3822,6 +3842,14 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType = "XR_resample_dataset";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!ui->resampleJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->resampleJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -3908,11 +3936,6 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     addScalarToArgs(args,ui->imarisConverterCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     // Advanced Job Settings
-    if(!ui->imarisConverterJobLogDirLineEdit->text().isEmpty()){
-        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->imarisConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
-    }
-
     if(!ui->imarisConverterUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->imarisConverterUuidLineEdit->text().toStdString(),prependedString,isMcc);
@@ -3926,6 +3949,14 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
 
     QString funcType = "XR_imaris_conversion_data_wrapper";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    if(!ui->imarisConverterJobLogDirLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->imarisConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("Imaris Converter Job"),ui->imarisConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
@@ -4012,6 +4043,9 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     }
 
     QString funcType = "XR_visualize_OTF_mask_segmentation";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
     // Send data to the MATLAB thread
     auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);

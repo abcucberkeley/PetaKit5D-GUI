@@ -41,6 +41,10 @@ void messageBoxSuccess(QWidget* parent, const QString &successText);
 
 bool messageBoxParseClusterWarning(QWidget* parent, const bool parseCluster, bool &enabled, const configFileVals &cFileVals);
 
+bool messageBoxSameJobSubmittedWarning(QWidget* parent,
+                                       std::pair<std::string,std::string> &prevFuncTypeArgs,
+                                       const std::string &funcType, const std::string &args, bool &enabled);
+
 bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
 
 bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);

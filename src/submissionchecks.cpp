@@ -36,7 +36,7 @@ bool messageBoxParseClusterWarning(QWidget* parent, const bool parseCluster, boo
                        "For more infomation about creating a config files and creating them, please visit this wiki page: "
                        "<a href='https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki/3.-Main-Settings#3-config-file-settings-located-in-main-advanced-settings'>Config File Settings</a>");
     messageBox.setFixedSize(600,400);
-    messageBox.addButton("I understand, Continue Anyway", QMessageBox::AcceptRole);
+    messageBox.addButton("I Understand, Continue Anyway", QMessageBox::AcceptRole);
     QAbstractButton* cancelButton = messageBox.addButton("Cancel Job", QMessageBox::RejectRole);
     QCheckBox* checkBox = new QCheckBox("Do not ask me again");
     messageBox.setCheckBox(checkBox);
@@ -47,6 +47,38 @@ bool messageBoxParseClusterWarning(QWidget* parent, const bool parseCluster, boo
     }
 
     if(messageBox.clickedButton() == cancelButton){
+        return false;
+    }
+    return true;
+}
+
+bool messageBoxSameJobSubmittedWarning(QWidget* parent,
+                                       std::pair<std::string,std::string> &prevFuncTypeArgs,
+                                       const std::string &funcType, const std::string &args, bool &enabled){
+    if(!enabled || prevFuncTypeArgs.first != funcType || prevFuncTypeArgs.second != args){
+        prevFuncTypeArgs.first = funcType;
+        prevFuncTypeArgs.second = args;
+        return true;
+    }
+
+    QMessageBox messageBox(parent);
+    messageBox.setIcon(QMessageBox::Warning);
+    messageBox.setWindowTitle("Warning");
+    messageBox.setText("It looks the job you are submitting is exactly the same as the last job submitted. "
+                       "Are you sure you want to submit it again?");
+    messageBox.setFixedSize(600,400);
+    messageBox.addButton("I Understand, Continue Anyway", QMessageBox::AcceptRole);
+    QAbstractButton* cancelButton = messageBox.addButton("Cancel Job", QMessageBox::RejectRole);
+    QCheckBox* checkBox = new QCheckBox("Do not ask me again");
+    messageBox.setCheckBox(checkBox);
+    messageBox.exec();
+
+    if(checkBox->isChecked()){
+        enabled = false;
+    }
+
+    if(messageBox.clickedButton() == cancelButton){
+        ((MainWindow*)parent)->onEnableSubmitButton();
         return false;
     }
     return true;

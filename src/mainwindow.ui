@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Main">
      <property name="minimumSize">
@@ -12595,7 +12595,7 @@
  <connections/>
  <buttongroups>
   <buttongroup name="deconRLMethodButtonGroup"/>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>
