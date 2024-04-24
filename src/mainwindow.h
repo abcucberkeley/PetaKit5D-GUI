@@ -38,6 +38,11 @@ class GUIvals{
         bool saveZarr;
         bool save3DStack;
 
+        // Stitch Advanced Settings
+        bool boundboxCropCheckBox;
+        std::vector<std::string> boundboxCrop;
+        std::vector<bool> stitchMIP;
+
         // Decon Advanced Settings
         QString RLMethod;
         bool fixIter;
@@ -112,6 +117,9 @@ class GUIvals{
                     zarrFile{false},
                     saveZarr{false},
                     save3DStack{true},
+                    boundboxCropCheckBox{false},
+                    boundboxCrop{},
+                    stitchMIP{false,false,false},
                     RLMethod{"OMW"},
                     fixIter{false},
                     errThresh{.00000001},
@@ -412,8 +420,6 @@ private slots:
 
     void on_imageListFullPathsLineEdit_textChanged(const QString &arg1);
 
-    void on_boundBoxCheckBox_stateChanged(int arg1);
-
     void on_llffCorrectionCheckBox_stateChanged(int arg1);
 
     void on_lsImageAddPathsButton_clicked();
@@ -493,6 +499,10 @@ private slots:
     void on_otfMaskingSkewedManualCheckBox_stateChanged(int arg1);
 
     void on_otfMaskingSubmitButton_clicked();
+
+    void on_stitchAdvancedSettingsButton_clicked();
+
+    void on_stitchOnlineStitchCheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

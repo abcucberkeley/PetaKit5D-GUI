@@ -7,6 +7,7 @@
 #include "simreconmainadvanced.h"
 #include "simreconreconadvanced.h"
 #include "simreconjobadvanced.h"
+#include "stitchadvanced.h"
 #include "largescaleprocessingsettings.h"
 #include "datapaths.h"
 #include "loadprevioussettings.h"
@@ -315,19 +316,21 @@ void MainWindow::writeSettings()
     settings.setValue("xcorrShift", ui->xCorrShiftCheckBox->isChecked());
     settings.setValue("xcorrMode", ui->xCorrModeComboBox->currentText());
 
-    settings.setValue("boundBox", ui->boundBoxCheckBox->isChecked());
-    settings.setValue("bbYMin", ui->boundBoxYMinSpinBox->value());
-    settings.setValue("bbXMin", ui->boundBoxXMinSpinBox->value());
-    settings.setValue("bbZMin", ui->boundBoxZMinSpinBox->value());
-    settings.setValue("bbYMax", ui->boundBoxYMaxSpinBox->value());
-    settings.setValue("bbXMax", ui->boundBoxXMaxSpinBox->value());
-    settings.setValue("bbZMax", ui->boundBoxZMaxSpinBox->value());
+    settings.setValue("boundBox", guiVals.boundboxCropCheckBox);
+    if(guiVals.boundboxCropCheckBox){
+        settings.setValue("bbYMin", QString::fromStdString(guiVals.boundboxCrop[0]));
+        settings.setValue("bbXMin", QString::fromStdString(guiVals.boundboxCrop[1]));
+        settings.setValue("bbZMin", QString::fromStdString(guiVals.boundboxCrop[2]));
+        settings.setValue("bbYMax", QString::fromStdString(guiVals.boundboxCrop[3]));
+        settings.setValue("bbXMax", QString::fromStdString(guiVals.boundboxCrop[4]));
+        settings.setValue("bbZMax", QString::fromStdString(guiVals.boundboxCrop[5]));
+    }
 
     settings.setValue("primaryCh", ui->primaryCHLineEdit->text());
 
-    settings.setValue("stitchMIPY", ui->stitchStitchMIPYSpinBox->value());
-    settings.setValue("stitchMIPX", ui->stitchStitchMIPXSpinBox->value());
-    settings.setValue("stitchMIPZ", ui->stitchStitchMIPZSpinBox->value());
+    settings.setValue("stitchMIPY", bool(guiVals.stitchMIP[0]));
+    settings.setValue("stitchMIPX", bool(guiVals.stitchMIP[1]));
+    settings.setValue("stitchMIPZ", bool(guiVals.stitchMIP[2]));
     settings.setValue("onlineStitch", ui->stitchOnlineStitchCheckBox->isChecked());
     settings.setValue("generateImageList", ui->stitchGenerateImageListComboBox->currentText());
 
@@ -861,20 +864,24 @@ void MainWindow::readSettings()
     ui->xCorrShiftCheckBox->setChecked(settings.value("xcorrShift").toBool());
     ui->xCorrModeComboBox->setCurrentText(settings.value("xcorrMode").toString());
 
-    ui->boundBoxCheckBox->setChecked(settings.value("boundBox").toBool());
-    ui->boundBoxYMinSpinBox->setValue(settings.value("bbYMin").toInt());
-    ui->boundBoxXMinSpinBox->setValue(settings.value("bbXMin").toInt());
-    ui->boundBoxZMinSpinBox->setValue(settings.value("bbZMin").toInt());
-    ui->boundBoxYMaxSpinBox->setValue(settings.value("bbYMax").toInt());
-    ui->boundBoxXMinSpinBox->setValue(settings.value("bbXMax").toInt());
-    ui->boundBoxZMinSpinBox->setValue(settings.value("bbZMin").toInt());
+    guiVals.boundboxCropCheckBox = settings.value("boundBox").toBool();
+    if(guiVals.boundboxCropCheckBox){
+        guiVals.boundboxCrop = {settings.value("bbYMin").toString().toStdString(),
+                                settings.value("bbXMin").toString().toStdString(),
+                                settings.value("bbZMin").toString().toStdString(),
+                                settings.value("bbYMax").toString().toStdString(),
+                                settings.value("bbXMax").toString().toStdString(),
+                                settings.value("bbZMax").toString().toStdString()};
+    }
 
     ui->primaryCHLineEdit->setText(settings.value("primaryCh").toString());
 
-    ui->stitchStitchMIPYSpinBox->setValue(settings.value("stitchMIPY").toInt());
-    ui->stitchStitchMIPXSpinBox->setValue(settings.value("stitchMIPX").toInt());
-    ui->stitchStitchMIPZSpinBox->setValue(settings.value("stitchMIPZ").toInt());
+    guiVals.stitchMIP[0] = settings.value("stitchMIPY").toBool();
+    guiVals.stitchMIP[1] = settings.value("stitchMIPX").toBool();
+    guiVals.stitchMIP[2] = settings.value("stitchMIPZ").toBool();
     ui->stitchOnlineStitchCheckBox->setChecked(settings.value("onlineStitch").toBool());
+
+    on_stitchOnlineStitchCheckBox_stateChanged(settings.value("onlineStitch").toBool());
     ui->stitchGenerateImageListComboBox->setCurrentText(settings.value("generateImageList").toString());
 
 
@@ -1505,14 +1512,14 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"xcorrThresh",prependedString,isMcc);
         addScalarToArgs(args,guiVals.xcorrThresh.toStdString(),prependedString);
 
-        if(ui->boundBoxCheckBox->isChecked()){
+        if(guiVals.boundboxCropCheckBox){
             addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);
-            std::vector<std::string> boundboxCropV = {ui->boundBoxYMinSpinBox->text().toStdString(),
-                                                      ui->boundBoxXMinSpinBox->text().toStdString(),
-                                                      ui->boundBoxZMinSpinBox->text().toStdString(),
-                                                      ui->boundBoxYMaxSpinBox->text().toStdString(),
-                                                      ui->boundBoxXMaxSpinBox->text().toStdString(),
-                                                      ui->boundBoxZMaxSpinBox->text().toStdString()};
+            std::vector<std::string> boundboxCropV = {guiVals.boundboxCrop[0],
+                                                      guiVals.boundboxCrop[1],
+                                                      guiVals.boundboxCrop[2],
+                                                      guiVals.boundboxCrop[3],
+                                                      guiVals.boundboxCrop[4],
+                                                      guiVals.boundboxCrop[5]};
             addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
         }
 
@@ -1546,7 +1553,9 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,guiVals.EdgeArtifacts.toStdString(),prependedString);
 
         addCharArrayToArgs(args,"stitchMIP",prependedString,isMcc);
-        std::vector<std::string> stitchMIPV = {btosM(ui->stitchStitchMIPYSpinBox->value()),btosM(ui->stitchStitchMIPXSpinBox->value()),btosM(ui->stitchStitchMIPZSpinBox->value())};
+        std::vector<std::string> stitchMIPV = {btosM(guiVals.stitchMIP[0]),
+                                               btosM(guiVals.stitchMIP[1]),
+                                               btosM(guiVals.stitchMIP[2])};
         addArrayToArgs(args,stitchMIPV,false,prependedString,"[]",isMcc);
 
         addCharArrayToArgs(args,"onlineStitch",prependedString,isMcc);
@@ -1860,9 +1869,14 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"xcorrMode",prependedString,isMcc);
         addCharArrayToArgs(args,ui->xCorrModeComboBox->currentText().toStdString(),prependedString,isMcc);
 
-        if(ui->boundBoxCheckBox->isChecked()){
+        if(guiVals.boundboxCropCheckBox){
             addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);
-            std::vector<std::string> boundboxCropV = {ui->boundBoxYMinSpinBox->text().toStdString(),ui->boundBoxXMinSpinBox->text().toStdString(),ui->boundBoxZMinSpinBox->text().toStdString(),ui->boundBoxYMaxSpinBox->text().toStdString(), ui->boundBoxXMaxSpinBox->text().toStdString(), ui->boundBoxZMaxSpinBox->text().toStdString()};
+            std::vector<std::string> boundboxCropV = {guiVals.boundboxCrop[0],
+                                                      guiVals.boundboxCrop[1],
+                                                      guiVals.boundboxCrop[2],
+                                                      guiVals.boundboxCrop[3],
+                                                      guiVals.boundboxCrop[4],
+                                                      guiVals.boundboxCrop[5]};
             addArrayToArgs(args,boundboxCropV,false,prependedString,"[]",isMcc);
         }
 
@@ -1872,13 +1886,15 @@ void MainWindow::on_submitButton_clicked()
         }
 
         addCharArrayToArgs(args,"stitchMIP",prependedString,isMcc);
-        std::vector<std::string> stitchMIPV = {btosM(ui->stitchStitchMIPYSpinBox->value()),btosM(ui->stitchStitchMIPXSpinBox->value()),btosM(ui->stitchStitchMIPZSpinBox->value())};
+        std::vector<std::string> stitchMIPV = {btosM(guiVals.stitchMIP[0]),
+                                               btosM(guiVals.stitchMIP[1]),
+                                               btosM(guiVals.stitchMIP[2])};
         addArrayToArgs(args,stitchMIPV,false,prependedString,"[]",isMcc);
 
         addCharArrayToArgs(args,"onlineStitch",prependedString,isMcc);
         addBoolToArgs(args,ui->stitchOnlineStitchCheckBox->isChecked(),prependedString);
 
-        if(ui->stitchGenerateImageListComboBox->currentText().toStdString() != "none"){
+        if(ui->stitchOnlineStitchCheckBox->isChecked() && ui->stitchGenerateImageListComboBox->currentText().toStdString() != "none"){
             addCharArrayToArgs(args,"generateImageList",prependedString,isMcc);
             addCharArrayToArgs(args,ui->stitchGenerateImageListComboBox->currentText().toStdString(),prependedString,isMcc);
         }
@@ -2464,33 +2480,6 @@ void MainWindow::on_imageListFullPathsBrowseButton_clicked()
 void MainWindow::on_imageListFullPathsLineEdit_textChanged(const QString &arg1)
 {
     ui->imageListFullPathsLineEdit->setToolTip(arg1);
-}
-
-// Enable bound box options or disable them
-void MainWindow::on_boundBoxCheckBox_stateChanged(int arg1)
-{
-
-    ui->boundBoxYMinLabel->setEnabled(arg1);
-    ui->boundBoxYMinSpinBox->setEnabled(arg1);
-    ui->boundBoxXMinLabel->setEnabled(arg1);
-    ui->boundBoxXMinSpinBox->setEnabled(arg1);
-    ui->boundBoxZMinLabel->setEnabled(arg1);
-    ui->boundBoxZMinSpinBox->setEnabled(arg1);
-    ui->boundBoxYMaxLabel->setEnabled(arg1);
-    ui->boundBoxYMaxSpinBox->setEnabled(arg1);
-    ui->boundBoxXMaxLabel->setEnabled(arg1);
-    ui->boundBoxXMaxSpinBox->setEnabled(arg1);
-    ui->boundBoxZMaxLabel->setEnabled(arg1);
-    ui->boundBoxZMaxSpinBox->setEnabled(arg1);
-
-    if(!arg1){
-        ui->boundBoxYMinSpinBox->setValue(0);
-        ui->boundBoxXMinSpinBox->setValue(0);
-        ui->boundBoxZMinSpinBox->setValue(0);
-        ui->boundBoxYMaxSpinBox->setValue(0);
-        ui->boundBoxXMaxSpinBox->setValue(0);
-        ui->boundBoxZMaxSpinBox->setValue(0);
-    }
 }
 
 // Enable or Disable settings associated with LLFF
@@ -4027,3 +4016,18 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
+
+void MainWindow::on_stitchAdvancedSettingsButton_clicked()
+{
+    stitchAdvanced sAdvanced(guiVals);
+    sAdvanced.setModal(true);
+    sAdvanced.exec();
+}
+
+
+void MainWindow::on_stitchOnlineStitchCheckBox_stateChanged(int arg1)
+{
+    ui->stitchGenerateImageListLabel->setEnabled(arg1);
+    ui->stitchGenerateImageListComboBox->setEnabled(arg1);
+}
+

@@ -34,6 +34,7 @@ HEADERS += \
         src/simreconjobadvanced.h \
         src/simreconmainadvanced.h \
         src/simreconreconadvanced.h \
+        src/stitchadvanced.h \
         src/submissionchecks.h
 
 FORMS += \
@@ -53,7 +54,8 @@ FORMS += \
         src/loadprevioussettings.ui \
         src/simreconjobadvanced.ui \
         src/simreconmainadvanced.ui \
-        src/simreconreconadvanced.ui
+        src/simreconreconadvanced.ui \
+        src/stitchadvanced.ui
 
 SOURCES += \
         src/configfilecreator.cpp \
@@ -82,6 +84,7 @@ SOURCES += \
         src/simreconjobadvanced.cpp \
         src/simreconmainadvanced.cpp \
         src/simreconreconadvanced.cpp \
+        src/stitchadvanced.cpp \
         src/submissionchecks.cpp
 
 RESOURCES += \
