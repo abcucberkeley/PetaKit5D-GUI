@@ -70,8 +70,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->resolutionXYPixelSizeSpinBox->setValue(std::stod(guiVals.Resolution[0]));
     ui->resolutionDZSpinBox->setValue(std::stod(guiVals.Resolution[1]));
     ui->overlapTypeComboBox->setCurrentText(guiVals.overlapType);
-    ui->xyMaxOffsetSpinBox->setValue(guiVals.xyMaxOffset.toInt());
-    ui->zMaxOffsetSpinBox->setValue(guiVals.zMaxOffset.toInt());
     ui->xcorrDownsampleYSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[0]));
     ui->xcorrDownsampleXSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[1]));
     ui->xcorrDownsampleZSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[2]));
@@ -156,8 +154,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->Resolution[0] = ui->resolutionXYPixelSizeSpinBox->text().toStdString();
     gVals->Resolution[1] = ui->resolutionDZSpinBox->text().toStdString();
     gVals->overlapType = ui->overlapTypeComboBox->currentText();
-    gVals->xyMaxOffset = ui->xyMaxOffsetSpinBox->text();
-    gVals->zMaxOffset = ui->zMaxOffsetSpinBox->text();
     gVals->xcorrDownsample[0] = ui->xcorrDownsampleYSpinBox->text().toStdString();
     gVals->xcorrDownsample[1] = ui->xcorrDownsampleXSpinBox->text().toStdString();
     gVals->xcorrDownsample[2] = ui->xcorrDownsampleZSpinBox->text().toStdString();

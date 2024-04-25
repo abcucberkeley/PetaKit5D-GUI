@@ -1509,10 +1509,10 @@ void MainWindow::on_submitButton_clicked()
         addBoolToArgs(args,ui->xCorrShiftCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"xyMaxOffset",prependedString,isMcc);
-        addScalarToArgs(args,guiVals.xyMaxOffset.toStdString(),prependedString);
+        addScalarToArgs(args,ui->xyMaxOffsetSpinBox->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"zMaxOffset",prependedString,isMcc);
-        addScalarToArgs(args,guiVals.zMaxOffset.toStdString(),prependedString);
+        addScalarToArgs(args,ui->zMaxOffsetSpinBox->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xcorrDownsample",prependedString,isMcc);
         addArrayToArgs(args,guiVals.xcorrDownsample,false,prependedString,"[]",isMcc);
@@ -1876,6 +1876,12 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"BlendMethod",prependedString,isMcc);
         addCharArrayToArgs(args,ui->blendMethodComboBox->currentText().toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"xyMaxOffset",prependedString,isMcc);
+        addScalarToArgs(args,ui->xyMaxOffsetSpinBox->text().toStdString(),prependedString);
+
+        addCharArrayToArgs(args,"zMaxOffset",prependedString,isMcc);
+        addScalarToArgs(args,ui->zMaxOffsetSpinBox->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xcorrShift",prependedString,isMcc);
         addBoolToArgs(args,ui->xCorrShiftCheckBox->isChecked(),prependedString);

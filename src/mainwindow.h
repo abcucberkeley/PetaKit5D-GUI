@@ -88,8 +88,6 @@ class GUIvals{
         QString TileOffset;
         std::vector<std::string> Resolution;
         QString overlapType;
-        QString xyMaxOffset;
-        QString zMaxOffset;
         std::vector<std::string> xcorrDownsample;
         QString xcorrThresh;
         std::vector<std::string> timepoints;
@@ -158,8 +156,6 @@ class GUIvals{
                     TileOffset{"0"},
                     Resolution{".108",".5"},
                     overlapType{""},
-                    xyMaxOffset{"300"},
-                    zMaxOffset{"50"},
                     xcorrDownsample{"2","2","1"},
                     xcorrThresh{".25"},
                     timepoints{},

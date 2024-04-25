@@ -1486,7 +1486,7 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -1632,7 +1632,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_113" stretch="1">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_24">
+           <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,4,1">
             <item>
              <widget class="QLabel" name="imageListFullPathsLabel">
               <property name="font">
@@ -1724,17 +1724,14 @@
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer_18">
+         <spacer name="verticalSpacer_11">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>10</height>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -1795,6 +1792,80 @@
                 <string>feather</string>
                </property>
               </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_18">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_36">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_62">
+            <item>
+             <widget class="QLabel" name="xyMaxOffsetLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>XY Max Offset</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="xyMaxOffsetSpinBox">
+              <property name="maximum">
+               <number>2000000000</number>
+              </property>
+              <property name="value">
+               <number>300</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_63">
+            <item>
+             <widget class="QLabel" name="zMaxOffsetLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Z Max Offset</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="zMaxOffsetSpinBox">
+              <property name="maximum">
+               <number>2000000000</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
              </widget>
             </item>
            </layout>
