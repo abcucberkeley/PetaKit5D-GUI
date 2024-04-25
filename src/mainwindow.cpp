@@ -1212,7 +1212,6 @@ void MainWindow::onEnableSubmitButton()
     ui->otfMaskingSubmitButton->setEnabled(true);
     ui->imarisConverterSubmitButton->setEnabled(true);
     ui->mipGeneratorSubmitButton->setEnabled(true);
-    ui->parallelRsyncSubmitButton->setEnabled(true);
     ui->fftAnalysisSubmitButton->setEnabled(true);
     ui->fscAnalysisSubmitButton->setEnabled(true);
     ui->simReconSubmitButton->setEnabled(true);
@@ -3126,79 +3125,6 @@ void MainWindow::on_simReconJobPreviousButton_clicked()
 {
     ui->simReconTab->setCurrentWidget(ui->simReconRecon);
 }
-
-void MainWindow::on_parallelRsyncSubmitButton_clicked()
-{
-    // Write settings in case of crash
-    writeSettings();
-
-    if(ui->parallelRsyncSourceLineEdit->text().isEmpty()){
-        messageBoxError("No source set");
-        return;
-    }
-
-    if(ui->parallelRsyncDestLineEdit->text().isEmpty()){
-        messageBoxError("No destination set");
-        return;
-    }
-
-    // Disable submit button
-    ui->parallelRsyncSubmitButton->setEnabled(false);
-
-    std::string args;
-
-    // NOTE: We have to push a lot of things into our data array one at a time
-    // Potentially in the future I can loop through the widgets and do this in fewer lines
-
-    // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = ui->parallelRsyncSourceLineEdit->text();
-
-    const std::string firstPrependedString = "";
-    std::string prependedString;
-    if(isMcc){
-        prependedString = " ";
-    }
-    else{
-        prependedString = ",";
-    }
-    // Source
-    addCharArrayToArgs(args,ui->parallelRsyncSourceLineEdit->text().toStdString(), firstPrependedString, isMcc);
-
-    // Destination
-    addCharArrayToArgs(args,ui->parallelRsyncDestLineEdit->text().toStdString(), prependedString, isMcc);
-
-    addCharArrayToArgs(args,"cpusPerTask", prependedString, isMcc);
-    addScalarToArgs(args,ui->parallelRsyncCpusPerTaskLineEdit->text().toStdString(), prependedString);
-
-    addCharArrayToArgs(args,"numStream", prependedString, isMcc);
-    addScalarToArgs(args,ui->parallelRsyncNumStreamLineEdit->text().toStdString(), prependedString);
-
-    QString funcType = "XR_parallel_rsync_wrapper";
-    // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Parallel Rsync"),true);
-    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
-}
-
-
-void MainWindow::on_parallelRsyncSourceBrowseButton_clicked()
-{
-    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select the Source Folder",mostRecentDir));
-    if(!folder_path.absoluteFilePath().isEmpty()){
-        ui->parallelRsyncSourceLineEdit->setText(folder_path.absoluteFilePath());
-        mostRecentDir = folder_path.absoluteFilePath();
-    }
-}
-
-
-void MainWindow::on_parallelRsyncDestBrowseButton_clicked()
-{
-    QFileInfo folder_path(QFileDialog::getExistingDirectory(this,"Select the Destination Folder",mostRecentDir));
-    if(!folder_path.absoluteFilePath().isEmpty()){
-        ui->parallelRsyncDestLineEdit->setText(folder_path.absoluteFilePath());
-        mostRecentDir = folder_path.absoluteFilePath();
-    }
-}
-
 
 void MainWindow::on_fftAnalysisSubmitButton_clicked()
 {

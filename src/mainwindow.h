@@ -461,12 +461,6 @@ private slots:
 
     void on_simReconJobPreviousButton_clicked();
 
-    void on_parallelRsyncSubmitButton_clicked();
-
-    void on_parallelRsyncSourceBrowseButton_clicked();
-
-    void on_parallelRsyncDestBrowseButton_clicked();
-
     void on_fftAnalysisSubmitButton_clicked();
 
     void on_fftAnalysisAddPathsButton_clicked();
