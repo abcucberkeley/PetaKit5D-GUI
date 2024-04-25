@@ -30,6 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     readMatlabPathSettings();
 
+    // Default values
+    wienerAlphaDefaultValue = ".005";
+    otfCumThreshDefaultValue = ".9";
+
     // Set warnings
     parseClusterWarning = true;
     sameJobSubmittedWarning = true;
@@ -1625,17 +1629,23 @@ void MainWindow::on_submitButton_clicked()
 
         // OMW Only Settings
         if(ui->deconRLMethodOMWRadioButton->isChecked()){
-            addCharArrayToArgs(args,"wienerAlpha",prependedString,isMcc);
-            addCharArrayToArgs(args,ui->wienerAlphaLineEdit->text().toStdString(),prependedString,isMcc);
-
-            std::stringstream s_stream(ui->otfCumThreshLineEdit->text().toStdString());
-            std::vector<std::string> otfCumThreshV;
-            while(s_stream.good()) {
-                std::string substr;
-                getline(s_stream, substr, ','); //get first string delimited by comma
-                otfCumThreshV.push_back(substr);
+            // Set defaults for wienerAlpha and otfCumThresh if they were not set by the user
+            std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+            if(!wienerAlphaValues.size()){
+                for(size_t i = 0; i < channelNames.size(); i++) wienerAlphaValues.push_back(wienerAlphaDefaultValue);
             }
+            if(!otfCumThreshValues.size()){
+                for(size_t i = 0; i < channelNames.size(); i++) otfCumThreshValues.push_back(otfCumThreshDefaultValue);
+            }
+
+            addCharArrayToArgs(args,"wienerAlpha",prependedString,isMcc);
+            std::vector<std::string> wienerAlphaV;
+            for(size_t i = 0; i < wienerAlphaValues.size(); i++) wienerAlphaV.push_back(wienerAlphaValues[i].toStdString());
+            addArrayToArgs(args,wienerAlphaV,false,prependedString,"[]",isMcc);
+
             addCharArrayToArgs(args,"OTFCumThresh",prependedString,isMcc);
+            std::vector<std::string> otfCumThreshV;
+            for(size_t i = 0; i < otfCumThreshValues.size(); i++) otfCumThreshV.push_back(otfCumThreshValues[i].toStdString());
             addArrayToArgs(args,otfCumThreshV,false,prependedString,"[]",isMcc);
 
             addCharArrayToArgs(args,"hanWinBounds",prependedString,isMcc);
@@ -2510,7 +2520,8 @@ void MainWindow::on_llffCorrectionCheckBox_stateChanged(int arg1)
 // Open window for adding lsImage Paths
 void MainWindow::on_lsImageAddPathsButton_clicked()
 {
-    dataPaths daPaths(lsImagePaths, false, mostRecentDir);
+    std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+    dataPaths daPaths(lsImagePaths, false, mostRecentDir, channelNames, QString("path"));
     daPaths.setModal(true);
     daPaths.exec();
 }
@@ -2518,7 +2529,8 @@ void MainWindow::on_lsImageAddPathsButton_clicked()
 // Open window for adding background Paths
 void MainWindow::on_backgroundAddPathsButton_clicked()
 {
-    dataPaths daPaths(backgroundPaths, false, mostRecentDir);
+    std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+    dataPaths daPaths(backgroundPaths, false, mostRecentDir, channelNames, QString("path"));
     daPaths.setModal(true);
     daPaths.exec();
 }
@@ -2526,30 +2538,7 @@ void MainWindow::on_backgroundAddPathsButton_clicked()
 // Open window for adding PSF Paths
 void MainWindow::on_psfFullAddPathsButton_2_clicked()
 {
-    std::vector<QString> channelNames;
-    if(!ui->customPatternsCheckBox->isChecked()){
-        for(auto i : channelWidgets){
-            if(i.second->isChecked()){
-                channelNames.push_back(i.first->text());
-            }
-        }
-    }
-    else{
-        QString patternLine = ui->customPatternsLineEdit->text();
-        QString pattern;
-        for(int i = 0; i < patternLine.size(); i++){
-            if(patternLine[i] == ','){
-                channelNames.push_back(pattern);
-                pattern.clear();
-            }
-            else{
-                pattern.push_back(patternLine[i]);
-            }
-        }
-        if(pattern.size()){
-            channelNames.push_back(pattern);
-        }
-    }
+    std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
     dataPaths daPaths(psfFullPaths, false, mostRecentDir, channelNames);
     daPaths.setModal(true);
     daPaths.exec();
@@ -3464,14 +3453,14 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     if(ui->tiffZarrConverterTiffToZarrRadioButton->isChecked()){
         funcType = "XR_tiffToZarr_wrapper";
         std::vector<std::string> dataPaths = getDataPaths(tiffZarrConverterDPaths);
-        std::vector<std::string> channelPatterns = getChannelPatterns(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text());
+        std::vector<QString> channelPatterns = getChannelPatterns(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text());
         std::vector<std::string> finalDataPaths;
         for (std::string &dataPath: dataPaths){
             QDir directory(QString::fromStdString(dataPath));
             QStringList images = directory.entryList(QStringList() << "*.tif" << "*.tiff",QDir::Files);
             for(QString &fileName : images) {
-                for(std::string &pattern : channelPatterns){
-                    if(fileName.contains(QString::fromStdString(pattern))){
+                for(QString &pattern : channelPatterns){
+                    if(fileName.contains(pattern)){
                         finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
                         break;
                     }
@@ -3894,9 +3883,9 @@ void MainWindow::on_rlMethodButton_clicked(){
     else if(ui->deconRLMethodSimplifiedRadioButton->isChecked()) guiVals.RLMethod = "simplified";
     else if(ui->deconRLMethodOriginalRadioButton->isChecked()) guiVals.RLMethod = "original";
     ui->wienerAlphaLabel->setEnabled(isOMW);
-    ui->wienerAlphaLineEdit->setEnabled(isOMW);
+    ui->wienerAlphaButton->setEnabled(isOMW);
     ui->otfCumThreshLabel->setEnabled(isOMW);
-    ui->otfCumThreshLineEdit->setEnabled(isOMW);
+    ui->otfCumThreshButton->setEnabled(isOMW);
     ui->hanWinBoundsLabel->setEnabled(isOMW);
     ui->hanWinBoundsLowerLineEdit->setEnabled(isOMW);
     ui->hanWinBoundsUpperLineEdit->setEnabled(isOMW);
@@ -3989,5 +3978,29 @@ void MainWindow::on_stitchOnlineStitchCheckBox_stateChanged(int arg1)
 {
     ui->stitchGenerateImageListLabel->setEnabled(arg1);
     ui->stitchGenerateImageListComboBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_wienerAlphaButton_clicked()
+{
+    std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+    if(!wienerAlphaValues.size()){
+        for(size_t i = 0; i < channelNames.size(); i++) wienerAlphaValues.push_back(wienerAlphaDefaultValue);
+    }
+    dataPaths daPaths(wienerAlphaValues, false, mostRecentDir, channelNames, QString("double"));
+    daPaths.setModal(true);
+    daPaths.exec();
+}
+
+
+void MainWindow::on_otfCumThreshButton_clicked()
+{
+    std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+    if(!otfCumThreshValues.size()){
+        for(size_t i = 0; i < channelNames.size(); i++) otfCumThreshValues.push_back(otfCumThreshDefaultValue);
+    }
+    dataPaths daPaths(otfCumThreshValues, false, mostRecentDir, channelNames, QString("double"));
+    daPaths.setModal(true);
+    daPaths.exec();
 }
 

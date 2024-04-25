@@ -170,8 +170,8 @@ void addChannelPatternsToArgs(std::string &args, const std::vector<std::pair<QLa
     args.append(arrayChars[1]+surroundQuotes);
 }
 
-std::vector<std::string> getChannelPatterns(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine){
-    std::vector<std::string> pVec;
+std::vector<QString> getChannelPatterns(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine){
+    std::vector<QString> pVec;
     // Channel Patterns
     if(!customPatterns){
         if(channelWidgets.size()){
@@ -185,7 +185,7 @@ std::vector<std::string> getChannelPatterns(const std::vector<std::pair<QLabel*,
                 // Convert from rich text to plain text
                 QTextDocument toPlain;
                 toPlain.setHtml(channelWidgets[i].first->text());
-                pVec.push_back(toPlain.toPlainText().toStdString());
+                pVec.push_back(toPlain.toPlainText());
             }
         }
     }
@@ -194,7 +194,7 @@ std::vector<std::string> getChannelPatterns(const std::vector<std::pair<QLabel*,
         QString pattern;
         for(int i = 0; i < patternLine.size(); i++){
             if(patternLine[i] == ','){
-                pVec.push_back(pattern.toStdString());
+                pVec.push_back(pattern);
                 pattern.clear();
             }
             else{
@@ -202,7 +202,7 @@ std::vector<std::string> getChannelPatterns(const std::vector<std::pair<QLabel*,
             }
         }
         if(pattern.size()) {
-            pVec.push_back(pattern.toStdString());
+            pVec.push_back(pattern);
         }
     }
     return pVec;

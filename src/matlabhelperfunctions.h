@@ -20,7 +20,7 @@ std::vector<std::string> getDataPaths(const std::vector<dataPath> &dataPaths);
 
 void addChannelPatternsToArgs(std::string &args, const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine, const std::string &prependedString, const bool isMcc=false, const std::string &arrayChars=std::string("{}"), const bool isCharArray=true);
 
-std::vector<std::string> getChannelPatterns(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine);
+std::vector<QString> getChannelPatterns(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine);
 
 std::string btosM(const bool val);
 

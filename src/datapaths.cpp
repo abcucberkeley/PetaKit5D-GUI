@@ -57,7 +57,7 @@ dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostR
 }
 
 // For other data paths
-dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent) :
+dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const QString &dataType, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -67,16 +67,22 @@ dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRec
     // Most recent folder for browsing
     this->mostRecentDir = &mostRecentDir;
 
+    delete ui->addPathButton;
+
     // connect slot for data
     connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clickedOther);
-    connect(ui->addPathButton,&QPushButton::clicked,this,&dataPaths::on_dataPathAddPathButton_clickedOther);
 
     // pointer to hold the passed in paths vector
     dataHand = &dPaths;
 
+    // data type
+    this->dataType = dataType;
+
+    if(dataType == "double") this->setWindowTitle("Add Values");
+
     ui->dataPathsVerticalLayout->addStretch();
-    for(size_t i = 0; i < dPaths.size(); i++){
-        makeNewPath(i,dataPath(),false,QString(),true);
+    for(size_t i = 0; i < channelNames.size(); i++){
+        makeNewPath(i,dataPath(),false,channelNames[i],true);
     }
 
 }
@@ -255,7 +261,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     // Add the Path label
     QLabel* QL = new QLabel(this);
     QL->setTextFormat(Qt::RichText);
-    if(!psf) QL->setText(QString("<b>")+QString("Data Path ")+QString::number(i+1)+QString("<\b>"));
+    if(!psf && !otherData) QL->setText(QString("<b>")+QString("Data Path ")+QString::number(i+1)+QString("<\b>"));
     else QL->setText(QString("<b>")+channelName+QString("<\b>"));
     QHBox->addWidget(QL);
 
@@ -272,6 +278,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     QPB->setObjectName(QString("dataPathBrowseButton")+QString::number(i));
     QPB->setText("Browse");
     connect(QPB,&QPushButton::clicked,this,&dataPaths::on_dataPathBrowseButton_clicked);
+    if(dataType == "double") QPB->setVisible(false);
     QHBox->addWidget(QPB);
 
     // Add Find button
@@ -332,7 +339,7 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     QPBR->setObjectName(QString("dataPathRemoveButton")+QString::number(i));
     QPBR->setText("Remove Path");
     connect(QPBR,&QPushButton::clicked,this,&dataPaths::on_dataPathRemoveButton_clicked);
-    if(psf) QPBR->setVisible(false);
+    if(psf || otherData) QPBR->setVisible(false);
     QHBox->addWidget(QPBR);
 
     paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));

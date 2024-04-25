@@ -365,6 +365,12 @@ private:
     std::vector<QString> backgroundPaths;
     std::vector<QString> psfFullPaths;
 
+    QString wienerAlphaDefaultValue;
+    std::vector<QString> wienerAlphaValues;
+
+    QString otfCumThreshDefaultValue;
+    std::vector<QString> otfCumThreshValues;
+
     std::unordered_map<int,std::pair<QString,QDateTime>> jobLogPaths;
     std::unordered_map<int,QString> jobNames;
 
@@ -502,6 +508,10 @@ private slots:
     void on_stitchAdvancedSettingsButton_clicked();
 
     void on_stitchOnlineStitchCheckBox_stateChanged(int arg1);
+
+    void on_wienerAlphaButton_clicked();
+
+    void on_otfCumThreshButton_clicked();
 
 private:
     Ui::MainWindow *ui;

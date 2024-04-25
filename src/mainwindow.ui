@@ -2291,9 +2291,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="wienerAlphaLineEdit">
+             <widget class="QPushButton" name="wienerAlphaButton">
               <property name="text">
-               <string>.005</string>
+               <string>Add/View Values</string>
               </property>
              </widget>
             </item>
@@ -2315,9 +2315,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="otfCumThreshLineEdit">
+             <widget class="QPushButton" name="otfCumThreshButton">
               <property name="text">
-               <string>.9</string>
+               <string>Add/View Values</string>
               </property>
              </widget>
             </item>

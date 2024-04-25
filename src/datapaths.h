@@ -27,7 +27,7 @@ class dataPaths : public QDialog
 public:
     explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
     explicit dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
-    dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
+    dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const QString &dataType, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
@@ -62,6 +62,7 @@ private:
     std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
     std::vector<dataPath> *dpHand;
     std::vector<QString> *dataHand;
+    QString dataType;
 };
 
 #endif // DATAPATHS_H
