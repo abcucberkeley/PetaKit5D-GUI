@@ -21,6 +21,21 @@ stitchAdvanced::stitchAdvanced(GUIvals &guiVals, QWidget *parent)
     ui->stitchStitchMIPYCheckBox->setChecked(guiVals.stitchMIP[0]);
     ui->stitchStitchMIPXCheckBox->setChecked(guiVals.stitchMIP[1]);
     ui->stitchStitchMIPZCheckBox->setChecked(guiVals.stitchMIP[2]);
+    ui->stitchInfoFullpathLineEdit->setText(guiVals.stitchInfoFullpath);
+    ui->distBboxesCheckBox->setChecked(guiVals.distBboxesCheckBox);
+    if(ui->distBboxesCheckBox->isChecked()){
+        ui->distBboxesYMinSpinBox->setValue(std::stoi(guiVals.distBboxes[0]));
+        ui->distBboxesXMinSpinBox->setValue(std::stoi(guiVals.distBboxes[1]));
+        ui->distBboxesZMinSpinBox->setValue(std::stoi(guiVals.distBboxes[2]));
+        ui->distBboxesYMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[3]));
+        ui->distBboxesXMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[4]));
+        ui->distBboxesZMaxSpinBox->setValue(std::stoi(guiVals.distBboxes[5]));
+    }
+    ui->overlapTypeComboBox->setCurrentText(guiVals.overlapType);
+    ui->shiftMethodComboBox->setCurrentText(guiVals.shiftMethod);
+    ui->groupFileLineEdit->setText(guiVals.groupFile);
+    ui->bigStitchDataCheckBox->setChecked(guiVals.bigStitchData);
+    ui->processFunPathLineEdit->setText(guiVals.processFunPath);
 
 }
 
@@ -49,6 +64,21 @@ void stitchAdvanced::on_submitButton_clicked()
     gVals->stitchMIP[0] = ui->stitchStitchMIPYCheckBox->isChecked();
     gVals->stitchMIP[1] = ui->stitchStitchMIPXCheckBox->isChecked();
     gVals->stitchMIP[2] = ui->stitchStitchMIPZCheckBox->isChecked();
+    gVals->stitchInfoFullpath = ui->stitchInfoFullpathLineEdit->text();
+    gVals->distBboxesCheckBox = ui->distBboxesCheckBox->isChecked();
+    if(ui->distBboxesCheckBox->isChecked()){
+        gVals->distBboxes = {ui->distBboxesYMinSpinBox->text().toStdString(),
+                             ui->distBboxesXMinSpinBox->text().toStdString(),
+                             ui->distBboxesZMinSpinBox->text().toStdString(),
+                             ui->distBboxesYMaxSpinBox->text().toStdString(),
+                             ui->distBboxesXMaxSpinBox->text().toStdString(),
+                             ui->distBboxesZMaxSpinBox->text().toStdString()};
+    }
+    gVals->overlapType = ui->overlapTypeComboBox->currentText();
+    gVals->shiftMethod = ui->shiftMethodComboBox->currentText();
+    gVals->groupFile = ui->groupFileLineEdit->text();
+    gVals->bigStitchData = ui->bigStitchDataCheckBox->isChecked();
+    gVals->processFunPath = ui->processFunPathLineEdit->text();
     stitchAdvanced::close();
 }
 
@@ -75,6 +105,32 @@ void stitchAdvanced::on_boundBoxCheckBox_stateChanged(int arg1)
         ui->boundBoxYMaxSpinBox->setValue(0);
         ui->boundBoxXMaxSpinBox->setValue(0);
         ui->boundBoxZMaxSpinBox->setValue(0);
+    }
+}
+
+
+void stitchAdvanced::on_distBboxesCheckBox_stateChanged(int arg1)
+{
+    ui->distBboxesYMinLabel->setEnabled(arg1);
+    ui->distBboxesYMinSpinBox->setEnabled(arg1);
+    ui->distBboxesXMinLabel->setEnabled(arg1);
+    ui->distBboxesXMinSpinBox->setEnabled(arg1);
+    ui->distBboxesZMinLabel->setEnabled(arg1);
+    ui->distBboxesZMinSpinBox->setEnabled(arg1);
+    ui->distBboxesYMaxLabel->setEnabled(arg1);
+    ui->distBboxesYMaxSpinBox->setEnabled(arg1);
+    ui->distBboxesXMaxLabel->setEnabled(arg1);
+    ui->distBboxesXMaxSpinBox->setEnabled(arg1);
+    ui->distBboxesZMaxLabel->setEnabled(arg1);
+    ui->distBboxesZMaxSpinBox->setEnabled(arg1);
+
+    if(!arg1){
+        ui->distBboxesYMinSpinBox->setValue(0);
+        ui->distBboxesXMinSpinBox->setValue(0);
+        ui->distBboxesZMinSpinBox->setValue(0);
+        ui->distBboxesYMaxSpinBox->setValue(0);
+        ui->distBboxesXMaxSpinBox->setValue(0);
+        ui->distBboxesZMaxSpinBox->setValue(0);
     }
 }
 

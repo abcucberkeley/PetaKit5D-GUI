@@ -24,6 +24,8 @@ private slots:
 
     void on_boundBoxCheckBox_stateChanged(int arg1);
 
+    void on_distBboxesCheckBox_stateChanged(int arg1);
+
 private:
     Ui::stitchAdvanced *ui;
     GUIvals* gVals;

@@ -42,6 +42,13 @@ class GUIvals{
         bool boundboxCropCheckBox;
         std::vector<std::string> boundboxCrop;
         std::vector<bool> stitchMIP;
+        bool bigStitchData;
+        QString stitchInfoFullpath;
+        QString processFunPath;
+        QString shiftMethod;
+        QString overlapType;
+        bool distBboxesCheckBox;
+        std::vector<std::string> distBboxes;
 
         // Decon Advanced Settings
         QString RLMethod;
@@ -75,29 +82,22 @@ class GUIvals{
         // Stitch Large Scale Processing Settings
         bool multiLoc;
         QString ProcessedDirStr;
-        QString stitchInfoFullpath;
         bool IOScan;
         std::vector<std::string> blockSize;
         std::vector<std::string> shardSize;
-        bool distBboxesCheckBox;
-        std::vector<std::string> distBboxes;
         bool InputBboxCheckBox;
         std::vector<std::string> InputBbox;
         bool tileOutBboxCheckBox;
         std::vector<std::string> tileOutBbox;
         QString TileOffset;
         std::vector<std::string> Resolution;
-        QString overlapType;
         std::vector<std::string> xcorrDownsample;
         QString xcorrThresh;
         std::vector<std::string> timepoints;
-        QString shiftMethod;
         std::vector<std::string> axisWeight;
         QString groupFile;
         bool usePrimaryCoords;
         QString EdgeArtifacts;
-        bool bigStitchData;
-        QString processFunPath;
         bool masterCompute;
         std::vector<std::string> maskFns;
 
@@ -118,6 +118,13 @@ class GUIvals{
                     boundboxCropCheckBox{false},
                     boundboxCrop{},
                     stitchMIP{false,false,false},
+                    bigStitchData{false},
+                    stitchInfoFullpath{""},
+                    processFunPath{""},
+                    shiftMethod{"grid"},
+                    overlapType{""},
+                    distBboxesCheckBox{false},
+                    distBboxes{"0","0","0","0","0","0"},
                     RLMethod{"OMW"},
                     fixIter{false},
                     errThresh{.00000001},
@@ -143,29 +150,22 @@ class GUIvals{
                     BatchSize{"1024","1024","1024"},
                     multiLoc{false},
                     ProcessedDirStr{""},
-                    stitchInfoFullpath{""},
                     IOScan{false},
                     blockSize{"256","256","256"},
                     shardSize{"0","0","0"},
-                    distBboxesCheckBox{false},
-                    distBboxes{"0","0","0","0","0","0"},
                     InputBboxCheckBox{false},
                     InputBbox{},
                     tileOutBboxCheckBox{false},
                     tileOutBbox{},
                     TileOffset{"0"},
                     Resolution{".108",".5"},
-                    overlapType{""},
                     xcorrDownsample{"2","2","1"},
                     xcorrThresh{".25"},
                     timepoints{},
-                    shiftMethod{"grid"},
                     axisWeight{"1",".1","10"},
                     groupFile{""},
                     usePrimaryCoords{false},
                     EdgeArtifacts{"2"},
-                    bigStitchData{false},
-                    processFunPath{""},
                     masterCompute{true},
                     maskFns{"","",""}
         {}
