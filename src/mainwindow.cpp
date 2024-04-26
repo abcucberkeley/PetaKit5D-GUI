@@ -1474,7 +1474,9 @@ void MainWindow::on_submitButton_clicked()
 
         if(guiVals.resampleEnabled){
             addCharArrayToArgs(args,"resample",prependedString,isMcc);
-            std::vector<std::string> resampleV = {std::to_string(guiVals.resample[0]),std::to_string(guiVals.resample[1]),std::to_string(guiVals.resample[2])};
+            std::vector<std::string> resampleV = {std::to_string(guiVals.resample[0]),
+                                                  std::to_string(guiVals.resample[1]),
+                                                  std::to_string(guiVals.resample[2])};
             addArrayToArgs(args,resampleV,false,prependedString,"[]",isMcc);
         }
 
@@ -1515,10 +1517,13 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->zMaxOffsetSpinBox->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"xcorrDownsample",prependedString,isMcc);
-        addArrayToArgs(args,guiVals.xcorrDownsample,false,prependedString,"[]",isMcc);
+        std::vector<std::string> xcorrDownsampleV = {ui->xcorrDownsampleYSpinBox->text().toStdString(),
+                                                     ui->xcorrDownsampleXSpinBox->text().toStdString(),
+                                                     ui->xcorrDownsampleZSpinBox->text().toStdString()};
+        addArrayToArgs(args,xcorrDownsampleV,false,prependedString,"[]",isMcc);
 
         addCharArrayToArgs(args,"xcorrThresh",prependedString,isMcc);
-        addScalarToArgs(args,guiVals.xcorrThresh.toStdString(),prependedString);
+        addScalarToArgs(args,ui->xcorrThreshSpinBox->text().toStdString(),prependedString);
 
         if(guiVals.boundboxCropCheckBox){
             addCharArrayToArgs(args,"boundboxCrop",prependedString,isMcc);

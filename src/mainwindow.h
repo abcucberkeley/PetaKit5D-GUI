@@ -91,8 +91,6 @@ class GUIvals{
         std::vector<std::string> tileOutBbox;
         QString TileOffset;
         std::vector<std::string> Resolution;
-        std::vector<std::string> xcorrDownsample;
-        QString xcorrThresh;
         std::vector<std::string> timepoints;
         std::vector<std::string> axisWeight;
         QString groupFile;
@@ -159,8 +157,6 @@ class GUIvals{
                     tileOutBbox{},
                     TileOffset{"0"},
                     Resolution{".108",".5"},
-                    xcorrDownsample{"2","2","1"},
-                    xcorrThresh{".25"},
                     timepoints{},
                     axisWeight{"1",".1","10"},
                     groupFile{""},

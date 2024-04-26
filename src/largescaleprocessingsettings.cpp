@@ -57,10 +57,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
     ui->tileOffsetSpinBox->setValue(guiVals.TileOffset.toInt());
     ui->resolutionXYPixelSizeSpinBox->setValue(std::stod(guiVals.Resolution[0]));
     ui->resolutionDZSpinBox->setValue(std::stod(guiVals.Resolution[1]));
-    ui->xcorrDownsampleYSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[0]));
-    ui->xcorrDownsampleXSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[1]));
-    ui->xcorrDownsampleZSpinBox->setValue(std::stoi(guiVals.xcorrDownsample[2]));
-    ui->xcorrThreshSpinBox->setValue(guiVals.xcorrThresh.toDouble());
     std::string tString;
     for(std::string &i : guiVals.timepoints){
         tString.append(i);
@@ -126,10 +122,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
     gVals->TileOffset = ui->tileOffsetSpinBox->text();
     gVals->Resolution[0] = ui->resolutionXYPixelSizeSpinBox->text().toStdString();
     gVals->Resolution[1] = ui->resolutionDZSpinBox->text().toStdString();
-    gVals->xcorrDownsample[0] = ui->xcorrDownsampleYSpinBox->text().toStdString();
-    gVals->xcorrDownsample[1] = ui->xcorrDownsampleXSpinBox->text().toStdString();
-    gVals->xcorrDownsample[2] = ui->xcorrDownsampleZSpinBox->text().toStdString();
-    gVals->xcorrThresh = ui->xcorrThreshSpinBox->text();
     gVals->timepoints.clear();
     std::stringstream s_stream(ui->timepointsLineEdit->text().toStdString());
     while(s_stream.good()) {
