@@ -170,7 +170,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     // Write current user settings if we aren't just killing the app
     if(!kill) writeSettings();
-    //event->accept();
 
     // Close output window if visible
     if(mOutputWindow) mOutputWindow->close();

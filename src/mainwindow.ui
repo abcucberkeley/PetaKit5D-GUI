@@ -1736,7 +1736,7 @@
                </font>
               </property>
               <property name="text">
-               <string>X Corr Mode</string>
+               <string>XCorr Mode</string>
               </property>
              </widget>
             </item>

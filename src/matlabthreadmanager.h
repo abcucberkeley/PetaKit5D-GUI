@@ -1,14 +1,11 @@
 #ifndef MATLABTHREADMANAGER_H
 #define MATLABTHREADMANAGER_H
 
-//#include "MatlabEngine.hpp"
-//#include "MatlabDataArray.hpp"
 #include "matlabthread.h"
 #include <unordered_map>
 #include <QtCore>
 #include <QThread>
 #include "mainwindowconsoleoutputwindow.h"
-//using namespace matlab::engine;
 
 class matlabThreadManager : public QThread
 {
@@ -27,13 +24,10 @@ signals:
 private:
     std::string args;
     std::unordered_map<unsigned int, matlabThread*> mThreads;
-    //std::unique_ptr<MATLABEngine> matlabPtr;
-    //matlab::data::ArrayFactory factory;
     QMutex *outputLock;
     std::tuple<QString, QString, bool> mPathJNameParseCluster;
     std::unordered_map<int,std::pair<QString,QDateTime>> *jobLogPaths;
     size_t outA;
-    //std::vector<matlab::data::Array> data;
     QString funcType;
     bool isMcc;
     std::string pathToMatlab;

@@ -19,13 +19,9 @@ signals:
 public slots:
 
 private:
-    //matlabOutputThread* mOutThread;
-    //std::unique_ptr<MATLABEngine> matlabPtr;
-    //matlab::data::ArrayFactory factory;
     QString funcType;
     size_t outA;
     std::string args;
-    //std::vector<matlab::data::Array> data;
     std::tuple<QString, QString, bool> mPathJNameParseCluster;
     unsigned int mThreadID;
     bool isMcc;

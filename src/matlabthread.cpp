@@ -12,13 +12,6 @@ matlabThread::matlabThread(QObject *parent, const QString &funcType, const size_
 }
 
 matlabThread::~matlabThread(){
-    /*
-    if(mOutThread){
-        if(!mOutThread->isFinished()) {
-            mOutThread->terminate();
-        }
-    }
-    */
     if(job){
         job->kill();
         job->terminate();
@@ -38,7 +31,6 @@ void matlabThread::run(){
     if(!isMcc){
         std::string matlabOptions = "-batch";
         matlabCmd.append("\""+pathToMatlab+"\" "+matlabOptions);
-        //matlab -batch "cd('/clusterfs/nvme/matthewmueller/clusterBenchmarking');clusterBenchmarking;exit;"
 
         // Add the LLSM5DTools Repository to the path
         std::string newDir = QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools";
@@ -122,9 +114,7 @@ void matlabThread::run(){
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" Finished\n");
         }
         else{
-            //if(std::get<2>(mPathJNameParseCluster))
             ss << std::string("Matlab Job \"" + std::get<1>(mPathJNameParseCluster).toStdString() + "\" has Failed. MATLAB EXCEPTION.\n");
-            //else std::cout << "Matlab Job \"" << std::get<1>(mPathJNameParseCluster).toStdString() << "\" has Failed. MATLAB EXCEPTION. Check job output file for details." << std::endl;
         }
         emit availableQProcessOutput(QString::fromStdString(ss.str()));
 		ss.str("");
