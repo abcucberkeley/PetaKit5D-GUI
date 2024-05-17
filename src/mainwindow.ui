@@ -1265,7 +1265,7 @@
              </font>
             </property>
             <property name="text">
-             <string>LLFF Correction</string>
+             <string>FF Correction</string>
             </property>
            </widget>
           </item>
@@ -1311,7 +1311,7 @@
              </font>
             </property>
             <property name="text">
-             <string>LS Image Paths</string>
+             <string>FF Image Paths</string>
             </property>
            </widget>
           </item>
@@ -2576,7 +2576,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_221">
             <item>
-             <widget class="QLabel" name="hanWinBoundsLabel">
+             <widget class="QLabel" name="hannWinBoundsLabel">
               <property name="font">
                <font>
                 <pointsize>12</pointsize>
@@ -2584,19 +2584,19 @@
                </font>
               </property>
               <property name="text">
-               <string>Han Win Bounds</string>
+               <string>Hann Win Bounds</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="hanWinBoundsLowerLineEdit">
+             <widget class="QLineEdit" name="hannWinBoundsLowerLineEdit">
               <property name="text">
                <string>.8</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="hanWinBoundsUpperLineEdit">
+             <widget class="QLineEdit" name="hannWinBoundsUpperLineEdit">
               <property name="text">
                <string>1.0</string>
               </property>
@@ -4974,6 +4974,9 @@
             </property>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_21" stretch="1,1,1,1,1,1,1">
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <property name="bottomMargin">
                <number>0</number>
               </property>
@@ -5038,50 +5041,6 @@
                  <size>
                   <width>20</width>
                   <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="cropResultPathLayout">
-                <item>
-                 <widget class="QLabel" name="cropResultPathLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Result Path</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="cropResultPathLineEdit">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="cropResultPathBrowseButton">
-                  <property name="text">
-                   <string>Browse</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_48">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>68</width>
-                  <height>17</height>
                  </size>
                 </property>
                </spacer>
@@ -5174,6 +5133,43 @@
                   </property>
                   <property name="placeholderText">
                    <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_48">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="cropResultPathLayout">
+                <item>
+                 <widget class="QLabel" name="cropResultDirNameLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="cropResultDirNameLineEdit">
+                  <property name="text">
+                   <string>Cropped</string>
                   </property>
                  </widget>
                 </item>
@@ -6117,7 +6113,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_27">
+           <layout class="QVBoxLayout" name="verticalLayout_27" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -6187,9 +6183,15 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="1,1">
+             <layout class="QHBoxLayout" name="fftAnalysisChannelPatternsHorizontalLayout">
               <item>
-               <widget class="QLabel" name="fftAnalysisOverwriteLabel">
+               <widget class="QLabel" name="fftAnalysisChannelPatternsLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -6199,16 +6201,144 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Overwrite</string>
+                 <string>Channel Patterns</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="fftAnalysisOverwriteCheckBox">
+               <spacer name="fftAnalysisChannelPatternsHorizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Maximum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>30</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_12">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="fftAnalysisCustomPatternsHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="fftAnalysisCustomPatternsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Custom Patterns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="fftAnalysisCustomPatternsCheckBox">
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
                </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="fftAnalysisCustomPatternsLineEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_21">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisResultDirNameLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="fftAnalysisResultDirNameLineEdit">
+                  <property name="text">
+                   <string>FFT</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOverwriteLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                    <strikeout>false</strikeout>
+                    <kerning>true</kerning>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Overwrite</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="fftAnalysisOverwriteCheckBox">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -6319,7 +6449,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_71" stretch="1,1,1,1,1,1">
               <item>
-               <widget class="QLabel" name="fftAnalysisNYLabel">
+               <widget class="QLabel" name="fftAnalysisOutSizeYLabel">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6335,7 +6465,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisNYSpinBox">
+               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeYSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6348,7 +6478,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="fftAnalysisNXLabel">
+               <widget class="QLabel" name="fftAnalysisOutSizeXLabel">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6364,7 +6494,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisNXSpinBox">
+               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeXSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6377,7 +6507,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="fftAnalysisNZLabel">
+               <widget class="QLabel" name="fftAnalysisOutSizeZLabel">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6393,7 +6523,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisNZSpinBox">
+               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeZSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -6723,7 +6853,31 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_170" stretch="1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_170" stretch="1,1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <widget class="QLabel" name="fscResultDirNameLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="fscResultDirNameLineEdit">
+                  <property name="text">
+                   <string>FSCs</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_73">
                 <item>
@@ -7083,7 +7237,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Bounding Box</string>
+                 <string>Input Bounding Box:</string>
                 </property>
                </widget>
               </item>
@@ -7478,7 +7632,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_46" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_46" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -7645,6 +7799,47 @@
             </item>
             <item>
              <spacer name="verticalSpacer_101">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="imarisConverterResultDirNameLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="imarisConverterResultDirNameLineEdit">
+                  <property name="text">
+                   <string>imaris</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_73">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -7985,7 +8180,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxYMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8001,7 +8196,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxYMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8021,7 +8216,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxXMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8037,7 +8232,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxXMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8057,7 +8252,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxZMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8073,7 +8268,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxZMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8110,7 +8305,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxYMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8126,7 +8321,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxYMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8146,7 +8341,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxXMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8162,7 +8357,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxXMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8182,7 +8377,7 @@
                 <item>
                  <widget class="QLabel" name="imarisConverterBBoxZMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -8198,7 +8393,7 @@
                 <item>
                  <widget class="QSpinBox" name="imarisConverterBBoxZMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -8707,11 +8902,11 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="mipGeneratorAxisHorizontalLayout">
+             <layout class="QHBoxLayout" name="mipGeneratorResultDirNameAxisHorizontalLayout" stretch="1,1">
               <item>
-               <layout class="QHBoxLayout" name="mipGeneratorAxisLabelLayout">
+               <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,1">
                 <item>
-                 <widget class="QLabel" name="mipGeneratorAxisLabel">
+                 <widget class="QLabel" name="mipGeneratorResultDirNameLabel">
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
@@ -8719,93 +8914,121 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Axis:</string>
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="mipGeneratorResultDirNameLineEdit">
+                  <property name="text">
+                   <string>MIPs</string>
                   </property>
                  </widget>
                 </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="mipGeneratorAxisYHorizontalLayout">
+               <layout class="QHBoxLayout" name="mipGeneratorAxisHorizontalLayout">
                 <item>
-                 <widget class="QLabel" name="mipGeneratorAxisYLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Y:</string>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="mipGeneratorAxisLabelLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorAxisLabel">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Axis:</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="mipGeneratorAxisYCheckBox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="mipGeneratorAxisXHorizontalLayout">
-                <item>
-                 <widget class="QLabel" name="mipGeneratorAxisXLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>X:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="mipGeneratorAxisXCheckBox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="mipGeneratorAxisZHorizontalLayout">
-                <item>
-                 <widget class="QLabel" name="mipGeneratorAxisZLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Z:</string>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="mipGeneratorAxisYHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorAxisYLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Y:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="mipGeneratorAxisYCheckBox">
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="mipGeneratorAxisZCheckBox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="mipGeneratorAxisXHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorAxisXLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>X:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="mipGeneratorAxisXCheckBox">
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="mipGeneratorAxisZHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorAxisZLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Z:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="mipGeneratorAxisZCheckBox">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -10700,7 +10923,7 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_229" stretch="0,1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_229" stretch="1,1,1">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_197" stretch="1,4">
                 <property name="bottomMargin">
@@ -10715,7 +10938,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Output Dir</string>
+                   <string>Result Dir Name</string>
                   </property>
                  </widget>
                 </item>
@@ -10952,7 +11175,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxYMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10968,7 +11191,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxYMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -10988,7 +11211,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxXMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11004,7 +11227,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxXMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -11024,7 +11247,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxZMinLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11040,7 +11263,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxZMinSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -11077,7 +11300,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxYMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11093,7 +11316,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxYMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -11113,7 +11336,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxXMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11129,7 +11352,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxXMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -11149,7 +11372,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBBoxZMaxLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11165,7 +11388,7 @@
                 <item>
                  <widget class="QSpinBox" name="resampleBBoxZMaxSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="minimum">
                    <number>0</number>
@@ -11798,7 +12021,7 @@
            <number>9</number>
           </property>
           <item row="2" column="1">
-           <layout class="QVBoxLayout" name="verticalLayout_40" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_40" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -12029,6 +12252,47 @@
             </item>
             <item>
              <spacer name="verticalSpacer_89">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="tiffZarrConverterResultDirNameLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Result Dir Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="tiffZarrConverterResultDirNameLineEdit">
+                  <property name="text">
+                   <string>tiffs</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_74">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -12592,7 +12856,7 @@
  <connections/>
  <buttongroups>
   <buttongroup name="deconRLMethodButtonGroup"/>
-  <buttongroup name="tiffZarrConverterButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
+  <buttongroup name="tiffZarrConverterButtonGroup"/>
  </buttongroups>
 </ui>

@@ -23,9 +23,9 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
 
     // Set the vals in the window to the ones passed in
     ui->saveMIPCheckBox->setChecked(guiVals.SaveMIP);
-    ui->batchSizeYSpinBox->setValue(std::stoi(guiVals.BatchSize[0]));
-    ui->batchSizeXSpinBox->setValue(std::stoi(guiVals.BatchSize[1]));
-    ui->batchSizeZSpinBox->setValue(std::stoi(guiVals.BatchSize[2]));
+    ui->batchSizeYSpinBox->setValue(std::stoi(guiVals.batchSize[0]));
+    ui->batchSizeXSpinBox->setValue(std::stoi(guiVals.batchSize[1]));
+    ui->batchSizeZSpinBox->setValue(std::stoi(guiVals.batchSize[2]));
 
     ui->multiLocCheckBox->setChecked(guiVals.multiLoc);
     ui->processedDirStringLineEdit->setText(guiVals.ProcessedDirStr);
@@ -55,17 +55,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
         ui->tileOutBboxZMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[5]));
     }
     ui->tileOffsetSpinBox->setValue(guiVals.TileOffset.toInt());
-    ui->resolutionXYPixelSizeSpinBox->setValue(std::stod(guiVals.Resolution[0]));
-    ui->resolutionDZSpinBox->setValue(std::stod(guiVals.Resolution[1]));
-    std::string tString;
-    for(std::string &i : guiVals.timepoints){
-        tString.append(i);
-        tString.append(",");
-    }
-    if(!tString.empty()){
-        tString.pop_back();
-        ui->timepointsLineEdit->setText(QString::fromStdString(tString));
-    }
     ui->axisWeightYSpinBox->setValue(std::stod(guiVals.axisWeight[0]));
     ui->axisWeightXSpinBox->setValue(std::stod(guiVals.axisWeight[1]));
     ui->axisWeightZSpinBox->setValue(std::stod(guiVals.axisWeight[2]));
@@ -88,9 +77,9 @@ void largeScaleProcessingSettings::on_cancelButton_clicked()
 void largeScaleProcessingSettings::on_submitButton_clicked()
 {
     gVals->SaveMIP = ui->saveMIPCheckBox->isChecked();
-    gVals->BatchSize[0] = ui->batchSizeYSpinBox->text().toStdString();
-    gVals->BatchSize[1] = ui->batchSizeXSpinBox->text().toStdString();
-    gVals->BatchSize[2] = ui->batchSizeZSpinBox->text().toStdString();
+    gVals->batchSize[0] = ui->batchSizeYSpinBox->text().toStdString();
+    gVals->batchSize[1] = ui->batchSizeXSpinBox->text().toStdString();
+    gVals->batchSize[2] = ui->batchSizeZSpinBox->text().toStdString();
 
     gVals->multiLoc = ui->multiLocCheckBox->isChecked();
     gVals->ProcessedDirStr = ui->processedDirStringLineEdit->text();
@@ -120,15 +109,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
                               ui->tileOutBboxZMaxSpinBox->text().toStdString()};
     }
     gVals->TileOffset = ui->tileOffsetSpinBox->text();
-    gVals->Resolution[0] = ui->resolutionXYPixelSizeSpinBox->text().toStdString();
-    gVals->Resolution[1] = ui->resolutionDZSpinBox->text().toStdString();
-    gVals->timepoints.clear();
-    std::stringstream s_stream(ui->timepointsLineEdit->text().toStdString());
-    while(s_stream.good()) {
-        std::string substr;
-        getline(s_stream, substr, ','); //get first string delimited by comma
-        gVals->timepoints.push_back(substr);
-    }
     gVals->axisWeight[0] = ui->axisWeightYSpinBox->text().toStdString();
     gVals->axisWeight[1] = ui->axisWeightXSpinBox->text().toStdString();
     gVals->axisWeight[2] = ui->axisWeightZSpinBox->text().toStdString();

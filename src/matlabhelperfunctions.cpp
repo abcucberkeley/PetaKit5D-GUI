@@ -218,3 +218,22 @@ bool endsWith(std::string_view str, std::string_view suffix)
 {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
+
+// Get the data paths
+/*
+std::vector<std::string> dataPaths = getDataPaths(tiffZarrConverterDPaths);
+std::vector<QString> channelPatterns = getChannelPatterns(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text());
+std::vector<std::string> finalDataPaths;
+for (std::string &dataPath: dataPaths){
+    QDir directory(QString::fromStdString(dataPath));
+    QStringList images = directory.entryList(QStringList() << "*.tif" << "*.tiff",QDir::Files);
+    for(QString &fileName : images) {
+        for(QString &pattern : channelPatterns){
+            if(fileName.contains(pattern)){
+                finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
+                break;
+            }
+        }
+    }
+}
+*/

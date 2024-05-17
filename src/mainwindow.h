@@ -24,7 +24,6 @@ class GUIvals{
         double skewAngle;
         bool dzFromEncoder;
         bool Reverse;
-        bool sCMOSCameraFlip;
         bool parseSettingFile;
 
         // DSR Advanced Settings
@@ -42,7 +41,6 @@ class GUIvals{
         bool boundboxCropCheckBox;
         std::vector<std::string> boundboxCrop;
         std::vector<bool> stitchMIP;
-        bool bigStitchData;
         QString stitchInfoFullpath;
         QString processFunPath;
         QString shiftMethod;
@@ -52,13 +50,10 @@ class GUIvals{
 
         // Decon Advanced Settings
         QString RLMethod;
-        bool fixIter;
-        double errThresh;
         bool debug;
         bool gpuJob;
         QString largeMethod;
-        bool rotatePSF;
-        double damper;
+        double dampFactor;
         std::vector<std::string> scaleFactor;
         uint64_t deconOffset;
         std::vector<std::string> deconMaskFns;
@@ -77,7 +72,7 @@ class GUIvals{
 
         // DSR Large Scale Processing Settings
         bool SaveMIP;
-        std::vector<std::string> BatchSize;
+        std::vector<std::string> batchSize;
 
         // Stitch Large Scale Processing Settings
         bool multiLoc;
@@ -90,8 +85,6 @@ class GUIvals{
         bool tileOutBboxCheckBox;
         std::vector<std::string> tileOutBbox;
         QString TileOffset;
-        std::vector<std::string> Resolution;
-        std::vector<std::string> timepoints;
         std::vector<std::string> axisWeight;
         QString groupFile;
         bool usePrimaryCoords;
@@ -102,7 +95,6 @@ class GUIvals{
         GUIvals() : skewAngle{32.45},
                     dzFromEncoder{false},
                     Reverse{true},
-                    sCMOSCameraFlip{false},
                     parseSettingFile{false},
                     flipZStack{false},
                     BKRemoval{false},
@@ -116,7 +108,6 @@ class GUIvals{
                     boundboxCropCheckBox{false},
                     boundboxCrop{},
                     stitchMIP{false,false,false},
-                    bigStitchData{false},
                     stitchInfoFullpath{""},
                     processFunPath{""},
                     shiftMethod{"grid"},
@@ -124,13 +115,10 @@ class GUIvals{
                     distBboxesCheckBox{false},
                     distBboxes{"0","0","0","0","0","0"},
                     RLMethod{"OMW"},
-                    fixIter{false},
-                    errThresh{.00000001},
                     debug{false},
                     gpuJob{false},
                     largeMethod{"inmemory"},
-                    rotatePSF{false},
-                    damper{1.0},
+                    dampFactor{1.0},
                     scaleFactor{},
                     deconOffset{0},
                     deconMaskFns{"","",""},
@@ -145,7 +133,7 @@ class GUIvals{
                     maxModifyTime{10},
                     maxWaitLoopNum{10},
                     SaveMIP{true},
-                    BatchSize{"1024","1024","1024"},
+                    batchSize{"1024","1024","1024"},
                     multiLoc{false},
                     ProcessedDirStr{""},
                     IOScan{false},
@@ -156,8 +144,6 @@ class GUIvals{
                     tileOutBboxCheckBox{false},
                     tileOutBbox{},
                     TileOffset{"0"},
-                    Resolution{".108",".5"},
-                    timepoints{},
                     axisWeight{"1",".1","10"},
                     groupFile{""},
                     usePrimaryCoords{false},
@@ -327,6 +313,7 @@ private:
 
     // FFT Analysis
     std::vector<dataPath> fftAnalysisDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> fftAnalysisChannelWidgets;
 
     // FSC Analysis
     std::vector<dataPath> fscAnalysisDPaths;
@@ -460,8 +447,6 @@ private slots:
 
     void on_fftAnalysisSubmitButton_clicked();
 
-    void on_fftAnalysisAddPathsButton_clicked();
-
     void on_fscAnalysisSubmitButton_clicked();
 
     void on_psfDetectionAnalysisSubmitButton_clicked();
@@ -503,6 +488,12 @@ private slots:
     void on_wienerAlphaButton_clicked();
 
     void on_otfCumThreshButton_clicked();
+
+    void on_tiffZarrConverterTiffToZarrRadioButton_toggled(bool checked);
+
+    void on_imarisConverterBBoxCheckBox_stateChanged(int arg1);
+
+    void on_resampleBBoxCheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

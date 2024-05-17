@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>480</height>
+    <height>507</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -530,31 +530,7 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,4">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QLabel" name="bigStitchDataLabel">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Big Stitch Data</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="bigStitchDataCheckBox">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="4">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>

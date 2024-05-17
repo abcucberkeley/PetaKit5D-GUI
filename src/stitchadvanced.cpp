@@ -34,7 +34,6 @@ stitchAdvanced::stitchAdvanced(GUIvals &guiVals, QWidget *parent)
     ui->overlapTypeComboBox->setCurrentText(guiVals.overlapType);
     ui->shiftMethodComboBox->setCurrentText(guiVals.shiftMethod);
     ui->groupFileLineEdit->setText(guiVals.groupFile);
-    ui->bigStitchDataCheckBox->setChecked(guiVals.bigStitchData);
     ui->processFunPathLineEdit->setText(guiVals.processFunPath);
 
 }
@@ -77,7 +76,6 @@ void stitchAdvanced::on_submitButton_clicked()
     gVals->overlapType = ui->overlapTypeComboBox->currentText();
     gVals->shiftMethod = ui->shiftMethodComboBox->currentText();
     gVals->groupFile = ui->groupFileLineEdit->text();
-    gVals->bigStitchData = ui->bigStitchDataCheckBox->isChecked();
     gVals->processFunPath = ui->processFunPathLineEdit->text();
     stitchAdvanced::close();
 }
