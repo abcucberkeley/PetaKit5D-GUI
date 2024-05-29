@@ -42,7 +42,12 @@ class GUIvals{
         std::vector<std::string> boundboxCrop;
         std::vector<bool> stitchMIP;
         QString stitchInfoFullpath;
-        QString processFunPath;
+        bool processFunPath;
+        std::vector <QString> stitchFFImagePaths;
+        std::vector <QString> stitchBackgroundPaths;
+        QString TileOffset;
+        QString stitchLowerLimit;
+        bool stitchFFBackground;
         QString shiftMethod;
         QString overlapType;
         bool distBboxesCheckBox;
@@ -51,12 +56,13 @@ class GUIvals{
         // Decon Advanced Settings
         QString RLMethod;
         bool debug;
-        bool gpuJob;
+        QString saveStep;
         QString largeMethod;
         double dampFactor;
         std::vector<std::string> scaleFactor;
         uint64_t deconOffset;
         std::vector<std::string> deconMaskFns;
+        QString edgeErosion;
         bool erodeByFTP;
         bool deconRotate;
 
@@ -84,7 +90,6 @@ class GUIvals{
         std::vector<std::string> InputBbox;
         bool tileOutBboxCheckBox;
         std::vector<std::string> tileOutBbox;
-        QString TileOffset;
         std::vector<std::string> axisWeight;
         QString groupFile;
         bool usePrimaryCoords;
@@ -109,19 +114,25 @@ class GUIvals{
                     boundboxCrop{},
                     stitchMIP{false,false,false},
                     stitchInfoFullpath{""},
-                    processFunPath{""},
+                    processFunPath{false},
+                    stitchFFImagePaths{},
+                    stitchBackgroundPaths{},
+                    TileOffset{"0"},
+                    stitchLowerLimit{".4"},
+                    stitchFFBackground{false},
                     shiftMethod{"grid"},
                     overlapType{""},
                     distBboxesCheckBox{false},
                     distBboxes{"0","0","0","0","0","0"},
                     RLMethod{"OMW"},
                     debug{false},
-                    gpuJob{false},
+                    saveStep{"5"},
                     largeMethod{"inmemory"},
                     dampFactor{1.0},
                     scaleFactor{},
                     deconOffset{0},
                     deconMaskFns{"","",""},
+                    edgeErosion{"8"},
                     erodeByFTP{true},
                     deconRotate{false},
                     largeFile{false},
@@ -143,7 +154,6 @@ class GUIvals{
                     InputBbox{},
                     tileOutBboxCheckBox{false},
                     tileOutBbox{},
-                    TileOffset{"0"},
                     axisWeight{"1",".1","10"},
                     groupFile{""},
                     usePrimaryCoords{false},
@@ -330,6 +340,7 @@ private:
     // psfDetectionAnalysis
     std::vector<dataPath> psfDetectionAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> psfDetectionAnalysisChannelWidgets;
+    std::vector<QString> rwfnPaths;
 
     // resample
     std::vector<dataPath> resampleDPaths;
@@ -494,6 +505,16 @@ private slots:
     void on_imarisConverterBBoxCheckBox_stateChanged(int arg1);
 
     void on_resampleBBoxCheckBox_stateChanged(int arg1);
+
+    void on_fscAnalysisBoundBoxCheckBox_stateChanged(int arg1);
+
+    void on_fscAnalysisResThreshMethodComboBox_currentTextChanged(const QString &arg1);
+
+    void on_resampleZarrFileCheckBox_stateChanged(int arg1);
+
+    void on_AnalysisModeButton_clicked();
+
+    void on_psfDetectionAnalysisRWFnButton_clicked();
 
 private:
     Ui::MainWindow *ui;

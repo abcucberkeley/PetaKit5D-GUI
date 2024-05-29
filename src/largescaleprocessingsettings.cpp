@@ -54,7 +54,6 @@ largeScaleProcessingSettings::largeScaleProcessingSettings(GUIvals& guiVals, QWi
         ui->tileOutBboxXMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[4]));
         ui->tileOutBboxZMaxSpinBox->setValue(std::stoi(guiVals.tileOutBbox[5]));
     }
-    ui->tileOffsetSpinBox->setValue(guiVals.TileOffset.toInt());
     ui->axisWeightYSpinBox->setValue(std::stod(guiVals.axisWeight[0]));
     ui->axisWeightXSpinBox->setValue(std::stod(guiVals.axisWeight[1]));
     ui->axisWeightZSpinBox->setValue(std::stod(guiVals.axisWeight[2]));
@@ -108,7 +107,6 @@ void largeScaleProcessingSettings::on_submitButton_clicked()
                               ui->tileOutBboxXMaxSpinBox->text().toStdString(),
                               ui->tileOutBboxZMaxSpinBox->text().toStdString()};
     }
-    gVals->TileOffset = ui->tileOffsetSpinBox->text();
     gVals->axisWeight[0] = ui->axisWeightYSpinBox->text().toStdString();
     gVals->axisWeight[1] = ui->axisWeightXSpinBox->text().toStdString();
     gVals->axisWeight[2] = ui->axisWeightZSpinBox->text().toStdString();

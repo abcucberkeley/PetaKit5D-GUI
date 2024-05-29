@@ -15,11 +15,14 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
 
     // Set the vals in the window to the ones passed in
     ui->debugCheckBox->setChecked(guiVals.debug);
-    ui->gpuJobCheckBox->setChecked(guiVals.gpuJob);
-    if(guiVals.RLMethod != "simplified"){
+    if(guiVals.RLMethod == "original"){
         ui->debugLabel->setEnabled(false);
         ui->debugCheckBox->setEnabled(false);
+        ui->saveStepLabel->setEnabled(false);
+        ui->saveStepLineEdit->setEnabled(false);
     }
+    else on_debugCheckBox_clicked(ui->debugCheckBox->isChecked());
+    ui->saveStepLineEdit->setText(guiVals.saveStep);
     ui->largeMethodComboBox->setCurrentText(guiVals.largeMethod);
     ui->erodeByFTPCheckBox->setChecked(guiVals.erodeByFTP);
     ui->deconRotateCheckBox->setChecked(guiVals.deconRotate);
@@ -48,7 +51,7 @@ void deconAdvanced::on_cancelButton_clicked()
 void deconAdvanced::on_submitButton_clicked()
 {
     gVals->debug = ui->debugCheckBox->isChecked();
-    gVals->gpuJob = ui->gpuJobCheckBox->isChecked();
+    gVals->saveStep = ui->saveStepLineEdit->text();
     gVals->largeMethod = ui->largeMethodComboBox->currentText();
     gVals->erodeByFTP = ui->erodeByFTPCheckBox->isChecked();
     gVals->deconRotate = ui->deconRotateCheckBox->isChecked();
@@ -71,5 +74,12 @@ void deconAdvanced::on_pushButton_clicked()
     maskFilenames mFilenames(gVals->deconMaskFns);
     mFilenames.setModal(true);
     mFilenames.exec();
+}
+
+
+void deconAdvanced::on_debugCheckBox_clicked(bool checked)
+{
+    ui->saveStepLabel->setEnabled(checked);
+    ui->saveStepLineEdit->setEnabled(checked);
 }
 

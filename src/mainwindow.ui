@@ -614,7 +614,7 @@
          <number>1</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_32" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -651,21 +651,6 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="overwriteDataLabel">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Overwrite Data</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLabel" name="save16BitLabel">
             <property name="font">
              <font>
@@ -699,7 +684,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_46" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -728,22 +713,6 @@
            <widget class="QCheckBox" name="deskewCheckBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deskewOverwriteDataCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -788,7 +757,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_44" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -830,19 +799,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="rotateOverwriteDataCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="rotateSave16BitCheckBox">
             <property name="enabled">
              <bool>false</bool>
@@ -874,7 +830,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_47" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -909,28 +865,6 @@
            <widget class="QCheckBox" name="deskewAndRotateCheckBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deskewAndRotateOverwriteDataCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -987,7 +921,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_45" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1029,19 +963,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="stitchOverwriteDataCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="stitchSave16BitCheckBox">
             <property name="enabled">
              <bool>false</bool>
@@ -1073,7 +994,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_48" stretch="1,1,1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -1108,19 +1029,6 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
-            </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="deconOnlyOverwriteDataCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -1486,13 +1394,261 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
-         <number>1</number>
+         <number>6</number>
         </property>
         <property name="topMargin">
          <number>0</number>
         </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_113" stretch="1">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,4,1">
+            <item>
+             <widget class="QLabel" name="imageListFullPathsLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Image List Full Paths</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="imageListFullPathsLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="imageListFullPathsBrowseButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_112" stretch="1,1">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_23">
+            <item>
+             <widget class="QLabel" name="resultsDirLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Result Directory Name</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="resultsDirLineEdit">
+              <property name="text">
+               <string>matlab_stitch</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_25">
+            <item>
+             <widget class="QLabel" name="axisOrderLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Axis Order</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="axisOrderLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="placeholderText">
+               <string>EX: xyz OR -xyz OR yxz etc.</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_115" stretch="1,1">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_26">
+            <item>
+             <widget class="QLabel" name="blendMethodLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Blend Method</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="blendMethodComboBox">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="editable">
+               <bool>false</bool>
+              </property>
+              <property name="currentText">
+               <string>none</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>none</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mean</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>median</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>max</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>feather</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="primaryCHLabel">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Primary Ch</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="primaryCHLineEdit">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="maxLength">
+               <number>32763</number>
+              </property>
+              <property name="placeholderText">
+               <string>EX: camA_ch0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_18">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_111" stretch="1,1,4">
           <item>
@@ -1565,7 +1721,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>XCorr Downsample</string>
+                 <string>XCorr Downsample:</string>
                 </property>
                </widget>
               </item>
@@ -1585,7 +1741,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Y:</string>
+                 <string>Y</string>
                 </property>
                </widget>
               </item>
@@ -1621,7 +1777,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>X:</string>
+                 <string>X</string>
                 </property>
                </widget>
               </item>
@@ -1657,7 +1813,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Z:</string>
+                 <string>Z</string>
                 </property>
                </widget>
               </item>
@@ -1684,7 +1840,7 @@
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer_15">
+         <spacer name="verticalSpacer_17">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -1700,31 +1856,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_112" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_23">
-            <item>
-             <widget class="QLabel" name="resultsDirLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Result Directory Name</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="resultsDirLineEdit">
-              <property name="text">
-               <string>matlab_stitch</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_114" stretch="0">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_28">
             <item>
@@ -1776,116 +1908,6 @@
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer_16">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_113" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,4,1">
-            <item>
-             <widget class="QLabel" name="imageListFullPathsLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Image List Full Paths</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="imageListFullPathsLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="imageListFullPathsBrowseButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Browse</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_17">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_114" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_25">
-            <item>
-             <widget class="QLabel" name="axisOrderLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Axis Order</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="axisOrderLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="placeholderText">
-               <string>EX: xyz OR -xyz OR yxz etc.</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
          <spacer name="verticalSpacer_11">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1894,84 +1916,6 @@
            <size>
             <width>20</width>
             <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_115" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_26">
-            <item>
-             <widget class="QLabel" name="blendMethodLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Blend Method</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="blendMethodComboBox">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="editable">
-               <bool>false</bool>
-              </property>
-              <property name="currentText">
-               <string>none</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>none</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>mean</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>median</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>max</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>feather</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_18">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
            </size>
           </property>
          </spacer>
@@ -2036,62 +1980,6 @@
         </item>
         <item>
          <spacer name="verticalSpacer_19">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_116" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QLabel" name="primaryCHLabel">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Primary Ch</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="primaryCHLineEdit">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="maxLength">
-               <number>32763</number>
-              </property>
-              <property name="placeholderText">
-               <string>EX: camA_ch0</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_42">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -2304,6 +2192,9 @@
        <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>1</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="10,11,11,11">
@@ -2574,7 +2465,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_220" stretch="1,1">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_221">
+           <layout class="QHBoxLayout" name="horizontalLayout_221" stretch="1,1,1">
             <item>
              <widget class="QLabel" name="hannWinBoundsLabel">
               <property name="font">
@@ -2605,7 +2496,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_222">
+           <layout class="QHBoxLayout" name="horizontalLayout_222" stretch="1,1,1,1">
             <item>
              <widget class="QLabel" name="skewedManualLabel">
               <property name="font">
@@ -2676,75 +2567,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_122" stretch="1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_35">
-            <item>
-             <widget class="QLabel" name="edgeErosionLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Edge Erosion</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="edgeErosionLineEdit">
-              <property name="text">
-               <string>8</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_20">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Preferred</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_125" stretch="1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_33">
-            <item>
-             <widget class="QLabel" name="backgroundIntensityLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Background Intensity</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="backgroundIntensityLineEdit">
-              <property name="text">
-               <string>100</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_38">
             <item>
@@ -2764,6 +2587,30 @@
              <widget class="QPushButton" name="psfFullAddPathsButton_2">
               <property name="text">
                <string>Add/View Paths</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_34" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="dzPSFLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>PSF Step Size</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dzPSFLineEdit">
+              <property name="text">
+               <string>.1</string>
               </property>
              </widget>
             </item>
@@ -2790,9 +2637,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_126" stretch="1,1">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_34">
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
             <item>
-             <widget class="QLabel" name="dzPSFLabel">
+             <widget class="QLabel" name="psfGenLabel">
               <property name="font">
                <font>
                 <pointsize>12</pointsize>
@@ -2800,21 +2647,24 @@
                </font>
               </property>
               <property name="text">
-               <string>PSF Step Size</string>
+               <string>Generate PSF</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="dzPSFLineEdit">
+             <widget class="QCheckBox" name="psfGenCheckBox">
               <property name="text">
-               <string>.1</string>
+               <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_39">
+           <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="1,1">
             <item>
              <widget class="QLabel" name="deconIterationsLabel">
               <property name="font">
@@ -2832,6 +2682,94 @@
              <widget class="QLineEdit" name="deconIterationsLineEdit">
               <property name="text">
                <string>2</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_20">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_35" stretch="1,1">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_33" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="backgroundIntensityLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Background Intensity</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="backgroundIntensityLineEdit">
+              <property name="text">
+               <string>100</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_67" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="gpuJobLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>GPU Job</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="gpuJobCheckBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
               </property>
              </widget>
             </item>
@@ -6113,7 +6051,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_27" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_27" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -6289,7 +6227,7 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_68" stretch="1">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,1">
                 <item>
@@ -6309,32 +6247,6 @@
                  <widget class="QLineEdit" name="fftAnalysisResultDirNameLineEdit">
                   <property name="text">
                    <string>FFT</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_14">
-                <item>
-                 <widget class="QLabel" name="fftAnalysisOverwriteLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                    <strikeout>false</strikeout>
-                    <kerning>true</kerning>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Overwrite</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="fftAnalysisOverwriteCheckBox">
-                  <property name="text">
-                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -6447,93 +6359,156 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_71" stretch="1,1,1,1,1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_231">
               <item>
-               <widget class="QLabel" name="fftAnalysisOutSizeYLabel">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Y:</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_122" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOutPixelSizeLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Out Pixel Size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="fftAnalysisOutPixelSizeLineEdit"/>
+                </item>
+               </layout>
               </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_95">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_116" stretch="1">
               <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeYSpinBox">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximum">
-                 <double>100000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1001.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="fftAnalysisOutSizeXLabel">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>X:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeXSpinBox">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximum">
-                 <double>100000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1001.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="fftAnalysisOutSizeZLabel">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Z:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="fftAnalysisOutSizeZSpinBox">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximum">
-                 <double>100000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1001.000000000000000</double>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_71" stretch="1,1,1,1,1,1,1">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOutSizeLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Out Size:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOutSizeYLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="fftAnalysisOutSizeYSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>999999999</number>
+                  </property>
+                  <property name="value">
+                   <number>1001</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOutSizeXLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="fftAnalysisOutSizeXSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>999999999</number>
+                  </property>
+                  <property name="value">
+                   <number>1001</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="fftAnalysisOutSizeZLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="fftAnalysisOutSizeZSpinBox">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>999999999</number>
+                  </property>
+                  <property name="value">
+                   <number>1001</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -6573,6 +6548,73 @@
                  <string/>
                 </property>
                </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_75">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_123" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_183" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisBackgroundLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Background</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="fftAnalysisBackgroundLineEdit">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_182" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="fftAnalysisInterpMethodLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Interp Method</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="fftAnalysisInterpMethodComboBox">
+                  <item>
+                   <property name="text">
+                    <string>linear</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -6980,7 +7022,7 @@
                 <item>
                  <widget class="QLineEdit" name="fscAnalysisDrLineEdit">
                   <property name="text">
-                   <string>.1</string>
+                   <string>10</string>
                   </property>
                  </widget>
                 </item>
@@ -7006,7 +7048,7 @@
                 <item>
                  <widget class="QLineEdit" name="fscAnalysisDthetaLineEdit">
                   <property name="text">
-                   <string>.1</string>
+                   <string>.261799</string>
                   </property>
                  </widget>
                 </item>
@@ -7028,7 +7070,45 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_172">
+             <layout class="QHBoxLayout" name="horizontalLayout_172" stretch="1,1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_80">
+                <item>
+                 <widget class="QLabel" name="fscAnalysisResThreshMethodLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                    <strikeout>false</strikeout>
+                    <kerning>true</kerning>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>resThreshMethod</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="fscAnalysisResThreshMethodComboBox">
+                  <item>
+                   <property name="text">
+                    <string>fixed</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>one-bit</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>half-bit</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_79">
                 <item>
@@ -7050,32 +7130,6 @@
                  <widget class="QLineEdit" name="fscAnalysisResTheshLineEdit">
                   <property name="text">
                    <string>.2</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_80">
-                <item>
-                 <widget class="QLabel" name="fscAnalysisResThreshMethodLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                    <strikeout>false</strikeout>
-                    <kerning>true</kerning>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>resThreshMethod</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="fscAnalysisResThreshMethodLineEdit">
-                  <property name="text">
-                   <string>one-bit</string>
                   </property>
                  </widget>
                 </item>
@@ -7125,6 +7179,19 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_81">
               <item>
+               <widget class="QLabel" name="fscAnalysisHalfSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Half Size:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QLabel" name="fscAnalysisNYLabel">
                 <property name="enabled">
                  <bool>true</bool>
@@ -7136,7 +7203,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Y:</string>
+                 <string>Y</string>
                 </property>
                </widget>
               </item>
@@ -7165,7 +7232,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>X:</string>
+                 <string>X</string>
                 </property>
                </widget>
               </item>
@@ -7194,7 +7261,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Z:</string>
+                 <string>Z</string>
                 </property>
                </widget>
               </item>
@@ -8455,36 +8522,6 @@
                 </item>
                </layout>
               </item>
-              <item>
-               <layout class="QHBoxLayout" name="imarisConverterOverwriteHorizontalLayout">
-                <item>
-                 <widget class="QLabel" name="imarisConverterOverwriteLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Overwrite</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="imarisConverterOverwriteCheckBox">
-                  <property name="autoFillBackground">
-                   <bool>false</bool>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
              </layout>
             </item>
             <item>
@@ -9048,7 +9085,10 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_175">
+             <layout class="QHBoxLayout" name="horizontalLayout_175" stretch="1,1,4">
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
               <item>
                <layout class="QHBoxLayout" name="mipGeneratorZarrFileHorizontalLayout">
                 <item>
@@ -9106,6 +9146,136 @@
                    <bool>false</bool>
                   </property>
                  </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="mipGeneratorBatchSizeHorizontalLayout">
+                <item>
+                 <widget class="QLabel" name="mipGeneratorBatchSizeLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                    <strikeout>false</strikeout>
+                    <kerning>true</kerning>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Batch Size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="mipGeneratorBatchSizeYHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorBatchSizeYLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Y</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="mipGeneratorBatchSizeYSpinBox">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="decimals">
+                     <number>0</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1000000000.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>512.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="mipGeneratorBatchSizeXHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorBatchSizeXLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>X</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="mipGeneratorBatchSizeXSpinBox">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="decimals">
+                     <number>0</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1000000000.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>512.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="mipGeneratorBatchSizeZHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="mipGeneratorBatchSizeZLabel">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Z</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="mipGeneratorBatchSizeZSpinBox">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="decimals">
+                     <number>0</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1000000000.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>512.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -9431,7 +9601,10 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_49" stretch="1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_49" stretch="1,1,1,1,1">
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_124">
               <item>
@@ -9547,6 +9720,47 @@
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_42">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_105">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_106" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="minIntThrshLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Minimum Integral Threshold</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="minIntThrshLineEdit">
+                  <property name="text">
+                   <string>.0025</string>
                   </property>
                  </widget>
                 </item>
@@ -10212,15 +10426,9 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="psfDetectionAnalysisRWFnLineEdit">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
+               <widget class="QPushButton" name="psfDetectionAnalysisRWFnButton">
                 <property name="text">
-                 <string>/clusterfs/fiona/Gokul/RW_PSFs/PSF_RW_515em_128_128_101_100nmSteps.tif,/clusterfs/fiona/Gokul/RW_PSFs/PSF_RW_605em_128_128_101_100nmSteps.tif</string>
-                </property>
-                <property name="placeholderText">
-                 <string>Comma seperated channels Ex. 488,560</string>
+                 <string>Add/View Paths</string>
                 </property>
                </widget>
               </item>
@@ -10348,6 +10556,9 @@
              <layout class="QHBoxLayout" name="psfDetectionAnalysisCropSizeHorizontalLayout">
               <item>
                <widget class="QLabel" name="psfDetectionAnalysisCropSizeLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -10366,7 +10577,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisCropSizeYLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10375,14 +10586,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeYDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -10399,7 +10610,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisCropSizeXLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10408,14 +10619,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeXDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -10432,7 +10643,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisCropSizeZLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10441,14 +10652,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisCropSizeZDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -10479,6 +10690,9 @@
              <layout class="QHBoxLayout" name="psfDetectionAnalysisDistThreshHorizontalLayout">
               <item>
                <widget class="QLabel" name="psfDetectionAnalysisDistThreshLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -10497,7 +10711,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisDistThreshYLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10506,14 +10720,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshYDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -10530,7 +10744,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisDistThreshXLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10539,14 +10753,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshXDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -10563,7 +10777,7 @@
                 <item>
                  <widget class="QLabel" name="psfDetectionAnalysisDistThreshZLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -10572,14 +10786,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="psfDetectionAnalysisDistThreshZDoubleSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="maximum">
                    <double>100000.000000000000000</double>
@@ -11062,6 +11276,9 @@
                <layout class="QHBoxLayout" name="horizontalLayout_230">
                 <item>
                  <widget class="QLabel" name="resampleLargeZarrLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
@@ -11075,6 +11292,9 @@
                 </item>
                 <item>
                  <widget class="QCheckBox" name="resampleLargeZarrCheckBox">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string/>
                   </property>
@@ -11422,6 +11642,9 @@
              <layout class="QHBoxLayout" name="resampleBlockSizeHorizontalLayout">
               <item>
                <widget class="QLabel" name="resampleBlockSizeLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -11440,7 +11663,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBlockSizeYLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11449,14 +11672,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBlockSizeYSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11476,7 +11699,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBlockSizeXLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11485,14 +11708,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBlockSizeXSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11512,7 +11735,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBlockSizeZLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11521,14 +11744,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBlockSizeZSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11562,6 +11785,9 @@
              <layout class="QHBoxLayout" name="resampleBatchSizeHorizontalLayout">
               <item>
                <widget class="QLabel" name="resampleBatchSizeLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -11580,7 +11806,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBatchSizeYLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11589,14 +11815,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBatchSizeYSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11616,7 +11842,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBatchSizeXLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11625,14 +11851,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBatchSizeXSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11652,7 +11878,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBatchSizeZLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -11661,14 +11887,14 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBatchSizeZSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -11729,7 +11955,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
@@ -11765,7 +11991,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
@@ -11801,7 +12027,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
@@ -12021,7 +12247,7 @@
            <number>9</number>
           </property>
           <item row="2" column="1">
-           <layout class="QVBoxLayout" name="verticalLayout_40" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_40" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="bottomMargin">
              <number>0</number>
             </property>
@@ -12283,7 +12509,7 @@
                 <item>
                  <widget class="QLineEdit" name="tiffZarrConverterResultDirNameLineEdit">
                   <property name="text">
-                   <string>tiffs</string>
+                   <string>zarr</string>
                   </property>
                  </widget>
                 </item>
@@ -12669,121 +12895,6 @@
               </item>
              </layout>
             </item>
-            <item>
-             <spacer name="verticalSpacer_95">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_193">
-              <item>
-               <layout class="QHBoxLayout" name="tiffZarrConverterMaxTrialNumHorizontalLayout">
-                <item>
-                 <widget class="QLabel" name="tiffZarrConverterMaxTrialNumLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Max Trial Num</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="tiffZarrConverterMaxTrialNumLineEdit">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>20</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>3</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="tiffZarrConverterMaxTrialNumHorizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>200</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="tiffZarrConverterUnitWaitTimeHorizontalLayout">
-                <item>
-                 <widget class="QLabel" name="tiffZarrConverterUnitWaitTimeLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Unit Wait Time</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="tiffZarrConverterUnitWaitTimeLineEdit">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>20</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>30</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="tiffZarrConverterUnitWaitTimeHorizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>200</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
            </layout>
           </item>
           <item row="1" column="1">
@@ -12855,8 +12966,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="deconRLMethodButtonGroup"/>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
+  <buttongroup name="deconRLMethodButtonGroup"/>
  </buttongroups>
 </ui>

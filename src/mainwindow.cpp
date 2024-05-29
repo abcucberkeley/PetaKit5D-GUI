@@ -17,6 +17,7 @@
 #include <QTextDocument>
 #include <QObjectList>
 #include <QtMath>
+#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -72,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect FSC Analysis signals
     connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+    connect(ui->psfDetectionAnalysisModeButtonGroup, &QButtonGroup::buttonClicked, this, &MainWindow::on_AnalysisModeButton_clicked);
 
     // Connect Imaris Converter signals
     connect(ui->imarisConverterAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
@@ -233,12 +235,6 @@ void MainWindow::writeSettings()
     }
 
     // Save Main Settings
-
-    settings.setValue("deskewOverwrite",ui->deskewOverwriteDataCheckBox->isChecked());
-    settings.setValue("rotateOverwrite",ui->rotateOverwriteDataCheckBox->isChecked());
-    settings.setValue("deskewAndRotateOverwrite",ui->deskewAndRotateOverwriteDataCheckBox->isChecked());
-    settings.setValue("stitchOverwrite",ui->stitchOverwriteDataCheckBox->isChecked());
-
     settings.setValue("Streaming",ui->streamingCheckBox->isChecked());
     settings.setValue("largeScaleProcessing",ui->largeScaleProcessingCheckBox->isChecked());
 
@@ -283,7 +279,6 @@ void MainWindow::writeSettings()
 
     // Decon Only Settings
     settings.setValue("deconOnly",ui->deconOnlyCheckBox->isChecked());
-    settings.setValue("deconOnlyOverwriteData",ui->deconOnlyOverwriteDataCheckBox->isChecked());
     settings.setValue("deconOnlySave16Bit",ui->deconOnlySave16BitCheckBox->isChecked());
 
     // Save DSR Settings
@@ -349,13 +344,15 @@ void MainWindow::writeSettings()
     settings.setValue("RLMethod",guiVals.RLMethod);
     settings.setValue("Background", ui->backgroundIntensityLineEdit->text());
     settings.setValue("dzPSF", ui->dzPSFLineEdit->text());
-    settings.setValue("edgeErosion", ui->edgeErosionLineEdit->text());
+    settings.setValue("edgeErosion", guiVals.edgeErosion);
+    settings.setValue("psfGen",ui->psfGenCheckBox->isChecked());
 
     // Save Decon Advaced Settings
     settings.setValue("ErodeByFTP", guiVals.erodeByFTP);
     settings.setValue("deconRotate", guiVals.deconRotate);
     settings.setValue("debug", guiVals.debug);
-    settings.setValue("gpuJob", guiVals.gpuJob);
+    settings.setValue("saveStep", guiVals.saveStep);
+    settings.setValue("gpuJob", ui->gpuJobCheckBox->isChecked());
 
     settings.beginWriteArray("psfFullpaths");
     for(unsigned int i = 0; i < psfFullPaths.size(); i++)
@@ -761,12 +758,6 @@ void MainWindow::readSettings()
     }
 
     // Read Main Settings
-
-    ui->deskewOverwriteDataCheckBox->setChecked(settings.value("deskewOverwrite").toBool());
-    ui->rotateOverwriteDataCheckBox->setChecked(settings.value("rotateOverwrite").toBool());
-    ui->deskewAndRotateOverwriteDataCheckBox->setChecked(settings.value("deskewAndRotateOverwrite").toBool());
-    ui->stitchOverwriteDataCheckBox->setChecked(settings.value("stitchOverwrite").toBool());
-
     ui->streamingCheckBox->setChecked(settings.value("Streaming").toBool());
     ui->largeScaleProcessingCheckBox->setChecked(settings.value("largeScaleProcessing").toBool());
 
@@ -830,7 +821,6 @@ void MainWindow::readSettings()
     ui->deskewAndRotateCheckBox->setChecked(settings.value("deskewAndRotate").toBool());
 
     ui->deconOnlyCheckBox->setChecked(settings.value("deconOnly").toBool());
-    ui->deconOnlyOverwriteDataCheckBox->setChecked(settings.value("deconOnlyOverwriteData").toBool());
     ui->deconOnlySave16BitCheckBox->setChecked(settings.value("deconOnlySave16Bit").toBool());
 
     // Read DSR Settings
@@ -891,14 +881,12 @@ void MainWindow::readSettings()
 
 
     // Read Decon Settings
-
-    //ui->deskewDeconCheckBox->setChecked(settings.value("DS").toBool());
-    //ui->deskewAndRotateDeconCheckBox->setChecked(settings.value("DSR").toBool());
     ui->backgroundIntensityLineEdit->setText(settings.value("Background").toString());
     ui->dzPSFLineEdit->setText(settings.value("dzPSF").toString());
-    ui->edgeErosionLineEdit->setText(settings.value("edgeErosion").toString());
+    guiVals.edgeErosion = settings.value("edgeErosion").toString();
     guiVals.erodeByFTP = settings.value("ErodeByFTP").toBool();
     guiVals.deconRotate = settings.value("deconRotate").toBool();
+    ui->psfGenCheckBox->setChecked(settings.value("psfGen").toBool());
 
     // Read Decon Advaced Settings
     guiVals.RLMethod = settings.value("RLMethod").toString();
@@ -913,7 +901,8 @@ void MainWindow::readSettings()
     }
     on_rlMethodButton_clicked();
     guiVals.debug = settings.value("debug").toBool();
-    guiVals.gpuJob = settings.value("gpuJob").toBool();
+    guiVals.saveStep = settings.value("saveStep").toString();
+    ui->gpuJobCheckBox->setChecked(settings.value("gpuJob").toBool());
 
     size = settings.beginReadArray("psfFullpaths");
     for(int i = 0; i < size; i++)
@@ -1386,9 +1375,6 @@ void MainWindow::on_submitButton_clicked()
     addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
 
     if(lspDSR){
-        addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
-        addBoolToArgs(args,ui->deskewAndRotateOverwriteDataCheckBox->isChecked(),prependedString);
-
         addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
         addBoolToArgs(args,guiVals.flipZStack,prependedString);
 
@@ -1562,26 +1548,35 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"onlineStitch",prependedString,isMcc);
         addBoolToArgs(args,ui->stitchOnlineStitchCheckBox->isChecked(),prependedString);
-
-        addCharArrayToArgs(args,"processFunPath",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.processFunPath.toStdString(),prependedString,isMcc);
-
+        if(guiVals.processFunPath){
+            std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
+            if(channelNames.size() != guiVals.stitchFFImagePaths.size() || channelNames.size() != guiVals.stitchBackgroundPaths.size()){
+                ui->submitButton->setEnabled(true);
+                messageBoxError("FF Image Paths and Background paths must be set in the Stitch Advanced Settings to use FF Correction on a Stitch Job.");
+                return;
+            }
+            QString processFunPathDateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+            QString processFunPathTimeJobName = processFunPathDateTime+QString(ui->jobNameLineEdit->text()).replace(" ","_");
+            std::vector<std::string> processFunPath;
+            for(size_t i = 0; i < channelNames.size(); i++){
+                std::string filePath = QDir::tempPath().toStdString()+"/"+processFunPathTimeJobName.toStdString()+"_"+channelNames[i].toStdString()+".txt";
+                std::ofstream file(filePath);
+                if (file.is_open()) {
+                    file << "@(x)processFFCorrectionFrame(x,'"+guiVals.stitchFFImagePaths[i].toStdString()+"','"+guiVals.stitchBackgroundPaths[i].toStdString()+
+                            "',"+guiVals.TileOffset.toStdString()+","+guiVals.stitchLowerLimit.toStdString()+","+btosM(guiVals.stitchFFBackground)+")" << std::endl;
+                    file.close();
+                }
+                processFunPath.push_back(filePath);
+            }
+            addCharArrayToArgs(args,"processFunPath",prependedString,isMcc);
+            addArrayToArgs(args,processFunPath,true,prependedString,"{}",isMcc,";");
+        }
         addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
         addBoolToArgs(args,guiVals.masterCompute,prependedString);
 
     }
     else if(ui->deconOnlyCheckBox->isChecked()){
-
         // Main Settings
-        // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
-        // TODO: FIX LOGIC FOR DECON ONLY
-        addCharArrayToArgs(args,"overwrite",prependedString,isMcc);
-        if(ui->deconOnlyCheckBox->isChecked()) addBoolToArgs(args,false,prependedString);
-
-        //**** For when dzFromEncoder is implemented into the decon wrapper ****
-        //data.push_back(factory.createCharArray("dzFromEncoder"));
-        //data.push_back(factory.createScalar<bool>(ui->dzFromEncoderCheckBox->isChecked()));
-
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
         addCharArrayToArgs(args,"save16bit",prependedString,isMcc);
@@ -1630,7 +1625,7 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,ui->dzPSFLineEdit->text().toStdString(),prependedString);
 
         addCharArrayToArgs(args,"edgeErosion",prependedString,isMcc);
-        addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
+        addScalarToArgs(args,guiVals.edgeErosion.toStdString(),prependedString);
 
         addCharArrayToArgs(args,"ErodeByFTP",prependedString,isMcc);
         addBoolToArgs(args,guiVals.erodeByFTP,prependedString);
@@ -1645,11 +1640,19 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,psfMPaths,true,prependedString,"{}",isMcc);
         }
 
-        addCharArrayToArgs(args,"debug",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.debug,prependedString);
+        if(guiVals.RLMethod != "original"){
+            addCharArrayToArgs(args,"debug",prependedString,isMcc);
+            addBoolToArgs(args,guiVals.debug,prependedString);
+
+            addCharArrayToArgs(args,"saveStep",prependedString,isMcc);
+            addScalarToArgs(args,guiVals.saveStep.toStdString(),prependedString);
+        }
+
+        addCharArrayToArgs(args,"psfGen",prependedString,isMcc);
+        addBoolToArgs(args,ui->psfGenCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"GPUJob",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.gpuJob,prependedString);
+        addBoolToArgs(args,ui->gpuJobCheckBox->isChecked(),prependedString);
 
         addCharArrayToArgs(args,"deconIter",prependedString,isMcc);
         addScalarToArgs(args,ui->deconIterationsLineEdit->text().toStdString(),prependedString);
@@ -1691,18 +1694,7 @@ void MainWindow::on_submitButton_clicked()
 
     }
     else{
-
         // Main Settings
-        // TODO: Logic (in bool array 4th value is all decon, 5th value is rotate after decon)
-        // TODO: FIX LOGIC FOR DECON ONLY
-        addCharArrayToArgs(args,"Overwrite",prependedString,isMcc);
-        if(ui->deconOnlyCheckBox->isChecked()) addBoolToArgs(args,false,prependedString);
-        else if(ui->deskewOverwriteDataCheckBox->isChecked() && ui->rotateOverwriteDataCheckBox->isChecked() && ui->deskewAndRotateOverwriteDataCheckBox->isChecked() && ui->stitchOverwriteDataCheckBox->isChecked()) addBoolToArgs(args,true,prependedString);
-        else{
-            std::vector<std::string> OverwriteV = {btosM(ui->deskewOverwriteDataCheckBox->isChecked()),btosM(ui->rotateOverwriteDataCheckBox->isChecked()),btosM(ui->stitchOverwriteDataCheckBox->isChecked()),btosM(false),btosM(false)};
-            addArrayToArgs(args,OverwriteV,false,prependedString,"[]",isMcc);
-        }
-
         addCharArrayToArgs(args,"streaming",prependedString,isMcc);
         addBoolToArgs(args,ui->streamingCheckBox->isChecked(),prependedString);
 
@@ -1872,8 +1864,6 @@ void MainWindow::on_submitButton_clicked()
     }
 
     // Job Settings for all functions
-
-
     addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
     addBoolToArgs(args,ui->parseClusterCheckBox->isChecked(),prependedString);
 
@@ -1966,7 +1956,6 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
-        ui->deskewOverwriteDataCheckBox->setEnabled(true);
         ui->deskewSave16BitCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
@@ -1976,10 +1965,8 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->deskewOverwriteDataCheckBox->setEnabled(false);
         ui->deskewSave16BitCheckBox->setEnabled(false);
 
-        ui->deskewOverwriteDataCheckBox->setChecked(false);
         ui->deskewSave16BitCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
@@ -2002,7 +1989,6 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
-        ui->rotateOverwriteDataCheckBox->setEnabled(true);
         ui->rotateSave16BitCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
@@ -2012,10 +1998,8 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->rotateOverwriteDataCheckBox->setEnabled(false);
         ui->rotateSave16BitCheckBox->setEnabled(false);
 
-        ui->rotateOverwriteDataCheckBox->setChecked(false);
         ui->rotateSave16BitCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
@@ -2039,7 +2023,6 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
-        ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(true);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
@@ -2049,10 +2032,8 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->deskewAndRotateOverwriteDataCheckBox->setEnabled(false);
         ui->deskewAndRotateSave16BitCheckBox->setEnabled(false);
 
-        ui->deskewAndRotateOverwriteDataCheckBox->setChecked(false);
         ui->deskewAndRotateSave16BitCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
@@ -2075,7 +2056,6 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
-        ui->stitchOverwriteDataCheckBox->setEnabled(true);
         ui->stitchSave16BitCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
@@ -2085,10 +2065,8 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->stitchOverwriteDataCheckBox->setEnabled(false);
         ui->stitchSave16BitCheckBox->setEnabled(false);
 
-        ui->stitchOverwriteDataCheckBox->setChecked(false);
         ui->stitchSave16BitCheckBox->setChecked(false);
 
         // If none of the other main boxes are checked then disable the next button
@@ -2460,7 +2438,6 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
         ui->deskewAndRotateCheckBox->setChecked(false);
         ui->stitchCheckBox->setChecked(false);
 
-        ui->deconOnlyOverwriteDataCheckBox->setEnabled(true);
         ui->deconOnlySave16BitCheckBox->setEnabled(true);
 
         // Check Save 16 Bit by default
@@ -2470,10 +2447,8 @@ void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
         ui->mainNextButton->setEnabled(true);
     }
     else{
-        ui->deconOnlyOverwriteDataCheckBox->setEnabled(false);
         ui->deconOnlySave16BitCheckBox->setEnabled(false);
 
-        ui->deconOnlyOverwriteDataCheckBox->setChecked(false);
         ui->deconOnlySave16BitCheckBox->setChecked(false);
 
         if(!(ui->stitchCheckBox->isChecked() || ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->rotateCheckBox->isChecked())){
@@ -2667,7 +2642,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     addScalarToArgs(args,std::to_string(ui->simReconLatticePeriodLineEdit->text().toDouble()/ui->simReconNPhasesLineEdit->text().toDouble()),prependedString);
 
     addCharArrayToArgs(args,"EdgeErosion",prependedString,isMcc);
-    addScalarToArgs(args,ui->edgeErosionLineEdit->text().toStdString(),prependedString);
+    addScalarToArgs(args,ui->simReconEdgeErosionLineEdit->text().toStdString(),prependedString);
 
     addCharArrayToArgs(args,"ErodeBefore",prependedString,isMcc);
     addBoolToArgs(args,ui->simReconErodeBeforeCheckBox->isChecked(),prependedString);
@@ -3047,6 +3022,11 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"dz",prependedString,isMcc);
     addScalarToArgs(args,ui->fftAnalysisDzLineEdit->text().toStdString(),prependedString);
 
+    if(!ui->fftAnalysisOutPixelSizeLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"outPixelSize",prependedString,isMcc);
+        addScalarToArgs(args,ui->fftAnalysisOutPixelSizeLineEdit->text().toStdString(),prependedString);
+    }
+
     addCharArrayToArgs(args,"outSize",prependedString,isMcc);
     std::vector<std::string> outSizeV = {ui->fftAnalysisOutSizeYSpinBox->text().toStdString(),
                                          ui->fftAnalysisOutSizeXSpinBox->text().toStdString(),
@@ -3055,6 +3035,12 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
 
     addCharArrayToArgs(args,"save3DStack",prependedString,isMcc);
     addBoolToArgs(args,ui->fftAnalysisSave3DStackCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"background",prependedString,isMcc);
+    addScalarToArgs(args,ui->fftAnalysisBackgroundLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"interpMethod",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->fftAnalysisInterpMethodComboBox->currentText().toStdString(),prependedString,isMcc);
 
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
@@ -3125,7 +3111,7 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addScalarToArgs(args,ui->fscAnalysisDthetaLineEdit->text().toStdString(),prependedString);
 
     addCharArrayToArgs(args,"resThreshMethod",prependedString,isMcc);
-    addCharArrayToArgs(args,ui->fscAnalysisResThreshMethodLineEdit->text().toStdString(),prependedString,isMcc);
+    addCharArrayToArgs(args,ui->fscAnalysisResThreshMethodComboBox->currentText().toStdString(),prependedString,isMcc);
 
     addCharArrayToArgs(args,"resThresh",prependedString,isMcc);
     addScalarToArgs(args,ui->fscAnalysisResTheshLineEdit->text().toStdString(),prependedString);
@@ -3134,12 +3120,19 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,ui->fscAnalysisResAxisLineEdit->text().toStdString(),prependedString,isMcc);
 
     addCharArrayToArgs(args,"halfSize",prependedString,isMcc);
-    std::vector<std::string> halfSizeV = {ui->fscAnalysisNYSpinBox->text().toStdString(),ui->fscAnalysisNXSpinBox->text().toStdString(),ui->fscAnalysisNZSpinBox->text().toStdString()};
+    std::vector<std::string> halfSizeV = {ui->fscAnalysisNYSpinBox->text().toStdString(),
+                                          ui->fscAnalysisNXSpinBox->text().toStdString(),
+                                          ui->fscAnalysisNZSpinBox->text().toStdString()};
     addArrayToArgs(args,halfSizeV,false,prependedString,"[]",isMcc);
 
     if(ui->fscAnalysisBoundBoxCheckBox->isChecked()){
         addCharArrayToArgs(args,"inputBbox",prependedString,isMcc);
-        std::vector<std::string> inputBboxV = {ui->fscAnalysisBoundBoxYMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxXMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxZMinSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxYMaxSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxXMaxSpinBox->text().toStdString(),ui->fscAnalysisBoundBoxZMaxSpinBox->text().toStdString()};
+        std::vector<std::string> inputBboxV = {ui->fscAnalysisBoundBoxYMinSpinBox->text().toStdString(),
+                                               ui->fscAnalysisBoundBoxXMinSpinBox->text().toStdString(),
+                                               ui->fscAnalysisBoundBoxZMinSpinBox->text().toStdString(),
+                                               ui->fscAnalysisBoundBoxYMaxSpinBox->text().toStdString(),
+                                               ui->fscAnalysisBoundBoxXMaxSpinBox->text().toStdString(),
+                                               ui->fscAnalysisBoundBoxZMaxSpinBox->text().toStdString()};
         addArrayToArgs(args,inputBboxV,false,prependedString,"[]",isMcc);
     }
 
@@ -3232,9 +3225,12 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"sourceStr",prependedString,isMcc);
     addCharArrayToArgs(args,ui->psfDetectionAnalysisSourceStrLineEdit->text().toStdString(),prependedString,isMcc);
 
-    // Using the Channel Patterns function to get the comma delimited strings
     addCharArrayToArgs(args,"RWFn",prependedString,isMcc);
-    addChannelPatternsToArgs(args,psfDetectionAnalysisChannelWidgets,true,ui->psfDetectionAnalysisRWFnLineEdit->text(),prependedString,isMcc);
+    std::vector<std::string> rwfnMPaths;
+    for(size_t i = 0; i < rwfnPaths.size(); i++){
+        rwfnMPaths.push_back(rwfnPaths[i].toStdString());
+    }
+    addArrayToArgs(args,rwfnMPaths,true,prependedString,"{}",isMcc);
 
     addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
     addBoolToArgs(args,ui->psfDetectionAnalysisFlipZStackCheckBox->isChecked(),prependedString);
@@ -3374,16 +3370,10 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
     addBoolToArgs(args,ui->tiffZarrConverterMasterComputeCheckBox->isChecked(),prependedString);
 
-    if(!simreconVals.uuid.isEmpty()){
+    if(!ui->tiffZarrConverterUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
         addCharArrayToArgs(args,ui->tiffZarrConverterUuidLineEdit->text().toStdString(),prependedString,isMcc);
     }
-
-    addCharArrayToArgs(args,"maxTrialNum",prependedString,isMcc);
-    addScalarToArgs(args,ui->tiffZarrConverterMaxTrialNumLineEdit->text().toStdString(),prependedString);
-
-    addCharArrayToArgs(args,"unitWaitTime",prependedString,isMcc);
-    addScalarToArgs(args,ui->tiffZarrConverterUnitWaitTimeLineEdit->text().toStdString(),prependedString);
 
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
@@ -3455,6 +3445,12 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
 
     addCharArrayToArgs(args,"largeZarr",prependedString,isMcc);
     addBoolToArgs(args,ui->mipGeneratorLargeZarrCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"batchSize",prependedString,isMcc);
+    std::vector<std::string> batchSizeV = {ui->mipGeneratorBatchSizeYSpinBox->text().toStdString(),
+                                           ui->mipGeneratorBatchSizeXSpinBox->text().toStdString(),
+                                           ui->mipGeneratorBatchSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,batchSizeV,false,prependedString,"[]",isMcc);
 
     addCharArrayToArgs(args,"save16bit",prependedString,isMcc);
     addBoolToArgs(args,ui->mipGeneratorSave16BitCheckBox->isChecked(),prependedString);
@@ -3848,6 +3844,9 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
         addArrayToArgs(args,{},false,prependedString,"[]",isMcc);
     }
 
+    addCharArrayToArgs(args,"minIntThrsh",prependedString,isMcc);
+    addScalarToArgs(args,ui->minIntThrshLineEdit->text().toStdString(),prependedString);
+
     QString funcType = "XR_visualize_OTF_mask_segmentation";
 
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
@@ -3859,7 +3858,7 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
 
 void MainWindow::on_stitchAdvancedSettingsButton_clicked()
 {
-    stitchAdvanced sAdvanced(guiVals);
+    stitchAdvanced sAdvanced(guiVals, mostRecentDir, channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
     sAdvanced.setModal(true);
     sAdvanced.exec();
 }
@@ -3934,5 +3933,82 @@ void MainWindow::on_resampleBBoxCheckBox_stateChanged(int arg1)
     ui->resampleBBoxXMaxSpinBox->setEnabled(arg1);
     ui->resampleBBoxZMaxLabel->setEnabled(arg1);
     ui->resampleBBoxZMaxSpinBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_fscAnalysisBoundBoxCheckBox_stateChanged(int arg1)
+{
+    ui->fscAnalysisBoundBoxYMinLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxYMinSpinBox->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxXMinLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxXMinSpinBox->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxZMinLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxZMinSpinBox->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxYMaxLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxYMaxSpinBox->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxXMaxLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxXMaxSpinBox->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxZMaxLabel->setEnabled(arg1);
+    ui->fscAnalysisBoundBoxZMaxSpinBox->setEnabled(arg1);
+}
+
+
+void MainWindow::on_fscAnalysisResThreshMethodComboBox_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == "fixed"){
+        ui->fscAnalysisResThreshLabel->setEnabled(true);
+        ui->fscAnalysisResTheshLineEdit->setEnabled(true);
+    }
+    else{
+        ui->fscAnalysisResThreshLabel->setEnabled(false);
+        ui->fscAnalysisResTheshLineEdit->setEnabled(false);
+    }
+}
+
+
+void MainWindow::on_resampleZarrFileCheckBox_stateChanged(int arg1)
+{
+    ui->resampleLargeZarrLabel->setEnabled(arg1);
+    ui->resampleLargeZarrCheckBox->setEnabled(arg1);
+    ui->resampleBlockSizeLabel->setEnabled(arg1);
+    ui->resampleBlockSizeYLabel->setEnabled(arg1);
+    ui->resampleBlockSizeXLabel->setEnabled(arg1);
+    ui->resampleBlockSizeZLabel->setEnabled(arg1);
+    ui->resampleBlockSizeYSpinBox->setEnabled(arg1);
+    ui->resampleBlockSizeXSpinBox->setEnabled(arg1);
+    ui->resampleBlockSizeZSpinBox->setEnabled(arg1);
+    ui->resampleBatchSizeLabel->setEnabled(arg1);
+    ui->resampleBatchSizeYLabel->setEnabled(arg1);
+    ui->resampleBatchSizeXLabel->setEnabled(arg1);
+    ui->resampleBatchSizeZLabel->setEnabled(arg1);
+    ui->resampleBatchSizeYSpinBox->setEnabled(arg1);
+    ui->resampleBatchSizeXSpinBox->setEnabled(arg1);
+    ui->resampleBatchSizeZSpinBox->setEnabled(arg1);
+}
+
+void MainWindow::on_AnalysisModeButton_clicked(){
+    bool isDetectionAndAnalysis = ui->psfDetectionAnalysisDetectionAndAnalysisRadioButton->isChecked();
+    ui->psfDetectionAnalysisCropSizeLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeYLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeYDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeXLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeXDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeZLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisCropSizeZDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshYLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshYDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshXLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshXDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshZLabel->setEnabled(isDetectionAndAnalysis);
+    ui->psfDetectionAnalysisDistThreshZDoubleSpinBox->setEnabled(isDetectionAndAnalysis);
+}
+
+void MainWindow::on_psfDetectionAnalysisRWFnButton_clicked()
+{
+    std::vector<QString> channelNames = getChannelPatterns(psfDetectionAnalysisChannelWidgets, ui->psfDetectionAnalysisCustomPatternsCheckBox->isChecked(), ui->psfDetectionAnalysisCustomPatternsLineEdit->text());
+    dataPaths daPaths(rwfnPaths, false, mostRecentDir, channelNames, QString("path"));
+    daPaths.setModal(true);
+    daPaths.exec();
 }
 

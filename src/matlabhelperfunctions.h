@@ -6,7 +6,7 @@
 #include <string_view>
 #include "datapath.h"
 
-void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString=std::string(","), const std::string &arrayChars=std::string("{}"),const bool isMcc=false);
+void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString=std::string(","), const std::string &arrayChars=std::string("{}"),const bool isMcc=false, const std::string &separator=",");
 
 void addCharArrayToArgs(std::string &args, const std::string &charArray, const std::string &prependedString=std::string(","), const bool isMcc=false);
 

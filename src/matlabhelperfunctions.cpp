@@ -7,7 +7,7 @@
 #include <iostream>
 #include <fstream>
 
-void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString, const std::string &arrayChars, const bool isMcc){
+void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray, const bool isCharArray, const std::string &prependedString, const std::string &arrayChars, const bool isMcc, const std::string &separator){
     if(arrayChars.size() != 2){
         std::cout << "Error: addArrayToArgs arrayChars input must be the 2 chars that open and close the array type" << std::endl;
         return;
@@ -16,7 +16,7 @@ void addArrayToArgs(std::string &args, const std::vector<std::string> &cellArray
     if(isMcc) surroundQuotes = "\"";
     args.append(prependedString+surroundQuotes+arrayChars[0]);
     for(size_t i = 0; i < cellArray.size(); i++){
-        if(i > 0) args.append(",");
+        if(i > 0) args.append(separator);
         if(isCharArray) args.append("\'");
         args.append(cellArray[i]);
         if(isCharArray) args.append("\'");

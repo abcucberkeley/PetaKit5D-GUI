@@ -24,6 +24,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_debugCheckBox_clicked(bool checked);
+
 private:
     Ui::deconAdvanced *ui;
     GUIvals* gVals;
