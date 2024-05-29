@@ -132,7 +132,7 @@
          <number>1</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_109">
+         <layout class="QHBoxLayout" name="horizontalLayout_109" stretch="1,4,1">
           <item>
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
@@ -147,26 +147,30 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="dataPathsLabel">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Data Paths</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="addPathsButton">
-            <property name="text">
-             <string>Add/View Paths</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_232" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="dataPathsLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Data Paths</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="addPathsButton">
+              <property name="text">
+               <string>Add/View Paths</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="horizontalSpacer_5">
@@ -200,7 +204,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,4,1">
           <item>
            <spacer name="horizontalSpacer_6">
             <property name="orientation">
@@ -215,54 +219,58 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_118">
+           <layout class="QHBoxLayout" name="horizontalLayout_233" stretch="1,1">
             <item>
-             <widget class="QLabel" name="streamingLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>true</kerning>
-               </font>
-              </property>
-              <property name="text">
-               <string>Real-time Processing</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_118">
+              <item>
+               <widget class="QLabel" name="streamingLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Real-time Processing</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="streamingCheckBox">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QCheckBox" name="streamingCheckBox">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_207">
-            <item>
-             <widget class="QLabel" name="largeScaleProcessingLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>true</kerning>
-               </font>
-              </property>
-              <property name="text">
-               <string>Large Scale Processing</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="largeScaleProcessingCheckBox">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_207">
+              <item>
+               <widget class="QLabel" name="largeScaleProcessingLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Large Scale Processing</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="largeScaleProcessingCheckBox">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -355,7 +363,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_49">
+         <layout class="QHBoxLayout" name="horizontalLayout_49" stretch="1,4,1">
           <item>
            <spacer name="horizontalSpacer_9">
             <property name="orientation">
@@ -370,39 +378,43 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="customPatternsLabel">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Custom Patterns</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="customPatternsCheckBox">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="customPatternsLineEdit">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_193" stretch="4,1,8">
+            <item>
+             <widget class="QLabel" name="customPatternsLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Custom Patterns</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="customPatternsCheckBox">
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="customPatternsLineEdit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="placeholderText">
+               <string>Comma seperated channels Ex. CamA_ch0,CamB_ch0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="horizontalSpacer_10">
@@ -436,7 +448,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,4,1">
           <item>
            <spacer name="horizontalSpacer_23">
             <property name="orientation">
@@ -451,72 +463,76 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_40">
+           <layout class="QHBoxLayout" name="horizontalLayout_236" stretch="1,1">
             <item>
-             <widget class="QLabel" name="xyPixelSizeLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>true</kerning>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>Microns</string>
-              </property>
-              <property name="text">
-               <string>xy Pixel Size</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_40">
+              <item>
+               <widget class="QLabel" name="xyPixelSizeLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Microns</string>
+                </property>
+                <property name="text">
+                 <string>XY Pixel Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="xyPixelSizeSpinBox">
+                <property name="toolTip">
+                 <string>Microns</string>
+                </property>
+                <property name="decimals">
+                 <number>5</number>
+                </property>
+                <property name="maximum">
+                 <double>1000000000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.001000000000000</double>
+                </property>
+                <property name="stepType">
+                 <enum>QAbstractSpinBox::DefaultStepType</enum>
+                </property>
+                <property name="value">
+                 <double>0.108000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="xyPixelSizeSpinBox">
-              <property name="toolTip">
-               <string>Microns</string>
-              </property>
-              <property name="decimals">
-               <number>5</number>
-              </property>
-              <property name="maximum">
-               <double>1000000000.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.001000000000000</double>
-              </property>
-              <property name="stepType">
-               <enum>QAbstractSpinBox::DefaultStepType</enum>
-              </property>
-              <property name="value">
-               <double>0.108000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_200">
-            <item>
-             <widget class="QLabel" name="dzLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>true</kerning>
-               </font>
-              </property>
-              <property name="text">
-               <string>Step Size</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="dzLineEdit">
-              <property name="text">
-               <string>.5</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_200">
+              <item>
+               <widget class="QLabel" name="dzLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                  <strikeout>false</strikeout>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Step Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="dzLineEdit">
+                <property name="text">
+                 <string>.5</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -552,7 +568,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,4,1">
           <item>
            <spacer name="horizontalSpacer_25">
             <property name="orientation">
@@ -567,29 +583,33 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="objectiveScanLabel">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-              <bold>true</bold>
-              <strikeout>false</strikeout>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="text">
-             <string>Objective Scan</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="objectiveScanCheckBox">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_237">
+            <item>
+             <widget class="QLabel" name="objectiveScanLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Objective Scan</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="objectiveScanCheckBox">
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="horizontalSpacer_26">
@@ -6281,7 +6301,7 @@
                  <string>Microns</string>
                 </property>
                 <property name="text">
-                 <string>xy Pixel Size</string>
+                 <string>XY Pixel Size</string>
                 </property>
                </widget>
               </item>
@@ -6934,7 +6954,7 @@
                    <string>Microns</string>
                   </property>
                   <property name="text">
-                   <string>xy Pixel Size</string>
+                   <string>XY Pixel Size</string>
                   </property>
                  </widget>
                 </item>
@@ -10156,7 +10176,7 @@
                    <string>Microns</string>
                   </property>
                   <property name="text">
-                   <string>xy Pixel Size</string>
+                   <string>XY Pixel Size</string>
                   </property>
                  </widget>
                 </item>
