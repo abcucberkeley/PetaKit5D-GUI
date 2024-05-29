@@ -1948,11 +1948,13 @@ void MainWindow::on_deskewCheckBox_stateChanged(int arg1)
 {
     // disable or enable decon as it can only be run by itself for now
     if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyLabel->setEnabled(true);
         ui->deconOnlyCheckBox->setEnabled(true);
     }
 
 
     if(arg1){
+        ui->deconOnlyLabel->setEnabled(false);
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
@@ -1982,10 +1984,12 @@ void MainWindow::on_rotateCheckBox_stateChanged(int arg1)
 {
     // disable or enable decon as it can only be run by itself for now
     if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyLabel->setEnabled(true);
         ui->deconOnlyCheckBox->setEnabled(true);
     }
 
     if(arg1){
+        ui->deconOnlyLabel->setEnabled(false);
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
@@ -2016,10 +2020,12 @@ void MainWindow::on_deskewAndRotateCheckBox_stateChanged(int arg1)
 {
     // disable or enable decon as it can only be run by itself for now
     if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyLabel->setEnabled(true);
         ui->deconOnlyCheckBox->setEnabled(true);
     }
 
     if(arg1){
+        ui->deconOnlyLabel->setEnabled(false);
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
@@ -2049,10 +2055,12 @@ void MainWindow::on_stitchCheckBox_stateChanged(int arg1)
 {
     // disable or enable decon as it can only be run by itself for now
     if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked() || ui->stitchCheckBox->isChecked())){
+        ui->deconOnlyLabel->setEnabled(true);
         ui->deconOnlyCheckBox->setEnabled(true);
     }
 
     if(arg1){
+        ui->deconOnlyLabel->setEnabled(false);
         ui->deconOnlyCheckBox->setEnabled(false);
         ui->deconOnlyCheckBox->setChecked(false);
 
@@ -2150,8 +2158,10 @@ void MainWindow::on_objectiveScanCheckBox_stateChanged(int arg1)
         ui->deskewLabel->setEnabled(false);
     }
     else{
-        ui->deskewCheckBox->setEnabled(true);
-        ui->deskewLabel->setEnabled(true);
+        if(!ui->deconOnlyCheckBox->isChecked()){
+            ui->deskewCheckBox->setEnabled(true);
+            ui->deskewLabel->setEnabled(true);
+        }
     }
 }
 
@@ -2427,9 +2437,15 @@ void MainWindow::checkLoadPrevSettings()
 void MainWindow::on_deconOnlyCheckBox_stateChanged(int arg1)
 {
     // disable or enable all other options as decon can only be run by itself for now
-    ui->deskewCheckBox->setEnabled(!arg1);
+    if(!ui->objectiveScanCheckBox->isChecked()){
+        ui->deskewLabel->setEnabled(!arg1);
+        ui->deskewCheckBox->setEnabled(!arg1);
+    }
+    ui->rotateLabel->setEnabled(!arg1);
     ui->rotateCheckBox->setEnabled(!arg1);
+    ui->deskewAndRotateLabel->setEnabled(!arg1);
     ui->deskewAndRotateCheckBox->setEnabled(!arg1);
+    ui->stitchLabel->setEnabled(!arg1);
     ui->stitchCheckBox->setEnabled(!arg1);
 
     if(arg1){
