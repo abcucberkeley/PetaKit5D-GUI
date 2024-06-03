@@ -1,4 +1,3 @@
-[submodule "LLSM5DTools"]
-	path = LLSM5DTools
-	url = https://github.com/abcucberkeley/LLSM5DTools
-	branch = dev
+[submodule "PetaKit5D"]
+	path = PetaKit5D
+	url = https://github.com/abcucberkeley/PetaKit5D
