@@ -1,5 +1,5 @@
 # LLSM_Processing_GUI
-A Graphical User Interface for the [LLSM5DTools](https://github.com/abcucberkeley/LLSM5DTools) image processing pipeline
+A Graphical User Interface for the [PetaKit5D](https://github.com/abcucberkeley/PetaKit5D) image processing pipeline
 
 ## Quick Start Guide
 Currently Linux (Ubuntu 22.04 and Scientific Linux), Windows (10 and 11), and MacOS (12.1 or newer) are supported

@@ -75,7 +75,7 @@ void loadPreviousSettings::runInstallScriptMCC(){
     #else
     std::string matlabDmg = "MATLAB_Runtime_R2023a_Update_6_maci64.dmg";
     std::string matlabApp = "InstallForMacOSX.app";
-    installCmd.append("unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/mac/LLSM5DToolsMCC.zip\" -d /Applications/LLSM5DToolsMCC/;");
+    installCmd.append("unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/mac/PetaKit5DMCC.zip\" -d /Applications/PetaKit5DMCC/;");
     installCmd.append("hdiutil attach \"\""+tmpDir+"/"+matlabDmg+"\"\";");
     installCmd.append("cp -r -f /Volumes/"+matlabDmg.substr(0,matlabDmg.size()-4)+"/"+matlabApp+" \"\""+tmpDir+"\"\""+";");
     installCmd.append("hdiutil detach /Volumes/"+matlabDmg.substr(0,matlabDmg.size()-4)+";");

@@ -629,11 +629,11 @@ void MainWindow::readConfigSettings(){
     // If any of the config files are not set, create and set default ones.
     if(setFiles){
         #ifdef __linux__
-        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux/run_mccMaster.sh");
         #elif _WIN32
-        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster");
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster");
         #else
-        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/LLSM5DToolsMCC/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
 
@@ -661,7 +661,7 @@ void MainWindow::readConfigSettings(){
         // Also create a default jvm config file on Linux
         #ifdef __linux__
         if(cFileVals.jvmConfigFile.isEmpty()){
-            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh");
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux_with_jvm/run_mccMaster.sh");
             cFileVals.jvmConfigFile = defaultJvmConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.jvmConfigFile, jsonObj);
         }
@@ -677,11 +677,11 @@ void MainWindow::readConfigSettings(){
     #endif
     if(createFiles){
         #ifdef __linux__
-        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux/run_mccMaster.sh");
         #elif _WIN32
-        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/windows/mccMaster");
+        cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster");
         #else
-        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/LLSM5DToolsMCC/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
 
@@ -707,7 +707,7 @@ void MainWindow::readConfigSettings(){
         // Also create a default jvm config file on Linux
         #ifdef __linux__
         if(!QFileInfo::exists(defaultJvmConfigFile)){
-            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/mcc/linux_with_jvm/run_mccMaster.sh");
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux_with_jvm/run_mccMaster.sh");
             configFileCreator::createJsonConfigFile(defaultJvmConfigFile, jsonObj);
         }
         #endif
@@ -3739,11 +3739,11 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     // Path to ImsConverter
     addCharArrayToArgs(args,"converterPath",prependedString,isMcc);
     #ifdef __linux__
-    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/linux/parallelimariswriter",prependedString,isMcc);
+    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/linux/parallelimariswriter",prependedString,isMcc);
     #elif _WIN32
-    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/windows/parallelimariswriter",prependedString,isMcc);
+    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/windows/parallelimariswriter",prependedString,isMcc);
     #else
-    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/LLSM5DTools/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/mac/parallelimariswriter",prependedString,isMcc);
+    addCharArrayToArgs(args,QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/microscopeDataProcessing/tools/Imaris/Parallel_Imaris_Writer/mac/parallelimariswriter",prependedString,isMcc);
     #endif
 
     // Job Settings
