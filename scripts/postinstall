@@ -1,6 +1,6 @@
 #!/bin/bash
 
-unzip -o -q /Applications/LLSM_Processing_GUI.app/Contents/MacOS/PetaKit5D/mcc/mac/PetaKit5DMCC.zip -d /Applications/PetaKit5DMCC/
+unzip -o -q /Applications/PetaKit5D-GUI.app/Contents/MacOS/PetaKit5D/mcc/mac/PetaKit5DMCC.zip -d /Applications/PetaKit5DMCC/
 
 # Display a message indicating that the download is starting
 echo "Downloading files..."

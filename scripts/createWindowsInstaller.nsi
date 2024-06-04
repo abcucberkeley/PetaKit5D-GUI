@@ -1,8 +1,8 @@
 Unicode True
 
 !include LogicLib.nsh
-!define APP_NAME "LLSM_Processing_GUI"
-!define APP_EXE "LLSM_Processing_GUI.exe"
+!define APP_NAME "PetaKit5D-GUI"
+!define APP_EXE "PetaKit5D-GUI.exe"
 !define RUNTIME_ZIP_URL "https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2023a_Update_6_win64.zip"
 !define TEMP_DIR "C:\temp\matlabRuntimeTmp"
 !define TEMP_DIR_D "C:\\temp\\matlabRuntimeTmp"
@@ -16,7 +16,7 @@ Section
 InitPluginsDir
 SetOutPath $PLUGINSDIR
 
-File /r "C:\Users\matt\Desktop\LLSM_Processing_GUI_releases\jenkins\LLSM_Processing_GUI"
+File /r "C:\Users\matt\Desktop\PetaKit5D-GUI_releases\jenkins\PetaKit5D-GUI"
 
 ; Run the PowerShell command and capture the exit code
 nsExec::Exec 'powershell "exit [int]([Environment]::GetEnvironmentVariable(\"PATH\", \"Machine\").Split(\";\")[0] -eq \"C:\Program Files\MATLAB\MATLAB Runtime\R2023a\runtime\win64\")"' $0 SW_HIDE
@@ -57,15 +57,15 @@ okRuntimeS:
 RMDir /r "${TEMP_DIR}"
 
 skip_runtime:
-DetailPrint "Installing LLSM_Processing_GUI files..."
-CopyFiles /Silent "$PLUGINSDIR\LLSM_Processing_GUI" "$InstDir"
+DetailPrint "Installing PetaKit5D-GUI files..."
+CopyFiles /Silent "$PLUGINSDIR\PetaKit5D-GUI" "$InstDir"
 
 SectionEnd
 
 Section "Install"
 SetOutPath $INSTDIR
 CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
-WriteUninstaller "$INSTDIR\uninstall_LLSM_Processing_GUI.exe"
+WriteUninstaller "$INSTDIR\uninstall_PetaKit5D-GUI.exe"
 SectionEnd
 
 Section "Uninstall"

@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
-  - name: LLSM_Processing_GUI Wiki
-    url: https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki
+  - name: PetaKit5D-GUI Wiki
+    url: https://github.com/abcucberkeley/PetaKit5D-GUI/wiki
     about: We have an extensive wiki that can answer most questions about the GUI's usage

@@ -34,7 +34,7 @@ bool messageBoxParseClusterWarning(QWidget* parent, const bool parseCluster, boo
                        "You should create your own config files for cluster jobs. "
                        "You can do so inside the Config File Settings in the Main Advanced Settings."
                        "For more infomation about creating a config files and creating them, please visit this wiki page: "
-                       "<a href='https://github.com/abcucberkeley/LLSM_Processing_GUI/wiki/3.-Main-Settings#3-config-file-settings-located-in-main-advanced-settings'>Config File Settings</a>");
+                       "<a href='https://github.com/abcucberkeley/PetaKit5D-GUI/wiki/3.-Main-Settings#3-config-file-settings-located-in-main-advanced-settings'>Config File Settings</a>");
     messageBox.setFixedSize(600,400);
     messageBox.addButton("I Understand, Continue Anyway", QMessageBox::AcceptRole);
     QAbstractButton* cancelButton = messageBox.addButton("Cancel Job", QMessageBox::RejectRole);

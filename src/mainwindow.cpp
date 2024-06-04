@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Set warnings
     parseClusterWarning = true;
     sameJobSubmittedWarning = true;
-    QSettings settings("ABC", "LLSM GUI");
+    QSettings settings("ABC", "PetaKit5D-GUI");
     settings.beginGroup("MainWindow");
     if(settings.contains("parseClusterWarning")){
         parseClusterWarning = settings.value("parseClusterWarning").toBool();
@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
     mostRecentDir = QDir::homePath();
 
     // Check if version is up to date with what was last saved.
-    //QSettings settings("ABC", "LLSM GUI");
+    //QSettings settings("ABC", "PetaKit5D-GUI");
     //settings.beginGroup("MainWindow");
     //QString savedVersion = settings.value("version").toString();
     //settings.endGroup();
@@ -183,7 +183,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 // Write user settings
 void MainWindow::writeSettings()
 {
-    QSettings settings("ABC", "LLSM GUI");
+    QSettings settings("ABC", "PetaKit5D-GUI");
     settings.beginGroup("MainWindow");
     settings.setValue("version", QCoreApplication::applicationVersion());
 
@@ -597,7 +597,7 @@ void MainWindow::writeSettings()
 }
 
 void MainWindow::readMatlabPathSettings(){
-    QSettings settings("ABC", "LLSM GUI");
+    QSettings settings("ABC", "PetaKit5D-GUI");
     settings.beginGroup("MainWindow");
     isMcc = settings.value("isMcc").toBool();
     pathToMatlab = settings.value("pathToMatlab").toString().toStdString();
@@ -605,7 +605,7 @@ void MainWindow::readMatlabPathSettings(){
 }
 
 void MainWindow::readConfigSettings(){
-    QSettings settings("ABC", "LLSM GUI");
+    QSettings settings("ABC", "PetaKit5D-GUI");
     settings.beginGroup("MainWindow");
     cFileVals.configFile = settings.value("configFile").toString();
     cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
@@ -718,7 +718,7 @@ void MainWindow::readConfigSettings(){
 // Restore previous user settings
 void MainWindow::readSettings()
 {
-    QSettings settings("ABC", "LLSM GUI");
+    QSettings settings("ABC", "PetaKit5D-GUI");
     settings.beginGroup("MainWindow");
 
     // Read Data Paths

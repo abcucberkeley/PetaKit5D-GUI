@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>LLSM Processing</string>
+   <string>PetaKit5D</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -12857,7 +12857,7 @@
  <connections/>
  <buttongroups>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="deconRLMethodButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>
