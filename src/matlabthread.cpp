@@ -45,8 +45,8 @@ void matlabThread::run(){
     }
     // If the user is using mcc
     else{
+        // We do not use the jvm because of the overhead unless it is required by the function
         #ifdef __linux__
-        // For the Linux version, we mainly do not use the jvm because of the overhead unless it is required by the function
         std::string mccLoc;
         if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation" && funcType.toStdString() != "XR_FSC_analysis_wrapper" && funcType.toStdString() != "XR_psf_analysis_wrapper" && funcType.toStdString() != "XR_psf_detection_and_analysis_wrapper"){
             mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux/run_mccMaster.sh\"";
@@ -55,9 +55,21 @@ void matlabThread::run(){
             mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux_with_jvm/run_mccMaster.sh\"";
         }
         #elif _WIN32
-        std::string mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster\"";
+        std::string mccLoc;
+        if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation" && funcType.toStdString() != "XR_FSC_analysis_wrapper" && funcType.toStdString() != "XR_psf_analysis_wrapper" && funcType.toStdString() != "XR_psf_detection_and_analysis_wrapper"){
+            mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster\"";
+        }
+        else{
+            mccLoc = "\""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows_with_jvm/mccMaster\"";
+        }
         #else
-        std::string mccLoc = "/Applications/PetaKit5DMCC/run_mccMaster.sh";
+        std::string mccLoc;
+        if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation" && funcType.toStdString() != "XR_FSC_analysis_wrapper" && funcType.toStdString() != "XR_psf_analysis_wrapper" && funcType.toStdString() != "XR_psf_detection_and_analysis_wrapper"){
+            mccLoc = "\""+"/Applications/PetaKit5DMCC/mac/run_mccMaster.sh\"";
+        }
+        else{
+            mccLoc = "\""+"/Applications/PetaKit5DMCC/mac_with_jvm/run_mccMaster.sh\"";
+        }
         #endif
         matlabCmd.append(mccLoc);
 

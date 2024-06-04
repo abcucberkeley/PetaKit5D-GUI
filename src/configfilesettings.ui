@@ -168,7 +168,7 @@
           </font>
          </property>
          <property name="text">
-          <string>JVM Config File (Linux Only)</string>
+          <string>JVM Config File</string>
          </property>
         </widget>
        </item>

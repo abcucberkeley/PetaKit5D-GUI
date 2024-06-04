@@ -10,12 +10,7 @@ configFileSettings::configFileSettings(configFileVals* cFileVals, QWidget *paren
     ui->setupUi(this);
     ui->configFileLineEdit->setText(cFileVals->configFile);
     ui->gpuConfigFileLineEdit->setText(cFileVals->gpuConfigFile);
-    #ifdef __linux__
     ui->jvmConfigLineEdit->setText(cFileVals->jvmConfigFile);
-    #else
-    ui->jvmConfigFileLabel->setEnabled(false);
-    ui->jvmConfigLineEdit->setEnabled(false);
-    #endif
 }
 
 configFileSettings::~configFileSettings()
@@ -27,9 +22,7 @@ void configFileSettings::on_submitButton_clicked()
 {
     cFileVals->configFile = ui->configFileLineEdit->text();
     cFileVals->gpuConfigFile = ui->gpuConfigFileLineEdit->text();
-    #ifdef __linux__
     cFileVals->jvmConfigFile = ui->jvmConfigLineEdit->text();
-    #endif
     configFileSettings::close();
 }
 

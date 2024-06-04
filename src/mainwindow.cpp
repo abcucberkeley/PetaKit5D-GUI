@@ -615,16 +615,13 @@ void MainWindow::readConfigSettings(){
     settings.endGroup();
 
     bool setFiles = false;
-    if(cFileVals.configFile.isEmpty() || cFileVals.gpuConfigFile.isEmpty()) setFiles = true;
-    #ifdef __linux__
-    if(cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
-    #endif
+    if(cFileVals.configFile.isEmpty() ||
+       cFileVals.gpuConfigFile.isEmpty() ||
+       cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
 
     QString defaultConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/cpu_default_config.json");
     QString defaultGpuConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/gpu_default_config.json");
-    #ifdef __linux__
     QString defaultJvmConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/jvm_cpu_default_config.json");
-    #endif
 
     // If any of the config files are not set, create and set default ones.
     if(setFiles){
@@ -633,7 +630,7 @@ void MainWindow::readConfigSettings(){
         #elif _WIN32
         cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster");
         #else
-        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/mac/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
 
@@ -658,30 +655,33 @@ void MainWindow::readConfigSettings(){
             cFileVals.gpuConfigFile = defaultGpuConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.gpuConfigFile, jsonObj);
         }
-        // Also create a default jvm config file on Linux
-        #ifdef __linux__
+        // Also create a default jvm config file
         if(cFileVals.jvmConfigFile.isEmpty()){
+            #ifdef __linux__
             jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux_with_jvm/run_mccMaster.sh");
+            #elif _WIN32
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows_with_jvm/run_mccMaster.sh");
+            #else
+            jsonObj["MCCMasterStr"] = QString::fromStdString("/Applications/PetaKit5DMCC/mac_with_jvm/run_mccMaster.sh");
+            #endif
             cFileVals.jvmConfigFile = defaultJvmConfigFile;
             configFileCreator::createJsonConfigFile(cFileVals.jvmConfigFile, jsonObj);
         }
-        #endif
 
     }
 
     bool createFiles = false;
     // If any of the default files don't exist then create them but don't set them as the current config file
-    if(!QFileInfo::exists(defaultConfigFile) || !QFileInfo::exists(defaultGpuConfigFile)) createFiles = true;
-    #ifdef __linux__
-    if(!QFileInfo::exists(defaultJvmConfigFile)) createFiles = true;
-    #endif
+    if(!QFileInfo::exists(defaultConfigFile) ||
+       !QFileInfo::exists(defaultGpuConfigFile) ||
+        !QFileInfo::exists(defaultJvmConfigFile)) createFiles = true;
     if(createFiles){
         #ifdef __linux__
         cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux/run_mccMaster.sh");
         #elif _WIN32
         cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows/mccMaster");
         #else
-        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/run_mccMaster.sh");
+        cFileVals.MCCMasterStr = QString::fromStdString("/Applications/PetaKit5DMCC/mac/run_mccMaster.sh");
         #endif
         cFileVals.MCRParam = QString::fromStdString(pathToMatlab);
 
@@ -704,13 +704,17 @@ void MainWindow::readConfigSettings(){
         if(!QFileInfo::exists(defaultGpuConfigFile)){
             configFileCreator::createJsonConfigFile(defaultGpuConfigFile, jsonObj);
         }
-        // Also create a default jvm config file on Linux
-        #ifdef __linux__
+        // Also create a default jvm config file
         if(!QFileInfo::exists(defaultJvmConfigFile)){
+            #ifdef __linux__
             jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux_with_jvm/run_mccMaster.sh");
+            #elif _WIN32
+            jsonObj["MCCMasterStr"] = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/windows_with_jvm/run_mccMaster.sh");
+            #else
+            jsonObj["MCCMasterStr"] = QString::fromStdString("/Applications/PetaKit5DMCC/mac_with_jvm/run_mccMaster.sh");
+            #endif
             configFileCreator::createJsonConfigFile(defaultJvmConfigFile, jsonObj);
         }
-        #endif
     }
 
 }
@@ -3165,18 +3169,9 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    bool isLinux = false;
-    #ifdef __linux__
-    isLinux = true;
-    #endif
-    if(isLinux){
-        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
-    }
-    else{
-        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
-    }
+    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+
     // TODO: ADD PARSE CLUSTER
 
     QString funcType = "XR_FSC_analysis_wrapper";
@@ -3258,18 +3253,8 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    bool isLinux = false;
-    #ifdef __linux__
-    isLinux = true;
-    #endif
-    if(isLinux){
-        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
-    }
-    else{
-        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
-    }
+    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+    addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
 
     QString funcType;
 
