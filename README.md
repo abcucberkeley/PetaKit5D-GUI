@@ -4,7 +4,7 @@ A Graphical User Interface for the [PetaKit5D](https://github.com/abcucberkeley/
 ## Quick Start Guide
 Currently Linux (Ubuntu 22.04 and Scientific Linux), Windows (10 or newer), and MacOS (12 or newer) are supported
 
-You can find detailed explanations for all parameters and step-by-step usage examples on the wiki: [PetaKit5D-GUI Wiki](https://github.com/abcucberkeley/PetaKit5D-GUI/wiki)
+Detailed explanations for all parameters and step-by-step examples can be found on the wiki: [PetaKit5D-GUI Wiki](https://github.com/abcucberkeley/PetaKit5D-GUI/wiki)
 
 ### Installation
    1. Download the latest installer or package release for your operating system from the [releases](https://github.com/abcucberkeley/PetaKit5D-GUI/releases) page
