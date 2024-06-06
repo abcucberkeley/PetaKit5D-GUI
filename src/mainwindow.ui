@@ -5595,7 +5595,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>Start Coord of last Time point</string>
+                     <string>Start Coord of Last Timepoint</string>
                     </property>
                    </widget>
                   </item>
@@ -6222,7 +6222,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Actual Pixel size in Z</string>
+                 <string>Actual Pixel Size in Z</string>
                 </property>
                </widget>
               </item>
@@ -9055,7 +9055,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Batch Size</string>
+                   <string>Batch Size:</string>
                   </property>
                  </widget>
                 </item>
@@ -12856,8 +12856,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="tiffZarrConverterButtonGroup"/>
-  <buttongroup name="deconRLMethodButtonGroup"/>
   <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
+  <buttongroup name="deconRLMethodButtonGroup"/>
+  <buttongroup name="tiffZarrConverterButtonGroup"/>
  </buttongroups>
 </ui>
