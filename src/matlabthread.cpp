@@ -65,10 +65,10 @@ void matlabThread::run(){
         #else
         std::string mccLoc;
         if(funcType.toStdString() != "XR_visualize_OTF_mask_segmentation" && funcType.toStdString() != "XR_FSC_analysis_wrapper" && funcType.toStdString() != "XR_psf_analysis_wrapper" && funcType.toStdString() != "XR_psf_detection_and_analysis_wrapper"){
-            mccLoc = "\""+"/Applications/PetaKit5DMCC/mac/run_mccMaster.sh\"";
+            mccLoc = "\"/Applications/PetaKit5DMCC/mac/run_mccMaster.sh\"";
         }
         else{
-            mccLoc = "\""+"/Applications/PetaKit5DMCC/mac_with_jvm/run_mccMaster.sh\"";
+            mccLoc = "\"/Applications/PetaKit5DMCC/mac_with_jvm/run_mccMaster.sh\"";
         }
         #endif
         matlabCmd.append(mccLoc);
