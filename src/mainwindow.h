@@ -329,6 +329,10 @@ private:
     std::vector<dataPath> fscAnalysisDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> fscAnalysisChannelWidgets;
 
+    // Image List Generator
+    std::vector<dataPath> imageListGeneratorDPaths;
+    std::vector<std::pair<QLabel*,QCheckBox*>> imageListGeneratorChannelWidgets;
+
     // Imaris Converter
     std::vector<dataPath> imarisConverterDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> imarisConverterChannelWidgets;
@@ -515,6 +519,8 @@ private slots:
     void on_AnalysisModeButton_clicked();
 
     void on_psfDetectionAnalysisRWFnButton_clicked();
+
+    void on_imageListGeneratorSubmitButton_clicked();
 
 private:
     Ui::MainWindow *ui;

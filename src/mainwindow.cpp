@@ -75,6 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->fscAnalysisAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
     connect(ui->psfDetectionAnalysisModeButtonGroup, &QButtonGroup::buttonClicked, this, &MainWindow::on_AnalysisModeButton_clicked);
 
+    // Connect Image List Generator signals
+    connect(ui->imageListGeneratorAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
+
     // Connect Imaris Converter signals
     connect(ui->imarisConverterAddPathsButton, &QPushButton::clicked, this, &MainWindow::on_addPathsButton_clicked);
 
@@ -1200,6 +1203,7 @@ void MainWindow::readSettings()
 void MainWindow::onEnableSubmitButton()
 {
     ui->otfMaskingSubmitButton->setEnabled(true);
+    ui->imageListGeneratorSubmitButton->setEnabled(true);
     ui->imarisConverterSubmitButton->setEnabled(true);
     ui->mipGeneratorSubmitButton->setEnabled(true);
     ui->fftAnalysisSubmitButton->setEnabled(true);
@@ -2280,6 +2284,12 @@ void MainWindow::on_addPathsButton_clicked()
         addPathsChannelWidgets = &fscAnalysisChannelWidgets;
         addPathsCurrWidget = ui->fscAnalysis;
         addPathsCurrLayout = ui->fscAnalysisChannelPatternsHorizontalLayout;
+    }
+    else if(((QPushButton *)sender())->objectName().contains("imageListGenerator")){
+        addPathsDataPaths = &imageListGeneratorDPaths;
+        addPathsChannelWidgets = &imageListGeneratorChannelWidgets;
+        addPathsCurrWidget = ui->imageListGenerator;
+        addPathsCurrLayout = ui->imageListGeneratorChannelPatternsHorizontalLayout;
     }
     else if(((QPushButton *)sender())->objectName().contains("imarisConverter")){
         addPathsDataPaths = &imarisConverterDPaths;
@@ -3853,7 +3863,7 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), true);
+    auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), false);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -4011,5 +4021,133 @@ void MainWindow::on_psfDetectionAnalysisRWFnButton_clicked()
     dataPaths daPaths(rwfnPaths, false, mostRecentDir, channelNames, QString("path"));
     daPaths.setModal(true);
     daPaths.exec();
+}
+
+void MainWindow::on_imageListGeneratorSubmitButton_clicked()
+{
+    // Write settings in case of crash
+    writeSettings();
+
+    // Error if no data paths set
+    if(!dataPathsAreSet(imageListGeneratorDPaths)) return;
+
+    // Disable submit button
+    ui->imageListGeneratorSubmitButton->setEnabled(false);
+
+    std::string args;
+
+    // NOTE: We have to push a lot of things into our data array one at a time
+    // Potentially in the future I can loop through the widgets and do this in fewer lines
+
+    // Set main path. This is where all the output files made by the GUI will be stored.
+    QString mainPath = imageListGeneratorDPaths[0].masterPath;
+
+    const std::string firstPrependedString = "";
+    std::string prependedString;
+    if(isMcc){
+        prependedString = " ";
+    }
+    else{
+        prependedString = ",";
+    }
+
+    addDataPathsToArgs(args,firstPrependedString,imageListGeneratorDPaths,isMcc);
+
+    addCharArrayToArgs(args,ui->imageListGeneratorGenerationMethodComboBox->currentText().toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"channelPatterns",prependedString,isMcc);
+    addChannelPatternsToArgs(args,imageListGeneratorChannelWidgets,ui->imageListGeneratorCustomPatternsCheckBox->isChecked(),ui->imageListGeneratorCustomPatternsLineEdit->text(),prependedString,isMcc);
+
+    // Use default Tile Patterns if all the text boxes are empty
+    if(!(ui->imageListGeneratorTilePatternsTLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorTilePatternsCLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorTilePatternsXLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorTilePatternsYLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorTilePatternsZLineEdit->text().isEmpty()))
+    {
+        addCharArrayToArgs(args,"tilePatterns",prependedString,isMcc);
+        std::vector<std::string> imageListGeneratorTilePatternsV = {ui->imageListGeneratorTilePatternsTLineEdit->text().toStdString(),
+                                                     ui->imageListGeneratorTilePatternsCLineEdit->text().toStdString(),
+                                                     ui->imageListGeneratorTilePatternsXLineEdit->text().toStdString(),
+                                                     ui->imageListGeneratorTilePatternsYLineEdit->text().toStdString(),
+                                                     ui->imageListGeneratorTilePatternsZLineEdit->text().toStdString()};
+        addArrayToArgs(args,imageListGeneratorTilePatternsV,true,prependedString,"{}",isMcc);
+    }
+
+    addCharArrayToArgs(args,"DS",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorDSCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorDSRCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"xyPixelSize",prependedString,isMcc);
+    addScalarToArgs(args,ui->imageListGeneratorXYPixelSizeLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"dz",prependedString,isMcc);
+    addScalarToArgs(args,ui->imageListGeneratorDZLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"skewAngle",prependedString,isMcc);
+    addScalarToArgs(args,ui->imageListGeneratorSkewAngleLineEdit->text().toStdString(),prependedString);
+
+    addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->imageListGeneratorAxisOrderLineEdit->text().toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"dataOrder",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->imageListGeneratorDataOrderLineEdit->text().toStdString(),prependedString,isMcc);
+
+    addCharArrayToArgs(args,"objectiveScan",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorObjectiveScanCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorIOScanCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorZarrFileCheckBox->isChecked(),prependedString);
+
+    // Don't use Overlap Size if all the text boxes are empty
+    if(!(ui->imageListGeneratorOverlapSizeYLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorOverlapSizeXLineEdit->text().isEmpty() &&
+         ui->imageListGeneratorOverlapSizeZLineEdit->text().isEmpty()))
+    {
+        addCharArrayToArgs(args,"overlapSize",prependedString,isMcc);
+        std::vector<std::string> imageListGeneratorOverlapSizeV;
+        if(ui->imageListGeneratorOverlapSizeTypeComboBox->currentText() == "pixel"){
+            if(!ui->imageListGeneratorOverlapSizeYLineEdit->text().isEmpty()){
+                imageListGeneratorOverlapSizeV.push_back(ui->imageListGeneratorOverlapSizeYLineEdit->text().toStdString());
+            }
+            if(!ui->imageListGeneratorOverlapSizeXLineEdit->text().isEmpty()){
+                imageListGeneratorOverlapSizeV.push_back(ui->imageListGeneratorOverlapSizeXLineEdit->text().toStdString());
+            }
+        }
+        else if(ui->imageListGeneratorOverlapSizeTypeComboBox->currentText() == "um"){
+            if(!ui->imageListGeneratorOverlapSizeXLineEdit->text().isEmpty()){
+                imageListGeneratorOverlapSizeV.push_back(ui->imageListGeneratorOverlapSizeXLineEdit->text().toStdString());
+            }
+            if(!ui->imageListGeneratorOverlapSizeYLineEdit->text().isEmpty()){
+                imageListGeneratorOverlapSizeV.push_back(ui->imageListGeneratorOverlapSizeYLineEdit->text().toStdString());
+            }
+        }
+        if(!ui->imageListGeneratorOverlapSizeZLineEdit->text().isEmpty()){
+            imageListGeneratorOverlapSizeV.push_back(ui->imageListGeneratorOverlapSizeZLineEdit->text().toStdString());
+        }
+        addArrayToArgs(args,imageListGeneratorOverlapSizeV,false,prependedString,"[]",isMcc);
+    }
+
+    addCharArrayToArgs(args,"overlapSizeType",prependedString,isMcc);
+    addCharArrayToArgs(args,ui->imageListGeneratorOverlapSizeTypeComboBox->currentText().toStdString(),prependedString,isMcc);
+
+    // Advanced Job Settings
+    if(!ui->imageListGeneratorUuidLineEdit->text().isEmpty()){
+        addCharArrayToArgs(args,"uuid",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->imageListGeneratorUuidLineEdit->text().toStdString(),prependedString,isMcc);
+    }
+
+    QString funcType = "XR_generate_image_list_wrapper";
+
+    if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
+
+    // Send data to the MATLAB thread
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Image List Generator Job"), false);
+    emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
