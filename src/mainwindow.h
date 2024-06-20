@@ -522,6 +522,8 @@ private slots:
 
     void on_imageListGeneratorSubmitButton_clicked();
 
+    void on_fftAnalysisCustomPatternsCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     mainwindowConsoleOutputWindow* matlabJobLogsOutputWindow;

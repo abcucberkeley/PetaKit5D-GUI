@@ -4151,3 +4151,9 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
+
+void MainWindow::on_fftAnalysisCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->fftAnalysisCustomPatternsLineEdit->setEnabled(arg1);
+}
+
