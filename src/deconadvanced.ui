@@ -181,7 +181,7 @@
        <item>
         <widget class="QLineEdit" name="edgeErosionLineEdit">
          <property name="text">
-          <string>8</string>
+          <string>0</string>
          </property>
         </widget>
        </item>

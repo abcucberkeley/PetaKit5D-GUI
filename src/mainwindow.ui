@@ -908,7 +908,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Decon Only</string>
+             <string>Deconvolution</string>
             </property>
            </widget>
           </item>
@@ -1454,8 +1454,13 @@
                <bool>false</bool>
               </property>
               <property name="currentText">
-               <string>none</string>
+               <string>feather</string>
               </property>
+              <item>
+               <property name="text">
+                <string>feather</string>
+               </property>
+              </item>
               <item>
                <property name="text">
                 <string>none</string>
@@ -1474,11 +1479,6 @@
               <item>
                <property name="text">
                 <string>max</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>feather</string>
                </property>
               </item>
              </widget>
@@ -2087,7 +2087,7 @@
          <number>0</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="10,11,11,11">
+         <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="1,1,1,1">
           <item>
            <widget class="QLabel" name="deconRLMethodLabel">
             <property name="font">
@@ -2102,7 +2102,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_29" stretch="0,0,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_29" stretch="0,1,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -2150,7 +2150,7 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -2163,7 +2163,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_30">
+           <layout class="QHBoxLayout" name="horizontalLayout_30" stretch="1,0,0">
             <item>
              <widget class="QLabel" name="deconRLMethodSimplifiedLabel">
               <property name="font">
@@ -2205,7 +2205,7 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -2218,7 +2218,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_31">
+           <layout class="QHBoxLayout" name="horizontalLayout_31" stretch="1,0,0">
             <item>
              <widget class="QLabel" name="deconRLMethodOMWLabel">
               <property name="font">
@@ -2260,7 +2260,7 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -5792,6 +5792,9 @@
                     </property>
                     <property name="text">
                      <string/>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
@@ -10253,6 +10256,9 @@
                   <property name="text">
                    <string/>
                   </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -11947,6 +11953,9 @@
                   <property name="text">
                    <string/>
                   </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -12374,7 +12383,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Block Size</string>
+                 <string>Block Size:</string>
                 </property>
                </widget>
               </item>
@@ -12517,7 +12526,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Batch Size</string>
+                 <string>Batch Size:</string>
                 </property>
                </widget>
               </item>
@@ -12648,6 +12657,9 @@
              <layout class="QHBoxLayout" name="resampleBorderSizeHorizontalLayout">
               <item>
                <widget class="QLabel" name="resampleBorderSizeLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -12657,7 +12669,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Border Size</string>
+                 <string>Border Size:</string>
                 </property>
                </widget>
               </item>
@@ -12666,7 +12678,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBorderSizeYLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -12682,7 +12694,7 @@
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBorderSizeYSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -12702,7 +12714,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBorderSizeXLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -12718,7 +12730,7 @@
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBorderSizeXSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>
@@ -12738,7 +12750,7 @@
                 <item>
                  <widget class="QLabel" name="resampleBorderSizeZLabel">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -12754,7 +12766,7 @@
                 <item>
                  <widget class="QDoubleSpinBox" name="resampleBorderSizeZSpinBox">
                   <property name="enabled">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="decimals">
                    <number>0</number>

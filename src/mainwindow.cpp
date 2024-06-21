@@ -3499,7 +3499,7 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"),ui->mipGeneratorParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"), ui->mipGeneratorParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3653,7 +3653,7 @@ void MainWindow::on_resampleSubmitButton_clicked()
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"),ui->resampleParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"), ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3995,6 +3995,13 @@ void MainWindow::on_resampleZarrFileCheckBox_stateChanged(int arg1)
     ui->resampleBatchSizeYSpinBox->setEnabled(arg1);
     ui->resampleBatchSizeXSpinBox->setEnabled(arg1);
     ui->resampleBatchSizeZSpinBox->setEnabled(arg1);
+    ui->resampleBorderSizeLabel->setEnabled(arg1);
+    ui->resampleBorderSizeYLabel->setEnabled(arg1);
+    ui->resampleBorderSizeXLabel->setEnabled(arg1);
+    ui->resampleBorderSizeZLabel->setEnabled(arg1);
+    ui->resampleBorderSizeYSpinBox->setEnabled(arg1);
+    ui->resampleBorderSizeXSpinBox->setEnabled(arg1);
+    ui->resampleBorderSizeZSpinBox->setEnabled(arg1);
 }
 
 void MainWindow::on_AnalysisModeButton_clicked(){
@@ -4155,5 +4162,23 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
 void MainWindow::on_fftAnalysisCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->fftAnalysisCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_imageListGeneratorCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->imageListGeneratorCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_imarisConverterCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->imarisConverterCustomPatternsLineEdit->setEnabled(arg1);
+}
+
+
+void MainWindow::on_resampleCustomPatternsCheckBox_stateChanged(int arg1)
+{
+    ui->resampleCustomPatternsLineEdit->setEnabled(arg1);
 }
 

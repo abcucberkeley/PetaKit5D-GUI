@@ -24,6 +24,7 @@ deconAdvanced::deconAdvanced(GUIvals &guiVals, QWidget *parent) :
     else on_debugCheckBox_clicked(ui->debugCheckBox->isChecked());
     ui->saveStepLineEdit->setText(guiVals.saveStep);
     ui->largeMethodComboBox->setCurrentText(guiVals.largeMethod);
+    ui->edgeErosionLineEdit->setText(guiVals.edgeErosion);
     ui->erodeByFTPCheckBox->setChecked(guiVals.erodeByFTP);
     ui->deconRotateCheckBox->setChecked(guiVals.deconRotate);
     ui->damperSpinBox->setValue(guiVals.dampFactor);
@@ -53,6 +54,7 @@ void deconAdvanced::on_submitButton_clicked()
     gVals->debug = ui->debugCheckBox->isChecked();
     gVals->saveStep = ui->saveStepLineEdit->text();
     gVals->largeMethod = ui->largeMethodComboBox->currentText();
+    gVals->edgeErosion = ui->edgeErosionLineEdit->text();
     gVals->erodeByFTP = ui->erodeByFTPCheckBox->isChecked();
     gVals->deconRotate = ui->deconRotateCheckBox->isChecked();
     gVals->dampFactor = ui->damperSpinBox->value();

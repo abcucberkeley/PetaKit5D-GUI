@@ -524,6 +524,12 @@ private slots:
 
     void on_fftAnalysisCustomPatternsCheckBox_stateChanged(int arg1);
 
+    void on_imageListGeneratorCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_imarisConverterCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_resampleCustomPatternsCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     mainwindowConsoleOutputWindow* matlabJobLogsOutputWindow;
