@@ -35,6 +35,7 @@ loadPreviousSettings::loadPreviousSettings(bool &lPS, bool &kill, bool &isMcc, s
     #else
     this->defaultMCCPath = "/Applications/MATLAB/MATLAB_Runtime/R2023a";
     #endif
+    this->homeCacheDir = QDir::homePath().toStdString()+"/.PetaKit5D-GUI";
     ui->setupUi(this);
 
 
@@ -341,13 +342,13 @@ void loadPreviousSettings::reject(){
 int loadPreviousSettings::getMatlabPath(){
     bool jobSuccess = true;
     std::string matlabCmd;
-    std::string chmodCmd = "chmod 777 -R "+QCoreApplication::applicationDirPath().toStdString()+"/matlabPath";
+    std::string chmodCmd = "chmod 777 -R "+homeCacheDir+"/matlabPath";
 
     // Make path if it does not exist
-    QDir dir(QCoreApplication::applicationDirPath()+"/matlabPath");
+    QDir dir(QString::fromStdString(homeCacheDir)+"/matlabPath");
     if (!dir.exists())
         dir.mkpath(".");
-    std::string matlabPathTxt = QCoreApplication::applicationDirPath().toStdString()+"/matlabPath/matlabPath.txt";
+    std::string matlabPathTxt = homeCacheDir+"/matlabPath/matlabPath.txt";
 
     if(ui->lpsUseMCCCheckBox->isChecked()){
         ui->lpsMatlabPathLineEdit->setText(QString(defaultMCCPath.c_str()));

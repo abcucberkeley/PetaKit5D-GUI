@@ -26,6 +26,7 @@ public:
     QProgressDialog *mccInstallProgress;
     bool installing;
     QMutex futuresLock;
+    std::string homeCacheDir;
 
 private:
     std::vector<QFuture<void>> futures;

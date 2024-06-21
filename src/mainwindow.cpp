@@ -140,8 +140,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mThreadManager, &matlabThreadManager::availableQProcessOutput, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdout); // connect output to this QDockWidget to redirect the flow of output
     connect(mThreadManager, &matlabThreadManager::data, terminalConsoleOutput, &mainwindowConsoleOutputWindow::printStdoutStdString); // This is what prints out stdout/stderr throughout this project to here.
 
-    readConfigSettings();
+
     checkLoadPrevSettings();
+    readConfigSettings();
     if(loadSettings) readSettings();
     //}
     /*
@@ -601,6 +602,11 @@ void MainWindow::writeSettings()
 
 void MainWindow::readMatlabPathSettings(){
     QSettings settings("ABC", "PetaKit5D-GUI");
+
+    // Do not load previous settings if no settings file exists
+    QString settingsFilePath = settings.fileName();
+    if(!QFile::exists(settingsFilePath)) return;
+
     settings.beginGroup("MainWindow");
     isMcc = settings.value("isMcc").toBool();
     pathToMatlab = settings.value("pathToMatlab").toString().toStdString();
@@ -609,18 +615,26 @@ void MainWindow::readMatlabPathSettings(){
 
 void MainWindow::readConfigSettings(){
     QSettings settings("ABC", "PetaKit5D-GUI");
-    settings.beginGroup("MainWindow");
-    cFileVals.configFile = settings.value("configFile").toString();
-    cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
-    cFileVals.jvmConfigFile = settings.value("jvmConfigFile").toString();
-    cFileVals.MCCMasterStr = settings.value("MCCMasterStr").toString();
-    cFileVals.MCRParam = settings.value("MCRParam").toString();
-    settings.endGroup();
 
+    // Do not load previous settings if no settings file exists
+    QString settingsFilePath = settings.fileName();
+    if(QFile::exists(settingsFilePath)){
+        settings.beginGroup("MainWindow");
+        cFileVals.configFile = settings.value("configFile").toString();
+        cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
+        cFileVals.jvmConfigFile = settings.value("jvmConfigFile").toString();
+        cFileVals.MCCMasterStr = settings.value("MCCMasterStr").toString();
+        cFileVals.MCRParam = settings.value("MCRParam").toString();
+        settings.endGroup();
+    }
+
+    // Never set the default config file as the current config for now
     bool setFiles = false;
+    /*
     if(cFileVals.configFile.isEmpty() ||
        cFileVals.gpuConfigFile.isEmpty() ||
        cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
+    */
 
     QString defaultConfigFile = QString::fromStdString(QDir::homePath().toStdString()+"/.PetaKit5D-GUI/configFiles/cpu_default_config.json");
     QString defaultGpuConfigFile = QString::fromStdString(QDir::homePath().toStdString()+"/.PetaKit5D-GUI/configFiles/gpu_default_config.json");
@@ -677,7 +691,7 @@ void MainWindow::readConfigSettings(){
     // If any of the default files don't exist then create them but don't set them as the current config file
     if(!QFileInfo::exists(defaultConfigFile) ||
        !QFileInfo::exists(defaultGpuConfigFile) ||
-        !QFileInfo::exists(defaultJvmConfigFile)) createFiles = true;
+       !QFileInfo::exists(defaultJvmConfigFile)) createFiles = true;
     if(createFiles){
         #ifdef __linux__
         cFileVals.MCCMasterStr = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/linux/run_mccMaster.sh");
@@ -726,6 +740,11 @@ void MainWindow::readConfigSettings(){
 void MainWindow::readSettings()
 {
     QSettings settings("ABC", "PetaKit5D-GUI");
+
+    // Do not load previous settings if no settings file exists
+    QString settingsFilePath = settings.fileName();
+    if(!QFile::exists(settingsFilePath)) return;
+
     settings.beginGroup("MainWindow");
 
     // Read Data Paths
@@ -2348,7 +2367,7 @@ void MainWindow::on_addPathsButton_clicked()
                 c = cPath.next();
                 rmatch = re.match(c);
                 // Check if there is a match and that it is not already in the vector
-                if (!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
+                if(!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
             }
         }
         for(const auto &subPath : path.subPaths){
@@ -2362,7 +2381,7 @@ void MainWindow::on_addPathsButton_clicked()
                     c = cPath.next();
                     rmatch = re.match(c);
                     // Check if there is a match and that it is not already in the vector
-                    if (!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
+                    if(!rmatch.captured(0).isEmpty() && !(std::count(channels.begin(),channels.end(),rmatch.captured(0)))) channels.push_back(rmatch.captured(0));
                 }
             }
         }
@@ -2561,7 +2580,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
     // Check for job log directory for main job
     QString jobLogCopy = simreconVals.jobLogDir;
     QDir dir(simreconVals.jobLogDir);
-    if (!dir.exists()){
+    if(!dir.exists()){
         QDir mDir(mainPath);
         if(!mDir.exists()){
             mDir.mkpath(".");
