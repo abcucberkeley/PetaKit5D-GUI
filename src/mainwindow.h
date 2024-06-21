@@ -261,7 +261,7 @@ public:
         GNUparallel(false),
         MCCMasterStr(""),
         MCRParam(""),
-        MemPerCPU(16),
+        MemPerCPU(4),
         SlurmParam(""),
         jobTimeLimit(12),
         masterCompute(true),

@@ -1614,6 +1614,11 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"RLMethod",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.RLMethod.toStdString(),prependedString,isMcc);
 
+        if(!ui->deconResultDirNameLineEdit->text().isEmpty()){
+            addCharArrayToArgs(args,"resultDirName",prependedString,isMcc);
+            addCharArrayToArgs(args,ui->deconResultDirNameLineEdit->text().toStdString(),prependedString,isMcc);
+        }
+
         // OMW Only Settings
         if(ui->deconRLMethodOMWRadioButton->isChecked()){
             // Set defaults for wienerAlpha and otfCumThresh if they were not set by the user
