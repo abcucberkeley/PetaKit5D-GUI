@@ -622,9 +622,9 @@ void MainWindow::readConfigSettings(){
        cFileVals.gpuConfigFile.isEmpty() ||
        cFileVals.jvmConfigFile.isEmpty()) setFiles = true;
 
-    QString defaultConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/cpu_default_config.json");
-    QString defaultGpuConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/gpu_default_config.json");
-    QString defaultJvmConfigFile = QString::fromStdString(QCoreApplication::applicationDirPath().toStdString()+"/configFiles/jvm_cpu_default_config.json");
+    QString defaultConfigFile = QString::fromStdString(QDir::homePath().toStdString()+"/.PetaKit5D-GUI/configFiles/cpu_default_config.json");
+    QString defaultGpuConfigFile = QString::fromStdString(QDir::homePath().toStdString()+"/.PetaKit5D-GUI/configFiles/gpu_default_config.json");
+    QString defaultJvmConfigFile = QString::fromStdString(QDir::homePath().toStdString()+"/.PetaKit5D-GUI/configFiles/jvm_cpu_default_config.json");
 
     // If any of the config files are not set, create and set default ones.
     if(setFiles){
