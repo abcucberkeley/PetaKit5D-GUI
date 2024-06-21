@@ -132,7 +132,7 @@ class GUIvals{
                     scaleFactor{},
                     deconOffset{0},
                     deconMaskFns{"","",""},
-                    edgeErosion{"8"},
+                    edgeErosion{"0"},
                     erodeByFTP{true},
                     deconRotate{false},
                     largeFile{false},
@@ -529,6 +529,8 @@ private slots:
     void on_imarisConverterCustomPatternsCheckBox_stateChanged(int arg1);
 
     void on_resampleCustomPatternsCheckBox_stateChanged(int arg1);
+
+    void on_xCorrShiftCheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

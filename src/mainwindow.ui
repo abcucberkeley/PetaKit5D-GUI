@@ -1558,8 +1558,14 @@
             </item>
             <item>
              <widget class="QCheckBox" name="xCorrShiftCheckBox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

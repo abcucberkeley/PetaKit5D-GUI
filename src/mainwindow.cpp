@@ -4182,27 +4182,37 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
-
 void MainWindow::on_fftAnalysisCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->fftAnalysisCustomPatternsLineEdit->setEnabled(arg1);
 }
-
 
 void MainWindow::on_imageListGeneratorCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->imageListGeneratorCustomPatternsLineEdit->setEnabled(arg1);
 }
 
-
 void MainWindow::on_imarisConverterCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->imarisConverterCustomPatternsLineEdit->setEnabled(arg1);
 }
-
 
 void MainWindow::on_resampleCustomPatternsCheckBox_stateChanged(int arg1)
 {
     ui->resampleCustomPatternsLineEdit->setEnabled(arg1);
 }
 
+void MainWindow::on_xCorrShiftCheckBox_stateChanged(int arg1)
+{
+    ui->xcorrThreshLabel->setEnabled(arg1);
+    ui->xcorrThreshSpinBox->setEnabled(arg1);
+    ui->xcorrDownsampleLabel->setEnabled(arg1);
+    ui->xcorrDownsampleYLabel->setEnabled(arg1);
+    ui->xcorrDownsampleYSpinBox->setEnabled(arg1);
+    ui->xcorrDownsampleXLabel->setEnabled(arg1);
+    ui->xcorrDownsampleXSpinBox->setEnabled(arg1);
+    ui->xcorrDownsampleZLabel->setEnabled(arg1);
+    ui->xcorrDownsampleZSpinBox->setEnabled(arg1);
+    ui->xCorrModeLabel->setEnabled(arg1);
+    ui->xCorrModeComboBox->setEnabled(arg1);
+}
