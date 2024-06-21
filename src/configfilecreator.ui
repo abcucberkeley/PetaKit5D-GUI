@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>518</height>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -434,7 +434,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="maxJobNumSpinBox"/>
+        <widget class="QSpinBox" name="maxJobNumSpinBox">
+         <property name="maximum">
+          <number>9999999</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
