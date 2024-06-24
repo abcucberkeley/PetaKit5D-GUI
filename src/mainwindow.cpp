@@ -1450,19 +1450,19 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.stitchInfoFullpath.toStdString(),prependedString,isMcc);
 
-        //addCharArrayToArgs(args,"DS",prependedString,isMcc);
-        //addBoolToArgs(args,ui->deskewDeconCheckBox->isChecked(),prependedString);
+        addCharArrayToArgs(args,"DS",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchDSCheckBox->isChecked(),prependedString);
 
-        //addCharArrayToArgs(args,"DSR",prependedString,isMcc);
-        //addBoolToArgs(args,ui->deskewAndRotateDeconCheckBox->isChecked(),prependedString);
+        addCharArrayToArgs(args,"DSR",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchDSRCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
+        addBoolToArgs(args,ui->stitchIOScanCheckBox->isChecked(),prependedString);
 
         if(!ui->axisOrderLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
             addCharArrayToArgs(args,ui->axisOrderLineEdit->text().toStdString(),prependedString,isMcc);
         }
-
-        addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.IOScan,prependedString);
 
         addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
         addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);

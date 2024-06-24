@@ -83,7 +83,6 @@ class GUIvals{
         // Stitch Large Scale Processing Settings
         bool multiLoc;
         QString ProcessedDirStr;
-        bool IOScan;
         std::vector<std::string> blockSize;
         std::vector<std::string> shardSize;
         bool InputBboxCheckBox;
@@ -147,7 +146,6 @@ class GUIvals{
                     batchSize{"1024","1024","1024"},
                     multiLoc{false},
                     ProcessedDirStr{""},
-                    IOScan{false},
                     blockSize{"256","256","256"},
                     shardSize{"0","0","0"},
                     InputBboxCheckBox{false},

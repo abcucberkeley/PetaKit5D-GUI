@@ -1284,7 +1284,7 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1">
+       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>6</number>
         </property>
@@ -1421,6 +1421,95 @@
            <size>
             <width>20</width>
             <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_264" stretch="1,1,1">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_267">
+            <item>
+             <widget class="QLabel" name="stitchDSLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>DS</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="stitchDSCheckBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_266">
+            <item>
+             <widget class="QLabel" name="stitchDSRLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>DSR</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="stitchDSRCheckBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_265">
+            <item>
+             <widget class="QLabel" name="stitchIOScanLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>IO Scan</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="stitchIOScanCheckBox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_128">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -6554,6 +6643,21 @@
                   <item>
                    <property name="text">
                     <string>linear</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>cubic</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>lanczos2</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>lanczos3</string>
                    </property>
                   </item>
                  </widget>
