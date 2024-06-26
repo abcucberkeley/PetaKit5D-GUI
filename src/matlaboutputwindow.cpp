@@ -44,15 +44,14 @@ void matlabOutputWindow::closeEvent(QCloseEvent *event){
 void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<QString,QString>> *fNames, QMutex *fileNamesLock){
     fileNamesLock->lock();
     for(auto &path : *fNames){
-
         outputBox nBox;
         bool addLayout = false;
         if(buttons.find(path.first) == buttons.end()){
-        addLayout = true;
-        QWidget* container = new QWidget(this);
-        nBox = outputBox(new QScrollArea(this),container,new QVBoxLayout(container));
-        buttons.emplace(path.first,std::make_pair(nBox,std::unordered_map<QString,QPushButton*>()));
-        nBox.vBox->addStretch();
+            addLayout = true;
+            QWidget* container = new QWidget(this);
+            nBox = outputBox(new QScrollArea(this),container,new QVBoxLayout(container));
+            buttons.emplace(path.first,std::make_pair(nBox,std::unordered_map<QString,QPushButton*>()));
+            nBox.vBox->addStretch();
         }
         else nBox = buttons[path.first].first;
 
@@ -62,18 +61,18 @@ void matlabOutputWindow::onUpdateOutputForm(std::map<int,std::map<QString,QStrin
                QFileInfo filePath(subPath.second);
                button->setText(filePath.fileName());
                button->setObjectName(filePath.absoluteFilePath());
-               buttons[path.first].second.emplace(button->objectName(),button);
+               buttons[path.first].second.emplace(subPath.second,button);
                connect(button,&QPushButton::clicked,this,&matlabOutputWindow::onJobButtonClicked);
                nBox.vBox->insertWidget(nBox.vBox->count()-1,button);
            }
         }
 
         if(addLayout){
-        nBox.container->setLayout(nBox.vBox);
-        nBox.scrollArea->setWidget(nBox.container);
+            nBox.container->setLayout(nBox.vBox);
+            nBox.scrollArea->setWidget(nBox.container);
 
-        mainBox.vBox->addWidget(new QLabel("<b>"+jobNames->operator[](path.first)+"</b>",this));
-        mainBox.vBox->addWidget(nBox.scrollArea);
+            mainBox.vBox->addWidget(new QLabel("<b>"+jobNames->operator[](path.first)+"</b>",this));
+            mainBox.vBox->addWidget(nBox.scrollArea);
         }
     }
     fileNamesLock->unlock();

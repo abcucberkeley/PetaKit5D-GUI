@@ -1348,7 +1348,7 @@ void MainWindow::on_submitButton_clicked()
     QString jobLogCopy = guiVals.jobLogDir;
 
     // Check for job log directory for main job
-    checkJobLogDir(guiVals, mainPath, timeJobName);
+    checkJobLogDir(guiVals.jobLogDir, mainPath, timeJobName);
 
     bool lspDSR = false;
     bool lspStitch = false;
@@ -1934,13 +1934,13 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,guiVals.jobLogDir.toStdString(),prependedString,isMcc);
     }
 
-    // Send data to the MATLAB thread
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName, ui->parseClusterCheckBox->isChecked());
-    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
-
     // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
     jobNames.emplace(currJob,timeJobName);
+
+    // Send data to the MATLAB thread
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName, ui->parseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     QString currJobText = ui->jobNameLineEdit->text();
     if(currJobText.contains("Job ") && currJobText.back().isDigit()){
@@ -2578,7 +2578,7 @@ void MainWindow::on_simReconSubmitButton_clicked()
 
     // Set main path. This is where all the output files made by the GUI will be stored if a job log dir does not exist.
     //QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
-    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmm_");
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
     QString timeJobName = dateTime+QString(ui->simReconJobNameLineEdit->text()).replace(" ","_");
     QString mainPath = simReconDPaths[0].masterPath+"/job_logs/"+timeJobName;
 
@@ -2804,13 +2804,13 @@ void MainWindow::on_simReconSubmitButton_clicked()
         addCharArrayToArgs(args,simreconVals.jobLogDir.toStdString(),prependedString,isMcc);
     }
 
-    // Send data to the MATLAB thread
-    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
-    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
-
     // Still deciding which name I want to show to the user
     size_t currJob = jobNames.size()+1;
     jobNames.emplace(currJob,timeJobName);
+
+    // Send data to the MATLAB thread
+    auto mPJNPC = std::make_tuple(mainPath, timeJobName,ui->simReconParseClusterCheckBox->isChecked());
+    emit jobStart(args, funcType, mPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
     QString currJobText = ui->simReconJobNameLineEdit->text();
     if(currJobText.contains("Job ") && currJobText.back().isDigit()){
@@ -2861,7 +2861,14 @@ void MainWindow::on_cropSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = cropDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("Crop");
+    QString mainPath = cropDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = ui->cropJobLogDirLineEdit->text();
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -2873,8 +2880,7 @@ void MainWindow::on_cropSubmitButton_clicked()
     }
 
     // Data Path
-    std::vector<std::string> datapathV = {mainPath.toStdString()};
-    addArrayToArgs(args,datapathV,true,firstPrependedString,"{}",isMcc);
+    addDataPathsToArgs(args,firstPrependedString,cropDPaths,isMcc);
 
     // bbox
     std::vector<std::string> bboxV = {ui->cropBoundBoxYMinSpinBox->text().toStdString(),ui->cropBoundBoxXMinSpinBox->text().toStdString(),ui->cropBoundBoxZMinSpinBox->text().toStdString(),ui->cropBoundBoxYMaxSpinBox->text().toStdString(),ui->cropBoundBoxXMaxSpinBox->text().toStdString(),ui->cropBoundBoxZMaxSpinBox->text().toStdString()};
@@ -2928,11 +2934,11 @@ void MainWindow::on_cropSubmitButton_clicked()
 
     if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->cropJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+        addCharArrayToArgs(args,jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Crop Job"),ui->cropParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, ui->cropParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3051,7 +3057,14 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = fftAnalysisDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("FFT_Analysis");
+    QString mainPath = fftAnalysisDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = mainPath;
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3107,7 +3120,7 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("FFT Analysis"),true);
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3133,7 +3146,14 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = fscAnalysisDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("FSC_Analysis");
+    QString mainPath = fscAnalysisDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = mainPath;
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3213,7 +3233,7 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("FSC Analysis"),true);
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3238,7 +3258,14 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = psfDetectionAnalysisDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("PSF_Analysis");
+    QString mainPath = psfDetectionAnalysisDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = mainPath;
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3356,7 +3383,14 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = tiffZarrConverterDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("Tiff_Zarr_Converter");
+    QString mainPath = tiffZarrConverterDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = ui->tiffZarrConverterJobLogDirLineEdit->text();
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3420,11 +3454,11 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
 
     if(!ui->cropJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->tiffZarrConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+        addCharArrayToArgs(args,jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Tiff/Zarr Conversion"),ui->tiffZarrConverterParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, ui->tiffZarrConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
 }
@@ -3452,7 +3486,14 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = mipGeneratorDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("MIP_Generator");
+    QString mainPath = mipGeneratorDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = ui->mipGeneratorJobLogDirLineEdit->text();
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3519,11 +3560,11 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
 
     if(!ui->mipGeneratorJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->mipGeneratorJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+        addCharArrayToArgs(args,jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("MIP Generator Job"), ui->mipGeneratorParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, ui->mipGeneratorParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3576,7 +3617,14 @@ void MainWindow::on_resampleSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = resampleDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("Resample");
+    QString mainPath = resampleDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = ui->resampleJobLogDirLineEdit->text();
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3673,11 +3721,11 @@ void MainWindow::on_resampleSubmitButton_clicked()
 
     if(!ui->resampleJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->resampleJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+        addCharArrayToArgs(args,jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Resample Job"), ui->resampleParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, ui->resampleParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3710,7 +3758,14 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = imarisConverterDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("Imaris_Converter");
+    QString mainPath = imarisConverterDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = ui->imarisConverterJobLogDirLineEdit->text();
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3791,11 +3846,11 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
 
     if(!ui->imarisConverterJobLogDirLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"jobLogDir",prependedString,isMcc);
-        addCharArrayToArgs(args,ui->imarisConverterJobLogDirLineEdit->text().toStdString(),prependedString,isMcc);
+        addCharArrayToArgs(args,jobLogDir.toStdString(),prependedString,isMcc);
     }
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Imaris Converter Job"),ui->imarisConverterParseClusterCheckBox->isChecked());
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName,ui->imarisConverterParseClusterCheckBox->isChecked());
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -3856,8 +3911,15 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("OTF_Masking");
     QFileInfo file_path(ui->otfMaskingPSFFilenameLineEdit->text());
-    QString mainPath = file_path.absolutePath();
+    QString mainPath = file_path.absolutePath()+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = mainPath;
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -3887,7 +3949,7 @@ void MainWindow::on_otfMaskingSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("OTF Masking Job"), false);
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, false);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 
@@ -4071,7 +4133,14 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     // Potentially in the future I can loop through the widgets and do this in fewer lines
 
     // Set main path. This is where all the output files made by the GUI will be stored.
-    QString mainPath = imageListGeneratorDPaths[0].masterPath;
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_");
+    QString timeJobName = dateTime+QString("Image_List_Generator");
+    QString mainPath = imageListGeneratorDPaths[0].masterPath+"/job_logs/"+timeJobName;
+
+    QString jobLogDir = mainPath;
+    checkJobLogDir(jobLogDir, mainPath, timeJobName);
+    size_t currJob = jobNames.size()+1;
+    jobNames.emplace(currJob,timeJobName);
 
     const std::string firstPrependedString = "";
     std::string prependedString;
@@ -4178,7 +4247,7 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("Image List Generator Job"), false);
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, false);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 }
 

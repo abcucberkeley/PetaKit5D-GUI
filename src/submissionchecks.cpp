@@ -1,5 +1,30 @@
 #include "submissionchecks.h"
 
+void checkJobLogDir(QString &jobLogDir, QString &mainPath, const QString &timeJobName){
+    // Check for job log directory for main job
+    QDir dir(jobLogDir);
+    if (!dir.exists()){
+        QDir mDir(mainPath);
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+        QFile setP(mainPath);
+        setP.setPermissions({QFileDevice::Permission::ReadUser,QFileDevice::Permission::WriteUser,QFileDevice::Permission::ExeUser,QFileDevice::Permission::ReadGroup,QFileDevice::Permission::WriteGroup,QFileDevice::Permission::ExeGroup,QFileDevice::Permission::ReadOther,QFileDevice::Permission::ExeOther});
+        jobLogDir = mainPath;
+        std::cout << "Chosen job log directory does not exist! Using " << jobLogDir.toStdString()<< " as the job log directory instead." << std::endl;
+    }
+    else{
+        mainPath = jobLogDir+"/"+timeJobName;
+        QDir mDir(mainPath);
+        if(!mDir.exists()){
+            mDir.mkpath(".");
+        }
+        QFile setP(mainPath);
+        setP.setPermissions({QFileDevice::Permission::ReadUser,QFileDevice::Permission::WriteUser,QFileDevice::Permission::ExeUser,QFileDevice::Permission::ReadGroup,QFileDevice::Permission::WriteGroup,QFileDevice::Permission::ExeGroup,QFileDevice::Permission::ReadOther,QFileDevice::Permission::ExeOther});
+        jobLogDir = mainPath;
+    }
+}
+
 void messageBoxError(const QString &errorText){
     QMessageBox messageBox;
     messageBox.warning(0,"Error",errorText);
