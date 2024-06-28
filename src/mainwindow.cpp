@@ -1721,8 +1721,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
         addBoolToArgs(args,guiVals.saveZarr,prependedString);
 
-        addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
+        if(!cFileVals.gpuConfigFile.isEmpty()){
+            addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
+            addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
+        }
 
     }
     else{
@@ -1911,8 +1913,10 @@ void MainWindow::on_submitButton_clicked()
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
 
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType;
     if(lspDSR) funcType = "XR_deskew_rotate_data_wrapper";
@@ -2940,8 +2944,10 @@ void MainWindow::on_cropSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType = "XR_crop_dataset";
 
@@ -3127,8 +3133,10 @@ void MainWindow::on_fftAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
 
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType = "XR_fftSpectrumComputingWrapper";
 
@@ -3238,8 +3246,10 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.jvmConfigFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    }
 
     // TODO: ADD PARSE CLUSTER
 
@@ -3335,8 +3345,10 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.jvmConfigFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.jvmConfigFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType;
 
@@ -3468,8 +3480,10 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
 
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
@@ -3572,8 +3586,10 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType = "XR_MIP_wrapper";
 
@@ -3733,8 +3749,10 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType = "XR_resample_dataset";
 
@@ -3858,8 +3876,10 @@ void MainWindow::on_imarisConverterSubmitButton_clicked()
     addBoolToArgs(args,isMcc,prependedString);
 
     // Config File Settings
-    addCharArrayToArgs(args,"configFile",prependedString,isMcc);
-    addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    if(!cFileVals.configFile.isEmpty()){
+        addCharArrayToArgs(args,"configFile",prependedString,isMcc);
+        addCharArrayToArgs(args,cFileVals.configFile.toStdString(),prependedString,isMcc);
+    }
 
     QString funcType = "XR_imaris_conversion_data_wrapper";
 
