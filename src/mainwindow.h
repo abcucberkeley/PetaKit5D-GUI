@@ -530,6 +530,8 @@ private slots:
 
     void on_xCorrShiftCheckBox_stateChanged(int arg1);
 
+    void on_cropZarrFileCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     mainwindowConsoleOutputWindow* matlabJobLogsOutputWindow;

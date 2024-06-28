@@ -1429,8 +1429,8 @@ void MainWindow::on_submitButton_clicked()
         }
 
         if(!guiVals.maskFns.at(0).empty() && !guiVals.maskFns.at(1).empty() && !guiVals.maskFns.at(2).empty()){
-            addCharArrayToArgs(args,"maskFns",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.deconMaskFns,false,prependedString,"[]",isMcc);
+            addCharArrayToArgs(args,"maskFullpaths",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.maskFns,true,prependedString,"{}",isMcc);
         }
 
         addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
@@ -1704,8 +1704,8 @@ void MainWindow::on_submitButton_clicked()
         addScalarToArgs(args,std::to_string(guiVals.deconOffset),prependedString);
 
         if(!guiVals.deconMaskFns.at(0).empty() && !guiVals.deconMaskFns.at(1).empty() && !guiVals.deconMaskFns.at(2).empty()){
-            addCharArrayToArgs(args,"deconMaskFns",prependedString,isMcc);
-            addArrayToArgs(args,guiVals.deconMaskFns,false,prependedString,"[]",isMcc);
+            addCharArrayToArgs(args,"maskFullpaths",prependedString,isMcc);
+            addArrayToArgs(args,guiVals.deconMaskFns,true,prependedString,"{}",isMcc);
         }
 
         // Advanced Job Settings
@@ -1878,9 +1878,6 @@ void MainWindow::on_submitButton_clicked()
         }
 
         // Advanced Job Settings
-        addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
-        addBoolToArgs(args,guiVals.largeFile,prependedString);
-
         addCharArrayToArgs(args,"minModifyTime",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.minModifyTime),prependedString);
 
@@ -1889,10 +1886,6 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"maxWaitLoopNum",prependedString,isMcc);
         addScalarToArgs(args,std::to_string(guiVals.maxWaitLoopNum),prependedString);
-
-        addCharArrayToArgs(args,"GPUConfigFile",prependedString,isMcc);
-        addCharArrayToArgs(args,cFileVals.gpuConfigFile.toStdString(),prependedString,isMcc);
-
     }
 
     // Job Settings for all functions
@@ -2905,6 +2898,28 @@ void MainWindow::on_cropSubmitButton_clicked()
     std::vector<std::string> lastStartCoordsV = {ui->cropLastStartYSpinBox->text().toStdString(),ui->cropLastStartXSpinBox->text().toStdString(),ui->cropLastStartZSpinBox->text().toStdString()};
     addArrayToArgs(args,lastStartCoordsV,false,prependedString,"[]",isMcc);
 
+    addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropZarrFileCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropLargeZarrCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
+    addBoolToArgs(args,ui->cropSaveZarrCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+    std::vector<std::string> blockSizeV = {ui->cropBlockSizeYSpinBox->text().toStdString(),
+                                           ui->cropBlockSizeXSpinBox->text().toStdString(),
+                                           ui->cropBlockSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,blockSizeV,false,prependedString,"[]",isMcc);
+
+    addCharArrayToArgs(args,"batchSize",prependedString,isMcc);
+    std::vector<std::string> batchSizeV = {ui->cropBatchSizeYSpinBox->text().toStdString(),
+                                           ui->cropBatchSizeXSpinBox->text().toStdString(),
+                                           ui->cropBatchSizeZSpinBox->text().toStdString()};
+    addArrayToArgs(args,batchSizeV,false,prependedString,"[]",isMcc);
+
+
     // Job Settings
     addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
     addBoolToArgs(args,ui->cropParseClusterCheckBox->isChecked(),prependedString);
@@ -3307,8 +3322,14 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
     addBoolToArgs(args,ui->psfDetectionAnalysisFlipZStackCheckBox->isChecked(),prependedString);
 
+    addCharArrayToArgs(args,"parseCluster",prependedString,isMcc);
+    addBoolToArgs(args,ui->psfDetectionAnalysisParseClusterCheckBox->isChecked(),prependedString);
+
     addCharArrayToArgs(args,"masterCompute",prependedString,isMcc);
     addBoolToArgs(args,ui->psfDetectionAnalysisMasterComputeCheckBox->isChecked(),prependedString);
+
+    addCharArrayToArgs(args,"cpusPerTask",prependedString,isMcc);
+    addScalarToArgs(args,ui->psfDetectionAnalysisCpusPerTaskLineEdit->text().toStdString(),prependedString);
 
     addCharArrayToArgs(args,"mccMode",prependedString,isMcc);
     addBoolToArgs(args,isMcc,prependedString);
@@ -3519,7 +3540,7 @@ void MainWindow::on_mipGeneratorSubmitButton_clicked()
     addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
     addBoolToArgs(args,ui->mipGeneratorZarrFileCheckBox->isChecked(),prependedString);
 
-    addCharArrayToArgs(args,"largeZarr",prependedString,isMcc);
+    addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
     addBoolToArgs(args,ui->mipGeneratorLargeZarrCheckBox->isChecked(),prependedString);
 
     addCharArrayToArgs(args,"batchSize",prependedString,isMcc);
@@ -3668,7 +3689,7 @@ void MainWindow::on_resampleSubmitButton_clicked()
     addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
     addBoolToArgs(args,ui->resampleZarrFileCheckBox->isChecked(),prependedString);
 
-    addCharArrayToArgs(args,"largeZarr",prependedString,isMcc);
+    addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
     addBoolToArgs(args,ui->resampleLargeZarrCheckBox->isChecked(),prependedString);
 
     addCharArrayToArgs(args,"saveZarr",prependedString,isMcc);
@@ -4285,3 +4306,24 @@ void MainWindow::on_xCorrShiftCheckBox_stateChanged(int arg1)
     ui->xCorrModeLabel->setEnabled(arg1);
     ui->xCorrModeComboBox->setEnabled(arg1);
 }
+
+void MainWindow::on_cropZarrFileCheckBox_stateChanged(int arg1)
+{
+    ui->cropLargeZarrLabel->setEnabled(arg1);
+    ui->cropLargeZarrCheckBox->setEnabled(arg1);
+    ui->cropBlockSizeLabel->setEnabled(arg1);
+    ui->cropBlockSizeYLabel->setEnabled(arg1);
+    ui->cropBlockSizeXLabel->setEnabled(arg1);
+    ui->cropBlockSizeZLabel->setEnabled(arg1);
+    ui->cropBlockSizeYSpinBox->setEnabled(arg1);
+    ui->cropBlockSizeXSpinBox->setEnabled(arg1);
+    ui->cropBlockSizeZSpinBox->setEnabled(arg1);
+    ui->cropBatchSizeLabel->setEnabled(arg1);
+    ui->cropBatchSizeYLabel->setEnabled(arg1);
+    ui->cropBatchSizeXLabel->setEnabled(arg1);
+    ui->cropBatchSizeZLabel->setEnabled(arg1);
+    ui->cropBatchSizeYSpinBox->setEnabled(arg1);
+    ui->cropBatchSizeXSpinBox->setEnabled(arg1);
+    ui->cropBatchSizeZSpinBox->setEnabled(arg1);
+}
+
