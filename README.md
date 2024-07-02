@@ -37,7 +37,7 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
    4. Windows (Windows 10 or newer):
 
-      1. Double-click the PetaKit5D-GUI_setup.exe file
+      1. Double-click the PetaKit5D-GUI_windows_setup.exe file
 
       2. Follow the installer's instructions
 
