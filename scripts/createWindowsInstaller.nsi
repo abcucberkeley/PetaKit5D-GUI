@@ -8,7 +8,7 @@ Unicode True
 !define TEMP_DIR_D "C:\\temp\\matlabRuntimeTmp"
 
 Name "${APP_NAME}"
-OutFile "${APP_NAME}_setup.exe"
+OutFile "${APP_NAME}_windows_setup.exe"
 InstallDir "C:\Program Files\${APP_NAME}"
 RequestExecutionLevel admin
 
