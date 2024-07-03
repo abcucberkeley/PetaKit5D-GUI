@@ -27,7 +27,7 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
       2. Currently, the Mac installer .pkg needs to be manually approved before it can be run (This may change in the future if there is more demand for the Mac version)
      
-      3. Go into System Preferences > Security & Privacy > General (The tab at the top)
+      3. Go into System Preferences > Security & Privacy > General
      
       4. At the bottom, you should see "PetaKit5D-GUI_mac.pkg" was blocked from use because it is not from an identified developer.
 
