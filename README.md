@@ -23,19 +23,29 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
    3. Mac (MacOS 12 or newer):
 
-      1. Double-click the PetaKit5D-GUI_mac.pkg file
+      1. Double-click the PetaKit5D-GUI_mac.pkg file and you should see an error about an unidentified developer
 
-      2. You may be prompted for admin privileges at some point. Type in your password if prompted
+      2. Currently, the Mac installer .pkg needs to be manually approved before it can be run (This may change in the future if there is more demand for the Mac version)
+     
+      3. Go into System Preferences > Security & Privacy > General (The tab at the top)
+     
+      4. At the bottom, you should see "PetaKit5D-GUI_mac.pkg" was blocked from use because it is not from an identified developer.
 
-      3. Follow the installer's instructions
+      5. Click Open Anyway
 
-      4. You may see a bouncing Matlab icon in your taskbar. Do not click this as it can cause the installation to fail
+      6. Click Open
 
-      5. When prompted to choose an installation location for the Matlab Runtime, Leave all values at their default
+      7. You may be prompted for admin privileges at some point. Type in your password if prompted
 
-      6. Search for PetaKit5D-GUI and launch the program
+      8. Follow the installer's instructions
 
-   4. Windows (Windows 10 or newer):
+      9. You may see a bouncing Matlab icon in your taskbar. Do not click this as it can cause the installation to fail
+
+      10. When prompted to choose an installation location for the Matlab Runtime, Leave all values at their default
+
+      11. Search for PetaKit5D-GUI and launch the program
+
+   5. Windows (Windows 10 or newer):
 
       1. Double-click the PetaKit5D-GUI_windows_setup.exe file
 
