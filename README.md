@@ -49,9 +49,9 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
       1. Double-click the PetaKit5D-GUI_windows_setup.exe file
 
-      2.  You may get a popup saying "Microsoft Defender SmartScreen prevented an unrecognized app from starting."
+      2. You may get a popup saying "Microsoft Defender SmartScreen prevented an unrecognized app from starting."
 
-      3.  If this happens, click More Info > Run anyway
+      3. If this happens, click More Info > Run anyway
 
       5. You may be prompted for admin privileges, click Yes
 
