@@ -11,7 +11,7 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
    2. Note: In some cases, the installation may take a long time (10-15 minutes)
 
-   2. Linux:
+   3. Linux:
 
       1. Ubuntu 22.04:
 
@@ -21,11 +21,11 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
          3. Call PetaKit5D-GUI from a terminal
 
-   3. Mac (MacOS 12 or newer):
+   4. Mac (MacOS 12 or newer):
 
       1. Double-click the PetaKit5D-GUI_mac.pkg file and you should see an error about an unidentified developer
 
-      2. Currently, the Mac installer .pkg needs to be manually approved before it can be run (This may change in the future if there is more demand for the Mac version)
+      2. Currently the Mac installer .pkg needs to be manually approved before it can be run (This may change in the future if there is more demand for the Mac version)
      
       3. Go into System Preferences > Security & Privacy > General
      
