@@ -49,9 +49,15 @@ Detailed explanations for all parameters and step-by-step examples can be found 
 
       1. Double-click the PetaKit5D-GUI_windows_setup.exe file
 
-      2. Follow the installer's instructions
+      2.  You may get a popup saying "Microsoft Defender SmartScreen prevented an unrecognized app from starting."
 
-      3. Search for PetaKit5D-GUI and launch the program
+      3.  If this happens, click More Info > Run anyway
+
+      5. You may be prompted for admin privileges, click Yes
+
+      6. Follow the installer's instructions
+
+      7. Search for PetaKit5D-GUI and launch the program
 
 ### Wiki
 
