@@ -263,7 +263,7 @@ void MainWindow::writeSettings()
     settings.setValue("customPatternsCheckBox",ui->customPatternsCheckBox->isChecked());
     settings.setValue("customPatterns", ui->customPatternsLineEdit->text());
 
-    settings.setValue("SkewAngle",guiVals.skewAngle);
+    settings.setValue("skewAngle",guiVals.skewAngle);
     settings.setValue("dz",ui->dzLineEdit->text());
     settings.setValue("dzFromEncoder",guiVals.dzFromEncoder);
     settings.setValue("xyPixelSize",ui->xyPixelSizeSpinBox->value());
