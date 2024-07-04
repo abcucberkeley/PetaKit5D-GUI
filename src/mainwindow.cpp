@@ -1749,7 +1749,7 @@ void MainWindow::on_submitButton_clicked()
         // This needs to change FIX
         // TODO: FIX LOGIC FOR DECON ONLY
         addCharArrayToArgs(args,"save16bit",prependedString,isMcc);
-        std::vector<std::string> save16bitV = {btosM(ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked()),btosM(ui->stitchSave16BitCheckBox->isChecked()),btosM(false),btosM(false)};
+        std::vector<std::string> save16bitV = {btosM(ui->deskewSave16BitCheckBox->isChecked() || ui->rotateSave16BitCheckBox->isChecked() || ui->deskewAndRotateSave16BitCheckBox->isChecked()),btosM(ui->stitchSave16BitCheckBox->isChecked())};
         addArrayToArgs(args,save16bitV,false,prependedString,"[]",isMcc);
 
         addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
