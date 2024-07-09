@@ -1447,8 +1447,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"processedDirStr",prependedString,isMcc);
         addCharArrayToArgs(args,guiVals.ProcessedDirStr.toStdString(),prependedString,isMcc);
 
-        addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.stitchInfoFullpath.toStdString(),prependedString,isMcc);
+        if(!guiVals.stitchInfoFullpath.isEmpty()){
+            addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.stitchInfoFullpath.toStdString(),prependedString,isMcc);
+        }
 
         addCharArrayToArgs(args,"DS",prependedString,isMcc);
         addBoolToArgs(args,ui->stitchDSCheckBox->isChecked(),prependedString);
