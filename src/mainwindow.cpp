@@ -3192,6 +3192,9 @@ void MainWindow::on_fscAnalysisSubmitButton_clicked()
     addCharArrayToArgs(args,"channelPatterns",prependedString,isMcc);
     addChannelPatternsToArgs(args,fscAnalysisChannelWidgets,ui->fscAnalysisCustomPatternsCheckBox->isChecked(),ui->fscAnalysisCustomPatternsLineEdit->text(),prependedString,isMcc);
 
+    addCharArrayToArgs(args,"channels",prependedString,isMcc);
+    addChannelPatternsToArgs(args,fscAnalysisChannelWidgets,true,ui->fscAnalysisChannelsLineEdit->text(),prependedString,isMcc,"[]",false);
+
     addCharArrayToArgs(args,"resultDirName",prependedString,isMcc);
     addCharArrayToArgs(args,ui->fscResultDirNameLineEdit->text().toStdString(),prependedString,isMcc);
 
@@ -3387,7 +3390,7 @@ void MainWindow::on_psfDetectionAnalysisSubmitButton_clicked()
     if(!messageBoxSameJobSubmittedWarning(this,prevFuncTypeArgs,funcType.toStdString(),args,sameJobSubmittedWarning)) return;
 
     // Send data to the MATLAB thread
-    auto cMPJNPC = std::make_tuple(mainPath, QString("PSF Analysis"),true);
+    auto cMPJNPC = std::make_tuple(mainPath, timeJobName, true);
     emit jobStart(args, funcType, cMPJNPC, jobLogPaths, isMcc, pathToMatlab);
 
 }

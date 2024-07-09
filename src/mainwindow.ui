@@ -7401,7 +7401,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Actual Pixel size in Z</string>
+                   <string>Actual Pixel Size in Z</string>
                   </property>
                  </widget>
                 </item>
@@ -7477,7 +7477,7 @@
                 <item>
                  <widget class="QLineEdit" name="fscAnalysisDthetaLineEdit">
                   <property name="text">
-                   <string>.261799</string>
+                   <string>pi/12</string>
                   </property>
                  </widget>
                 </item>
@@ -7637,15 +7637,18 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fscAnalysisNYSpinBox">
+               <widget class="QSpinBox" name="fscAnalysisNYSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
                 <property name="maximum">
-                 <double>100000.000000000000000</double>
+                 <number>999999999</number>
                 </property>
                 <property name="value">
-                 <double>251.000000000000000</double>
+                 <number>251</number>
                 </property>
                </widget>
               </item>
@@ -7666,15 +7669,18 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fscAnalysisNXSpinBox">
+               <widget class="QSpinBox" name="fscAnalysisNXSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
                 <property name="maximum">
-                 <double>100000.000000000000000</double>
+                 <number>999999999</number>
                 </property>
                 <property name="value">
-                 <double>251.000000000000000</double>
+                 <number>251</number>
                 </property>
                </widget>
               </item>
@@ -7695,15 +7701,18 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="fscAnalysisNZSpinBox">
+               <widget class="QSpinBox" name="fscAnalysisNZSpinBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
                 <property name="maximum">
-                 <double>100000.000000000000000</double>
+                 <number>999999999</number>
                 </property>
                 <property name="value">
-                 <double>251.000000000000000</double>
+                 <number>251</number>
                 </property>
                </widget>
               </item>
