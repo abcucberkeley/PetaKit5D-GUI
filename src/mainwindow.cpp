@@ -604,8 +604,7 @@ void MainWindow::readMatlabPathSettings(){
     QSettings settings("ABC", "PetaKit5D-GUI");
 
     // Do not load previous settings if no settings file exists
-    QString settingsFilePath = settings.fileName();
-    if(!QFile::exists(settingsFilePath)) return;
+    if(!settingsFileExists()) return;
 
     settings.beginGroup("MainWindow");
     isMcc = settings.value("isMcc").toBool();
@@ -617,8 +616,7 @@ void MainWindow::readConfigSettings(){
     QSettings settings("ABC", "PetaKit5D-GUI");
 
     // Do not load previous settings if no settings file exists
-    QString settingsFilePath = settings.fileName();
-    if(QFile::exists(settingsFilePath)){
+    if(settingsFileExists()){
         settings.beginGroup("MainWindow");
         cFileVals.configFile = settings.value("configFile").toString();
         cFileVals.gpuConfigFile = settings.value("gpuConfigFile").toString();
@@ -742,8 +740,7 @@ void MainWindow::readSettings()
     QSettings settings("ABC", "PetaKit5D-GUI");
 
     // Do not load previous settings if no settings file exists
-    QString settingsFilePath = settings.fileName();
-    if(!QFile::exists(settingsFilePath)) return;
+    if(!settingsFileExists()) return;
 
     settings.beginGroup("MainWindow");
 

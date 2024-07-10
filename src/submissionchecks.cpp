@@ -150,3 +150,15 @@ bool pathsFound(dataPath& path){
     
     return true;
 }
+
+bool settingsFileExists(){
+    QSettings settings("ABC", "PetaKit5D-GUI");
+    #ifndef _WIN32
+    return QFile::exists(settings.fileName());
+    #else
+    settings.beginGroup("MainWindow");
+    QStringList keys = settings.allKeys();
+    settings.endGroup();
+    return !keys.isEmpty();
+    #endif
+}

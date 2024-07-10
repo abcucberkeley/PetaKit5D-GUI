@@ -6,6 +6,7 @@
 #include <QFileDevice>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QSettings>
 #include <iostream>
 
 void checkJobLogDir(QString &jobLogDir, QString &mainPath, const QString &timeJobName);
@@ -25,5 +26,7 @@ bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
 bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);
 
 bool pathsFound(dataPath& path);
+
+bool settingsFileExists();
 
 #endif // SUBMISSIONCHECKS_H
