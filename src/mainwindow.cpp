@@ -1444,8 +1444,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"multiLoc",prependedString,isMcc);
         addBoolToArgs(args,guiVals.multiLoc,prependedString);
 
-        addCharArrayToArgs(args,"processedDirStr",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.ProcessedDirStr.toStdString(),prependedString,isMcc);
+        if(!guiVals.ProcessedDirStr.isEmpty()){
+            addCharArrayToArgs(args,"processedDirStr",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.ProcessedDirStr.toStdString(),prependedString,isMcc);
+        }
 
         if(!guiVals.stitchInfoFullpath.isEmpty()){
             addCharArrayToArgs(args,"stitchInfoFullpath",prependedString,isMcc);
@@ -1511,8 +1513,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"BlendMethod",prependedString,isMcc);
         addCharArrayToArgs(args,ui->blendMethodComboBox->currentText().toStdString(),prependedString,isMcc);
 
-        addCharArrayToArgs(args,"overlapType",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.overlapType.toStdString(),prependedString,isMcc);
+        if(!guiVals.overlapType.isEmpty()){
+            addCharArrayToArgs(args,"overlapType",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.overlapType.toStdString(),prependedString,isMcc);
+        }
 
         addCharArrayToArgs(args,"xcorrShift",prependedString,isMcc);
         addBoolToArgs(args,ui->xCorrShiftCheckBox->isChecked(),prependedString);
@@ -1552,8 +1556,10 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"axisWeight",prependedString,isMcc);
         addArrayToArgs(args,guiVals.axisWeight,false,prependedString,"[]",isMcc);
 
-        addCharArrayToArgs(args,"groupFile",prependedString,isMcc);
-        addCharArrayToArgs(args,guiVals.groupFile.toStdString(),prependedString,isMcc);
+        if(!guiVals.groupFile.isEmpty()){
+            addCharArrayToArgs(args,"groupFile",prependedString,isMcc);
+            addCharArrayToArgs(args,guiVals.groupFile.toStdString(),prependedString,isMcc);
+        }
 
         if(!ui->primaryCHLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"primaryCh",prependedString,isMcc);
