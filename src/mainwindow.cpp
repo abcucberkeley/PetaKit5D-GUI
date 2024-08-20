@@ -107,6 +107,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->simReconTab->setTabEnabled(ui->simReconTab->indexOf(ui->simReconDeskew),false);
     ui->simReconTab->setCurrentWidget(ui->simReconMain);
 
+    // Remove the Sim Recon Tab for now
+    // Someday we may add better support for Sim Recon if there is a demand for it
+    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->simRecon));
+
     // Set most recent Dir to Home initially
     mostRecentDir = QDir::homePath();
 
