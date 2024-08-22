@@ -25,6 +25,8 @@ bool dataPathsAreSet(const std::vector<dataPath> &dPaths);
 
 bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const QCheckBox* customPatternsCheckBox, const QLineEdit* customPatternsLineEdit);
 
+void onlyRotateCheckboxIsChecked();
+
 bool pathsFound(dataPath& path);
 
 bool settingsFileExists();

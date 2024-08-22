@@ -132,6 +132,15 @@ bool channelPatternsAreSet(const std::vector<std::pair<QLabel*,QCheckBox*>> &cha
     return true;
 }
 
+void onlyRotateCheckboxIsChecked(){
+    messageBoxError("Currently a Rotate cannot be performed by only checking the Rotate checkbox. "
+                    "You can perform a rotation only job by unchecking the Rotate checkbox, "
+                    "checking the Deskew & Rotate checkbox as true, "
+                    "and checking Objective Scan checkbox as true. Keep in mind you will also have to change your Step "
+                    "Size accordingly.");
+    return;
+}
+
 bool pathsFound(dataPath& path){
     if(path.includeMaster){
         if(!QFileInfo::exists(path.masterPath)){

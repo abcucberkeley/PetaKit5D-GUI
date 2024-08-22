@@ -2131,6 +2131,14 @@ void MainWindow::on_mainNextButton_clicked()
     // Error if no channel patterns set
     if(!channelPatternsAreSet(channelWidgets,ui->customPatternsCheckBox,ui->customPatternsLineEdit)) return;
 
+    // Error if only the rotate checkbox is checked
+    if(ui->rotateCheckBox->isChecked() && !(ui->deskewCheckBox->isChecked() ||
+                                            ui->deskewAndRotateCheckBox->isChecked() ||
+                                            ui->deconOnlyCheckBox->isChecked())){
+        onlyRotateCheckboxIsChecked();
+        return;
+    }
+
     // Set the checkmark and disable the tab
     ui->tabWidget->setTabText(ui->tabWidget->indexOf(ui->Main),QString::fromStdString("Main ✔"));
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->Main),false);
