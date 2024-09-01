@@ -3467,6 +3467,9 @@ void MainWindow::on_tiffZarrConverterSubmitButton_clicked()
                                                ui->tiffZarrConverterBlockSizeZDoubleSpinBox->text().toStdString()};
         addArrayToArgs(args,blockSizeV,false,prependedString,"[]",isMcc);
 
+        addCharArrayToArgs(args,"readWholeTiff",prependedString,isMcc);
+        addBoolToArgs(args,ui->tiffZarrConverterReadWholeTiffCheckBox->isChecked(),prependedString);
+
         addCharArrayToArgs(args,"partialFile",prependedString,isMcc);
         addBoolToArgs(args,ui->tiffZarrConverterPartialFileCheckBox->isChecked(),prependedString);
     }
