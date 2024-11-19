@@ -1048,10 +1048,95 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_8">
+       <layout class="QVBoxLayout" name="verticalLayout_8" stretch="1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>1</number>
         </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_277" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="dsrInputAxisOrderLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Input Axis Order</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dsrInputAxisOrderLineEdit">
+              <property name="text">
+               <string>yxz</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_134">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_35">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_278" stretch="1,1">
+            <item>
+             <widget class="QLabel" name="dsrOutputAxisOrderLabel">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Output Axis Order</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dsrOutputAxisOrderLineEdit">
+              <property name="text">
+               <string>yxz</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_135">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_21">
           <item>
@@ -14356,8 +14441,8 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
   <buttongroup name="deconRLMethodButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>

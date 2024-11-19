@@ -1800,6 +1800,12 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
         addBoolToArgs(args,guiVals.flipZStack,prependedString);
 
+        addCharArrayToArgs(args,"inputAxisOrder",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->dsrInputAxisOrderLineEdit->text().toStdString(),prependedString,isMcc);
+
+        addCharArrayToArgs(args,"outputAxisOrder",prependedString,isMcc);
+        addCharArrayToArgs(args,ui->dsrOutputAxisOrderLineEdit->text().toStdString(),prependedString,isMcc);
+
         addCharArrayToArgs(args,"FFCorrection",prependedString,isMcc);
         addBoolToArgs(args,ui->llffCorrectionCheckBox->isChecked(),prependedString);
 
