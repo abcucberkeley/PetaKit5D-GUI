@@ -330,6 +330,8 @@ private:
     // Image List Generator
     std::vector<dataPath> imageListGeneratorDPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> imageListGeneratorChannelWidgets;
+    std::vector<QString> imageListGeneratorFilenames;
+    std::vector<QString> imageListGeneratorFileIndices;
 
     // Imaris Converter
     std::vector<dataPath> imarisConverterDPaths;
@@ -428,7 +430,7 @@ private slots:
 
     void on_backgroundAddPathsButton_clicked();
 
-    void on_psfFullAddPathsButton_2_clicked();
+    void on_psfFullAddPathsButton_clicked();
 
     void on_deconOnlyCheckBox_stateChanged(int arg1);
 
@@ -531,6 +533,10 @@ private slots:
     void on_xCorrShiftCheckBox_stateChanged(int arg1);
 
     void on_cropZarrFileCheckBox_stateChanged(int arg1);
+
+    void on_imageListGeneratorGenerationMethodComboBox_currentTextChanged(const QString &arg1);
+
+    void on_imageListGeneratorTileListButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -220,20 +220,40 @@ bool endsWith(std::string_view str, std::string_view suffix)
 }
 
 // Get the data paths
-/*
-std::vector<std::string> dataPaths = getDataPaths(tiffZarrConverterDPaths);
-std::vector<QString> channelPatterns = getChannelPatterns(tiffZarrConverterChannelWidgets,ui->tiffZarrConverterCustomPatternsCheckBox->isChecked(),ui->tiffZarrConverterCustomPatternsLineEdit->text());
-std::vector<std::string> finalDataPaths;
-for (std::string &dataPath: dataPaths){
-    QDir directory(QString::fromStdString(dataPath));
-    QStringList images = directory.entryList(QStringList() << "*.tif" << "*.tiff",QDir::Files);
-    for(QString &fileName : images) {
-        for(QString &pattern : channelPatterns){
-            if(fileName.contains(pattern)){
-                finalDataPaths.push_back(dataPath+"/"+fileName.toStdString());
-                break;
+std::vector<QString> getFilenames(const std::vector<dataPath> &dataPaths, const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets,
+                                      const bool customPatterns, const QString &patternLine, const bool zarrFile){
+    std::vector<std::string> dataPathsS = getDataPaths(dataPaths);
+    std::vector<QString> channelPatterns = getChannelPatterns(channelWidgets,
+                                                              customPatterns,
+                                                              patternLine);
+    std::vector<QString> finalFilenames;
+    for (std::string &dataPath: dataPathsS){
+        QDir directory(QString::fromStdString(dataPath));
+        QStringList images;
+        if(!zarrFile) images = directory.entryList(QStringList() << "*.tif" << "*.tiff",QDir::Files);
+        else images = directory.entryList(QStringList() << "*.zarr",QDir::Dirs);
+        for(QString &fileName : images) {
+            for(QString &pattern : channelPatterns){
+                if(fileName.contains(pattern)){
+                    finalFilenames.push_back(fileName);
+                    break;
+                }
             }
         }
     }
+    return finalFilenames;
 }
-*/
+
+// Extract numbers from a comma separated QString
+std::vector<QString> extractNumbersFromQString(const QString& input){
+    std::vector<QString> numbers;
+    QStringList parts = input.split(',', Qt::SkipEmptyParts); // Split by commas
+
+    for (const QString& part : parts) {
+        QString number = part.trimmed(); // Trim whitespace
+        numbers.push_back(number);
+    }
+
+    return numbers;
+}
+

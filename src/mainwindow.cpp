@@ -2475,7 +2475,7 @@ void MainWindow::on_backgroundAddPathsButton_clicked()
 }
 
 // Open window for adding PSF Paths
-void MainWindow::on_psfFullAddPathsButton_2_clicked()
+void MainWindow::on_psfFullAddPathsButton_clicked()
 {
     std::vector<QString> channelNames = getChannelPatterns(channelWidgets, ui->customPatternsCheckBox->isChecked(), ui->customPatternsLineEdit->text());
     dataPaths daPaths(psfFullPaths, false, mostRecentDir, channelNames);
@@ -4306,6 +4306,30 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     addCharArrayToArgs(args,"overlapSizeType",prependedString,isMcc);
     addCharArrayToArgs(args,ui->imageListGeneratorOverlapSizeTypeComboBox->currentText().toStdString(),prependedString,isMcc);
 
+    // Tile List
+    if(ui->imageListGeneratorGenerationMethodComboBox->currentText() == "tile_list"){
+        std::vector<std::string> imageListGeneratorFilenamesString;
+        std::vector<std::string> imageListGeneratorFileIndicesString;
+        for (const auto& qString : imageListGeneratorFilenames) {
+            imageListGeneratorFilenamesString.push_back(qString.toStdString()); // Convert each QString to std::string
+        }
+        for (const auto& qString : imageListGeneratorFileIndices) {
+            imageListGeneratorFileIndicesString.push_back(qString.toStdString()); // Convert each QString to std::string
+        }
+
+        addCharArrayToArgs(args,"tileFilenames",prependedString,isMcc);
+        addArrayToArgs(args,imageListGeneratorFilenamesString,true,prependedString,"{}",isMcc);
+
+        addCharArrayToArgs(args,"tileIndices",prependedString,isMcc);
+        addArrayToArgs(args,imageListGeneratorFileIndicesString,false,prependedString,"[]",isMcc,";");
+
+        addCharArrayToArgs(args,"tileInterval",prependedString,isMcc);
+        std::vector<std::string> imageListGeneratorTileIntervalV = {ui->imageListGeneratorTileIntervalXLineEdit->text().toStdString(),
+                                                                    ui->imageListGeneratorTileIntervalYLineEdit->text().toStdString(),
+                                                                    ui->imageListGeneratorTileIntervalZLineEdit->text().toStdString()};
+        addArrayToArgs(args,imageListGeneratorTileIntervalV,false,prependedString,"[]",isMcc);
+    }
+
     // Advanced Job Settings
     if(!ui->imageListGeneratorUuidLineEdit->text().isEmpty()){
         addCharArrayToArgs(args,"uuid",prependedString,isMcc);
@@ -4376,3 +4400,48 @@ void MainWindow::on_cropZarrFileCheckBox_stateChanged(int arg1)
     ui->cropBatchSizeZSpinBox->setEnabled(arg1);
 }
 
+void MainWindow::on_imageListGeneratorGenerationMethodComboBox_currentTextChanged(const QString &arg1)
+{
+    bool isTileList = arg1 == "tile_list";
+    if(isTileList){
+        if(!imageListGeneratorFilenames.size()){
+            imageListGeneratorFilenames = getFilenames(imageListGeneratorDPaths,
+                                                       imageListGeneratorChannelWidgets,
+                                                       ui->imageListGeneratorCustomPatternsCheckBox->isChecked(),
+                                                       ui->imageListGeneratorCustomPatternsLineEdit->text(),
+                                                       ui->imageListGeneratorZarrFileCheckBox->isChecked());
+            imageListGeneratorFileIndices.clear();
+            for(size_t i = 0; i < imageListGeneratorFilenames.size(); i++){
+                imageListGeneratorFileIndices.push_back("0, 0, 0, 0, 0");
+            }
+        }
+    }
+    ui->imageListGeneratorTileListLabel->setEnabled(isTileList);
+    ui->imageListGeneratorTileListButton->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalLabel->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalXLabel->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalXLineEdit->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalYLabel->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalYLineEdit->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalZLabel->setEnabled(isTileList);
+    ui->imageListGeneratorTileIntervalZLineEdit->setEnabled(isTileList);
+}
+
+void MainWindow::on_imageListGeneratorTileListButton_clicked()
+{
+    std::vector<QString> imageListGeneratorFilenamesTemp = getFilenames(imageListGeneratorDPaths,
+                                               imageListGeneratorChannelWidgets,
+                                               ui->imageListGeneratorCustomPatternsCheckBox->isChecked(),
+                                               ui->imageListGeneratorCustomPatternsLineEdit->text(),
+                                               ui->imageListGeneratorZarrFileCheckBox->isChecked());
+    if(imageListGeneratorFilenames != imageListGeneratorFilenamesTemp){
+        imageListGeneratorFilenames = imageListGeneratorFilenamesTemp;
+        imageListGeneratorFileIndices.clear();
+        for(size_t i = 0; i < imageListGeneratorFilenames.size(); i++){
+            imageListGeneratorFileIndices.push_back("0, 0, 0, 0, 0");
+        }
+    }
+    dataPaths daPaths(imageListGeneratorFilenames, imageListGeneratorFileIndices);
+    daPaths.setModal(true);
+    daPaths.exec();
+}

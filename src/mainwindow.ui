@@ -2699,7 +2699,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="psfFullAddPathsButton_2">
+             <widget class="QPushButton" name="psfFullAddPathsButton">
               <property name="text">
                <string>Add/View Paths</string>
               </property>
@@ -8219,7 +8219,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_36" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_36" stretch="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -8398,7 +8398,7 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_238" stretch="1">
+             <layout class="QHBoxLayout" name="horizontalLayout_238" stretch="1,1">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_240" stretch="1,1">
                 <item>
@@ -8431,6 +8431,35 @@
                     <string>tile_position</string>
                    </property>
                   </item>
+                  <item>
+                   <property name="text">
+                    <string>tile_list</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_257" stretch="1,1">
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorZarrFileLabel">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Zarr File</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="imageListGeneratorZarrFileCheckBox">
+                  <property name="text">
+                   <string/>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -8573,6 +8602,151 @@
             </item>
             <item>
              <spacer name="verticalSpacer_121">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_279" stretch="1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_280">
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorTileListLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Tile List</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="imageListGeneratorTileListButton">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Set Indices</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_281">
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorTileIntervalLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Tile Interval:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorTileIntervalXLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="imageListGeneratorTileIntervalXLineEdit">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorTileIntervalYLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Y</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="imageListGeneratorTileIntervalYLineEdit">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorTileIntervalZLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Z</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="imageListGeneratorTileIntervalZLineEdit">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_136">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -8787,31 +8961,7 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_253" stretch="1,1,1,1">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_257" stretch="1,1">
-                <item>
-                 <widget class="QLabel" name="imageListGeneratorZarrFileLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Zarr File</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="imageListGeneratorZarrFileCheckBox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
+             <layout class="QHBoxLayout" name="horizontalLayout_253" stretch="1,1,1">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_256" stretch="1,1">
                 <item>
@@ -14441,8 +14591,8 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
-  <buttongroup name="deconRLMethodButtonGroup"/>
   <buttongroup name="tiffZarrConverterButtonGroup"/>
+  <buttongroup name="deconRLMethodButtonGroup"/>
+  <buttongroup name="psfDetectionAnalysisModeButtonGroup"/>
  </buttongroups>
 </ui>

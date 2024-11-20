@@ -1,6 +1,7 @@
 #include "datapaths.h"
 #include "ui_datapaths.h"
 #include "datapathsrecursive.h"
+#include "matlabhelperfunctions.h"
 #include <QMessageBox>
 
 // folder dicatates whether we are getting folders or files so I can use this form for 2 different situations.
@@ -87,6 +88,28 @@ dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRec
 
 }
 
+// For Image List Generator
+dataPaths::dataPaths(std::vector<QString> &imageListGeneratorFilenames, std::vector<QString> &imageListGeneratorFileIndices, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::dataPaths)
+{
+    ui->setupUi(this);
+
+    delete ui->addPathButton;
+
+    // connect slot for psf
+    connect(ui->submitButton,&QPushButton::clicked,this,&dataPaths::on_dataPathSubmitButton_clickedImageListGenerator);
+
+    // pointer to hold the passed in paths vector
+    dataHand = &imageListGeneratorFileIndices;
+
+    ui->dataPathsVerticalLayout->addStretch();
+    for(size_t i = 0; i < imageListGeneratorFilenames.size(); i++){
+        makeNewPathImageListGenerator(imageListGeneratorFilenames.at(i), extractNumbersFromQString(imageListGeneratorFileIndices.at(i)));
+    }
+
+}
+
 dataPaths::~dataPaths()
 {
     delete ui;
@@ -162,6 +185,19 @@ void dataPaths::on_dataPathSubmitButton_clickedOther(){
     dataHand->clear();
     for(const auto &path : paths){
         dataHand->push_back(std::get<2>(path)->text());
+    }
+    dataPaths::close();
+}
+
+// Close the window and save the values currently in the boxes). Case for PSF/LLFF submitting.
+void dataPaths::on_dataPathSubmitButton_clickedImageListGenerator(){
+    dataHand->clear();
+    for(const auto &path : pathsImageListGenerator){
+        dataHand->push_back(std::get<3>(path)->text()+", "+
+                            std::get<5>(path)->text()+", "+
+                            std::get<7>(path)->text()+", "+
+                            std::get<9>(path)->text()+", "+
+                            std::get<11>(path)->text());
     }
     dataPaths::close();
 }
@@ -343,6 +379,89 @@ void dataPaths::makeNewPath(int i, dataPath currPath, bool psf, QString channelN
     QHBox->addWidget(QPBR);
 
     paths.push_back(std::make_tuple(QHBox,QL,QLE,QPB,QPBF,QLP,QLEP,QLMD,QSB,QLR,QCB,QPBR));
+}
+
+void dataPaths::makeNewPathImageListGenerator(QString currFilename, std::vector<QString> currIndices)
+{
+    // Add a horizontal layout to the form
+    QHBoxLayout* QHBox = new QHBoxLayout(this);
+    ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
+
+    uint64_t minLabelWidth = 20;
+    uint64_t minTextBoxWidth = 40;
+
+    // Add the Filename label
+    QLabel* QLF = new QLabel(this);
+    QLF->setTextFormat(Qt::RichText);
+    QLF->setText(QString("<b>")+currFilename+QString(":<\b>"));
+    QHBox->addWidget(QLF);
+
+    // Add the T label
+    QLabel* QLT = new QLabel(this);
+    QLT->setTextFormat(Qt::RichText);
+    QLT->setText(QString("<b>T<\b>"));
+    QLT->setMinimumWidth(minLabelWidth);
+    QHBox->addWidget(QLT);
+
+    // Add the T text box
+    QLineEdit* QLET = new QLineEdit(this);
+    QLET->setText(currIndices.at(0));
+    QLET->setMinimumWidth(minTextBoxWidth);
+    QHBox->addWidget(QLET);
+
+    // Add the C label
+    QLabel* QLC = new QLabel(this);
+    QLC->setTextFormat(Qt::RichText);
+    QLC->setText(QString("<b>C<\b>"));
+    QLC->setMinimumWidth(minLabelWidth);
+    QHBox->addWidget(QLC);
+
+    // Add the C text box
+    QLineEdit* QLEC = new QLineEdit(this);
+    QLEC->setText(currIndices.at(1));
+    QLEC->setMinimumWidth(minTextBoxWidth);
+    QHBox->addWidget(QLEC);
+
+    // Add the X label
+    QLabel* QLX = new QLabel(this);
+    QLX->setTextFormat(Qt::RichText);
+    QLX->setText(QString("<b>X<\b>"));
+    QLX->setMinimumWidth(minLabelWidth);
+    QHBox->addWidget(QLX);
+
+    // Add the X text box
+    QLineEdit* QLEX = new QLineEdit(this);
+    QLEX->setText(currIndices.at(2));
+    QLEX->setMinimumWidth(minTextBoxWidth);
+    QHBox->addWidget(QLEX);
+
+    // Add the Y label
+    QLabel* QLY = new QLabel(this);
+    QLY->setTextFormat(Qt::RichText);
+    QLY->setText(QString("<b>Y<\b>"));
+    QLY->setMinimumWidth(minLabelWidth);
+    QHBox->addWidget(QLY);
+
+    // Add the Y text box
+    QLineEdit* QLEY = new QLineEdit(this);
+    QLEY->setText(currIndices.at(3));
+    QLEY->setMinimumWidth(minTextBoxWidth);
+    QHBox->addWidget(QLEY);
+
+    // Add the T label
+    QLabel* QLZ = new QLabel(this);
+    QLZ->setTextFormat(Qt::RichText);
+    QLZ->setText(QString("<b>Z<\b>"));
+    QLZ->setMinimumWidth(minLabelWidth);
+    QHBox->addWidget(QLZ);
+
+    // Add the T text box
+    QLineEdit* QLEZ = new QLineEdit(this);
+    QLEZ->setText(currIndices.at(4));
+    QLEZ->setMinimumWidth(minTextBoxWidth);
+    QHBox->addWidget(QLEZ);
+
+    pathsImageListGenerator.push_back(std::make_tuple(QHBox,QLF,QLT,QLET,QLC,QLEC,QLX,QLEX,QLY,QLEY,QLZ,QLEZ));
 }
 
 int dataPaths::getCurrPathIndex(QString currWidgetName)

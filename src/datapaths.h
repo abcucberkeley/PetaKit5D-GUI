@@ -28,6 +28,7 @@ public:
     explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
     explicit dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
     dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const QString &dataType, QWidget *parent = nullptr);
+    dataPaths(std::vector<QString> &imageListGeneratorFilenames, std::vector<QString> &imageListGeneratorFileIndices, QWidget *parent = nullptr);
     ~dataPaths();
 
 private slots:
@@ -41,6 +42,8 @@ private slots:
 
     void on_dataPathSubmitButton_clickedOther();
 
+    void on_dataPathSubmitButton_clickedImageListGenerator();
+
     void on_dataPathBrowseButton_clicked();
 
     void on_dataPathLineEdit_textChanged(const QString &arg1);
@@ -51,15 +54,18 @@ private slots:
 
     void makeNewPath(int i, dataPath currPath, bool psf = false, QString channelName = QString(), bool otherData = false);
 
+    void makeNewPathImageListGenerator(QString currFilename, std::vector<QString> currIndices);
+
     int getCurrPathIndex(QString currWidgetName);
 private:
     Ui::dataPaths *ui;
     QString *mostRecentDir;
-    std::unordered_map<QString,dataPath> currPaths;
+    std::unordered_map<QString, dataPath> currPaths;
     int activePaths;
     bool maxPaths;
     bool folder;
     std::vector<std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*>> paths;
+    std::vector<std::tuple<QHBoxLayout*, QLabel*, QLabel*, QLineEdit*, QLabel*, QLineEdit*, QLabel*, QLineEdit*, QLabel*, QLineEdit*, QLabel*, QLineEdit*>> pathsImageListGenerator;
     std::vector<dataPath> *dpHand;
     std::vector<QString> *dataHand;
     QString dataType;

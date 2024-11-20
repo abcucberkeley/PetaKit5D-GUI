@@ -26,4 +26,8 @@ std::string btosM(const bool val);
 
 bool endsWith(std::string_view str, std::string_view suffix);
 
+std::vector<QString> getFilenames(const std::vector<dataPath> &dataPaths, const std::vector<std::pair<QLabel*,QCheckBox*>> &channelWidgets, const bool customPatterns, const QString &patternLine, const bool zarrFile);
+
+std::vector<QString> extractNumbersFromQString(const QString& input);
+
 #endif // MATLABHELPERFUNCTIONS_H
