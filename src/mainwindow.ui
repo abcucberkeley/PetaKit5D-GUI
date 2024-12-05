@@ -9107,7 +9107,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeYLineEdit"/>
+                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeYLineEdit">
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="imageListGeneratorOverlapSizeXLabel">
@@ -9123,7 +9127,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeXLineEdit"/>
+                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeXLineEdit">
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="imageListGeneratorOverlapSizeZLabel">
@@ -9139,7 +9147,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeZLineEdit"/>
+                 <widget class="QLineEdit" name="imageListGeneratorOverlapSizeZLineEdit">
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
