@@ -1353,7 +1353,7 @@ void MainWindow::on_submitButton_clicked()
 
     bool lspDSR = false;
     bool lspStitch = false;
-    if(ui->deskewAndRotateCheckBox->isChecked() && ui->largeScaleProcessingCheckBox->isChecked()){
+    if((ui->deskewCheckBox->isChecked() || ui->deskewAndRotateCheckBox->isChecked()) && ui->largeScaleProcessingCheckBox->isChecked()){
         lspDSR = true;
     }
     else if(ui->stitchCheckBox->isChecked() && !(ui->deskewCheckBox->isChecked()
@@ -1403,6 +1403,27 @@ void MainWindow::on_submitButton_clicked()
     addBoolToArgs(args,guiVals.parseSettingFile,prependedString);
 
     if(lspDSR){
+        if(!(ui->deskewCheckBox->isChecked() || ui->rotateCheckBox->isChecked()) && ui->deskewAndRotateCheckBox->isChecked()){
+            addCharArrayToArgs(args,"DSRCombined",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
+
+            addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
+
+            addCharArrayToArgs(args,"Rotate",prependedString,isMcc);
+            addBoolToArgs(args,true,prependedString);
+        }
+        else{
+            addCharArrayToArgs(args,"DSRCombined",prependedString,isMcc);
+            addBoolToArgs(args,false,prependedString);
+
+            addCharArrayToArgs(args,"Deskew",prependedString,isMcc);
+            addBoolToArgs(args,ui->deskewCheckBox->isChecked(),prependedString);
+
+            addCharArrayToArgs(args,"Rotate",prependedString,isMcc);
+            addBoolToArgs(args,ui->rotateCheckBox->isChecked(),prependedString);
+        }
+
         addCharArrayToArgs(args,"flipZstack",prependedString,isMcc);
         addBoolToArgs(args,guiVals.flipZStack,prependedString);
 
@@ -1463,6 +1484,9 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"IOScan",prependedString,isMcc);
         addBoolToArgs(args,ui->stitchIOScanCheckBox->isChecked(),prependedString);
+
+        addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.zarrFile,prependedString);
 
         if(!ui->axisOrderLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
