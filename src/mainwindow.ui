@@ -464,35 +464,47 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="4">
+         <layout class="QHBoxLayout" name="horizontalLayout_237" stretch="1,1,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_237">
-            <item>
-             <widget class="QLabel" name="objectiveScanLabel">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-                <kerning>true</kerning>
-               </font>
-              </property>
-              <property name="text">
-               <string>Objective Scan</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="objectiveScanCheckBox">
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="objectiveScanLabel">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+              <strikeout>false</strikeout>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="text">
+             <string>Objective Scan</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="objectiveScanCheckBox">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -5346,7 +5358,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>Bounding Box</string>
+                     <string>Bounding Box:</string>
                     </property>
                    </widget>
                   </item>
@@ -5820,7 +5832,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>Start Coord of Last Timepoint</string>
+                     <string>Start Coord of Last Timepoint:</string>
                     </property>
                    </widget>
                   </item>
@@ -5899,7 +5911,7 @@
                        </font>
                       </property>
                       <property name="text">
-                       <string>Y:</string>
+                       <string>Y</string>
                       </property>
                      </widget>
                     </item>
@@ -5935,7 +5947,7 @@
                        </font>
                       </property>
                       <property name="text">
-                       <string>X:</string>
+                       <string>X</string>
                       </property>
                      </widget>
                     </item>
@@ -5971,7 +5983,7 @@
                        </font>
                       </property>
                       <property name="text">
-                       <string>Z:</string>
+                       <string>Z</string>
                       </property>
                      </widget>
                     </item>
@@ -7869,7 +7881,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y Min:</string>
+                   <string>Y Min</string>
                   </property>
                  </widget>
                 </item>
@@ -7902,7 +7914,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X Min:</string>
+                   <string>X Min</string>
                   </property>
                  </widget>
                 </item>
@@ -7935,7 +7947,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z Min:</string>
+                   <string>Z Min</string>
                   </property>
                  </widget>
                 </item>
@@ -7985,7 +7997,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y Max:</string>
+                   <string>Y Max</string>
                   </property>
                  </widget>
                 </item>
@@ -8018,7 +8030,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X Max:</string>
+                   <string>X Max</string>
                   </property>
                  </widget>
                 </item>
@@ -8051,7 +8063,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z Max:</string>
+                   <string>Z Max</string>
                   </property>
                  </widget>
                 </item>
@@ -10512,7 +10524,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>Y:</string>
+                     <string>Y</string>
                     </property>
                    </widget>
                   </item>
@@ -10539,7 +10551,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>X:</string>
+                     <string>X</string>
                     </property>
                    </widget>
                   </item>
@@ -10566,7 +10578,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>Z:</string>
+                     <string>Z</string>
                     </property>
                    </widget>
                   </item>
@@ -12155,7 +12167,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Crop Size</string>
+                 <string>Crop Size:</string>
                 </property>
                </widget>
               </item>
@@ -12289,7 +12301,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Dist Thresh</string>
+                 <string>Dist Thresh:</string>
                 </property>
                </widget>
               </item>
@@ -14136,7 +14148,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Block Size</string>
+                 <string>Block Size:</string>
                 </property>
                </widget>
               </item>
@@ -14154,7 +14166,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
@@ -14190,7 +14202,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>X:</string>
+                   <string>X</string>
                   </property>
                  </widget>
                 </item>
@@ -14226,7 +14238,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>

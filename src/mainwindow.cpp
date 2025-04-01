@@ -4406,22 +4406,33 @@ void MainWindow::on_xCorrShiftCheckBox_stateChanged(int arg1)
 
 void MainWindow::on_cropZarrFileCheckBox_stateChanged(int arg1)
 {
-    ui->cropLargeZarrLabel->setEnabled(arg1);
-    ui->cropLargeZarrCheckBox->setEnabled(arg1);
-    ui->cropBlockSizeLabel->setEnabled(arg1);
-    ui->cropBlockSizeYLabel->setEnabled(arg1);
-    ui->cropBlockSizeXLabel->setEnabled(arg1);
-    ui->cropBlockSizeZLabel->setEnabled(arg1);
-    ui->cropBlockSizeYSpinBox->setEnabled(arg1);
-    ui->cropBlockSizeXSpinBox->setEnabled(arg1);
-    ui->cropBlockSizeZSpinBox->setEnabled(arg1);
-    ui->cropBatchSizeLabel->setEnabled(arg1);
-    ui->cropBatchSizeYLabel->setEnabled(arg1);
-    ui->cropBatchSizeXLabel->setEnabled(arg1);
-    ui->cropBatchSizeZLabel->setEnabled(arg1);
-    ui->cropBatchSizeYSpinBox->setEnabled(arg1);
-    ui->cropBatchSizeXSpinBox->setEnabled(arg1);
-    ui->cropBatchSizeZSpinBox->setEnabled(arg1);
+    if(!arg1 && ui->cropLargeZarrCheckBox->isChecked()){
+        ui->cropLargeZarrLabel->setEnabled(arg1);
+        ui->cropLargeZarrCheckBox->setEnabled(arg1);
+        ui->cropLargeZarrCheckBox->setChecked(arg1);
+        if(!ui->cropSaveZarrCheckBox->isChecked()){
+            ui->cropBlockSizeLabel->setEnabled(arg1);
+            ui->cropBlockSizeYLabel->setEnabled(arg1);
+            ui->cropBlockSizeXLabel->setEnabled(arg1);
+            ui->cropBlockSizeZLabel->setEnabled(arg1);
+            ui->cropBlockSizeYSpinBox->setEnabled(arg1);
+            ui->cropBlockSizeXSpinBox->setEnabled(arg1);
+            ui->cropBlockSizeZSpinBox->setEnabled(arg1);
+        }
+        ui->cropBatchSizeLabel->setEnabled(arg1);
+        ui->cropBatchSizeYLabel->setEnabled(arg1);
+        ui->cropBatchSizeXLabel->setEnabled(arg1);
+        ui->cropBatchSizeZLabel->setEnabled(arg1);
+        ui->cropBatchSizeYSpinBox->setEnabled(arg1);
+        ui->cropBatchSizeXSpinBox->setEnabled(arg1);
+        ui->cropBatchSizeZSpinBox->setEnabled(arg1);
+
+    }
+    else{
+        ui->cropLargeZarrLabel->setEnabled(arg1);
+        ui->cropLargeZarrCheckBox->setEnabled(arg1);
+    }
+
 }
 
 void MainWindow::on_imageListGeneratorGenerationMethodComboBox_currentTextChanged(const QString &arg1)
@@ -4468,4 +4479,37 @@ void MainWindow::on_imageListGeneratorTileListButton_clicked()
     dataPaths daPaths(imageListGeneratorFilenames, imageListGeneratorFileIndices);
     daPaths.setModal(true);
     daPaths.exec();
+}
+
+void MainWindow::on_cropLargeZarrCheckBox_stateChanged(int arg1)
+{
+    if(!ui->cropSaveZarrCheckBox->isChecked()){
+        ui->cropBlockSizeLabel->setEnabled(arg1);
+        ui->cropBlockSizeYLabel->setEnabled(arg1);
+        ui->cropBlockSizeXLabel->setEnabled(arg1);
+        ui->cropBlockSizeZLabel->setEnabled(arg1);
+        ui->cropBlockSizeYSpinBox->setEnabled(arg1);
+        ui->cropBlockSizeXSpinBox->setEnabled(arg1);
+        ui->cropBlockSizeZSpinBox->setEnabled(arg1);
+    }
+    ui->cropBatchSizeLabel->setEnabled(arg1);
+    ui->cropBatchSizeYLabel->setEnabled(arg1);
+    ui->cropBatchSizeXLabel->setEnabled(arg1);
+    ui->cropBatchSizeZLabel->setEnabled(arg1);
+    ui->cropBatchSizeYSpinBox->setEnabled(arg1);
+    ui->cropBatchSizeXSpinBox->setEnabled(arg1);
+    ui->cropBatchSizeZSpinBox->setEnabled(arg1);
+}
+
+void MainWindow::on_cropSaveZarrCheckBox_stateChanged(int arg1)
+{
+    if(!ui->cropLargeZarrCheckBox->isChecked()){
+        ui->cropBlockSizeLabel->setEnabled(arg1);
+        ui->cropBlockSizeYLabel->setEnabled(arg1);
+        ui->cropBlockSizeXLabel->setEnabled(arg1);
+        ui->cropBlockSizeZLabel->setEnabled(arg1);
+        ui->cropBlockSizeYSpinBox->setEnabled(arg1);
+        ui->cropBlockSizeXSpinBox->setEnabled(arg1);
+        ui->cropBlockSizeZSpinBox->setEnabled(arg1);
+    }
 }

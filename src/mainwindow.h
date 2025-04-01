@@ -538,6 +538,10 @@ private slots:
 
     void on_imageListGeneratorTileListButton_clicked();
 
+    void on_cropLargeZarrCheckBox_stateChanged(int arg1);
+
+    void on_cropSaveZarrCheckBox_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     mainwindowConsoleOutputWindow* matlabJobLogsOutputWindow;
