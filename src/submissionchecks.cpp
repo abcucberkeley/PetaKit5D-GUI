@@ -95,6 +95,9 @@ bool messageBoxSameJobSubmittedWarning(QWidget* parent,
         return true;
     }
 
+    prevFuncTypeArgs.first = funcType;
+    prevFuncTypeArgs.second = args;
+
     QMessageBox messageBox(parent);
     messageBox.setIcon(QMessageBox::Warning);
     messageBox.setWindowTitle("Warning");

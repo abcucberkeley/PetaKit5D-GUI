@@ -1,5 +1,6 @@
 #include "jobadvanced.h"
 #include "ui_jobadvanced.h"
+#include "submissionchecks.h"
 #include <QFileDialog>
 #include <QFileInfo>
 jobAdvanced::jobAdvanced(GUIvals &guiVals, QWidget *parent) :
@@ -36,6 +37,10 @@ void jobAdvanced::on_cancelButton_clicked()
 // Close the window and save the current vals
 void jobAdvanced::on_submitButton_clicked()
 {
+    if(ui->jobLogDirLineEdit->text().isEmpty()){
+        messageBoxError("Job Log Dir cannot be empty. Please set it to a valid folder");
+        return;
+    }
     gVals->largeFile = ui->largeFileCheckBox->isChecked();
     gVals->jobLogDir = ui->jobLogDirLineEdit->text();
     gVals->uuid = ui->uuidLineEdit->text();
