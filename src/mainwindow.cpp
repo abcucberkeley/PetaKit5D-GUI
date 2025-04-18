@@ -1741,6 +1741,13 @@ void MainWindow::on_submitButton_clicked()
             addArrayToArgs(args,guiVals.deconMaskFns,true,prependedString,"{}",isMcc);
         }
 
+        // Decon LSP Settings
+        addCharArrayToArgs(args,"batchSize",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.batchSize,false,prependedString,"[]",isMcc);
+
+        addCharArrayToArgs(args,"blockSize",prependedString,isMcc);
+        addArrayToArgs(args,guiVals.blockSize,false,prependedString,"[]",isMcc);
+
         // Advanced Job Settings
         addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.largeFile,prependedString);
