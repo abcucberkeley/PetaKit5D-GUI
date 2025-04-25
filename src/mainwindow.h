@@ -243,7 +243,7 @@ public:
     bool GNUparallel;
     QString MCCMasterStr;
     QString MCRParam;
-    double MemPerCPU;
+    double memPerCPU;
     QString SlurmParam;
     qint64 jobTimeLimit;
     bool masterCompute;
@@ -259,7 +259,7 @@ public:
         GNUparallel(false),
         MCCMasterStr(""),
         MCRParam(""),
-        MemPerCPU(4),
+        memPerCPU(4),
         SlurmParam(""),
         jobTimeLimit(12),
         masterCompute(true),

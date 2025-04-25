@@ -13,7 +13,7 @@ configFileCreator::configFileCreator(configFileVals* cFileVals, QWidget *parent)
     ui->gnuParallelCheckBox->setChecked(cFileVals->GNUparallel);
     ui->mccMasterStrLineEdit->setText(cFileVals->MCCMasterStr);
     ui->mcrParamLineEdit->setText(cFileVals->MCRParam);
-    ui->memPerCPUDoubleSpinBox->setValue(cFileVals->MemPerCPU);
+    ui->memPerCPUDoubleSpinBox->setValue(cFileVals->memPerCPU);
     ui->slurmParamLineEdit->setText(cFileVals->SlurmParam);
     ui->jobTimeLimitSpinBox->setValue(cFileVals->jobTimeLimit);
     ui->masterComputeCheckBox->setChecked(cFileVals->masterCompute);
@@ -29,7 +29,7 @@ configFileCreator::~configFileCreator()
     cFileVals->GNUparallel = ui->gnuParallelCheckBox->isChecked();
     cFileVals->MCCMasterStr = ui->mccMasterStrLineEdit->text();
     cFileVals->MCRParam = ui->mcrParamLineEdit->text();
-    cFileVals->MemPerCPU = ui->memPerCPUDoubleSpinBox->value();
+    cFileVals->memPerCPU = ui->memPerCPUDoubleSpinBox->value();
     cFileVals->SlurmParam = ui->slurmParamLineEdit->text();
     cFileVals->jobTimeLimit  = ui->jobTimeLimitSpinBox->value();
     cFileVals->masterCompute = ui->masterComputeCheckBox->isChecked();
@@ -82,7 +82,7 @@ void configFileCreator::on_saveFileButton_clicked()
     jsonObj["GNUparallel"] = ui->gnuParallelCheckBox->isChecked();
     jsonObj["MCCMasterStr"] = ui->mccMasterStrLineEdit->text();
     jsonObj["MCRParam"] = ui->mcrParamLineEdit->text();
-    jsonObj["MemPerCPU"] = ui->memPerCPUDoubleSpinBox->value();
+    jsonObj["memPerCPU"] = ui->memPerCPUDoubleSpinBox->value();
     jsonObj["SlurmParam"] = ui->slurmParamLineEdit->text();
     jsonObj["jobTimeLimit"] = ui->jobTimeLimitSpinBox->value();
     jsonObj["masterCompute"] = ui->masterComputeCheckBox->isChecked();

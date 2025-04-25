@@ -658,7 +658,7 @@ void MainWindow::readConfigSettings(){
         jsonObj["GNUparallel"] = cFileVals.GNUparallel;
         jsonObj["MCCMasterStr"] = cFileVals.MCCMasterStr;
         jsonObj["MCRParam"] = cFileVals.MCRParam;
-        jsonObj["MemPerCPU"] = cFileVals.MemPerCPU;
+        jsonObj["memPerCPU"] = cFileVals.memPerCPU;
         jsonObj["SlurmParam"] = cFileVals.SlurmParam;
         jsonObj["jobTimeLimit"] = cFileVals.jobTimeLimit;
         jsonObj["masterCompute"] = cFileVals.masterCompute;
@@ -709,7 +709,7 @@ void MainWindow::readConfigSettings(){
         jsonObj["GNUparallel"] = cFileVals.GNUparallel;
         jsonObj["MCCMasterStr"] = cFileVals.MCCMasterStr;
         jsonObj["MCRParam"] = cFileVals.MCRParam;
-        jsonObj["MemPerCPU"] = cFileVals.MemPerCPU;
+        jsonObj["memPerCPU"] = cFileVals.memPerCPU;
         jsonObj["SlurmParam"] = cFileVals.SlurmParam;
         jsonObj["jobTimeLimit"] = cFileVals.jobTimeLimit;
         jsonObj["masterCompute"] = cFileVals.masterCompute;
