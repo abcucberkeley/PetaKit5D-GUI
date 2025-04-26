@@ -1433,6 +1433,9 @@ void MainWindow::on_submitButton_clicked()
         addCharArrayToArgs(args,"saveMIP",prependedString,isMcc);
         addBoolToArgs(args,guiVals.SaveMIP,prependedString);
 
+        addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.largeFile,prependedString);
+
         addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.zarrFile,prependedString);
 
@@ -1487,6 +1490,9 @@ void MainWindow::on_submitButton_clicked()
 
         addCharArrayToArgs(args,"zarrFile",prependedString,isMcc);
         addBoolToArgs(args,guiVals.zarrFile,prependedString);
+
+        addCharArrayToArgs(args,"largeFile",prependedString,isMcc);
+        addBoolToArgs(args,guiVals.largeFile,prependedString);
 
         if(!ui->axisOrderLineEdit->text().isEmpty()){
             addCharArrayToArgs(args,"axisOrder",prependedString,isMcc);
