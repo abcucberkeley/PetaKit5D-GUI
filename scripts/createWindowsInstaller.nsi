@@ -3,7 +3,7 @@ Unicode True
 !include LogicLib.nsh
 !define APP_NAME "PetaKit5D-GUI"
 !define APP_EXE "PetaKit5D-GUI.exe"
-!define RUNTIME_ZIP_URL "https://ssd.mathworks.com/supportfiles/downloads/R2023a/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2023a_Update_6_win64.zip"
+!define RUNTIME_ZIP_URL "https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2024b_Update_6_win64.zip"
 !define TEMP_DIR "C:\temp\matlabRuntimeTmp"
 !define TEMP_DIR_D "C:\\temp\\matlabRuntimeTmp"
 
@@ -19,7 +19,7 @@ SetOutPath $PLUGINSDIR
 File /r "C:\Users\matt\Desktop\PetaKit5D-GUI_releases\jenkins\PetaKit5D-GUI"
 
 ; Run the PowerShell command and capture the exit code
-nsExec::Exec 'powershell "exit [int]([Environment]::GetEnvironmentVariable(\"PATH\", \"Machine\").Split(\";\")[0] -eq \"C:\Program Files\MATLAB\MATLAB Runtime\R2023a\runtime\win64\")"' $0 SW_HIDE
+nsExec::Exec 'powershell "exit [int]([Environment]::GetEnvironmentVariable(\"PATH\", \"Machine\").Split(\";\")[0] -eq \"C:\Program Files\MATLAB\MATLAB Runtime\R2024b\runtime\win64\")"' $0 SW_HIDE
 Pop $0 ; Get the exit code
 
 ; Check the exit code
@@ -27,10 +27,10 @@ ${If} $0 == 1
     DetailPrint "Matlab Runtime found on the path"
 ${Else}
     DetailPrint "Matlab Runtime not found as the first path. Adding it"
-    nsExec::Exec 'powershell "setx -m PATH \"C:\Program Files\MATLAB\MATLAB Runtime\R2023a\runtime\win64;$env:path\""'
+    nsExec::Exec 'powershell "setx -m PATH \"C:\Program Files\MATLAB\MATLAB Runtime\R2024b\runtime\win64;$env:path\""'
 ${EndIf}
 
-IfFileExists "C:\Program Files\MATLAB\MATLAB Runtime\R2023a\VersionInfo.xml" skip_runtime install_runtime 
+IfFileExists "C:\Program Files\MATLAB\MATLAB Runtime\R2024b\VersionInfo.xml" skip_runtime install_runtime 
 install_runtime:
 CreateDirectory ${TEMP_DIR}
 
