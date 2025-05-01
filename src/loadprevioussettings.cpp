@@ -74,7 +74,7 @@ void loadPreviousSettings::runInstallScriptMCC(){
     installName = "install";
     installCmd.append("\""+tmpDir+"/"+installName+"\" -agreeToLicense yes -destinationFolder \""+QCoreApplication::applicationDirPath().toStdString()+"/MATLAB_Runtime\"");
     #else
-    std::string matlabDmg = "MATLAB_Runtime_R2024b_Update_5_maci64.dmg";
+    std::string matlabDmg = "MATLAB_Runtime_R2024b_Update_6_maci64.dmg";
     std::string matlabApp = "InstallForMacOSX.app";
     installCmd.append("unzip -o -q \""+QCoreApplication::applicationDirPath().toStdString()+"/PetaKit5D/mcc/mac/PetaKit5DMCC.zip\" -d /Applications/PetaKit5DMCC/;");
     installCmd.append("hdiutil attach \"\""+tmpDir+"/"+matlabDmg+"\"\";");
@@ -145,11 +145,11 @@ void loadPreviousSettings::curlMCC(){
 
     std::string downloadCmd = "curl -o \""+QCoreApplication::applicationDirPath().toStdString()+"/matlabRuntime.zip\" ";
     #ifdef _WIN32
-    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/5/deployment_files/installer/complete/win64/MATLAB_Runtime_R2024b_Update_5_win64.zip");
+    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/6/deployment_files/installer/complete/win64/MATLAB_Runtime_R2024b_Update_6_win64.zip");
     #elif __linux__
-    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/5/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024b_Update_5_glnxa64.zip");
+    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/6/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024b_Update_6_glnxa64.zip");
     #else
-    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/5/deployment_files/installer/complete/maci64/MATLAB_Runtime_R2024b_Update_5_maci64.dmg.zip");
+    downloadCmd.append("https://ssd.mathworks.com/supportfiles/downloads/R2024b/Release/6/deployment_files/installer/complete/maci64/MATLAB_Runtime_R2024b_Update_6_maci64.dmg.zip");
     #endif
     system(downloadCmd.c_str());
     mccInstallProgress->setValue(50);
