@@ -1391,7 +1391,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_113" stretch="1">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,4,1">
+           <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,1">
             <item>
              <widget class="QLabel" name="imageListFullPathsLabel">
               <property name="font">
@@ -1406,16 +1406,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="imageListFullPathsLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="imageListFullPathsBrowseButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -1424,7 +1414,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Browse</string>
+               <string>Add/View Paths</string>
               </property>
              </widget>
             </item>

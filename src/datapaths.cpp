@@ -31,8 +31,8 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
 
 }
 
-// For PSF data paths
-dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent) :
+// For PSF data paths and Image List Full Paths
+dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const bool allowStandardFilename, QString *standardFilename, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dataPaths)
 {
@@ -49,6 +49,43 @@ dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostR
 
     // pointer to hold the passed in paths vector
     dataHand = &psfPaths;
+
+    if(allowStandardFilename){
+        this->standardFilename = standardFilename;
+        // Add a horizontal layout to the form
+        QHBoxLayout* QHBox = new QHBoxLayout(this);
+        ui->dataPathsVerticalLayout->insertLayout(ui->dataPathsVerticalLayout->count()-1,QHBox);
+
+        QString tooltip = "This option will let you specify the filename if it is the same for all folders and is located in the data folder.\n"
+            "Ex: For /path/to/folder1/list.csv and /path/to/folder2/list.csv you could enter list.csv here";
+
+        // Add the Path label
+        QLabel* QL = new QLabel(this);
+        QL->setTextFormat(Qt::RichText);
+        QL->setText(QString("<b>")+QString("Standard Filename")+QString("<\b>"));
+        QL->setToolTip(tooltip);
+        QHBox->addWidget(QL);
+
+        // Add the checkbox
+        QCheckBox* QCB = new QCheckBox(this);
+        QCB->setToolTip(tooltip);
+        connect(QCB,&QCheckBox::toggled,this,&dataPaths::standardFilenameChecked);
+        QHBox->addWidget(QCB);
+
+        // Add the text box
+        QLineEdit* QLE = new QLineEdit(this);
+        QLE->setEnabled(false);
+        QLE->setText(*standardFilename);
+        QLE->setMinimumWidth(150);
+        connect(QLE,&QLineEdit::textChanged,this,&dataPaths::on_dataPathLineEdit_textChanged);
+        QHBox->addWidget(QLE);
+
+        standardFilenameTuple = std::make_tuple(QHBox, QL, QCB, QLE);
+
+        if(!standardFilename->isEmpty()){
+            QCB->toggle();
+        }
+    }
 
     ui->dataPathsVerticalLayout->addStretch();
     for(size_t i = 0; i < channelNames.size(); i++){
@@ -160,7 +197,7 @@ void dataPaths::on_dataPathSubmitButton_clicked()
     for(const auto &path : paths){
         if(std::get<2>(path)->text().isEmpty()) continue;
         if(currPaths.find(std::get<2>(path)->text()) == currPaths.end()){
-            currPaths.emplace(std::get<2>(path)->text(),dataPath(std::get<2>(path)->text(),std::get<10>(path)->isChecked(),std::get<6>(path)->text(),std::get<8>(path)->value(),std::unordered_map<QString,std::pair<bool,QString>>()));
+            currPaths.emplace(std::get<2>(path)->text(),dataPath(std::get<2>(path)->text(),std::get<10>(path)->isChecked(),std::get<6>(path)->text(),std::get<8>(path)->value(),std::map<QString,std::pair<bool,QString>>()));
         }
         else{
             currPaths[std::get<2>(path)->text()].includeMaster = std::get<10>(path)->isChecked();
@@ -185,6 +222,12 @@ void dataPaths::on_dataPathSubmitButton_clickedOther(){
     dataHand->clear();
     for(const auto &path : paths){
         dataHand->push_back(std::get<2>(path)->text());
+    }
+    if(standardFilename){
+        if(std::get<2>(standardFilenameTuple)->isChecked()){
+            *standardFilename = std::get<3>(standardFilenameTuple)->text();
+        }
+        else *standardFilename = "";
     }
     dataPaths::close();
 }
@@ -243,7 +286,7 @@ void dataPaths::on_dataPathFindButton_clicked()
     }
 
     if(currPaths.find(std::get<2>(paths[currTuple])->text()) == currPaths.end()){
-        currPaths.emplace(std::get<2>(paths[currTuple])->text(),dataPath(std::get<2>(paths[currTuple])->text(),std::get<10>(paths[currTuple])->isChecked(),std::get<6>(paths[currTuple])->text(),std::get<8>(paths[currTuple])->value(),std::unordered_map<QString,std::pair<bool,QString>>()));
+        currPaths.emplace(std::get<2>(paths[currTuple])->text(),dataPath(std::get<2>(paths[currTuple])->text(),std::get<10>(paths[currTuple])->isChecked(),std::get<6>(paths[currTuple])->text(),std::get<8>(paths[currTuple])->value(),std::map<QString,std::pair<bool,QString>>()));
     }
     else{
         currPaths[std::get<2>(paths[currTuple])->text()].includeMaster = std::get<10>(paths[currTuple])->isChecked();
@@ -476,4 +519,13 @@ int dataPaths::getCurrPathIndex(QString currWidgetName)
         currChar--;
     }
     return currIndexString.toInt();
+}
+
+void dataPaths::standardFilenameChecked(bool checked){
+    std::get<3>(standardFilenameTuple)->setEnabled(checked);
+    for(const std::tuple<QHBoxLayout*, QLabel*, QLineEdit*, QPushButton*, QPushButton*, QLabel*, QLineEdit*,  QLabel*, QSpinBox*, QLabel*, QCheckBox*, QPushButton*> &path : paths){
+        std::get<1>(path)->setEnabled(!checked);
+        std::get<2>(path)->setEnabled(!checked);
+        std::get<3>(path)->setEnabled(!checked);
+    }
 }

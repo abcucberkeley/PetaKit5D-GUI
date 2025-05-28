@@ -1,6 +1,6 @@
 #ifndef DATAPATH_H
 #define DATAPATH_H
-#include <unordered_map>
+#include <map>
 #include <QString>
 #include <QHash>
 
@@ -18,7 +18,7 @@ class dataPath
 {
 public:
     dataPath();
-    dataPath(QString masterPath, bool includeMaster, QString pattern, int maxDepth, std::unordered_map<QString,std::pair<bool, QString>> subPaths);
+    dataPath(QString masterPath, bool includeMaster, QString pattern, int maxDepth, std::map<QString,std::pair<bool, QString>> subPaths);
 
     bool operator<(const dataPath &dPath);
     bool operator<(const dataPath &dPath) const;
@@ -27,7 +27,7 @@ public:
     bool includeMaster;
     QString pattern;
     int maxDepth;
-    std::unordered_map<QString,std::pair<bool, QString>> subPaths;
+    std::map<QString,std::pair<bool, QString>> subPaths;
 
 /*private:
     size_t numPaths;*/

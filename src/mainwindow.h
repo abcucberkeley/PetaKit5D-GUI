@@ -305,6 +305,8 @@ private:
     GUIvals guiVals;
     std::vector<dataPath> dPaths;
     std::vector<std::pair<QLabel*,QCheckBox*>> channelWidgets;
+    std::vector<QString> imageListFullPaths;
+    QString imageListStandardFilename;
 
     // Config Vals
     configFileVals cFileVals;
@@ -421,8 +423,6 @@ private slots:
     void on_addPathsButton_clicked();
 
     void on_imageListFullPathsBrowseButton_clicked();
-
-    void on_imageListFullPathsLineEdit_textChanged(const QString &arg1);
 
     void on_llffCorrectionCheckBox_stateChanged(int arg1);
 

@@ -13,7 +13,7 @@
 #include <QSpinBox>
 #include <QHash>
 #include <QPair>
-#include <unordered_map>
+#include <map>
 #include "datapath.h"
 
 namespace Ui {
@@ -26,7 +26,7 @@ class dataPaths : public QDialog
 
 public:
     explicit dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRecentDir, QWidget *parent = nullptr);
-    explicit dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, QWidget *parent = nullptr);
+    explicit dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const bool allowStandardFilename = false, QString *standardFilename = nullptr, QWidget *parent = nullptr);
     dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRecentDir, const std::vector<QString> &channelNames, const QString &dataType, QWidget *parent = nullptr);
     dataPaths(std::vector<QString> &imageListGeneratorFilenames, std::vector<QString> &imageListGeneratorFileIndices, QWidget *parent = nullptr);
     ~dataPaths();
@@ -57,10 +57,12 @@ private slots:
     void makeNewPathImageListGenerator(QString currFilename, std::vector<QString> currIndices);
 
     int getCurrPathIndex(QString currWidgetName);
+
+    void standardFilenameChecked(bool checked);
 private:
     Ui::dataPaths *ui;
     QString *mostRecentDir;
-    std::unordered_map<QString, dataPath> currPaths;
+    std::map<QString, dataPath> currPaths;
     int activePaths;
     bool maxPaths;
     bool folder;
@@ -69,6 +71,8 @@ private:
     std::vector<dataPath> *dpHand;
     std::vector<QString> *dataHand;
     QString dataType;
+    QString *standardFilename;
+    std::tuple<QHBoxLayout*, QLabel*, QCheckBox*, QLineEdit*> standardFilenameTuple;
 };
 
 #endif // DATAPATHS_H

@@ -35,7 +35,7 @@ private slots:
 
 private:
     Ui::dataPathsRecursive *ui;
-    std::unordered_map<QString,std::pair<bool, QString>>* currPaths;
+    std::map<QString,std::pair<bool, QString>>* currPaths;
     QString currPath;
     int maxDepth;
     std::vector<std::tuple<QHBoxLayout*, QLabel*, QCheckBox*, QLineEdit*>> paths;
