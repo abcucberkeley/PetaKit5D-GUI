@@ -8400,7 +8400,7 @@
              </spacer>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_238" stretch="1,1">
+             <layout class="QHBoxLayout" name="horizontalLayout_238" stretch="1,1,1">
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_240" stretch="1,1">
                 <item>
@@ -8461,6 +8461,39 @@
                  <widget class="QCheckBox" name="imageListGeneratorZarrFileCheckBox">
                   <property name="text">
                    <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <item>
+                 <widget class="QLabel" name="imageListGeneratorMapTilenameLabel">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Map Tilename</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="imageListGeneratorMapTilenameCheckBox">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>

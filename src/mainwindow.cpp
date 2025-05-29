@@ -4337,6 +4337,9 @@ void MainWindow::on_imageListGeneratorSubmitButton_clicked()
     addCharArrayToArgs(args,"channelPatterns",prependedString,isMcc);
     addChannelPatternsToArgs(args,imageListGeneratorChannelWidgets,ui->imageListGeneratorCustomPatternsCheckBox->isChecked(),ui->imageListGeneratorCustomPatternsLineEdit->text(),prependedString,isMcc);
 
+    addCharArrayToArgs(args,"mapTilename",prependedString,isMcc);
+    addBoolToArgs(args,ui->imageListGeneratorMapTilenameCheckBox->isChecked(),prependedString);
+
     // Use default Tile Patterns if all the text boxes are empty
     if(!(ui->imageListGeneratorTilePatternsTLineEdit->text().isEmpty() &&
          ui->imageListGeneratorTilePatternsCLineEdit->text().isEmpty() &&
@@ -4523,6 +4526,7 @@ void MainWindow::on_cropZarrFileCheckBox_stateChanged(int arg1)
 void MainWindow::on_imageListGeneratorGenerationMethodComboBox_currentTextChanged(const QString &arg1)
 {
     bool isTileList = arg1 == "tile_list";
+    bool isSqlite = arg1 == "sqlite";
     if(isTileList){
         if(!imageListGeneratorFilenames.size()){
             imageListGeneratorFilenames = getFilenames(imageListGeneratorDPaths,
@@ -4545,6 +4549,9 @@ void MainWindow::on_imageListGeneratorGenerationMethodComboBox_currentTextChange
     ui->imageListGeneratorTileIntervalYLineEdit->setEnabled(isTileList);
     ui->imageListGeneratorTileIntervalZLabel->setEnabled(isTileList);
     ui->imageListGeneratorTileIntervalZLineEdit->setEnabled(isTileList);
+
+    ui->imageListGeneratorMapTilenameCheckBox->setEnabled(isSqlite);
+    ui->imageListGeneratorMapTilenameLabel->setEnabled(isSqlite);
 }
 
 void MainWindow::on_imageListGeneratorTileListButton_clicked()
