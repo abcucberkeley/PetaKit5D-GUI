@@ -11,6 +11,7 @@ dataPaths::dataPaths(std::vector<dataPath> &dPaths, bool folder, QString &mostRe
 {
     ui->setupUi(this);
     this->folder = folder;
+    this->standardFilename = nullptr;
 
     // Most recent folder for browsing
     this->mostRecentDir = &mostRecentDir;
@@ -38,6 +39,7 @@ dataPaths::dataPaths(std::vector<QString> &psfPaths, bool folder, QString &mostR
 {
     ui->setupUi(this);
     this->folder = folder;
+    this->standardFilename = nullptr;
 
     // Most recent folder for browsing
     this->mostRecentDir = &mostRecentDir;
@@ -101,6 +103,7 @@ dataPaths::dataPaths(std::vector<QString> &dPaths, bool folder, QString &mostRec
 {
     ui->setupUi(this);
     this->folder = folder;
+    this->standardFilename = nullptr;
 
     // Most recent folder for browsing
     this->mostRecentDir = &mostRecentDir;
@@ -131,6 +134,7 @@ dataPaths::dataPaths(std::vector<QString> &imageListGeneratorFilenames, std::vec
     ui(new Ui::dataPaths)
 {
     ui->setupUi(this);
+    this->standardFilename = nullptr;
 
     delete ui->addPathButton;
 
